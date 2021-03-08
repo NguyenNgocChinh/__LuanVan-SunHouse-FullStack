@@ -1,0 +1,162 @@
+.product-group2 {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.khung,
+.khung_1 {
+    position: relative;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    background-color: white;
+}
+
+.khung .raoban,
+.khung_1 .raoban,
+.khung .noibat,
+.khung_1 .noibat {
+    font-size: 0.8rem;
+    color: white;
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    top: 10px;
+    left: 10px;
+    border-radius: 6px;
+    background-color: #3e4c66;
+}
+
+.khung .noibat,
+.khung_1 .noibat {
+    background-color: rgba(255, 26, 26, 0.7);
+    left: 77px;
+}
+
+.slide {
+    position: relative;
+    border-radius: 6px;
+}
+
+.slide .carousel-inner .carousel-item img {
+    float: left;
+    width: 100%;
+    height: 210px;
+    border-radius: 10px;
+}
+
+.slide .icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 1px 7px 1px 7px;
+    border-radius: 6px;
+    color: white;
+}
+
+.slide .icon.heart-active {
+    background-color: rgba(255, 26, 26, 0.7);
+}
+
+.slide:hover .icon {
+    background-color: rgba(255, 26, 26, 0.7);
+}
+
+.card-body a {
+    text-decoration: none;
+}
+
+.card-body b:hover {
+    color: rgba(255, 26, 26, 0.7);
+}
+
+.card-body i {
+    font-size: 1rem;
+}
+
+.card-body .noidung {
+    font-size: 0.8rem;
+}
+
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+    line-height: unset;
+}
+
+input {
+    outline: none;
+}
+
+/*Radio Button*/
+.radio-input {
+    display: none;
+}
+
+.radio-label {
+    width: .5rem;
+    height: .5rem;
+    border-radius: .5rem;
+    background-color: #eee;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 .5rem;
+    box-shadow: 0 0 0 4px #eee;
+    transition: all 0.25s linear;
+}
+
+.radio-input:checked + .radio-label {
+    box-shadow: 0 0 0 4px #fff, 0 0 0 6px #fd656b;
+    background-color: #fd656b;
+}
+
+/*CHECKBOX*/
+.switchR {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.switch {
+    position: relative;
+    cursor: pointer;
+    width: 4rem;
+    height: 2rem;
+    display: block;
+    overflow: hidden;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 50rem;
+    transition: background-color 0.25s linear;
+}
+
+.switch:after {
+    content: "";
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+    background-color: #006c70;
+    top: 5px;
+    left: 5px;
+    transition: background-color 0.25s linear, transform 0.25s linear;
+}
+
+.switch-input {
+    display: none;
+}
+
+.switch-input:checked + .switch {
+    background-color: #fd656b;
+}
+
+.switch-input:checked + .switch:after {
+    transform: translateX(2rem);
+    background-color: white;
+}

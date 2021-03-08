@@ -1,0 +1,17 @@
+.slide img {
+    width: 100%;
+    height: 50vh;
+}
+
+.slide {
+    width: 100%;
+}
+
+.khung {
+    position: relative;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    background-color: white;
+    box-sizing: border-box;
+}

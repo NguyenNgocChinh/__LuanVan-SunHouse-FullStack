@@ -1,0 +1,70 @@
+/*CUSTOM tag*/
+.img_dk {
+    background-image: url('../../img/bg-login.jpg');
+    height: 100vh;
+    width: 50vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/*CUSTOM between input and text icon*/
+.input-group-text {
+    margin-right: 5px;
+}
+/*CUSTOM INPUT*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+select {
+    color: #006c70 !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='rgb(0, 108, 112)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 5px;
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
+    padding: 1rem;
+}
+::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+::-webkit-calendar-picker-indicator::after {
+    content: '';
+    display: none;
+}
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #006c70 !important;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #006c70 !important;
+}
+
+::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #006c70 !important;
+}
+.form-group {
+    position: relative;
+}
+.icon__input {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translate(0, -50%);
+    color: #006c70;
+}

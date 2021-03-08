@@ -1,0 +1,12 @@
+/*CUSTOM error message*/
+input.error,
+select.error {
+    border-radius: 5px !important;
+}
+div.error {
+    width: 100%;
+    clear: both;
+    color: red;
+    font-weight: 500;
+    padding-bottom: 5px;
+}

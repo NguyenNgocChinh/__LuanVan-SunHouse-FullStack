@@ -1,0 +1,7 @@
+- Edit login ratelimiter: đang set 100 lần/min
+	\vender\laravel\fortify\src\LoginRateLimiter.php->tooManyAttempts
+
+- Edit validate Password: đang set lenght = 1
+	 \vendor\laravel\fortify\src\Rules\Password.php	
+
+- RedirectIfAuthenticated : chuyen huong khi dang nhap
