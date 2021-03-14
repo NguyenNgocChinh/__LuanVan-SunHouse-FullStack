@@ -79,7 +79,10 @@ export default {
 }
 .heart {
     position: absolute;
-    bottom: 53%;
+    bottom: 57%;
     right: 0;
+}
+.noidung {
+    height: 200px;
 }
 </style>

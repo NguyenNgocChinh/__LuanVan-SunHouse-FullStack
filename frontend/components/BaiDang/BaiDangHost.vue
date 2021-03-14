@@ -12,7 +12,7 @@
                 ></v-progress-circular>
                 <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
                     <v-slide-item v-for="baidang in baidanghots" :key="baidang.id" v-slot="{}">
-                        <v-card tile :outlined="false" color="white" class="ma-4" width="315" height="500">
+                        <v-card elevation="10" color="white" class="ma-4" width="315" height="500">
                             <bai-dang-card :baidang="baidang" />
                         </v-card>
                     </v-slide-item>
