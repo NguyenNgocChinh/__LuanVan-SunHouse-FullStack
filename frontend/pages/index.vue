@@ -1,9 +1,9 @@
 <template>
-    <v-main app>
+    <div>
         <h1>Home Page</h1>
         <Member />
         <BaiDangHost />
-    </v-main>
+    </div>
 </template>
 
 <script>
