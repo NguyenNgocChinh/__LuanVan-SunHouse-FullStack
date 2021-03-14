@@ -1,5 +1,5 @@
 <template>
-    <v-footer app padless>
+    <v-footer app padless absolute="false">
         <v-container fluid class="pa-0">
             <v-card color="sunhouse_primary" flat tile class="white--text text-center">
                 <v-card-text class="pa-0 pt-4">
