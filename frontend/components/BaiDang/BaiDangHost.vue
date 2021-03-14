@@ -1,16 +1,25 @@
 <template>
-    <v-container fluid class="red py-10">
-        <v-row>
-            <h1 class="d-flex pt-10 white--text justify-content-center">NHÀ NỔI BẬC</h1>
-            <v-slide-group v-model="model" class="pa-4" active-class="success">
-                <v-slide-item v-for="n in 15" :key="n" v-slot="{ active }">
-                    <v-card :color="active ? undefined : 'grey lighten-1'" class="ma-4" width="315">
-                        <bai-dang-card />
-                    </v-card>
-                </v-slide-item>
-            </v-slide-group>
-        </v-row>
-    </v-container>
+    <div>
+        <v-container fluid class="green lighten-2 py-10 baidang">
+            <h3 class="pt-8 white--text text-center">NHÀ NỔI BẬT</h3>
+            <h4 class="py-2 white--text text-center">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
+            <v-row>
+                <v-progress-circular
+                    v-if="baidanghots_loading"
+                    class="loading"
+                    indeterminate
+                    color="white"
+                ></v-progress-circular>
+                <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
+                    <v-slide-item v-for="baidang in baidanghots" :key="baidang.id" v-slot="{}">
+                        <v-card tile :outlined="false" color="white" class="ma-4" width="315" height="500">
+                            <bai-dang-card :baidang="baidang" />
+                        </v-card>
+                    </v-slide-item>
+                </v-slide-group>
+            </v-row>
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -20,11 +29,31 @@ export default {
     data: () => ({
         model: null,
         isActive: true,
+        baidanghots: null,
+        baidanghots_loading: true,
     }),
+    created() {
+        this.getBaiDangHot()
+    },
     methods: {
-        getBaiDangHot() {
-            // const baidangs = this.$axios.get('')
+        async getBaiDangHot() {
+            try {
+                const baidangs = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/hot')
+                this.baidanghots = baidangs
+            } catch (e) {
+                console.log(e)
+            }
+            this.baidanghots_loading = false
+            console.log(this.baidanghots)
         },
     },
 }
 </script>
+<style scoped>
+.baidang {
+    position: relative;
+}
+.loading {
+    margin: 50px auto;
+}
+</style>

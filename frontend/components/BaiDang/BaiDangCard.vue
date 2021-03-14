@@ -1,50 +1,59 @@
 <template>
-    <v-card :loading="loading" class="mx-auto relative">
+    <v-card v-if="baidang" :loading="loading" class="mx-auto" flat>
         <template slot="progress">
             <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
         </template>
-        <v-img height="250" src="https://api.sunhouse.stuesports.info/img/no-image.png"></v-img>
-        <v-card-title class="font-weight-bold red--text">Chung cơ cao cấp</v-card-title>
+        <!--        <v-img height="200" src="https://api.sunhouse.stuesports.info/img/no-image.png"></v-img>-->
+        <!--carousel-->
+        <v-carousel cycle height="200" hide-delimiter-background show-arrows-on-hover>
+            <v-carousel-item v-for="n in 3" :key="n">
+                <v-img height="200" src="https://api.sunhouse.stuesports.info/img/no-image.png" />
+            </v-carousel-item>
+        </v-carousel>
+        <v-card-title class="font-weight-bold red--text">{{ baidang.loai }}</v-card-title>
 
-        <v-card-subtitle>
+        <v-card-subtitle class="noidung">
             <div class="d-flex">
-                <p>Bài viết số 1</p>
+                <p>{{ baidang.tieude }}</p>
                 <v-spacer />
-                <p class="font-weight-bold orange--text">Giá : 5399$</p>
+                <p class="font-weight-bold orange--text">Giá : {{ baidang.gia }}$</p>
             </div>
-            <p class="diachi">
-                <v-icon class="blue--text">mdi-map-marker</v-icon>408 Lucas Oval South Irma, CT 78815-8821
-            </p>
+            <p class="diachi"><v-icon class="blue--text">mdi-map-marker</v-icon>{{ baidang.diachi }}</p>
             <div class="d-flex flex-column">
                 <div class="d-flex">
-                    <span class="mr-2">Phòng ngủ: 4</span>
+                    <span class="mr-2">Phòng ngủ: {{ baidang.sophongngu }}</span>
                     <v-spacer />
-                    <span class="mr-2 justify-content-center">Diện tích: 2523m2</span>
+                    <span class="mr-2 justify-content-center">Diện tích: {{ baidang.dientich }}</span>
                 </div>
-                <span class="mr-2">Phòng tắm: 3</span>
+                <span class="mr-2">Phòng tắm: {{ baidang.sophongtam }}</span>
             </div>
         </v-card-subtitle>
-        <v-divider />
-        <div class="d-flex pa-4">
-            <span>Mrs. Valerie Crona</span>
-            <v-spacer />
-            <span><v-icon class="blue--text">mdi-alarm</v-icon>45 năm trước</span>
-        </div>
 
         <v-chip-group class="loainha">
             <v-chip color="teal darken-1" class="white--text" label>Rao bán</v-chip>
             <v-chip color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
         </v-chip-group>
-
         <v-btn class="mx-2 heart" fab dark small color="pink">
             <v-icon dark> mdi-heart </v-icon>
         </v-btn>
+        <v-divider />
+        <div class="pa-4 d-flex">
+            <span style="font-size: 14px" class="font-weight-bold">{{ baidang.user }}</span>
+            <v-spacer />
+            <span style="font-size: 14px" class="font-weight-bold">
+                <v-icon class="blue--text">mdi-alarm</v-icon>45 năm trước
+            </span>
+        </div>
     </v-card>
 </template>
 <script>
 export default {
     name: 'BaiDangCard',
-    props: ['baidang'],
+    props: {
+        baidang: {
+            default: null,
+        },
+    },
     data: () => ({
         loading: false,
         selection: 1,
@@ -70,7 +79,7 @@ export default {
 }
 .heart {
     position: absolute;
-    bottom: 50%;
+    bottom: 53%;
     right: 0;
 }
 </style>
