@@ -8,10 +8,10 @@ export default {
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        titleTemplate: '%s - sunhouse',
-        title: 'sunhouse',
+        titleTemplate: 'SUNHOUSE',
+        title: 'SUNHOUSE',
         htmlAttrs: {
-            lang: 'en',
+            lang: 'vi',
         },
         meta: [
             { charset: 'utf-8' },
