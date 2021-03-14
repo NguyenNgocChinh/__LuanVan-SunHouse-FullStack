@@ -5,7 +5,7 @@
                 <v-slide-item v-for="n in 15" :key="n" v-slot="{ active }">
                     <v-card :color="active ? undefined : 'grey lighten-1'" class="ma-4" height="400" width="355">
                         <v-row>
-                            <v-card> dasdasdsa </v-card>
+                            <bai-dang-card :baidang="n" />
                         </v-row>
                     </v-card>
                 </v-slide-item>
@@ -15,7 +15,9 @@
 </template>
 
 <script>
+import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 export default {
+    components: { BaiDangCard },
     data: () => ({
         model: null,
         isActive: true,
