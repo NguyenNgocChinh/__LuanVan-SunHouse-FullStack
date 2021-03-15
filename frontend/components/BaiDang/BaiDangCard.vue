@@ -41,7 +41,7 @@
             <span style="font-size: 14px" class="font-weight-bold">{{ baidang.user }}</span>
             <v-spacer />
             <span style="font-size: 14px" class="font-weight-bold">
-                <v-icon class="blue--text">mdi-alarm</v-icon>45 năm trước
+                <v-icon class="blue--text">mdi-alarm</v-icon>{{ baidang.namxaydung }}
             </span>
         </div>
     </v-card>
