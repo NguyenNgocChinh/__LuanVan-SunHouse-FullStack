@@ -1,20 +1,57 @@
 <template>
-    <div>
-        <h1>Quản lý bài viết</h1>
-        <v-data-table
-            v-model="selected"
-            :headers="headers"
-            :items="desserts"
-            :single-select="singleSelect"
-            item-key="name"
-            show-select
-            class="elevation-1"
-        >
-            <template #top>
-                <v-switch v-model="singleSelect" label="Single select" class="pa-3"></v-switch>
-            </template>
-        </v-data-table>
-    </div>
+    <v-container fluid>
+        <v-card>
+            <v-card-title>
+                Danh Sách Bài Đăng
+                <v-spacer />
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+                v-model="selected"
+                :search="search"
+                :loading="loading"
+                :sort-by="['id']"
+                :sort-desc="[true]"
+                :headers="headers"
+                :items="dsBaiDang"
+                :single-select="singleSelect"
+                item-key="name"
+                show-select
+                class="elevation-1"
+            >
+                <template #top>
+                    <div class="d-flex justify-space-between">
+                        <v-switch v-model="singleSelect" label="Hủy chọn tất cả" class="pa-3"></v-switch>
+                        <v-btn color="blue" rounded fab fixed right bottom
+                            ><v-icon color="white">mdi-plus</v-icon></v-btn
+                        >
+                    </div>
+                </template>
+
+                <template #[`item.choduyet`]="{ item }">
+                    <v-btn v-if="item == 1" icon color="teal">
+                        <v-icon>mdi-check</v-icon>
+                    </v-btn>
+
+                    <v-btn v-else icon color="red">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+
+                <template #[`item.hanhdong`]="{ item }">
+                    <v-icon color="blue" class="mr-2" @click="deleteItem(item)"> mdi-eye </v-icon>
+                    <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+                </template>
+            </v-data-table>
+        </v-card>
+    </v-container>
 </template>
 
 <script>
@@ -22,104 +59,31 @@ export default {
     layout: 'admin',
     data() {
         return {
+            search: '',
             singleSelect: false,
             selected: [],
             headers: [
-                {
-                    text: 'Dessert (100g serving)',
-                    align: 'start',
-                    sortable: false,
-                    value: 'name',
-                },
-                { text: 'ID', value: 'calories' },
-                { text: 'Tiêu đề', value: 'fat' },
-                { text: 'Người đăng', value: 'carbs' },
-                { text: 'Protein (g)', value: 'protein' },
-                { text: 'Iron (%)', value: 'iron' },
+                { text: 'ID', value: 'id' },
+                { text: 'Tiêu đề', value: 'tieude' },
+                { text: 'Người đăng', value: 'user' },
+                { text: 'Thời gian', value: 'thoigian' },
+                { text: 'Đã duyệt', value: 'choduyet' },
+                { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
-            desserts: [
-                {
-                    name: 'Frozen Yogurt',
-                    calories: 159,
-                    fat: 6.0,
-                    carbs: 24,
-                    protein: 4.0,
-                    iron: '1%',
-                },
-                {
-                    name: 'Ice cream sandwich',
-                    calories: 237,
-                    fat: 9.0,
-                    carbs: 37,
-                    protein: 4.3,
-                    iron: '1%',
-                },
-                {
-                    name: 'Eclair',
-                    calories: 262,
-                    fat: 16.0,
-                    carbs: 23,
-                    protein: 6.0,
-                    iron: '7%',
-                },
-                {
-                    name: 'Cupcake',
-                    calories: 305,
-                    fat: 3.7,
-                    carbs: 67,
-                    protein: 4.3,
-                    iron: '8%',
-                },
-                {
-                    name: 'Gingerbread',
-                    calories: 356,
-                    fat: 16.0,
-                    carbs: 49,
-                    protein: 3.9,
-                    iron: '16%',
-                },
-                {
-                    name: 'Jelly bean',
-                    calories: 375,
-                    fat: 0.0,
-                    carbs: 94,
-                    protein: 0.0,
-                    iron: '0%',
-                },
-                {
-                    name: 'Lollipop',
-                    calories: 392,
-                    fat: 0.2,
-                    carbs: 98,
-                    protein: 0,
-                    iron: '2%',
-                },
-                {
-                    name: 'Honeycomb',
-                    calories: 408,
-                    fat: 3.2,
-                    carbs: 87,
-                    protein: 6.5,
-                    iron: '45%',
-                },
-                {
-                    name: 'Donut',
-                    calories: 452,
-                    fat: 25.0,
-                    carbs: 51,
-                    protein: 4.9,
-                    iron: '22%',
-                },
-                {
-                    name: 'KitKat',
-                    calories: 518,
-                    fat: 26.0,
-                    carbs: 65,
-                    protein: 7,
-                    iron: '6%',
-                },
-            ],
+            dsBaiDang: [],
+            loading: true,
+            fab: false,
         }
+    },
+    created() {
+        this.fetchDSBaiDang()
+    },
+    methods: {
+        async fetchDSBaiDang() {
+            const data = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang')
+            this.dsBaiDang = data
+            this.loading = false
+        },
     },
 }
 </script>

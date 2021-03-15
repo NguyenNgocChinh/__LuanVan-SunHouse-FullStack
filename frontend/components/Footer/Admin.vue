@@ -13,5 +13,6 @@ export default {
 <style lang="scss">
 .v-application .footerpart {
     border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    position: static !important;
 }
 </style>
