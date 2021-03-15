@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container fluid class="green lighten-2 py-10 baidang">
+        <v-container fluid class="red lighten-2 py-10 baidang">
             <h3 class="pt-8 white--text text-center">NHÀ NỔI BẬT</h3>
             <h4 class="py-2 white--text text-center">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
