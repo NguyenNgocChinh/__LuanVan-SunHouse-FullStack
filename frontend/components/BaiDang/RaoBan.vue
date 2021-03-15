@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container class="white py-10 chothue">
+        <v-container class="teal accent-2 py-10 chothue">
             <h3 class="pt-8 Black--text">NHÀ BÁN MỚI NHẤT</h3>
             <h4 class="py-2 red--text">Sun House trao trọn niềm tin</h4>
             <v-row>
