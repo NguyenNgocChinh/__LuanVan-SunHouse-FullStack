@@ -3,7 +3,7 @@
         id="main-sidebar"
         v-model="Sidebar_drawer"
         :color="SidebarColor"
-        mobile-break-point="960"
+        mobile-breakpoint="960"
         clipped
         :right="$vuetify.rtl"
         mini-variant-width="70"
