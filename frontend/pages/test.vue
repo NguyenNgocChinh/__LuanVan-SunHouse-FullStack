@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        asdasdasd sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad asdasdasd
+        <!--        asdasdasd sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad asdasdasd
         sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad asdasdasd sadsadad asdasdadssad
 
         <v-img
@@ -8,10 +8,15 @@
             max-height="150"
             max-width="250"
             src="https://picsum.photos/id/11/500/300"
-        ></v-img>
+        ></v-img>-->
+        <FormBaiDang />
     </v-container>
 </template>
 
 <script>
-export default {}
+import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
+
+export default {
+    components: { FormBaiDang },
+}
 </script>
