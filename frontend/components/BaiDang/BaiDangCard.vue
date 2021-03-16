@@ -5,13 +5,22 @@
         </template>
         <!--        <v-img height="200" src="https://api.sunhouse.stuesports.info/img/no-image.png"></v-img>-->
         <!--carousel-->
-        <v-carousel cycle height="200" hide-delimiter-background show-arrows-on-hover>
-            <v-carousel-item v-for="n in 3" :key="n">
-                <v-img height="200" src="https://api.sunhouse.stuesports.info/img/no-image.png" />
+        <v-carousel
+            v-if="baidang.hinhanh.length != 0"
+            cycle
+            height="200"
+            hide-delimiter-background
+            show-arrows-on-hover
+        >
+            <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i">
+                <v-img height="200" :src="'https://api.sunhouse.stuesports.info/images/upload/' + hinh.filename" />
             </v-carousel-item>
         </v-carousel>
-        <v-card-title class="font-weight-bold red--text">{{ baidang.loai }}</v-card-title>
 
+        <div v-else>
+            <v-img height="200" src="https://api.sunhouse.stuesports.info/images/upload/no-image.png" />
+        </div>
+        <v-card-title class="font-weight-bold red--text">{{ baidang.loai }}</v-card-title>
         <v-card-subtitle class="noidung">
             <div class="d-flex">
                 <p>{{ baidang.tieude }}</p>

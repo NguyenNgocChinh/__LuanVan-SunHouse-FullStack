@@ -27,10 +27,19 @@
             >
                 <template #top>
                     <div class="d-flex justify-space-between">
-                        <v-switch v-model="singleSelect" label="Hủy chọn tất cả" class="pa-3"></v-switch>
-                        <v-btn color="blue" rounded fab fixed right bottom
-                            ><v-icon color="white">mdi-plus</v-icon></v-btn
-                        >
+                        <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
+                        <v-spacer />
+                        <div class="pt-4">
+                            <v-btn fab dark small color="green" class="mr-2">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn fab dark small color="indigo" class="mr-2">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                            <v-btn fab dark small color="red" class="mr-5">
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </div>
                     </div>
                 </template>
 
@@ -45,9 +54,27 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="deleteItem(item)"> mdi-eye </v-icon>
+                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
                     <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-                    <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+                    <v-dialog transition="dialog-top-transition" max-width="600">
+                        <template #activator="{ on, attrs }">
+                            <v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon>
+                        </template>
+                        <template #default="dialog">
+                            <v-card>
+                                <v-toolbar class="red lighten-1" dark>XÁC NHẬN XÓA</v-toolbar>
+                                <v-card-text class="pa-0">
+                                    <div class="font-weight-black pa-5">
+                                        Bạn có chắc chắn muốn xóa bài đăng có ID : {{ item.id }} ?
+                                    </div>
+                                </v-card-text>
+                                <v-card-actions class="justify-end">
+                                    <v-btn text @click="dialog.value = false">Hủy</v-btn>
+                                    <v-btn color="red" class="white--text" @click="deleteItem(item.id)">XÓA</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </template>
+                    </v-dialog>
                 </template>
             </v-data-table>
         </v-card>
@@ -56,6 +83,7 @@
 
 <script>
 export default {
+    components: {},
     layout: 'admin',
     data() {
         return {
@@ -84,6 +112,9 @@ export default {
             this.dsBaiDang = data
             this.loading = false
         },
+        showItem: (item) => console.log('SHOW FUCTION'),
+        editItem: (item) => console.log('EDIT FUNCTION'),
+        deleteItem: (item) => console.log('DELETE FUNCTION'),
     },
 }
 </script>
