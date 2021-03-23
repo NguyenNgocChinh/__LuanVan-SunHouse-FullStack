@@ -27,6 +27,13 @@
                         <bai-dang-card :baidang="baidang" />
                     </v-card>
                 </v-row>
+                <v-row class="mr-10">
+                    <template>
+                        <div class="text-center">
+                            <v-pagination v-model="page" :length="6"></v-pagination>
+                        </div>
+                    </template>
+                </v-row>
             </v-col>
         </v-row>
     </v-container>

@@ -13,6 +13,7 @@ import BaiDangHost from '@/components/BaiDang/BaiDangHost'
 import ChoThue from '@/components/BaiDang/ChoThue'
 import RaoBan from '@/components/BaiDang/RaoBan'
 import Member from '~/components/Member'
+
 export default {
     name: 'Index',
     components: { BaiDangHost, Member, ChoThue, RaoBan },

@@ -1,15 +1,12 @@
 <template>
     <v-container>
-        <KQHienThi></KQHienThi>
-        <FormBaiDang />
+        <FormDangKy></FormDangKy>
     </v-container>
 </template>
 
 <script>
-import KQHienThi from '@/components/DSBaiDang/KQHienThi'
-import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
-
+import FormDangKy from '@/components/DangKy/FormDangKy'
 export default {
-    components: { KQHienThi, FormBaiDang  },
+    components: { FormDangKy },
 }
 </script>
