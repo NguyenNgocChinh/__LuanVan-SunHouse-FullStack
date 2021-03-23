@@ -9,7 +9,6 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
             <div class="list-menu">
                 <nuxt-link
                     v-for="(item, index) in listMenus"
@@ -34,7 +33,7 @@
         </v-app-bar>
         <!--IS MOBILE-->
         <div v-show="isMobile">
-            <v-app-bar dense flat color="sunhouse_primary">
+            <v-app-bar dense flat fixed color="sunhouse_primary">
                 <v-app-bar-nav-icon class="white--text" @click="isMenuResponsive = true"></v-app-bar-nav-icon>
                 <v-toolbar-title class="white--text">
                     <nuxt-link class="text-decoration-none white--text" to="/"
@@ -102,8 +101,8 @@ export default {
                 { menu: 'Nhà đang HOT', href: '/BaiDang/Hot', icon: 'mdi-fire' },
                 { menu: 'Nhà cho bán', href: '/baidang/sell', icon: 'mdi-home-city' },
                 { menu: 'Nhà cho thuê', href: '/baidang/rent', icon: 'mdi-home-city' },
-                { menu: 'Bảng giá dịch vụ', href: '/pricing', icon: 'mdi-table-cog' },
-                { menu: 'Hỗ trợ', href: '/support', icon: 'mdi-charity' },
+                { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
+                { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
             ],
         }
     },
