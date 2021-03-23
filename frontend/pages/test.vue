@@ -10,11 +10,9 @@
         </v-row>
     </v-container>
 </template>
-
 <script>
-import KQHienThi from '@/components/DSBaiDang/KQHienThi'
+import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
-
 export default {
     components: { KQHienThi, FormBaiDang },
 }
