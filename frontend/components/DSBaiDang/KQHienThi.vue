@@ -2,9 +2,6 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-card> ádsads</v-card>
-            </v-col>
-            <v-col cols="8">
                 <v-card color class="d-flex">
                     <v-row align="center">
                         <v-col cols="6"><div class="ml-2">Kết quả hiển thị 1 - 6 trên tổng 11 kết quả</div></v-col>
