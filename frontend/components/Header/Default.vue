@@ -9,7 +9,6 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
             <div class="list-menu">
                 <nuxt-link
                     v-for="(item, index) in listMenus"
@@ -99,11 +98,12 @@ export default {
             isVerySmall: false,
             listMenus: [
                 { menu: 'Trang chủ', href: '/', icon: 'mdi-home' },
-                { menu: 'Nhà đang HOT', href: '/baidang/hot', icon: 'mdi-fire' },
-                { menu: 'Nhà cho bán', href: '/NHACHOBAN/BAN', icon: 'mdi-home-city' },
-                { menu: 'Nhà cho thuê', href: '/NHACHOTHUE/THUE', icon: 'mdi-home-city' },
-                { menu: 'Bảng giá dịch vụ', href: '/pricing', icon: 'mdi-table-cog' },
-                { menu: 'Hỗ trợ', href: '/support', icon: 'mdi-charity' },
+
+                { menu: 'Nhà đang HOT', href: '/BaiDang/Hot', icon: 'mdi-fire' },
+                { menu: 'Nhà cho bán', href: '/baidang/sell', icon: 'mdi-home-city' },
+                { menu: 'Nhà cho thuê', href: '/baidang/rent', icon: 'mdi-home-city' },
+                { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
+                { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
             ],
         }
     },
