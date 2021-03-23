@@ -1,7 +1,10 @@
 <template>
-    <h1>NHÀ cho thuê</h1>
+    <KQHienThi />
 </template>
 
 <script>
-export default {}
+import KQHienThi from '~/components/DSBaiDang/KQHienThi'
+export default {
+    components: { KQHienThi },
+}
 </script>
