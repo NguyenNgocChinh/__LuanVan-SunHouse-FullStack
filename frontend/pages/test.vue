@@ -5,7 +5,7 @@
                 <FormBaiDang />
             </v-col>
             <v-col cols="8">
-                <KQHienThi></KQHienThi>
+                <KQHienThi />
             </v-col>
         </v-row>
     </v-container>
@@ -15,5 +15,21 @@ import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
 export default {
     components: { KQHienThi, FormBaiDang },
+    data() {
+        return {
+            // baidangs: this.$store.state.SearchResult,
+        }
+    },
+    computed: {
+        baidangs() {
+            return this.$store.state.SearchResult
+        },
+    },
+    watch: {
+        baidangs() {
+            console.log('REFRESH TESTs')
+        },
+    },
+    methods: {},
 }
 </script>

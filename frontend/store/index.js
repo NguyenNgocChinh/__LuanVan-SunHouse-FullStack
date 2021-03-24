@@ -4,7 +4,8 @@ export const state = () => ({
         Customizer_drawer: false,
         SidebarColor: 'white',
         SidebarBg: '',
-        SearchResult: [],
+        SearchResult: null,
+        loadingSearchResult: false,
     },
 })
 
@@ -20,5 +21,11 @@ export const mutations = {
     },
     SET_KQ_BAIDANG_TIMKIEM(state, payload) {
         state.SearchResult = payload
+    },
+}
+
+export const getters = {
+    GET_SEARCH_RESULT(state) {
+        return state.SearchResult
     },
 }

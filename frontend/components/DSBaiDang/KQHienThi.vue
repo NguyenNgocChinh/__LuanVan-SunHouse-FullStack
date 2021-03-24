@@ -53,19 +53,14 @@ import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 
 export default {
     components: { BaiDangCard },
-    props: {
-        baidangs: {
-            default: null,
-        },
-    },
     data: () => ({
         model: null,
         isActive: true,
-
         baidangs_loading: true,
         items: ['Mới nhất', 'Cũ nhất', 'Giá tăng dần', 'Giá giảm dần'],
         selected: 'Mới nhất',
         page: 1,
+        baidangs: null,
     }),
     watch: {
         page() {
@@ -76,10 +71,29 @@ export default {
             })
             this.baidangs_loading = true
         },
+        baidangs() {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth',
+            })
+            this.baidangs_loading = true
+            console.log('REFRESH BAI DANG')
+        },
     },
-    created() {},
-    methods: {},
+    created() {
+        this.getbaidangs()
+    },
+    methods: {
+        getbaidangs() {
+            this.baidangs = this.$store.state.SearchResult
+            console.log(this.baidangs)
+            if (typeof this.baidangs === 'undefined') {
+                return this.$axios.$get('https://api.sunhouse.stuesports.info/api/timkiem').then((data) => {
+                    this.baidangs = data
+                })
+            }
+        },
+    },
 }
 </script>
-
-<style></style>

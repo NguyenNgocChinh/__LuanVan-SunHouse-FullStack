@@ -219,6 +219,7 @@ export default {
         this.getGiaMinMax()
         this.getDienTich()
         this.getThanhPho()
+        this.getTimKiemBaiDang()
     },
     methods: {
         // SELECT Theo vi tri
@@ -269,25 +270,32 @@ export default {
             const xaphuong = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/XaPhuong/${id}`)
             this.xaphuong = xaphuong
         },
-        async getTimKiemBaiDang() {
-            const kqTimKiem = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/timkiem', {
-                diadiem: this.inputThanhPho,
-                gia1: this.minGia,
-                gia2: this.maxGia,
-                type: this.type,
-                loai_id: this.loai_id,
-                huong: this.huong,
-                sophongngu: this.sophongngu,
-                sophongtam: this.sophongtam,
-                keyword: this.keyword,
-                dientich1: this.minDienTich,
-                dientich2: this.maxDienTich,
-                X: this.X,
-                Y: this.Y,
-                inputAdressR: this.inputAdressR,
-                bankinh: this.bankinh,
-            })
-            this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
+        getTimKiemBaiDang() {
+            this.$axios
+                .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
+                    diadiem: this.inputThanhPho,
+                    gia1: this.minGia,
+                    gia2: this.maxGia,
+                    type: this.type,
+                    loai_id: this.loai_id,
+                    huong: this.huong,
+                    sophongngu: this.sophongngu,
+                    sophongtam: this.sophongtam,
+                    keyword: this.keyword,
+                    dientich1: this.minDienTich,
+                    dientich2: this.maxDienTich,
+                    X: this.X,
+                    Y: this.Y,
+                    inputAdressR: this.inputAdressR,
+                    bankinh: this.bankinh,
+                })
+                .then((kqTimKiem) => {
+                    this.$store.state.SearchResult = kqTimKiem
+                    this.$store.state.loadingSearchResult = true
+
+                    this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
+                    console.log('KHO ', this.$store.state.SearchResult)
+                })
         },
     },
 }
