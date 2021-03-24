@@ -11,7 +11,7 @@
             <v-text-field
                 ref="email"
                 v-model="email"
-                :rules="[rules.required, rules.email]"
+                :rules="[rules.required]"
                 label="Địa Chỉ Email"
                 placeholder="Nhập địa chỉ email của bạn"
                 required
@@ -36,10 +36,18 @@
             <v-btn class="white--text" color="deep-purple accent-4" depressed> Đăng Ký </v-btn>
             <v-spacer></v-spacer>
 
-            <v-btn :disabled="!form" :loading="isLoading" class="white--text" color="deep-purple accent-4" depressed>
+            <v-btn
+                :disabled="!form"
+                class="white--text"
+                color="deep-purple accent-4"
+                depressed
+                :loading="isLoading"
+                @click="xulydangnhap"
+            >
                 Đăng Nhập
             </v-btn>
-        </v-card-actions>
+            {{ kq }}</v-card-actions
+        >
     </v-card>
 </template>
 <script>
@@ -53,6 +61,7 @@ export default {
         show1: false,
         password: '',
         phone: '',
+        kq: '',
 
         rules: {
             required: (v) => (v = !!v || 'Không được để trống!'),
@@ -63,5 +72,20 @@ export default {
             },
         },
     }),
+    methods: {
+        async xulydangnhap() {
+            this.isLoading = true
+            // THanh cong.
+            this.kq = await this.$axios
+                .$post('https://api.sunhouse.stuesports.info/api/login', {
+                    username: this.email,
+                    password: this.password,
+                })
+                .then((data) => {
+                    this.$router.push('/')
+                })
+            // this.$router.push('/')
+        },
+    },
 }
 </script>

@@ -17,7 +17,7 @@ export default {
     methods: {
         async getBaiDangHot() {
             const result = await this.$axios.$get(
-                `https://api.sunhouse.stuesports.info/api/baidang/hot?page=${this.page}`
+                `https://api.sunhouse.stuesports.info/api/baidang/raoban?page=${this.page}`
             )
             this.baidangs = result
             // this.baidanghots_loading = false
