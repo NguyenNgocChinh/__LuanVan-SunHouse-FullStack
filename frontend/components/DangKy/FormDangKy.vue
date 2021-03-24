@@ -54,10 +54,12 @@
                 <v-card-actions>
                     <v-btn text> Đã có tài khoản? </v-btn>
                     <v-spacer />
-                    <v-btn color="primary" text> Đăng Ký </v-btn>
+                    <v-btn color="primary" text @click="xulydangky"> Đăng Ký </v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
+
+        {{ kq }}
     </v-row>
 </template>
 <script>
@@ -72,6 +74,7 @@ export default {
             password_confirmation: '',
             username: '',
             email: '',
+            kq: '',
             show1: false,
             show2: true,
             show3: false,
@@ -86,6 +89,26 @@ export default {
                 },
             },
         }
+    },
+    methods: {
+        async xulydangky() {
+            this.isLoading = true
+            // THanh cong.
+            this.kq = await this.$axios
+                .$post('https://api.sunhouse.stuesports.info/api/register', {
+                    name: this.name,
+                    email: this.email,
+                    username: this.username,
+                    password: this.password,
+                    repassword: this.password,
+                })
+                .then((data) => {
+                    // this.$router.push('/')
+                    console.log(data)
+                    this.kq = data
+                })
+            // this.$router.push('/')
+        },
     },
 }
 </script>

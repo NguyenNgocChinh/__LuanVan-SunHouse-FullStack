@@ -8,13 +8,16 @@
                 <KQHienThi />
             </v-col>
         </v-row>
+        <FormGuiTaiSan />
     </v-container>
 </template>
+
 <script>
-import KQHienThi from '~/components/DSBaiDang/KQHienThi'
+import FormGuiTaiSan from '~/components/GuiTaiSan/FormGuiTaiSan'
 import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
+import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 export default {
-    components: { KQHienThi, FormBaiDang },
+    components: { KQHienThi, FormBaiDang, FormGuiTaiSan },
     data() {
         return {
             // baidangs: this.$store.state.SearchResult,
