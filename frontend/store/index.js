@@ -4,6 +4,7 @@ export const state = () => ({
         Customizer_drawer: false,
         SidebarColor: 'white',
         SidebarBg: '',
+        SearchResult: [],
     },
 })
 
@@ -16,5 +17,8 @@ export const mutations = {
     },
     SET_SIDEBAR_COLOR(state, payload) {
         state.SidebarColor = payload
+    },
+    SET_KQ_BAIDANG_TIMKIEM(state, payload) {
+        state.SearchResult = payload
     },
 }
