@@ -1,19 +1,9 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col cols="4">
-                <FormBaiDang />
-            </v-col>
-            <v-col cols="8">
-                <KQHienThi></KQHienThi>
-            </v-col>
-        </v-row>
-    </v-container>
+    <FormGuiTaiSan />
 </template>
 <script>
-import KQHienThi from '~/components/DSBaiDang/KQHienThi'
-import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
+import FormGuiTaiSan from '~/components/GuiTaiSan/FormGuiTaiSan'
 export default {
-    components: { KQHienThi, FormBaiDang },
+    components: { FormGuiTaiSan },
 }
 </script>
