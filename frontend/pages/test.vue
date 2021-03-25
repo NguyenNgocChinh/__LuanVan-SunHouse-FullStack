@@ -13,25 +13,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import FormGuiTaiSan from '~/components/GuiTaiSan/FormGuiTaiSan'
 import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
 import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 export default {
     components: { KQHienThi, FormBaiDang, FormGuiTaiSan },
-    data() {
-        return {
-            // baidangs: this.$store.state.SearchResult,
-        }
-    },
     computed: {
-        baidangs() {
-            return this.$store.state.SearchResult
-        },
-    },
-    watch: {
-        baidangs() {
-            console.log('REFRESH TESTs')
-        },
+        ...mapState({
+            baidangs: (state) => state.SearchResult,
+        }),
     },
     methods: {},
 }
