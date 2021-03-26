@@ -19,7 +19,11 @@ class ApiUserController extends Controller
         $user->fill($request->all());
         $user->password = Hash::make($request->password);
         $user->save();
-        return response()->json($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 
     public function login(ApiLoginRequest $request)
@@ -27,9 +31,12 @@ class ApiUserController extends Controller
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
             $user = User::where('username', '=', $request->username)
                 ->orWhere('email', '=', $request->username)
-                ->first();
-            $user->token = $user->createToken('Api')->accessToken;
-            return response()->json($user);
+                ->firstOrFail();
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -37,7 +44,15 @@ class ApiUserController extends Controller
 
     public function userInfo(Request $request)
     {
-        return response()->json($request->user('api'));
+        return response()->json($request->user());
+    }
+
+    public function logout(Request $request){
+        Auth::guard('web')->logout();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()->json(1);
     }
 
     public function findUser(Request $request)
@@ -53,4 +68,5 @@ class ApiUserController extends Controller
     {
         return response()->json(UserResource::collection(User::get()->sortBy('created_at', SORT_REGULAR, true)));
     }
+
 }

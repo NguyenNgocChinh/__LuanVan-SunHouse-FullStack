@@ -179,7 +179,7 @@
                                             <div id="nhanoibat_{{ $baidang->id }}" class="carousel slide"
                                                  data-ride="carousel">
 
-                                                @if (count($baidang->hinhanh) < 1)
+                                                @if (count(array($baidang->hinhanh)) < 1)
                                                     <div class="slide">
                                                         <div class="carousel-inner">
                                                             <div class="carousel-item active" data-interval="2000">
@@ -300,7 +300,7 @@
             </div>
         </div>
         <div class="product-group">
-            @if (count($raobans) > 0)
+            @if (count(array($raobans)) > 0)
                 <div class="glide">
                     <div class="glide__track" data-glide-el="track">
                         <ul class="glide__slides">
@@ -311,7 +311,7 @@
                                             <div id="nhaban_{{ $baidang->id }}" class="carousel slide"
                                                  data-ride="carousel">
 
-                                                @if (count($baidang->hinhanh) < 1)
+                                                @if (count(array($baidang->hinhanh)) < 1)
                                                     <div class="slide">
                                                         <div class="carousel-inner">
                                                             <div class="carousel-item active" data-interval="2000">
@@ -432,7 +432,7 @@
             </div>
         </div>
         <div class="product-group">
-            @if (count($chothues) > 0)
+            @if (count(array($chothues)) > 0)
                 <div class="glide">
                     <div class="glide__track" data-glide-el="track">
                         <ul class="glide__slides">
@@ -443,7 +443,7 @@
                                             <div id="nhathue_{{ $baidang->id }}" class="carousel slide"
                                                  data-ride="carousel">
 
-                                                @if (count($baidang->hinhanh) < 1)
+                                                @if (count(array($baidang->hinhanh)) < 1)
                                                     <div class="slide">
                                                         <div class="carousel-inner">
                                                             <div class="carousel-item active" data-interval="2000">
