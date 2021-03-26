@@ -12,7 +12,7 @@
                     </v-row>
                 </v-card>
                 <v-row class="mt-4 ml-1">
-                    <v-row v-show="!baidanghots" class="">
+                    <v-row v-show="!baidangs" class="">
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
@@ -23,7 +23,7 @@
                     </v-row>
 
                     <v-card
-                        v-for="baidang in baidanghots"
+                        v-for="baidang in baidangs"
                         :key="baidang.id"
                         elevation="10"
                         color="white"
@@ -56,11 +56,11 @@ export default {
     data: () => ({
         model: null,
         isActive: true,
-        baidanghots: null,
-        baidanghots_loading: true,
+        baidangs_loading: true,
         items: ['Mới nhất', 'Cũ nhất', 'Giá tăng dần', 'Giá giảm dần'],
         selected: 'Mới nhất',
         page: 1,
+        baidangs: null,
     }),
     watch: {
         page() {
@@ -69,24 +69,30 @@ export default {
                 left: 0,
                 behavior: 'smooth',
             })
-            this.baidanghots_loading = true
-            this.baidanghots = null
-            this.getBaiDangHot()
+            this.baidangs_loading = true
+        },
+        baidangs() {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth',
+            })
+            this.baidangs_loading = true
+            console.log('REFRESH BAI DANG')
         },
     },
     created() {
-        this.getBaiDangHot()
+        this.getbaidangs()
     },
     methods: {
-        async getBaiDangHot() {
-            try {
-                const baidangs = await this.$axios.$get(
-                    `https://api.sunhouse.stuesports.info/api/baidang?page=${this.page}`
-                )
-                this.baidanghots = baidangs
-                this.baidanghots_loading = false
-            } catch (e) {}
-            this.baidanghots_loading = false
+        getbaidangs() {
+            this.baidangs = this.$store.state.SearchResult
+            console.log(this.baidangs)
+            if (typeof this.baidangs === 'undefined') {
+                return this.$axios.$get('https://api.sunhouse.stuesports.info/api/timkiem').then((data) => {
+                    this.baidangs = data
+                })
+            }
         },
     },
 }

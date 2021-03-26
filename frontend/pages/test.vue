@@ -5,15 +5,25 @@
                 <FormBaiDang />
             </v-col>
             <v-col cols="8">
-                <KQHienThi></KQHienThi>
+                <KQHienThi />
             </v-col>
         </v-row>
+        <FormGuiTaiSan />
     </v-container>
 </template>
+
 <script>
-import KQHienThi from '~/components/DSBaiDang/KQHienThi'
+import { mapState } from 'vuex'
+import FormGuiTaiSan from '~/components/GuiTaiSan/FormGuiTaiSan'
 import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
+import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 export default {
-    components: { KQHienThi, FormBaiDang },
+    components: { KQHienThi, FormBaiDang, FormGuiTaiSan },
+    computed: {
+        ...mapState({
+            baidangs: (state) => state.SearchResult,
+        }),
+    },
+    methods: {},
 }
 </script>

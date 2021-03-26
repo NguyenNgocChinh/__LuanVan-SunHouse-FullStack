@@ -7,10 +7,28 @@
             </v-text-field>
         </div>
         <div v-show="!banKinhOn" class="ml-5">
-            <v-select v-model="vitri" :items="['HCM', 'Hà Nội', 'Tiền Giang', 'Đồng Tháp']" label="Địa điểm">
+            <v-select v-model="inputThanhPho" :items="thanhpho" item-text="name" label="Địa điểm">
+                <template #item="{ item, attrs, on }">
+                    <v-list-item v-bind="attrs" v-on="on" @change="getQuanHuyen(item.matp)">
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
+                    </v-list-item>
+                </template>
+                <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
+            </v-select>
+            <!--            Quan huyen-->
+            <v-select v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">
+                <template #item="{ item, attrs, on }">
+                    <v-list-item v-bind="attrs" v-on="on" @change="getXaPhuong(item.maqh)">
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
+                    </v-list-item>
+                </template>
+                <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
+            </v-select>
+            <!--            Phuong xa-->
+            <v-select v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
                     </v-list-item>
                 </template>
                 <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
@@ -28,7 +46,7 @@
             </v-radio-group>
         </div>
         <div class="ml-5">
-            <v-select v-model="type" :items="['Cho thuê', 'Rao bán', 'Tất cả']" label="Hình thức">
+            <v-select v-model="type" :items="['Cho Thuê', 'Rao Bán', 'Tất Cả']" label="Hình thức">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
@@ -40,13 +58,30 @@
             <v-select v-model="loai_id" :items="loaiNha" item-text="ten_loai" label="Loại">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.ten_loai"></v-list-item-title>
+                        <v-list-item-title
+                            :id="attrs['aria-labelledby']"
+                            v-text="'Loại: ' + item.ten_loai"
+                        ></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
         </div>
         <div class="ml-5">
-            <v-select v-model="huong" :items="['Đông', 'Tây', 'Nam', 'Bắc']" label="Hướng nhà">
+            <v-select
+                v-model="huong"
+                :items="[
+                    'Hướng nhà: Đông',
+                    'Hướng nhà: Tây',
+                    'Hướng nhà: Nam',
+                    'Hướng nhà: Bắc',
+                    'Hướng nhà: Đông Bắc',
+                    'Hướng nhà: Đông Nam',
+                    'Hướng nhà: Tây Bắc',
+                    'Hướng nhà: Tây Nam',
+                    'Tất Cả',
+                ]"
+                label="Hướng nhà"
+            >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
@@ -55,7 +90,18 @@
             </v-select>
         </div>
         <div class="ml-5">
-            <v-select v-model="sophongngu" :items="['1', '2', '3', '4']" label="Số phòng ngủ">
+            <v-select
+                v-model="sophongngu"
+                :items="[
+                    'Số phòng ngủ: 1+',
+                    'Số phòng ngủ: 2+',
+                    'Số phòng ngủ: 3+',
+                    'Số phòng ngủ: 4+',
+                    'Số phòng ngủ: 5+',
+                    'Tất Cả',
+                ]"
+                label="Số phòng ngủ"
+            >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
@@ -64,7 +110,18 @@
             </v-select>
         </div>
         <div class="ml-5">
-            <v-select v-model="sophongtam" :items="['1', '2', '3', '4']" label="Số phòng tắm">
+            <v-select
+                v-model="sophongtam"
+                :items="[
+                    'Số phòng tắm: 1+',
+                    'Số phòng tắm: 2+',
+                    'Số phòng tắm: 3+',
+                    'Số phòng tắm: 4+',
+                    'Số phòng tắm: 5+',
+                    'Tất Cả',
+                ]"
+                label="Số phòng tắm"
+            >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
@@ -115,7 +172,7 @@
             </v-card>
         </div>
         <div class="ml-1">
-            <v-btn block class="deep-orange lighten-1">Tìm kiếm</v-btn>
+            <v-btn block class="deep-orange lighten-1" @click="getTimKiemBaiDang()">Tìm kiếm</v-btn>
         </div>
     </v-card>
 </template>
@@ -127,9 +184,9 @@ export default {
             minGia: 0,
             maxGia: 0,
             minDienTich: 0,
-            maxDienTich: 3000,
-            rangeGia: [this.minGia, this.maxGia],
-            rangeDienTich: [60, 1700],
+            maxDienTich: 0,
+            rangeGia: [0, 0],
+            rangeDienTich: [0, 0],
             ex1: { label: 'color', val: 50, color: 'purple darken-1' },
             ex2: { label: 'track-color', val: 75, color: 'green lighten-1' },
             ex3: { label: 'Giá từ', val: 50, color: 'blue lighten-1' },
@@ -139,17 +196,30 @@ export default {
             isViTri: true,
             radioGroup: 1,
             keyword: null,
-            vitri: [],
+            inputThanhPho: '',
+            inputQuanHuyen: '',
+            inputXaPhuong: '',
             type: null,
             loai_id: '',
             huong: null,
             sophongngu: 0,
             sophongtam: 0,
+            thanhpho: [],
+            quanhuyen: [],
+            xaphuong: [],
+            X: '',
+            Y: '',
+            inputAdressR: '',
+            bankinh: null,
         }
     },
+
     created() {
         this.getAllLoai()
         this.getGiaMinMax()
+        this.getDienTich()
+        this.getThanhPho()
+        this.getTimKiemBaiDang()
     },
     methods: {
         // SELECT Theo vi tri
@@ -160,18 +230,72 @@ export default {
             } catch (e) {
                 console.log(e)
             }
-            // this.loaiNha = false
-            console.log(this.loaiNha)
         },
-        async getGiaMinMax() {
+        getGiaMinMax() {
             try {
-                const gia = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/gia')
-                this.minGia = gia.min
-                this.maxGia = gia.max
+                this.$axios.$get('https://api.sunhouse.stuesports.info/api/gia').then((data) => {
+                    this.rangeGia = [data.min, data.max]
+                    this.minGia = data.min
+                    this.maxGia = data.max
+                })
             } catch (e) {
                 console.log(e)
             }
-            console.log(this.gia)
+        },
+        getDienTich() {
+            try {
+                this.$axios.$get('https://api.sunhouse.stuesports.info/api/dientich').then((data) => {
+                    this.rangeDienTich = [data.min, data.max]
+                    this.minDienTich = data.min
+                    this.maxDienTich = data.max
+                })
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        async getThanhPho() {
+            try {
+                const thanhPhoArr = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/ThanhPho')
+                this.thanhpho = thanhPhoArr
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async getQuanHuyen(id) {
+            const quanhuyen = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/QuanHuyen/${id}`)
+            this.quanhuyen = quanhuyen
+        },
+        async getXaPhuong(id) {
+            const xaphuong = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/XaPhuong/${id}`)
+            this.xaphuong = xaphuong
+        },
+        getTimKiemBaiDang() {
+            this.$axios
+                .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
+                    diadiem: this.inputThanhPho,
+                    gia1: this.minGia,
+                    gia2: this.maxGia,
+                    type: this.type,
+                    loai_id: this.loai_id,
+                    huong: this.huong,
+                    sophongngu: this.sophongngu,
+                    sophongtam: this.sophongtam,
+                    keyword: this.keyword,
+                    dientich1: this.minDienTich,
+                    dientich2: this.maxDienTich,
+                    X: this.X,
+                    Y: this.Y,
+                    inputAdressR: this.inputAdressR,
+                    bankinh: this.bankinh,
+                })
+                .then((kqTimKiem) => {
+                    this.$store.state.SearchResult = kqTimKiem
+                    this.$store.state.loadingSearchResult = true
+
+                    this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
+                    console.log('KHO ', this.$store.state.SearchResult)
+                })
         },
     },
 }

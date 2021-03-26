@@ -5,7 +5,6 @@
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
             <v-card-title class="title font-weight-regular"> Đăng nhập </v-card-title>
-            {{ this.$store.state.auth.user }}
             <v-spacer></v-spacer>
         </v-toolbar>
         <v-form ref="form" v-model="form" class="pa-4 pt-6" @submit.prevent="login">
@@ -13,8 +12,8 @@
                 ref="email"
                 v-model="loginForm.username"
                 :rules="[rules.required]"
-                label="Email hoặc Username"
-                placeholder="Email hoặc Username"
+                label="Địa Chỉ Email"
+                placeholder="Nhập địa chỉ email của bạn"
                 required
             ></v-text-field>
 
@@ -80,9 +79,13 @@ export default {
 
         async login() {
             try {
-                await this.$auth.loginWith('laravelPassport', { data: this.loginForm }).then((data) => {
+                this.$axios.defaults.withCredentials = true
+                await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((data) => {
                     console.log(data)
                 })
+                // await this.$axios.$get('http://127.0.0.1:8000' + '/sanctum/csrf-cookie').then((response) => {
+                //
+                // })
             } catch (err) {
                 console.log('LOI: ', err)
             }

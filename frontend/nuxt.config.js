@@ -21,13 +21,7 @@ export default {
             },
             { hid: 'description', name: 'description', content: '' },
         ],
-        link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            // {
-            //     rel: 'stylesheet',
-            //     href: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css',
-            // },
-        ],
+        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -48,37 +42,36 @@ export default {
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
-
+    modules: [
+        // https://go.nuxtjs.dev/axios
+        '@nuxtjs/axios',
+        '@nuxtjs/auth-next',
+    ],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'https://api.sunhouse.stuesports.info/api',
-    },
-    auth: {
-        redirect: {
-            callback: '/', // sau khi login sẽ chuyển hướng về đây
-        },
-        strategies: {
-            laravelPassport: {
-                provider: 'laravel/passport',
-                grant_type: 'password',
-                endpoints: {
-                    userInfo: process.env.USER_INFO_URL,
-                },
-                url: process.env.API_URL,
-                clientId: process.env.CLIENT_ID,
-                clientSecret: process.env.CLIENT_SECRET,
-            },
-            local: {
-                endpoints: {
-                    login: { url: process.env.USER_LOGIN_URL, method: 'post', propertyName: 'token' },
-                    logout: false,
-                    user: { url: process.env.USER_INFO_URL, method: 'get', propertyName: false },
-                },
-            },
-        },
+        proxy: true,
+        credentials: true,
     },
 
+    proxy: {
+        '/api': {
+            target: process.env.API_URL,
+            pathRewrite: { '^/api': '' },
+        },
+    },
+    auth: {
+        strategies: {
+            laravelSanctum: {
+                provider: 'laravel/sanctum',
+                url: process.env.APP_URL,
+                endpoints: {
+                    login: { url: '/api/auth/login', method: 'post', propertyName: 'token_auth' },
+                    logout: { url: '/api/auth/logout', method: 'post' },
+                    user: { url: '/api/auth/user', method: 'get', propertyName: null },
+                },
+            },
+        },
+    },
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
         customVariables: ['~/assets/variables.scss'],

@@ -98,9 +98,10 @@ export default {
             isVerySmall: false,
             listMenus: [
                 { menu: 'Trang chủ', href: '/', icon: 'mdi-home' },
+
                 { menu: 'Nhà đang HOT', href: '/BaiDang/Hot', icon: 'mdi-fire' },
-                { menu: 'Nhà cho bán', href: '/baidang/sell', icon: 'mdi-home-city' },
-                { menu: 'Nhà cho thuê', href: '/baidang/rent', icon: 'mdi-home-city' },
+                { menu: 'Nhà cho bán', href: '/BaiDang/sell', icon: 'mdi-home-city' },
+                { menu: 'Nhà cho thuê', href: '/BaiDang/rent', icon: 'mdi-home-city' },
                 { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
                 { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
             ],
