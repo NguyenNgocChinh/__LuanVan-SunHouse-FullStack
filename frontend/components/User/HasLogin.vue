@@ -13,7 +13,7 @@
                     @click="isClickUser = !isClickUser"
                 >
                     <v-avatar color="sunhouse_secondary" class="mr-1" size="30"> CV </v-avatar>
-                    <span :style="'color:' + color">Nguyễn Ngọc Chinh</span>
+                    <span :style="'color:' + color">{{ $auth.user.name }}</span>
                     <v-icon>{{ isClickUser ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                 </v-btn>
             </template>
@@ -32,9 +32,9 @@
                             <v-divider />
                             <v-list-item>
                                 <v-list-item-content>
-                                    <nuxt-link class="text-decoration-none white--dark" to="/logout">
+                                    <div class="text-decoration-none white--dark" @click="logout">
                                         <span>Đăng xuất</span>
-                                    </nuxt-link>
+                                    </div>
                                 </v-list-item-content>
                             </v-list-item>
                         </v-list-item-group>
@@ -61,6 +61,11 @@ export default {
     methods: {
         isClickUserOutSide() {
             this.isClickUser = false
+        },
+
+        async logout() {
+            await this.$axios.$get('http://127.0.0.1:8000/sanctum/csrf-cookie')
+            await this.$auth.logout()
         },
     },
 }

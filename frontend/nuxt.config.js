@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-    ssr: true,
+    ssr: false,
     // Target: https://go.nuxtjs.dev/config-target
     target: 'static',
 
@@ -49,15 +49,15 @@ export default {
     ],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        proxy: true,
+        // proxy: true,
         credentials: true,
     },
 
     proxy: {
-        '/api': {
-            target: process.env.API_URL,
-            pathRewrite: { '^/api': '' },
-        },
+        // '/api': {
+        //     target: process.env.API_URL,
+        //     pathRewrite: { '^/api': '' },
+        // },
     },
     auth: {
         strategies: {
@@ -65,9 +65,18 @@ export default {
                 provider: 'laravel/sanctum',
                 url: process.env.APP_URL,
                 endpoints: {
-                    login: { url: '/api/auth/login', method: 'post', propertyName: 'token_auth' },
-                    logout: { url: '/api/auth/logout', method: 'post' },
-                    user: { url: '/api/auth/user', method: 'get', propertyName: null },
+                    login: { url: '/api/auth/login', method: 'post' },
+                    logout: { url: '/api/auth/logout' },
+                    user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
+                },
+
+                redirect: {
+                    login: '/login',
+                    logout: '/',
+                    home: '/',
+                },
+                user: {
+                    property: null,
                 },
             },
         },
