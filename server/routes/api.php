@@ -49,3 +49,16 @@ Route::get('QuanHuyen/{id_thanhpho}', [DiaDiemController::class, "quanhuyen"])
 
 Route::get('XaPhuong/{id_quanhuyen}', [DiaDiemController::class, "xaphuong"])
     ->whereNumber("id_quanhuyen");
+/*
+ * GIA
+ */
+Route::get('gia', [HomeController::class, "getGia"]);
+/*
+ * DIEN TICH
+ */
+Route::get('dientich', [HomeController::class, "getDienTich"]);
+
+/*
+ * TIM KIEM
+ */
+Route::get('timkiem', [\App\Http\Controllers\api\ApiTimkiemController::class, "timkiem"]);

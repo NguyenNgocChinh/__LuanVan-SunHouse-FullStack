@@ -1,11 +1,11 @@
 <template>
-    <FormDangKy />
+    <Register />
 </template>
-<script>
-import FormDangKy from '~/components/DangKy/FormDangKy'
 
+<script>
+import Register from '@/components/Auth/Register'
 export default {
-    components: { FormDangKy },
+    components: { Register },
 }
 </script>
 

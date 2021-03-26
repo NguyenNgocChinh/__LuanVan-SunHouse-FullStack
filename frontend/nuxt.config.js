@@ -21,7 +21,13 @@ export default {
             },
             { hid: 'description', name: 'description', content: '' },
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            // {
+            //     rel: 'stylesheet',
+            //     href: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css',
+            // },
+        ],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -42,13 +48,36 @@ export default {
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: [
-        // https://go.nuxtjs.dev/axios
-        '@nuxtjs/axios',
-    ],
+    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
-    axios: {},
+    axios: {
+        baseURL: 'https://api.sunhouse.stuesports.info/api',
+    },
+    auth: {
+        redirect: {
+            callback: '/', // sau khi login sẽ chuyển hướng về đây
+        },
+        strategies: {
+            laravelPassport: {
+                provider: 'laravel/passport',
+                grant_type: 'password',
+                endpoints: {
+                    userInfo: process.env.USER_INFO_URL,
+                },
+                url: process.env.API_URL,
+                clientId: process.env.CLIENT_ID,
+                clientSecret: process.env.CLIENT_SECRET,
+            },
+            local: {
+                endpoints: {
+                    login: { url: process.env.USER_LOGIN_URL, method: 'post', propertyName: 'token' },
+                    logout: false,
+                    user: { url: process.env.USER_INFO_URL, method: 'get', propertyName: false },
+                },
+            },
+        },
+    },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
