@@ -12,7 +12,13 @@
                     v-on="on"
                     @click="isClickUser = !isClickUser"
                 >
-                    <v-avatar color="sunhouse_secondary" class="mr-1" size="30"> CV </v-avatar>
+                    <v-avatar color="sunhouse_secondary" class="mr-1" size="30">
+                        <div v-if="profile_photo_path == null">
+                            <v-img :src="profile_photo_url" style="width: 50px; height: 50px"></v-img>
+                        </div>
+                        <div v-else>CV</div>
+                    </v-avatar>
+
                     <span :style="'color:' + color">{{ $auth.user.name }}</span>
                     <v-icon>{{ isClickUser ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                 </v-btn>

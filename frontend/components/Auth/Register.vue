@@ -95,19 +95,25 @@ export default {
         async xulydangky() {
             this.isLoading = true
             // THanh cong.
-            this.kq = await this.$axios
-                .$post('https://api.sunhouse.stuesports.info/api/register', {
-                    name: this.name,
-                    email: this.email,
-                    username: this.username,
-                    password: this.password,
-                    repassword: this.password,
-                })
-                .then((data) => {
-                    // this.$router.push('/')
-                    console.log(data)
-                    this.kq = data
-                })
+            try {
+                this.kq = await this.$axios
+                    .$post('https://api.sunhouse.stuesports.info/api/auth/register', {
+                        data: {
+                            name: this.name,
+                            email: this.email,
+                            username: this.username,
+                            password: this.password,
+                            password_confirmation: this.password,
+                        },
+                    })
+                    .then((data) => {
+                        this.$router.push('/')
+                        // console.log(data)
+                        // this.kq = data
+                    })
+            } catch (e) {
+                console.log(e)
+            }
             // this.$router.push('/')
         },
     },
