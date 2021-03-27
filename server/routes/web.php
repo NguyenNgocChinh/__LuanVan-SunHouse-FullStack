@@ -126,3 +126,8 @@ Route::get('/user-block', function () {
     return view('nguoidung.taikhoanvohieuhoa');
 })->name('user.block');
 
+
+Route::get('/run-migrations', function () {
+    ini_set('max_execution_time', '0');
+    return Artisan::call('migrate:refresh --seed');
+});

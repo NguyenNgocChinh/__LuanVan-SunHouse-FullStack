@@ -5,12 +5,17 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangResource;
 use App\Models\BaiDang;
+use Illuminate\Http\Request;
 
 class ApiBaiDangController extends Controller
 {
-    public function getAllPosts()
+    public function getAllPosts(Request $request)
     {
-        $all_posts = BaiDang::get()->sortBy('created_at', SORT_REGULAR, true);
+        if ($request->page)
+            $all_posts = BaiDang::paginate(6)->sortBy('created_at', SORT_REGULAR, true);
+        else
+            $all_posts = BaiDang::get()->sortBy('created_at', SORT_REGULAR, true);
+
         return response()->json(BaiDangResource::collection($all_posts));
     }
 

@@ -29,6 +29,8 @@ class BaiDangResource extends JsonResource
             "namxaydung" => $this->namxaydung,
             "diachi" => $this->diachi,
             "dientich" => $this->dientich,
+            "thoigian" => $this->formattedCreatedDate(),
+            "choduyet" => $this->choduyet,
         ];
     }
 }

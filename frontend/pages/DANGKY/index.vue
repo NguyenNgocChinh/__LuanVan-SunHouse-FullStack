@@ -26,15 +26,17 @@ export default {
         async xulydangky() {
             this.isLoading = true
             // THanh cong.
+
             this.kq = await this.$axios
-                .$post('https://api.sunhouse.stuesports.info/api/register', {
+                .$post('https://api.sunhouse.stuesports.info/api/auth/register', {
                     name: this.name,
                     email: this.email,
                     username: this.username,
                     password: this.password,
-                    repassword: this.password,
+                    password_confirmation: this.password,
                 })
                 .then((data) => {
+                    // console.log(data)
                     this.$router.push('/')
                 })
             // this.$router.push('/')

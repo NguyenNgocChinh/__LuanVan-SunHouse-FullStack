@@ -67,6 +67,7 @@
 export default {
     data() {
         return {
+            post: '',
             items: ['Người dùng', 'Người bán'],
             selected: 'Người dùng',
             errorMessages: '',
@@ -118,5 +119,3 @@ export default {
     },
 }
 </script>
-
-<style></style>

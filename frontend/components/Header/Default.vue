@@ -23,7 +23,7 @@
             </div>
             <v-spacer></v-spacer>
             <!--Loggin: flase-->
-            <NotLogin v-if="!isLogin" />
+            <NotLogin v-if="!$auth.user" />
             <!--Loggin: true-->
             <HasLogin v-else />
             <v-btn elevation="2" rounded color="sunhouse_pinkLinght">
@@ -43,7 +43,7 @@
                 <v-spacer />
                 <!--LOGIN-->
                 <div v-show="!isVerySmall">
-                    <NotLogin v-if="!isLogin" />
+                    <NotLogin v-if="!$auth.user" />
                     <HasLogin v-else />
                 </div>
                 <v-btn elevation="2" rounded color="sunhouse_pinkLinght">
@@ -54,7 +54,7 @@
             <v-navigation-drawer v-model="isMenuResponsive" absolute temporary>
                 <v-list nav dense>
                     <v-list-item-group active-class="sunhouse_primary white--text">
-                        <div v-if="isLogin">
+                        <div v-if="$auth.user">
                             <HasLogin color="black" />
                         </div>
                         <div v-else>
@@ -87,12 +87,12 @@
 <script>
 import NotLogin from '@/components/User/NotLogin'
 import HasLogin from '@/components/User/HasLogin'
+
 export default {
     name: 'HeaderDefault',
     components: { HasLogin, NotLogin },
     data: () => {
         return {
-            isLogin: false,
             isMenuResponsive: false,
             isMobile: false,
             isVerySmall: false,
