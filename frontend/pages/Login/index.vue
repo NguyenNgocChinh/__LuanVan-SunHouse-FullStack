@@ -89,6 +89,28 @@ export default {
                 console.log('LOI: ', err)
             }
         },
+
+        // login() {
+        //     this.$axios
+        //         .$get('http://172.0.0.1:8000/sanctum/csrf-cookie', {
+        //             headers: {
+        //                 'X-Requested-With': 'XMLHttpRequest',
+        //             },
+        //             withCredentials: true,
+        //         })
+        //         .then(
+        //             function () {
+        //                 console.log('dsadad')
+        //                 this.$auth.loginWith('local', {
+        //                     data: {
+        //                         username: this.loginForm.username,
+        //                         password: this.loginForm.password,
+        //                     },
+        //                 })
+        //             }.bind(this)
+        //         )
+        //         .catch((e) => console.log(e))
+        // },
     },
 }
 </script>

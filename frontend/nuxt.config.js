@@ -64,10 +64,18 @@ export default {
             laravelSanctum: {
                 provider: 'laravel/sanctum',
                 url: process.env.APP_URL,
+
+                cookie: {
+                    // (optional) If set we check this cookie exsistence for loggedIn check
+                    name: 'XSRF-TOKEN',
+                },
                 endpoints: {
-                    login: { url: '/api/auth/login', method: 'post' },
+                    login: { url: '/api/auth/login', method: 'post', propertyName: 'user' },
                     logout: { url: '/api/auth/logout' },
-                    user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
+                    user: { url: '/api/auth/user', method: 'get', propertyName: null },
+                    csrf: {
+                        url: '/sanctum/csrf-cookie',
+                    },
                 },
 
                 redirect: {
@@ -78,6 +86,32 @@ export default {
                 user: {
                     property: null,
                 },
+            },
+            local: {
+                url: process.env.APP_URL,
+                endpoints: {
+                    login: {
+                        url: process.env.USER_LOGIN_URL,
+                        method: 'post',
+                        withCredentials: true,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                        },
+                    },
+                    user: {
+                        url: process.env.USER_INFO_URL,
+                        method: 'get',
+                        propertyName: false,
+                        withCredentials: true,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                        },
+                    },
+                },
+                tokenRequired: false,
+                tokenType: false,
             },
         },
     },
