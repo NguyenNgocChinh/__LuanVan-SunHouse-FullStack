@@ -76,11 +76,17 @@
                 <v-card class="mt-5">
                     <v-card-title>Tiện Nghi</v-card-title>
                     <v-card-text>
-                        <v-row>
-                            <v-col><b>Tủ lạnh</b></v-col>
+                        <v-col v-for="tn in tiennghi" :key="tn.id" v-slot="{}">
+                            <v-row>
+                                <b>{{ tn.ten_tiennghi }}</b>
+                            </v-row>
+                            <!--                        <v-col v-for="tn in tiennghi" :key="tn.id" v-slot="{}">
+                            <v-col
+                                ><b>{{ item.name }}</b>
+                            </v-col>
                             <v-col><b>Máy lạnh</b></v-col>
                             <v-col><b>Lò vi sóng</b></v-col>
-                        </v-row>
+                        </v-col>
                         <v-row>
                             <v-col><b>Máy giặt</b></v-col>
                             <v-col><b>Phòng gym</b></v-col>
@@ -90,7 +96,8 @@
                             <v-col><b>Bình nóng lạnh</b> </v-col>
                             <v-col></v-col>
                             <v-col></v-col>
-                        </v-row>
+                        </v-row>-->
+                        </v-col>
                     </v-card-text>
                 </v-card>
                 <v-card class="mt-5">
@@ -143,7 +150,7 @@
                 <v-card>
                     <v-card-title>Liên hệ người bán</v-card-title>
                     <v-row>
-                        <v-col><img src="avt" /> </v-col>
+                        <v-col><img :src="user.profile_photo_url" /> </v-col>
                         <v-col>
                             <v-row
                                 ><h3>{{ user.name }}</h3></v-row
@@ -160,7 +167,7 @@
                     <v-card-text>
                         <div>
                             <v-row>
-                                <v-col><img src="avt" /> </v-col>
+                                <v-col><img :src="profile_photo_url" /> </v-col>
                                 <v-col>
                                     <v-row style="color: #cd5b65"><h4>Tiêu đề bài viết</h4></v-row>
                                     <v-row>
@@ -177,7 +184,7 @@
 
                         <div class="mt-8">
                             <v-row>
-                                <v-col><img src="avt" /> </v-col>
+                                <v-col><img :src="profile_photo_url" /> </v-col>
                                 <v-col>
                                     <v-row style="color: #cd5b65"><h4>Tiêu đề bài viết</h4></v-row>
                                     <v-row>
@@ -256,6 +263,9 @@ export default {
             user: {
                 default: null,
             },
+            tn: {
+                default: [],
+            },
             items: [
                 {
                     src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
@@ -290,6 +300,7 @@ export default {
                     .then((data) => {
                         this.baidangs = data
                         this.user = this.baidangs.user
+                        this.tn = this.baidangs.tiennghis
                         console.log(this.user)
                     })
 
