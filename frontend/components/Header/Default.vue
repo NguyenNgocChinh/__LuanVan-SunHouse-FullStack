@@ -104,6 +104,7 @@ export default {
                 { menu: 'Nhà cho thuê', href: '/BaiDang/rent', icon: 'mdi-home-city' },
                 { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
                 { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
+                { menu: 'Tìm kiếm', href: '/timkiem/', icon: 'mdi-magnify' },
             ],
         }
     },

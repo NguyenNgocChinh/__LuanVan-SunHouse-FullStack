@@ -49,15 +49,15 @@ export default {
     ],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        proxy: true,
+        // proxy: true,
         credentials: true,
     },
 
     proxy: {
-        '/api': {
-            target: process.env.API_URL,
-            pathRewrite: { '^/api': '' },
-        },
+        // '/api': {
+        //     target: process..env.API_URL,
+        //     pathRewrite: { '^/api': '' },
+        // },
     },
     auth: {
         strategies: {
