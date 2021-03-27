@@ -53,12 +53,6 @@ export default {
         credentials: true,
     },
 
-    proxy: {
-        // '/api': {
-        //     target: process.env.API_URL,
-        //     pathRewrite: { '^/api': '' },
-        // },
-    },
     auth: {
         strategies: {
             laravelSanctum: {
@@ -86,32 +80,6 @@ export default {
                 user: {
                     property: null,
                 },
-            },
-            local: {
-                url: process.env.APP_URL,
-                endpoints: {
-                    login: {
-                        url: process.env.USER_LOGIN_URL,
-                        method: 'post',
-                        withCredentials: true,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Content-Type': 'application/json',
-                        },
-                    },
-                    user: {
-                        url: process.env.USER_INFO_URL,
-                        method: 'get',
-                        propertyName: false,
-                        withCredentials: true,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Content-Type': 'application/json',
-                        },
-                    },
-                },
-                tokenRequired: false,
-                tokenType: false,
             },
         },
     },

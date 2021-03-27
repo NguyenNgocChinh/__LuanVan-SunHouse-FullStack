@@ -2,6 +2,7 @@
     <v-row justify="center">
         <v-col cols="12" sm="10" md="8" lg="6">
             <h1 align="center" class="mt-10 mb-10">ĐĂNG KÝ</h1>
+
             <v-card ref="form">
                 <v-card-text>
                     <v-text-field
@@ -57,8 +58,8 @@
                     <v-btn color="primary" text @click="xulydangky"> Đăng Ký </v-btn>
                 </v-card-actions>
             </v-card>
+            <v-alert v-for="(tb, index) in thongbao" :key="index" dense text type="error"> {{ tb[0] }}</v-alert>
         </v-col>
-
         {{ kq }}
     </v-row>
 </template>
@@ -72,15 +73,17 @@ export default {
             errorMessages: '',
             name: '',
             vaitro: '',
+            password: '',
             password_confirmation: '',
             username: '',
             email: '',
             kq: '',
+            success: '',
             show1: false,
             show2: true,
             show3: false,
             show4: false,
-            password: '',
+            thongbao: null,
             rules: {
                 required: (value) => !!value || 'Không được để trống!',
                 min: (v) => v.length >= 8 || 'Ít nhất 8 kí tự',
@@ -101,14 +104,17 @@ export default {
                     email: this.email,
                     username: this.username,
                     password: this.password,
-                    repassword: this.password,
+                    password_confirmation: this.password_confirmation,
                 })
                 .then((data) => {
-                    // this.$router.push('/')
+                    this.$router.push('/Login')
                     console.log(data)
                     this.kq = data
+                    this.thongbao = 'Dang ky thanh cong'
                 })
-            // this.$router.push('/')
+                .catch((e) => {
+                    this.thongbao = e.response.data.errors
+                })
         },
     },
 }

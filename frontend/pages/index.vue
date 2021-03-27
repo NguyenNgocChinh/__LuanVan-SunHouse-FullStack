@@ -2,6 +2,7 @@
     <div>
         <h1>Home Page</h1>
         <Member />
+
         <BaiDangHost />
         <ChoThue />
         <RaoBan />

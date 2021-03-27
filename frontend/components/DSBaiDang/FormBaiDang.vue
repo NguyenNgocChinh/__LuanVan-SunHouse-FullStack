@@ -46,16 +46,26 @@
             </v-radio-group>
         </div>
         <div class="ml-5">
-            <v-select v-model="type" :items="['Cho Thuê', 'Rao Bán', 'Tất Cả']" label="Hình thức">
+            <v-select
+                v-model="type"
+                item-text="v"
+                item-value="k"
+                :items="[
+                    { k: 'thue', v: 'Thuê' },
+                    { k: 'ban', v: 'Rao Bán' },
+                    { k: 'tatca', v: 'Tất Cả' },
+                ]"
+                label="Hình thức"
+            >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.v"></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
         </div>
         <div class="ml-5">
-            <v-select v-model="loai_id" :items="loaiNha" item-text="ten_loai" label="Loại">
+            <v-select v-model="loai_id" :items="loaiNha" item-value="id" item-text="ten_loai" label="Loại">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title
@@ -69,22 +79,24 @@
         <div class="ml-5">
             <v-select
                 v-model="huong"
+                item-text="v"
+                item-value="k"
                 :items="[
-                    'Hướng nhà: Đông',
-                    'Hướng nhà: Tây',
-                    'Hướng nhà: Nam',
-                    'Hướng nhà: Bắc',
-                    'Hướng nhà: Đông Bắc',
-                    'Hướng nhà: Đông Nam',
-                    'Hướng nhà: Tây Bắc',
-                    'Hướng nhà: Tây Nam',
-                    'Tất Cả',
+                    { k: 'Dong', v: 'Hướng nhà: Đông' },
+                    { k: 'Tay', v: 'Hướng nhà: Tây' },
+                    { k: 'Nam', v: 'Hướng nhà: Nam' },
+                    { k: 'Bac', v: 'Hướng nhà: Bắc' },
+                    { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
+                    { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
+                    { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
+                    { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
+                    { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                 ]"
                 label="Hướng nhà"
             >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.v"></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
@@ -92,19 +104,21 @@
         <div class="ml-5">
             <v-select
                 v-model="sophongngu"
+                item-text="v"
+                item-value="k"
                 :items="[
-                    'Số phòng ngủ: 1+',
-                    'Số phòng ngủ: 2+',
-                    'Số phòng ngủ: 3+',
-                    'Số phòng ngủ: 4+',
-                    'Số phòng ngủ: 5+',
-                    'Tất Cả',
+                    { k: '1', v: 'Số phòng ngủ: 1+' },
+                    { k: '2', v: 'Số phòng ngủ: 2+' },
+                    { k: '3', v: 'Số phòng ngủ: 3+' },
+                    { k: '4', v: 'Số phòng ngủ: 4+' },
+                    { k: '5', v: 'Số phòng ngủ: 5+' },
+                    { k: 'tatca', v: 'Tất Cả' },
                 ]"
                 label="Số phòng ngủ"
             >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.v"></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
@@ -112,19 +126,21 @@
         <div class="ml-5">
             <v-select
                 v-model="sophongtam"
+                item-value="k"
+                item-text="v"
                 :items="[
-                    'Số phòng tắm: 1+',
-                    'Số phòng tắm: 2+',
-                    'Số phòng tắm: 3+',
-                    'Số phòng tắm: 4+',
-                    'Số phòng tắm: 5+',
-                    'Tất Cả',
+                    { k: '1', v: 'Số phòng tắm: 1+' },
+                    { k: '2', v: 'Số phòng tắm: 2+' },
+                    { k: '3', v: 'Số phòng tắm: 3+' },
+                    { k: '4', v: 'Số phòng tắm: 4+' },
+                    { k: '5', v: 'Số phòng tắm: 5+' },
+                    { k: 'tatca', v: 'Tất Cả' },
                 ]"
                 label="Số phòng tắm"
             >
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item"></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.v"></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
@@ -177,6 +193,8 @@
     </v-card>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
     data() {
         return {
@@ -200,7 +218,7 @@ export default {
             inputQuanHuyen: '',
             inputXaPhuong: '',
             type: null,
-            loai_id: '',
+            loai_id: null,
             huong: null,
             sophongngu: 0,
             sophongtam: 0,
@@ -222,6 +240,9 @@ export default {
         this.getTimKiemBaiDang()
     },
     methods: {
+        ...mapState({
+            kqTimKiem: (state) => state.SearchResult,
+        }),
         // SELECT Theo vi tri
         async getAllLoai() {
             try {
@@ -266,35 +287,50 @@ export default {
             const quanhuyen = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/QuanHuyen/${id}`)
             this.quanhuyen = quanhuyen
         },
+
         async getXaPhuong(id) {
             const xaphuong = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/XaPhuong/${id}`)
             this.xaphuong = xaphuong
         },
+
+        checkType() {
+            let kq = null
+            if (this.type === 'Thuê') {
+                kq = 'thue'
+            } else if (this.type === 'Tất Cả') {
+                kq = 'tatca'
+            }
+            return kq
+        },
+
         getTimKiemBaiDang() {
+            // this.$store.state.SearchResult = null
             this.$axios
                 .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
-                    diadiem: this.inputThanhPho,
-                    gia1: this.minGia,
-                    gia2: this.maxGia,
-                    type: this.type,
-                    loai_id: this.loai_id,
-                    huong: this.huong,
-                    sophongngu: this.sophongngu,
-                    sophongtam: this.sophongtam,
-                    keyword: this.keyword,
-                    dientich1: this.minDienTich,
-                    dientich2: this.maxDienTich,
-                    X: this.X,
-                    Y: this.Y,
-                    inputAdressR: this.inputAdressR,
-                    bankinh: this.bankinh,
+                    params: {
+                        // diadiem: this.inputThanhPho,
+                        gia1: this.rangeGia[0],
+                        gia2: this.rangeGia[1],
+                        type: this.type,
+                        loai_id: this.loai_id,
+                        huong: this.huong,
+                        sophongngu: this.sophongngu,
+                        sophongtam: this.sophongtam,
+                        keyword: this.keyword,
+                        dientich1: this.rangeDienTich[0],
+                        dientich2: this.rangeDienTich[1],
+                        // X: this.X,
+                        // Y: this.Y,
+                        // inputAdressR: this.inputAdressR,
+                        bankinh: this.ex5.val,
+                    },
                 })
                 .then((kqTimKiem) => {
                     this.$store.state.SearchResult = kqTimKiem
                     this.$store.state.loadingSearchResult = true
 
                     this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
-                    console.log('KHO ', this.$store.state.SearchResult)
+                    console.log('KHO ', kqTimKiem)
                 })
         },
     },
