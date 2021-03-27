@@ -1,6 +1,7 @@
 <template>
     <v-card class="mx-auto mt-10" style="max-width: 500px">
         <v-toolbar color="deep-purple accent-4" cards dark flat>
+            {{ $auth.user }}
             <v-btn icon @click="backButton">
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
@@ -81,11 +82,9 @@ export default {
             try {
                 this.$axios.defaults.withCredentials = true
                 await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((data) => {
-                    console.log(data)
+                    this.$auth.setUser(data.data.user)
+                    this.$router.push('/')
                 })
-                // await this.$axios.$get('http://127.0.0.1:8000' + '/sanctum/csrf-cookie').then((response) => {
-                //
-                // })
             } catch (err) {
                 console.log('LOI: ', err)
             }
