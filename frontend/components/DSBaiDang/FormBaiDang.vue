@@ -330,6 +330,7 @@ export default {
                     this.$store.state.loadingSearchResult = true
 
                     this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
+                    $nuxt.$emit('create')
                     console.log('KHO ', kqTimKiem)
                 })
         },

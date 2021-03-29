@@ -34,13 +34,6 @@
                         <bai-dang-card :baidang="baidang" />
                     </v-card>
                 </v-row>
-                <!--                <v-row class="mr-10">
-                    <template>
-                        <div class="text-center">
-                            <v-pagination v-model="page" :length="6"></v-pagination>
-                        </div>
-                    </template>
-                </v-row>-->
             </v-col>
         </v-row>
         <div class="text-center mt-10">
@@ -74,49 +67,42 @@ export default {
                 .then((data) => {
                     this.$store.state.SearchResult = data
                     this.baidangs = data
-                    /* this.$store.state.SearchResult = data */
-                    console.log('KQHT Page1', this.baidangs)
+
                 })
 
-            // this.baidangs_loading = true
-            /*   console.log('Page:', this.page)
-            console.log('baidang', this.baidangs)
-            console.log('Store', this.$store.state.SearchResult) */
         },
-        /* baidangs() {
-            /!* window.scrollTo({
+         baidangs() {
+             window.scrollTo({
                 top: 0,
                 left: 0,
                 behavior: 'smooth',
-            }) *!/
+            })
             if (this.baidangs !== this.$store.state.SearchResult) {
                 this.page = 1
                 this.baidangs = this.$store.state.SearchResult
                 return this.baidangs
             }
-            /!* this.baidangs_loading = true
+            this.baidangs_loading = true
             this.getbaidangs()
-            console.log('REFRESH BAI DANG')
-            console.log('baidang RE', this.baidangs) *!/
-        }, */
+        },
     },
-    created() {
-        this.getbaidangs()
+
+    mounted() {
+        this.getbaidangs();
+        this.$nuxt.$on('create', () => {
+            this.getbaidangs();
+        })
     },
     methods: {
         getbaidangs() {
             this.baidangs = this.$store.state.SearchResult
-            console.log(this.baidangs)
-            // eslint-disable-next-line no-unused-vars
-            const kqurl = `https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`
+
             if (this.baidangs == null) {
                 return this.$axios
                     .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`)
                     .then((data) => {
                         this.baidangs = data
                         this.$store.state.SearchResult = data
-                        console.log('url', kqurl)
-                        console.log('KQHT Page1', this.baidangs)
                     })
             }
         },
