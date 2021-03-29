@@ -23,26 +23,28 @@
                     </v-row>
 
                     <v-card
-                        v-for="baidang in baidangs"
-                        :key="baidang.id"
+                        v-for="(baidang,index) in baidangs"
+                        :key="index"
                         elevation="10"
                         color="white"
                         class="ma-6 ml-5"
                         width="325"
                         height="500"
                     >
-                        <bai-dang-card :baidang="baidang" />
+                        <bai-dang-card :baidang="baidang" :hinhanh="baidang.hinhanh" :user="baidang.user"/>
                     </v-card>
                 </v-row>
             </v-col>
         </v-row>
         <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="4" circle @click="getbaidangs"></v-pagination>
+            <v-pagination v-model="page" :length="10" circle @click="getbaidangs"></v-pagination>
         </div>
     </v-container>
 </template>
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import {mapState} from "vuex";
+import {mapFields } from 'vuex-map-field'
 
 export default {
     components: { BaiDangCard },
@@ -63,10 +65,11 @@ export default {
                 behavior: 'smooth',
             })
             return this.$axios
-                .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`)
+                .$get(`https://127.0.0.1:8000/api/timkiem?page=${this.page}`)
                 .then((data) => {
                     this.$store.state.SearchResult = data
-                    this.baidangs = data
+                    this.baidangs = data.baidangs
+                    console.log(this.baidangs)
 
                 })
 
@@ -95,17 +98,38 @@ export default {
     },
     methods: {
         getbaidangs() {
-            this.baidangs = this.$store.state.SearchResult
+            if (this.$store.state.SearchResult.baidangs != undefined) {
+                this.baidangs = this.$store.state.SearchResult.baidangs
+                console.log('bd1',this.baidangs)
+            }
+
 
             if (this.baidangs == null) {
                 return this.$axios
-                    .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`)
+                    .$get(`http://127.0.0.1:8000/api/timkiem?page=${this.page}`)
                     .then((data) => {
-                        this.baidangs = data
-                        this.$store.state.SearchResult = data
+                        console.log("DATA",data.baidangs)
+                        this.baidangs = data.baidangs
+                        this.$store.state.SearchResult = data.baidangs
+                        console.log('bd2',this.baidangs)
+
+
                     })
             }
         },
     },
+    computed: {
+        ...mapState({
+            lasted_page: state => state.last_page
+
+        }),
+        ...mapFields('admin', [
+            'searchParams.name',
+            'searchParams.cc',
+            'searchParams.bb',
+
+        ]),
+
+    }
 }
 </script>

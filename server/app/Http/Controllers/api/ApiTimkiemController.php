@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
 use App\Models\BaiDang;
 use App\Models\QuanHuyen;
@@ -12,8 +13,16 @@ use Illuminate\Http\Request;
 
 class ApiTimkiemController extends Controller
 {
+    public $page_size;
 
-    public function timkiem(Request $request, $perpage = 6){
+    public function __construct(Request $request)
+    {
+        $this->page_size = 6;
+        if ($request->page_size)
+            $this->page_size = $request->page_size;
+    }
+
+    public function timkiem(Request $request){
         $baidangs = new BaiDang();
         $baidangs_new = $baidangs->show_new_post();
         $queries = [];
@@ -157,9 +166,20 @@ class ApiTimkiemController extends Controller
         }
 
 
-        $baidangs = $baidangs->paginate($perpage)->appends($queries)->sortBy('created_at', SORT_REGULAR, true);
+        $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
+//        dd($baidangs);
+        $page_baidang = [
+            "current_page" => $baidangs->currentPage(),
+            "last_page" => $baidangs->lastPage(),
+            "total" => $baidangs->total() ,
+            "from" => $baidangs->firstItem(),
+            "to" => $baidangs->lastItem(),
+        ];
 
-        return response()->json(BaiDangResource::collection($baidangs));
+        return response()->json( (object) [
+            'page' => $page_baidang,
+            'baidangs' => BaiDangDetailResource::collection($baidangs)
+        ]);
 
     }
 

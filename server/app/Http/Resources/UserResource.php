@@ -18,8 +18,10 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'baidang' => $this->baidang,
-            'trangthai' => $this->trangthai
+            'baidang' => $this->baidang->count(),
+            'trangthai' => $this->trangthai,
+            'vaitro' => $this->vaitro,
+            'email' => $this->email,
         ];
     }
 }

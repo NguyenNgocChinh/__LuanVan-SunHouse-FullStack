@@ -194,6 +194,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { mapFields } from 'vuex-map-fields';
 
 export default {
     data() {
@@ -238,6 +239,25 @@ export default {
         this.getDienTich()
         this.getThanhPho()
         this.getTimKiemBaiDang()
+    },
+    computed:{
+        ...mapFields([
+            // diadiem: this.inputThanhPho,
+            // gia1: this.rangeGia[0],
+            // gia2: this.rangeGia[1],
+            // type: this.type,
+            // loai_id: this.loai_id,
+            // huong: this.huong,
+            // sophongngu: this.sophongngu,
+            // sophongtam: this.sophongtam,
+            // keyword: this.keyword,
+            // dientich1: this.rangeDienTich[0],
+            // dientich2: this.rangeDienTich[1],
+            // // X: this.X,
+            // // Y: this.Y,
+            // // inputAdressR: this.inputAdressR,
+            // bankinh: this.ex5.val,
+        ]),
     },
     methods: {
         ...mapState({
@@ -306,7 +326,7 @@ export default {
         getTimKiemBaiDang() {
             // this.$store.state.SearchResult = null
             this.$axios
-                .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
+                .$get('http://127.0.0.1:8000/api/timkiem', {
                     params: {
                         // diadiem: this.inputThanhPho,
                         gia1: this.rangeGia[0],

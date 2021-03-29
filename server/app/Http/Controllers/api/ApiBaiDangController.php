@@ -5,18 +5,23 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangResource;
 use App\Models\BaiDang;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ApiBaiDangController extends Controller
 {
+    public $page_size ;
+
+    public function __construct(Request $request)
+    {
+        $this->page_size = BaiDang::count();
+        if ($request->page_size)
+            $this->page_size = $request->page_size;
+    }
+
     public function getAllPosts(Request $request)
     {
-        if ($request->page)
-            $all_posts = BaiDang::paginate(6)->sortBy('created_at', SORT_REGULAR, true);
-        else
-            $all_posts = BaiDang::get()->sortBy('created_at', SORT_REGULAR, true);
-
-        return response()->json(BaiDangResource::collection($all_posts));
+        return response()->json(BaiDang::paginate($this->page_size));
     }
 
     public function getHotPosts()
