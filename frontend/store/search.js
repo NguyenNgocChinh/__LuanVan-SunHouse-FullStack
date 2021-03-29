@@ -1,6 +1,7 @@
 import { getField, updateField } from 'vuex-map-fields';
 export const state = () => ({
-    state: {
+    search: {
+        rangeGia: [0, 0],
 
     },
 })

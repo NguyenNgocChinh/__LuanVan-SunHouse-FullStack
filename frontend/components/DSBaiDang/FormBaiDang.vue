@@ -241,10 +241,10 @@ export default {
         this.getTimKiemBaiDang()
     },
     computed:{
-        ...mapFields([
+        ...mapFields('search',[
             // diadiem: this.inputThanhPho,
-            // gia1: this.rangeGia[0],
-            // gia2: this.rangeGia[1],
+            search.rangeGia,
+
             // type: this.type,
             // loai_id: this.loai_id,
             // huong: this.huong,
