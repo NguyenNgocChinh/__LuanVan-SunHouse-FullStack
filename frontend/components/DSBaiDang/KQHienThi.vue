@@ -4,10 +4,17 @@
             <v-col>
                 <v-card color class="d-flex">
                     <v-row align="center">
-                        <v-col cols="6"><div class="ml-2">Kết quả hiển thị 1 - 6 trên tổng 11 kết quả</div></v-col>
+                        <v-col cols="6">
+                            <div class="ml-2">Kết quả hiển thị 1 - 6 trên tổng 11 kết quả</div>
+                        </v-col>
+
                         <v-col cols="6" class="d-flex align-center">
-                            <v-col cols="6"><div class="text-center font-weight-bold" dark>Lọc Theo:</div></v-col>
-                            <v-col cols="6"><v-select v-model="selected" :items="items"></v-select></v-col>
+                            <v-col cols="6">
+                                <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select v-model="selected" :items="items"></v-select>
+                            </v-col>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -39,15 +46,16 @@
         <div class="text-center mt-10">
             <v-pagination v-model="page" :length="10" circle @click="getbaidangs"></v-pagination>
         </div>
+
     </v-container>
 </template>
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import {mapState} from "vuex";
-import {mapFields } from 'vuex-map-field'
+import {mapFields} from 'vuex-map-fields';
+
 
 export default {
-    components: { BaiDangCard },
+    components: {BaiDangCard},
     data: () => ({
         model: null,
         isActive: true,
@@ -56,8 +64,40 @@ export default {
         selected: 'Mới nhất',
         page: 1,
         baidangs: null,
+        debounce: null
     }),
+    computed: {
+        ...mapFields('search', {
+                keyword: 'searchParams.keyword',
+
+                type: 'searchParams.type',
+                loai_id: 'searchParams.loai_id',
+                huong: 'searchParams.huong',
+                sophongngu: 'searchParams.sophongngu',
+                sophongtam: 'searchParams.sophongtam',
+                X: 'searchParams.X',
+                Y: 'searchParams.Y',
+                inputAdressR: 'searchParams.inputAdressR',
+                bankinh: 'searchParams.bankinh',
+                gia1: 'searchParams.gia1',
+                gia2: 'searchParams.gia2',
+                dientich1: 'searchParams.dientich1',
+                dientich2: 'searchParams.dientich2',
+                searchParams: 'searchParams'
+            }
+        ),
+
+
+    },
     watch: {
+        searchParams: {
+            handler: _.debounce(
+                function (newVal){
+                    console.log(newVal)
+                },600
+            ),
+            deep: true
+        },
         page() {
             window.scrollTo({
                 top: 0,
@@ -74,62 +114,49 @@ export default {
                 })
 
         },
-         baidangs() {
-             window.scrollTo({
+        baidangs() {
+            window.scrollTo({
                 top: 0,
                 left: 0,
                 behavior: 'smooth',
             })
-            if (this.baidangs !== this.$store.state.SearchResult) {
-                this.page = 1
-                this.baidangs = this.$store.state.SearchResult
-                return this.baidangs
-            }
-            this.baidangs_loading = true
-            this.getbaidangs()
         },
     },
 
     mounted() {
         this.getbaidangs();
-        this.$nuxt.$on('create', () => {
-            this.getbaidangs();
-        })
     },
     methods: {
         getbaidangs() {
-            if (this.$store.state.SearchResult.baidangs != undefined) {
-                this.baidangs = this.$store.state.SearchResult.baidangs
-                console.log('bd1',this.baidangs)
-            }
-
-
-            if (this.baidangs == null) {
-                return this.$axios
-                    .$get(`http://127.0.0.1:8000/api/timkiem?page=${this.page}`)
-                    .then((data) => {
-                        console.log("DATA",data.baidangs)
-                        this.baidangs = data.baidangs
-                        this.$store.state.SearchResult = data.baidangs
-                        console.log('bd2',this.baidangs)
-
-
-                    })
-            }
+            this.$axios
+                .$get('http://127.0.0.1:8000/api/timkiem', {
+                    params: {
+                        // diadiem: this.inputThanhPho,
+                        gia1: this.gia1,
+                        gia2: this.gia2,
+                        type: this.type,
+                        loai_id: this.loai_id,
+                        huong: this.huong,
+                        sophongngu: this.sophongngu,
+                        sophongtam: this.sophongtam,
+                        keyword: this.keyword,
+                        dientich1: this.dientich1,
+                        dientich2: this.dientich2,
+                         X: this.X,
+                         Y: this.Y,
+                        // inputAdressR: this.inputAdressR,
+                        // bankinh: this.ex5.val,
+                    },
+                })
+                .then((kqTimKiem) => {
+                    this.$store.state.SearchResult = kqTimKiem
+                    this.$store.state.loadingSearchResult = true
+                    this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
+                    $nuxt.$emit('create')
+                    console.log('KHO ', kqTimKiem)
+                })
         },
     },
-    computed: {
-        ...mapState({
-            lasted_page: state => state.last_page
 
-        }),
-        ...mapFields('admin', [
-            'searchParams.name',
-            'searchParams.cc',
-            'searchParams.bb',
-
-        ]),
-
-    }
 }
 </script>

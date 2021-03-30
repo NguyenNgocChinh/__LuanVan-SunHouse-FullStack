@@ -1,11 +1,11 @@
 <template>
     <v-card v-if="baidang" :loading="loading" class="mx-auto" flat>
         <template slot="progress">
-            <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
+            <v-progress-linear color="deep-purple" height="5" indeterminate></v-progress-linear>
         </template>
 
         <v-carousel
-            v-if="baidang.hinhanh"
+            v-if="baidang.hinhanh.length > 0"
             cycle
             height="200"
             hide-delimiter-background
@@ -46,7 +46,7 @@
         </v-btn>
         <v-divider />
         <div class="pa-4 d-flex">
-            <span style="font-size: 14px" class="font-weight-bold">{{ baidang.user.name }}</span>
+            <span style="font-size: 14px" class="font-weight-bold">{{ baidang.user }}</span>
             <v-spacer />
             <span style="font-size: 14px" class="font-weight-bold">
                 <v-icon class="blue--text">mdi-alarm</v-icon>{{ baidang.thoigian }}
@@ -67,10 +67,6 @@ export default {
         selection: 1,
 
     }),
-    created() {
-
-        console.log("BD",this.baidang);
-    },
     methods: {
         reserve() {
             this.loading = true
