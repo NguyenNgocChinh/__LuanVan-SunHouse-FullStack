@@ -1,4 +1,4 @@
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from 'vuex-map-fields'
 const state = () => ({
     searchParams: {
         keyword: null,
@@ -22,27 +22,26 @@ const state = () => ({
     },
 })
 
- const mutations = {
-     updateField,
-     updateGia1Field(state, field) {
-         state.searchParams.gia1 = field
-     },
-     updateGia2Field(state, field) {
-         state.searchParams.gia2 = field
-     },
-     updateDienTich1Field(state, field) {
-         state.searchParams.dientich1 = field
-     },
-     updateDienTich2Field(state, field) {
-         state.searchParams.dientich2 = field
-     },
+const mutations = {
+    updateField,
+    updateGia1Field(state, field) {
+        state.searchParams.gia1 = field
+    },
+    updateGia2Field(state, field) {
+        state.searchParams.gia2 = field
+    },
+    updateDienTich1Field(state, field) {
+        state.searchParams.dientich1 = field
+    },
+    updateDienTich2Field(state, field) {
+        state.searchParams.dientich2 = field
+    },
 }
 
-
- const getters = {
-    test(state){
-        return state.search;
+const getters = {
+    test(state) {
+        return state.search
     },
     getField,
 }
-export  default  {state, mutations, getters}
+export default { state, mutations, getters }

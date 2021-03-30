@@ -2,7 +2,7 @@
     <v-card outlined class="pa-5">
         <div class="ml-5"><h3>Tìm kiếm tài sản</h3></div>
         <div class="ml-5">
-            <v-text-field v-model="keyword" label="Tìm kiếm từ khóa" >
+            <v-text-field v-model="keyword" label="Tìm kiếm từ khóa">
                 <v-icon slot="append" color="black"> mdi-magnify </v-icon>
             </v-text-field>
         </div>
@@ -38,7 +38,12 @@
             <v-switch v-model="banKinhOn" inset label="Tìm theo bán kính:"></v-switch>
         </div>
         <div v-show="banKinhOn" class="ml-5 pt-0 mt-0" @toggle="isViTri">
-            <v-slider v-model="bankinh.val" :label="bankinh.label" :thumb-color="ex3.color" thumb-label="always"></v-slider>
+            <v-slider
+                v-model="bankinh.val"
+                :label="bankinh.label"
+                :thumb-color="ex3.color"
+                thumb-label="always"
+            ></v-slider>
             <v-radio-group v-model="radioGroup" class="pt-0 mt-0">
                 <v-radio :label="'Theo địa chỉ'" :value="1" class="pt-0 mt-0"></v-radio>
                 <div v-if="radioGroup == 1" class="pt-0 mt-0"><v-text-field></v-text-field></div>
@@ -177,7 +182,7 @@
                                 :min="minDienTich"
                                 hide-details
                                 :label="ex4.label"
-                                :thumb-color="ex3.color"
+                                :thumb-color="ex4.color"
                                 thumb-label="always"
                                 class="align-center"
                             >
@@ -188,15 +193,13 @@
             </v-card>
         </div>
         <div class="ml-1">
-            <v-btn block class="deep-orange lighten-1" @click="getTimKiemBaiDang()">Tìm kiếm</v-btn>
+            <v-btn block class="deep-orange lighten-1">Tìm kiếm</v-btn>
         </div>
-
     </v-card>
 </template>
 <script>
-import {  mapGetters } from 'vuex'
-import { mapFields } from 'vuex-map-fields';
-import search from "~/store/search";
+import { mapGetters } from 'vuex'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
     data() {
@@ -206,7 +209,7 @@ export default {
             ex1: { label: 'color', val: 50, color: 'purple darken-1' },
             ex2: { label: 'track-color', val: 75, color: 'green lighten-1' },
             ex3: { label: 'Giá từ', val: 50, color: 'blue lighten-1' },
-            ex4: { label: 'Diện tích từ', val: 50, color: 'red' },
+            ex4: { label: 'Diện tích từ', val: 50, color: 'blue lighten-1' },
 
             isViTri: true,
             radioGroup: 1,
@@ -215,38 +218,39 @@ export default {
             inputQuanHuyen: '',
             inputXaPhuong: '',
 
-            loaiNha : [],
+            loaiNha: [],
             thanhpho: [],
             quanhuyen: [],
             xaphuong: [],
 
-            rangeGia: [0, 9999999999999],
-            rangeDienTich: [0, 9999999999999],
-
+            rangeGia: [0, 99999],
+            rangeDienTich: [0, 99999],
         }
     },
-    watch:{
-        rangeGia(){
-            _.debounce(function (){
-                this.$store.commit('search/updateGia1Field',this.rangeGia[0])
-                this.$store.commit('search/updateGia2Field',this.rangeGia[1])
-            },600)
+    watch: {
+        rangeGia() {
+            _.debounce(function () {
+                this.$store.commit('search/updateGia1Field', this.rangeGia[0])
+                this.$store.commit('search/updateGia2Field', this.rangeGia[1])
+            }, 600)
         },
-        rangeDienTich(){
-            this.$store.commit('search/updateDienTich1Field',this.rangeDienTich[0])
-            this.$store.commit('search/updateDienTich2Field',this.rangeDienTich[1])
-        }
+        rangeDienTich() {
+            _.debounce(function () {
+                this.$store.commit('search/updateDienTich1Field', this.rangeDienTich[0])
+                this.$store.commit('search/updateDienTich2Field', this.rangeDienTich[1])
+                console.log('UP', this.$store.state)
+            }, 600)
+        },
     },
     created() {
         this.getAllLoai()
         this.getGiaMinMax()
         this.getDienTich()
         this.getThanhPho()
-
     },
-    computed:{
-        ...mapGetters('search',['test']),
-        ...mapFields('search',{
+    computed: {
+        ...mapGetters('search', ['test']),
+        ...mapFields('search', {
             keyword: 'searchParams.keyword',
             minGia: 'searchParams.gia1',
             maxGia: 'searchParams.gia2',
@@ -259,11 +263,9 @@ export default {
             Y: 'searchParams.Y',
             inputAdressR: 'searchParams.inputAdressR',
             bankinh: 'searchParams.bankinh',
-            maxDienTich: 'searchParams.dientich1',
-            minDienTich: 'searchParams.dientich2',
-            }
-        ),
-
+            maxDienTich: 'searchParams.dientich2',
+            minDienTich: 'searchParams.dientich1',
+        }),
     },
     methods: {
         // SELECT Theo vi tri
@@ -290,8 +292,10 @@ export default {
             try {
                 this.$axios.$get('https://api.sunhouse.stuesports.info/api/dientich').then((data) => {
                     this.rangeDienTich = [0, data.max]
+
                     this.minDienTich = 0
                     this.maxDienTich = data.max
+                    console.log(this.minDienTich)
                 })
             } catch (e) {
                 console.log(e)
@@ -325,7 +329,6 @@ export default {
             // }
             // return kq
         },
-
     },
 }
 </script>

@@ -5,7 +5,10 @@
                 <v-card color class="d-flex">
                     <v-row align="center">
                         <v-col cols="6">
-                            <div class="ml-2">Kết quả hiển thị 1 - 6 trên tổng 11 kết quả</div>
+                            <div class="ml-2">
+                                Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng
+                                {{ detail_page.total }} kết quả
+                            </div>
                         </v-col>
 
                         <v-col cols="6" class="d-flex align-center">
@@ -30,7 +33,7 @@
                     </v-row>
 
                     <v-card
-                        v-for="(baidang,index) in baidangs"
+                        v-for="(baidang, index) in baidangs"
                         :key="index"
                         elevation="10"
                         color="white"
@@ -38,24 +41,22 @@
                         width="325"
                         height="500"
                     >
-                        <bai-dang-card :baidang="baidang" :hinhanh="baidang.hinhanh" :user="baidang.user"/>
+                        <bai-dang-card :baidang="baidang" :hinhanh="baidang.hinhanh" :user="baidang.user" />
                     </v-card>
                 </v-row>
             </v-col>
         </v-row>
         <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="10" circle @click="getbaidangs"></v-pagination>
+            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
         </div>
-
     </v-container>
 </template>
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import {mapFields} from 'vuex-map-fields';
-
+import { mapFields } from 'vuex-map-fields'
 
 export default {
-    components: {BaiDangCard},
+    components: { BaiDangCard },
     data: () => ({
         model: null,
         isActive: true,
@@ -64,55 +65,67 @@ export default {
         selected: 'Mới nhất',
         page: 1,
         baidangs: null,
-        debounce: null
+        debounce: null,
+        detail_page: '',
     }),
     computed: {
         ...mapFields('search', {
-                keyword: 'searchParams.keyword',
+            keyword: 'searchParams.keyword',
 
-                type: 'searchParams.type',
-                loai_id: 'searchParams.loai_id',
-                huong: 'searchParams.huong',
-                sophongngu: 'searchParams.sophongngu',
-                sophongtam: 'searchParams.sophongtam',
-                X: 'searchParams.X',
-                Y: 'searchParams.Y',
-                inputAdressR: 'searchParams.inputAdressR',
-                bankinh: 'searchParams.bankinh',
-                gia1: 'searchParams.gia1',
-                gia2: 'searchParams.gia2',
-                dientich1: 'searchParams.dientich1',
-                dientich2: 'searchParams.dientich2',
-                searchParams: 'searchParams'
-            }
-        ),
-
-
+            type: 'searchParams.type',
+            loai_id: 'searchParams.loai_id',
+            huong: 'searchParams.huong',
+            sophongngu: 'searchParams.sophongngu',
+            sophongtam: 'searchParams.sophongtam',
+            X: 'searchParams.X',
+            Y: 'searchParams.Y',
+            inputAdressR: 'searchParams.inputAdressR',
+            bankinh: 'searchParams.bankinh',
+            gia1: 'searchParams.gia1',
+            gia2: 'searchParams.gia2',
+            dientich1: 'searchParams.dientich1',
+            dientich2: 'searchParams.dientich2',
+            searchParams: 'searchParams',
+        }),
     },
     watch: {
         searchParams: {
-            handler: _.debounce(
-                function (newVal){
-                    console.log(newVal)
-                },600
-            ),
-            deep: true
+            handler: _.debounce(function (newVal) {
+                console.log(newVal)
+            }, 600),
+            deep: true,
         },
         page() {
+            this.baidangs = null
             window.scrollTo({
                 top: 0,
                 left: 0,
                 behavior: 'smooth',
             })
             return this.$axios
-                .$get(`https://127.0.0.1:8000/api/timkiem?page=${this.page}`)
-                .then((data) => {
-                    this.$store.state.SearchResult = data
-                    this.baidangs = data.baidangs
-                    console.log(this.baidangs)
-
+                .$get(`http://127.0.0.1:8000/api/timkiem?page=${this.page}`, {
+                    params: {
+                        // diadiem: this.inputThanhPho,
+                        gia1: this.gia1,
+                        gia2: this.gia2,
+                        type: this.type,
+                        loai_id: this.loai_id,
+                        huong: this.huong,
+                        sophongngu: this.sophongngu,
+                        sophongtam: this.sophongtam,
+                        keyword: this.keyword,
+                        dientich1: this.dientich1,
+                        dientich2: this.dientich2,
+                        X: this.X,
+                        Y: this.Y,
+                        // inputAdressR: this.inputAdressR,
+                        // bankinh: this.ex5.val,
+                    },
                 })
-
+                .then((data) => {
+                    this.baidangs = data.baidangs
+                    console.log('PAGE CHANGE', this.baidangs)
+                })
         },
         baidangs() {
             window.scrollTo({
@@ -124,10 +137,11 @@ export default {
     },
 
     mounted() {
-        this.getbaidangs();
+        this.getbaidangs()
     },
     methods: {
         getbaidangs() {
+            this.page = 1
             this.$axios
                 .$get('http://127.0.0.1:8000/api/timkiem', {
                     params: {
@@ -142,21 +156,19 @@ export default {
                         keyword: this.keyword,
                         dientich1: this.dientich1,
                         dientich2: this.dientich2,
-                         X: this.X,
-                         Y: this.Y,
+                        X: this.X,
+                        Y: this.Y,
                         // inputAdressR: this.inputAdressR,
                         // bankinh: this.ex5.val,
                     },
                 })
                 .then((kqTimKiem) => {
-                    this.$store.state.SearchResult = kqTimKiem
-                    this.$store.state.loadingSearchResult = true
-                    this.$store.commit('SET_KQ_BAIDANG_TIMKIEM', kqTimKiem)
-                    $nuxt.$emit('create')
-                    console.log('KHO ', kqTimKiem)
+                    this.baidangs = kqTimKiem.baidangs
+                    this.detail_page = kqTimKiem.page
+
+                    console.log('KQTK ', kqTimKiem)
                 })
         },
     },
-
 }
 </script>
