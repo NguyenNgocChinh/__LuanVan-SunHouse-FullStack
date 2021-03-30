@@ -103,7 +103,7 @@ export default {
                 behavior: 'smooth',
             })
             return this.$axios
-                .$get(`http://127.0.0.1:8000/api/timkiem?page=${this.page}`, {
+                .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`, {
                     params: {
                         // diadiem: this.inputThanhPho,
                         gia1: this.gia1,
@@ -143,7 +143,7 @@ export default {
         getbaidangs() {
             this.page = 1
             this.$axios
-                .$get('http://127.0.0.1:8000/api/timkiem', {
+                .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
                     params: {
                         // diadiem: this.inputThanhPho,
                         gia1: this.gia1,
