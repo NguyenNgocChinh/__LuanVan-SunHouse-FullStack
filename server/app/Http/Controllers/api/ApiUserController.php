@@ -28,18 +28,14 @@ class ApiUserController extends Controller
 
     public function login(ApiLoginRequest $request)
     {
-        if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
-            $user = User::where('username', '=', $request->username)
-                ->orWhere('email', '=', $request->username)
-                ->firstOrFail();
-            $token = $user->createToken('auth_token')->plainTextToken;
+        $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
+
+        if (!Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password]))
+
             return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
+                'message' => 'Invalid login details'
+            ], 401);
+        return true;
     }
 
     public function userInfo(Request $request)
@@ -47,17 +43,19 @@ class ApiUserController extends Controller
         return response()->json($request->user());
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         Auth::guard('web')->logout();
-        Auth::logout();
+
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
         return response()->json(1);
     }
 
     public function findUser(Request $request)
     {
-        $user = User::select('id')->where('email', $request->email)->limit(1)->get();
+        $user = User::select('id')->where('email', $request->email)->first();
         if (count($user) == 0) {
             return response()->json(false);
         }

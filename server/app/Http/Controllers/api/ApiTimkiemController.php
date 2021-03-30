@@ -133,8 +133,8 @@ class ApiTimkiemController extends Controller
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
                 if (is_null($column2)) {
-                    if ($column == 'gia') $column2 = 8000;
-                    if ($column == 'dientich') $column2 = 5000;
+                    if ($column == 'gia') $column2 = 9999999999999;
+                    if ($column == 'dientich') $column2 = 9999999999999;
                 }
                 $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 $queries[$column1] = request($column1);
@@ -178,7 +178,7 @@ class ApiTimkiemController extends Controller
 
         return response()->json( (object) [
             'page' => $page_baidang,
-            'baidangs' => BaiDangDetailResource::collection($baidangs)
+            'baidangs' => BaiDangResource::collection($baidangs)
         ]);
 
     }
