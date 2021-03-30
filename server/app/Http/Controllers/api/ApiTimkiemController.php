@@ -133,8 +133,8 @@ class ApiTimkiemController extends Controller
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
                 if (is_null($column2)) {
-                    if ($column == 'gia') $column2 = 9999999999999;
-                    if ($column == 'dientich') $column2 = 9999999999999;
+                    if ($column == 'gia') $column2 = BaiDang::max('gia');
+                    if ($column == 'dientich') $column2 = BaiDang::max('dientich');
                 }
                 $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 $queries[$column1] = request($column1);
@@ -167,7 +167,7 @@ class ApiTimkiemController extends Controller
 
 
         $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
-//        dd($baidangs);
+
         $page_baidang = [
             "current_page" => $baidangs->currentPage(),
             "last_page" => $baidangs->lastPage(),
@@ -175,7 +175,6 @@ class ApiTimkiemController extends Controller
             "from" => $baidangs->firstItem(),
             "to" => $baidangs->lastItem(),
         ];
-
         return response()->json( (object) [
             'page' => $page_baidang,
             'baidangs' => BaiDangResource::collection($baidangs)
