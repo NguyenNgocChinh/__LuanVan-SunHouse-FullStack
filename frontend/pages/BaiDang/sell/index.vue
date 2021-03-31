@@ -85,7 +85,7 @@ export default {
     methods: {
         getBaiDangHot() {
             this.$axios
-                .$get(`http://127.0.0.1:8000/api/baidang/raoban?page=${this.page}`, {
+                .$get(`https://api.sunhouse.stuesports.info/api/baidang/raoban?page=${this.page}`, {
                     params: {
                         page_size: 6,
                     },

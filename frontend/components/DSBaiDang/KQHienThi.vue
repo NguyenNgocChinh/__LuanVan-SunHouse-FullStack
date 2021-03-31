@@ -106,30 +106,7 @@ export default {
                 left: 0,
                 behavior: 'smooth',
             })
-            return this.$axios
-                .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}`, {
-                    params: {
-                        // diadiem: this.inputThanhPho,
-                        gia1: this.gia1,
-                        gia2: this.gia2,
-                        type: this.type,
-                        loai_id: this.loai_id,
-                        huong: this.huong,
-                        sophongngu: this.sophongngu,
-                        sophongtam: this.sophongtam,
-                        keyword: this.keyword,
-                        dientich1: this.dientich1,
-                        dientich2: this.dientich2,
-                        X: this.X,
-                        Y: this.Y,
-                        // inputAdressR: this.inputAdressR,
-                        // bankinh: this.ex5.val,
-                    },
-                })
-                .then((data) => {
-                    this.baidangs = data.baidangs
-                    console.log('PAGE CHANGE', this.baidangs)
-                })
+            this.getbaidangs()
         },
         baidangs() {
             window.scrollTo({
@@ -140,14 +117,13 @@ export default {
         },
     },
 
-    mounted() {
+    created() {
         this.getbaidangs()
     },
     methods: {
         getbaidangs() {
-            this.page = 1
             this.$axios
-                .$get('https://api.sunhouse.stuesports.info/api/timkiem', {
+                .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}&pagesize=6`, {
                     params: {
                         // diadiem: this.inputThanhPho,
                         gia1: this.gia1,
@@ -168,9 +144,7 @@ export default {
                 })
                 .then((kqTimKiem) => {
                     this.baidangs = kqTimKiem.baidangs
-                    this.detail_page = kqTimKiem.page
-
-                    console.log('KQTK ', kqTimKiem)
+                    this.detail_page = kqTimKiem.page[0]
                 })
         },
     },
