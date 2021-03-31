@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
+use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
 use App\Models\QuanHuyen;
 use App\Models\ThanhPho;
@@ -168,15 +169,9 @@ class ApiTimkiemController extends Controller
 
         $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
 
-        $page_baidang = [
-            "current_page" => $baidangs->currentPage(),
-            "last_page" => $baidangs->lastPage(),
-            "total" => $baidangs->total() ,
-            "from" => $baidangs->firstItem(),
-            "to" => $baidangs->lastItem(),
-        ];
+
         return response()->json( (object) [
-            'page' => $page_baidang,
+            'page' => new PaginateResource($baidangs),
             'baidangs' => BaiDangResource::collection($baidangs)
         ]);
 
