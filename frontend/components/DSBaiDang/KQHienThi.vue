@@ -66,7 +66,11 @@ export default {
         page: 1,
         baidangs: null,
         debounce: null,
-        detail_page: '',
+        detail_page: {
+            from: 0,
+            to: 0,
+            total: 0,
+        },
     }),
     computed: {
         ...mapFields('search', {
