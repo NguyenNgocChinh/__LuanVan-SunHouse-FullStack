@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import ENV from '@/api/baidang'
 export default {
     components: {},
     layout: 'admin',
@@ -107,10 +108,14 @@ export default {
         this.fetchDSBaiDang()
     },
     methods: {
-        async fetchDSBaiDang() {
-            const data = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang')
-            this.dsBaiDang = data
-            this.loading = false
+         fetchDSBaiDang() {
+
+             this.$axios.$get(ENV.baidangs).then(
+                (data) => {
+                    this.dsBaiDang = data.baidangs
+                    this.loading = false
+                }
+            )
         },
         showItem: (item) => console.log('SHOW FUCTION'),
         editItem: (item) => console.log('EDIT FUNCTION'),
