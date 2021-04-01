@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
 use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
@@ -22,7 +23,11 @@ class ApiBaiDangController extends Controller
 
     public function getAllPosts(Request $request)
     {
-        return response()->json(BaiDang::paginate($this->page_size));
+        $posts = BaiDang::paginate($this->page_size);
+        return response()->json([
+            'pages' => new PaginateResource($posts),
+            'baidangs' => BaiDangResource::collection($posts),
+        ]);
     }
 
     public function getHotPosts()
@@ -55,6 +60,8 @@ class ApiBaiDangController extends Controller
 
     public function getDetailPost($id)
     {
-        return response()->json(BaiDang::findOrFail($id));
+        return response()->json(
+           new BaiDangDetailResource(BaiDang::find($id))
+        );
     }
 }
