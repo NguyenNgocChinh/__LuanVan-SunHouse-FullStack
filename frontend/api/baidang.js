@@ -5,7 +5,7 @@ const ENV = {
     hot: 'https://api.sunhouse.stuesports.info/api/baidang/hot',
     choduyet: 'http://127.0.0.1:8000/api/baidang/choduyet/',
     delete: 'http://127.0.0.1:8000/api/baidang/',
-    duyetbai: 'http://127.0.0.1:8000/api/baidang/duyetbai/',
+    duyetbai: 'http://127.0.0.1:8000/api/baidang/duyetbai', // NOT INCLUDE /
 }
 
 export default ENV

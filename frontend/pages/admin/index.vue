@@ -41,7 +41,7 @@
                 :single-select="singleSelect"
                 item-key="id"
                 show-select
-                class="elevation-1"
+                class="elevation-4"
             >
                 <template #top>
                     <div class="d-flex justify-space-between">
@@ -77,15 +77,15 @@
                 </template>
             </v-data-table>
         </v-container>
-        <ErrorEvent :show="errorModal" />
+        <ModalError />
     </div>
 </template>
 
 <script>
 import ENV from '@/api/baidang'
-import ErrorEvent from '@/components/Error/errorEvent'
+import ModalError from '@/components/Error/modalError'
 export default {
-    components: { ErrorEvent },
+    components: { ModalError },
     layout: 'admin',
     data() {
         return {
@@ -104,14 +104,10 @@ export default {
             loading: true,
             fab: false,
             duyetbaiLoading: false,
-            errorModal: false,
         }
     },
     created() {
         this.fetchDSBaiDang()
-        $nuxt.$on('hideModal', function () {
-            this.errorModal = false
-        })
     },
     methods: {
         fetchDSBaiDang() {
@@ -125,20 +121,31 @@ export default {
             if (dsDuyet == null || dsDuyet.length < 1) return
             this.duyetbaiLoading = true
             const paramList = []
+
+            let isError = false
             if (Array.isArray(dsDuyet)) {
                 dsDuyet.forEach((item) => {
                     paramList.push(item.id)
                     this.$axios
-                        .put(ENV.duyetbai)
+                        .$put(ENV.duyetbai, null, {
+                            params: {
+                                id: item.id,
+                            },
+                        })
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
                             this.duyetbaiLoading = false
                         })
-                        .catch(() => {
+                        .catch((e) => {
                             this.duyetbaiLoading = false
-                            this.errorModal = true
+
+                            if (!isError) {
+                                isError = true
+                                $nuxt.$emit('openErrorModal')
+                            }
                         })
+                    console.log(this)
                 })
             } else {
                 paramList.push(dsDuyet.id)
