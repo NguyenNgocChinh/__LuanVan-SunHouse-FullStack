@@ -91,6 +91,20 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
+    public function duyetBai(Request $request){
+
+        $post = BaiDang::find($request->id);
+        $post->choduyet = 0;
+        $ok = $post->save();
+       if ($ok)
+           return response()->json([
+               'success' => 'Duyệt thành công'
+           ]);
+        return response()->json([
+            'fail' => 'Duyệt thất bại'
+        ]);
+    }
+
     public function storeBaiDang(Request $request){
 
         $request->validate(

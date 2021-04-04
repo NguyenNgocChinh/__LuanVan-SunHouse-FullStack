@@ -41,6 +41,7 @@ Route::get('/baidang/hot', [ApiBaiDangController::class, 'getHotPosts']);
 Route::get('/baidang/raoban', [ApiBaiDangController::class, 'getRaoBanPosts']);
 Route::get('/baidang/chothue', [ApiBaiDangController::class, 'getChoThuePosts']);
 Route::get('/baidang/choduyet', [ApiBaiDangController::class, 'getChoDuyetPosts']);
+Route::put('/baidang/duyetbai', [ApiBaiDangController::class, 'duyetBai']);
 Route::get('/baidang/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
 
 Route::post('/baidang', [ApiBaiDangController::class, 'storeBaiDang']);
