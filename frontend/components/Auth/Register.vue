@@ -64,6 +64,7 @@
     </v-row>
 </template>
 <script>
+import ENV from '@/api/user'
 export default {
     data() {
         return {
@@ -99,7 +100,7 @@ export default {
             this.isLoading = true
             // THanh cong.
             this.kq = await this.$axios
-                .$post('https://api.sunhouse.stuesports.info/api/auth/register', {
+                .$post(ENV.register, {
                     name: this.name,
                     email: this.email,
                     username: this.username,
