@@ -40,7 +40,13 @@ Route::get('/baidang', [ApiBaiDangController::class, 'getAllPosts']);
 Route::get('/baidang/hot', [ApiBaiDangController::class, 'getHotPosts']);
 Route::get('/baidang/raoban', [ApiBaiDangController::class, 'getRaoBanPosts']);
 Route::get('/baidang/chothue', [ApiBaiDangController::class, 'getChoThuePosts']);
-Route::get('/baidang/{id}', [ApiBaiDangController::class, 'getDetailPost']);
+Route::get('/baidang/choduyet', [ApiBaiDangController::class, 'getChoDuyetPosts']);
+Route::get('/baidang/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
+
+Route::post('/baidang', [ApiBaiDangController::class, 'storeBaiDang']);
+Route::delete('/baidang/{id}', [ApiBaiDangController::class, 'deletePost']);
+Route::put('/baidang/{id}', [ApiBaiDangController::class, 'updateBaiDang']);
+
 
 /*
  * LOAI API
