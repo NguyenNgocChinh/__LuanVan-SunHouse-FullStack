@@ -1,10 +1,10 @@
 <template>
-$END$
+<h1>Guitaisan</h1>
 </template>
 
 <script>
 export default {
-name: "index"
+
 }
 </script>
 
