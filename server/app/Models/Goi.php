@@ -12,4 +12,12 @@ class Goi extends Model
     protected $table = "goi";
     protected $primaryKey = "id";
     public $timestamps = false;
+
+    protected $fillable = [
+        'ten',
+        'gia',
+        'douutien',
+        'slbaidang',
+        'hansudung',
+    ];
 }
