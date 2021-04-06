@@ -6,24 +6,24 @@
                 <v-spacer />
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Số Thành Viên</v-card-title>
-                    <v-card-text>0 thành viên</v-card-text>
+                    <v-card-text >{{thanhvien}} thành viên</v-card-text>
                 </v-card>
                 <v-spacer />
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Tổng Bài Viết</v-card-title>
-                    <v-card-text>0 bài viết</v-card-text>
+                    <v-card-text>{{baiviet}} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Đang Chờ Duyệt</v-card-title>
-                    <v-card-text>0 bài viết</v-card-text>
+                    <v-card-text>{{choduyet}} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Số Gói</v-card-title>
-                    <v-card-text>0 gói</v-card-text>
+                    <v-card-text>{{sogoi}} gói</v-card-text>
                 </v-card>
                 <v-spacer />
             </v-row>
@@ -104,10 +104,18 @@ export default {
             loading: true,
             fab: false,
             duyetbaiLoading: false,
+            thanhvien: '',
+            baiviet: '',
+            choduyet: '',
+            sogoi: '',
         }
     },
     created() {
+        this.getSoChoDuyet()
+        this.getSoBaiViet()
+        this.getSoThanhVien()
         this.fetchDSBaiDang()
+        this.getSoGoi()
     },
     methods: {
         fetchDSBaiDang() {
@@ -116,6 +124,50 @@ export default {
 
                 this.loading = false
             })
+        },
+       async getSoThanhVien(){
+
+                     this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/count')
+                    .then((data) => {
+                        this.thanhvien = data
+                        console.log(data)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                    })
+        },
+        async getSoBaiViet(){
+
+            this.$axios.$get('https://api.sunhouse.stuesports.info/api/users/count')
+                .then((data) => {
+                    this.baiviet = data
+                    console.log(data)
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+        },
+        async getSoChoDuyet(){
+
+            this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/choduyet/count')
+                .then((data) => {
+                    this.choduyet = data
+                    console.log(data)
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+        },
+        async getSoGoi(){
+
+            this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/choduyet/count')
+                .then((data) => {
+                    this.sogoi = data
+                    console.log(data)
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         },
         duyetbai(dsDuyet) {
             if (dsDuyet == null || dsDuyet.length < 1) return
