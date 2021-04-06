@@ -22,20 +22,16 @@ export default {
             { hid: 'description', name: 'description', content: '' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-        script: [
-            {src: "https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js" , type: "text/javascript"}
-        ]
+        script: [{ src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' }],
     },
     router: {
-        middleware: 'checkAdmin'
+        middleware: 'checkAdmin',
     },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [
-
-    ],
+    plugins: [],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -47,10 +43,7 @@ export default {
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: [
-        '@nuxtjs/axios',
-        '@nuxtjs/auth-next',
-    ],
+    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // proxy: true,
@@ -114,5 +107,4 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
-
 }

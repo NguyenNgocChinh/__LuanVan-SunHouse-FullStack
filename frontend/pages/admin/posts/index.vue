@@ -21,7 +21,7 @@
                 :headers="headers"
                 :items="dsBaiDang"
                 :single-select="singleSelect"
-                item-key="name"
+                item-key="id"
                 show-select
                 class="elevation-1"
             >
@@ -108,18 +108,21 @@ export default {
         this.fetchDSBaiDang()
     },
     methods: {
-         fetchDSBaiDang() {
-
-             this.$axios.$get(ENV.baidangs).then(
-                (data) => {
-                    this.dsBaiDang = data.baidangs
-                    this.loading = false
-                }
-            )
+        fetchDSBaiDang() {
+            this.$axios.$get(ENV.baidangs).then((data) => {
+                this.dsBaiDang = data.baidangs
+                console.log(data)
+                console.log(this.dsBaiDang)
+                this.loading = false
+            })
         },
-        showItem: (item) => console.log('SHOW FUCTION'),
+        showItem(item) {
+            this.$router.push('/baidang/' + item.id)
+        },
         editItem: (item) => console.log('EDIT FUNCTION'),
-        deleteItem: (item) => console.log('DELETE FUNCTION'),
+        deleteItem(item) {
+            this.$axios.delete(ENV.delete + item.id)
+        },
     },
 }
 </script>
