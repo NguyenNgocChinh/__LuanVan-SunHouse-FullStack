@@ -8,5 +8,4 @@ const ENV = {
     duyetbai: 'http://127.0.0.1:8000/api/baidang/duyetbai', // NOT INCLUDE /
     info: 'https://api.sunhouse.stuesports.info/api/goi/',
 }
-
 export default ENV

@@ -28,7 +28,10 @@
             <HasLogin v-else />
             <v-btn elevation="2" rounded color="sunhouse_pinkLinght">
                 <!--<v-icon dark> mdi-plus</v-icon>-->
-                <span class="text-uppercase">Đăng tin</span>
+                <v-list-item link to="/GuiTaiSan">
+                    <span class="text-uppercase">Đăng tin</span>
+                </v-list-item>
+
             </v-btn>
         </v-app-bar>
         <!--IS MOBILE-->

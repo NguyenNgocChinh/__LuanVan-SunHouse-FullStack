@@ -53,7 +53,7 @@
                 </v-card-text>
                 <v-divider class="mt-4"></v-divider>
                 <v-card-actions>
-                    <v-btn text> Đã có tài khoản? </v-btn>
+                    <v-btn text @click="dacotaikhoan"> Đã có tài khoản? </v-btn>
                     <v-spacer />
                     <v-btn color="primary" text @click="xulydangky"> Đăng Ký </v-btn>
                 </v-card-actions>
@@ -100,7 +100,11 @@ export default {
             this.isLoading = true
             // THanh cong.
             this.kq = await this.$axios
+<<<<<<< HEAD
+                    .$post('https://api.sunhouse.stuesports.info/api/auth/register', {
+=======
                 .$post(ENV.register, {
+>>>>>>> a224f68adb4e17ff406b44e0d7455711da38ba58
                     name: this.name,
                     email: this.email,
                     username: this.username,
@@ -117,6 +121,10 @@ export default {
                     this.thongbao = e.response.data.errors
                 })
         },
+         dacotaikhoan(){
+            this.$router.push('/Login')
+            console.log(data)
+        }
     },
 }
 </script>
