@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('HomeApi', HomeController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 /*
  * AUTH
@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::post('/user/find', [ApiUserController::class, "findUser"]);
 
-Route::get('/listUser', [ApiUserController::class, "getAllUsers"])->middleware('auth:api');
+Route::get('/listUser', [ApiUserController::class, "getAllUsers"]);
 /*
  * BAI DANG API
  */
@@ -80,3 +80,7 @@ Route::get('dientich', [HomeController::class, "getDienTich"]);
  * TIM KIEM
  */
 Route::get('timkiem', [\App\Http\Controllers\api\ApiTimkiemController::class, "timkiem"]);
+/*
+ * GOI API
+ */
+Route::get('goi', [\App\Http\Controllers\api\ApiGoiController::class, "getAllPackages"]);
