@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         async fetchDSBaiDang() {
-            const data = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang')
+            const data = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/posts')
             this.dsBaiDang = data
             this.loading = false
         },
