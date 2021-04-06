@@ -4,5 +4,4 @@ const ENV = {
     raoban: "https://api.sunhouse.stuesports.info/api/baidang/raoban",
     hot: "https://api.sunhouse.stuesports.info/api/baidang/hot",
 }
-
 export default ENV

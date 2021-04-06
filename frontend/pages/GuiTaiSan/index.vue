@@ -1,13 +1,12 @@
 <template>
-$END$
+    <FormGuiTaiSan />
 </template>
 
 <script>
+import FormGuiTaiSan from '@/components/GuiTaiSan/FormGuiTaiSan'
 export default {
-name: "index"
+    components: { FormGuiTaiSan },
 }
 </script>
 
-<style scoped>
-
-</style>
+<style></style>

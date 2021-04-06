@@ -12,7 +12,7 @@
                         </v-col>
 
                         <v-col cols="6" class="d-flex align-center">
-                            <v-col cols="6">
+                            <v-col cols="6">`
                                 <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
                             </v-col>
                             <v-col cols="6">
