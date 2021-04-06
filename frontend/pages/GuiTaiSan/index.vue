@@ -8,5 +8,4 @@ export default {
     components: { FormGuiTaiSan },
 }
 </script>
-
 <style></style>
