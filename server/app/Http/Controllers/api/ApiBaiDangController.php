@@ -26,7 +26,7 @@ class ApiBaiDangController extends Controller
             $this->page_size = $request->page_size;
     }
 
-    public function getAllPosts(Request $request)
+    public function getAllPosts()
     {
         $posts = BaiDang::paginate($this->page_size);
         return response()->json([
@@ -61,6 +61,13 @@ class ApiBaiDangController extends Controller
             'pages' => new PaginateResource($chothue_posts),
            'baidangs' => BaiDangResource::collection($chothue_posts),
         ]);
+    }
+
+    public function countPosts(){
+        return response()->json(BaiDang::count());
+    }
+    public function countChoDuyetPosts(){
+        return response()->json(BaiDang::count());
     }
 
     public function getDetailPost($id)

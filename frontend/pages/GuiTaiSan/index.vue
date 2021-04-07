@@ -1,13 +1,11 @@
 <template>
-<h1>Guitaisan</h1>
+    <FormGuiTaiSan/>
 </template>
 
 <script>
+import FormGuiTaiSan from '@/components/GuiTaiSan/FormGuiTaiSan'
 export default {
-
+    components: {FormGuiTaiSan},
 }
 </script>
-
-<style scoped>
-
-</style>
+<style></style>

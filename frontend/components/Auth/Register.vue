@@ -49,57 +49,72 @@
                         counter
                         @click:append="show1 = !show1"
                     ></v-text-field>
-                    <v-select v-model="selected" name="vaitro" :items="items"></v-select>
+                    <v-select
+                        v-model="selected"
+                        name="vaitro"
+                        :items="items"
+                    ></v-select>
                 </v-card-text>
                 <v-divider class="mt-4"></v-divider>
                 <v-card-actions>
-                    <v-btn text> Đã có tài khoản? </v-btn>
+                    <v-btn text @click="dacotaikhoan"> Đã có tài khoản? </v-btn>
                     <v-spacer />
-                    <v-btn color="primary" text @click="xulydangky"> Đăng Ký </v-btn>
+                    <v-btn color="primary" text @click="xulydangky">
+                        Đăng Ký
+                    </v-btn>
                 </v-card-actions>
             </v-card>
-            <v-alert v-for="(tb, index) in thongbao" :key="index" dense text type="error"> {{ tb[0] }}</v-alert>
+            <v-alert
+                v-for="(tb, index) in thongbao"
+                :key="index"
+                dense
+                text
+                type="error"
+            >
+                {{ tb[0] }}</v-alert
+            >
         </v-col>
         {{ kq }}
     </v-row>
 </template>
 <script>
-import ENV from '@/api/user'
+import ENV from "@/api/user";
 export default {
     data() {
         return {
-            post: '',
-            items: ['Người dùng', 'Người bán'],
-            selected: 'Người dùng',
-            errorMessages: '',
-            name: '',
-            vaitro: '',
-            password: '',
-            password_confirmation: '',
-            username: '',
-            email: '',
-            kq: '',
-            success: '',
+            post: "",
+            items: ["Người dùng", "Người bán"],
+            selected: "Người dùng",
+            errorMessages: "",
+            name: "",
+            vaitro: "",
+            password: "",
+            password_confirmation: "",
+            username: "",
+            email: "",
+            kq: "",
+            success: "",
             show1: false,
             show2: true,
             show3: false,
             show4: false,
             thongbao: null,
             rules: {
-                required: (value) => !!value || 'Không được để trống!',
-                min: (v) => v.length >= 8 || 'Ít nhất 8 kí tự',
+                required: (value) => !!value || "Không được để trống!",
+                min: (v) => v.length >= 8 || "Ít nhất 8 kí tự",
                 email: (value) => {
-                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                    return pattern.test(value) || 'E-mail không hợp lệ!'
+                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return pattern.test(value) || "E-mail không hợp lệ!";
                 },
             },
-        }
+        };
     },
     methods: {
         async xulydangky() {
-            this.isLoading = true
+            this.isLoading = true;
             // THanh cong.
             this.kq = await this.$axios
+
                 .$post(ENV.register, {
                     name: this.name,
                     email: this.email,
@@ -108,15 +123,19 @@ export default {
                     password_confirmation: this.password_confirmation,
                 })
                 .then((data) => {
-                    this.$router.push('/Login')
-                    console.log(data)
-                    this.kq = data
-                    this.thongbao = 'Dang ky thanh cong'
+                    this.$router.push("/Login");
+                    console.log(data);
+                    this.kq = data;
+                    this.thongbao = "Dang ky thanh cong";
                 })
                 .catch((e) => {
-                    this.thongbao = e.response.data.errors
-                })
+                    this.thongbao = e.response.data.errors;
+                });
+        },
+        dacotaikhoan() {
+            this.$router.push("/Login");
+            console.log(data);
         },
     },
-}
+};
 </script>
