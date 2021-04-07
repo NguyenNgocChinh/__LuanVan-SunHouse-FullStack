@@ -1,11 +1,11 @@
 const ENV = {
-    baidangs: 'http://127.0.0.1:8000/api/baidang',
+    baidangs: 'https://api.sunhouse.stuesports.info/api/baidang',
     chothue: 'https://api.sunhouse.stuesports.info/api/baidang/chothue',
     raoban: 'https://api.sunhouse.stuesports.info/api/baidang/raoban',
     hot: 'https://api.sunhouse.stuesports.info/api/baidang/hot',
-    choduyet: 'http://127.0.0.1:8000/api/baidang/choduyet/',
-    delete: 'http://127.0.0.1:8000/api/baidang/',
-    duyetbai: 'http://127.0.0.1:8000/api/baidang/duyetbai', // NOT INCLUDE /
+    choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/choduyet',
+    duyetbai: 'https://api.sunhouse.stuesports.info/api/baidang/duyetbai', // NOT INCLUDE /
+    delete: 'https://api.sunhouse.stuesports.info/api/baidang/',
 }
 
 export default ENV
