@@ -22,8 +22,11 @@ export default {
             { hid: 'description', name: 'description', content: '' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        script: [{ src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' }],
     },
-
+    router: {
+        middleware: 'checkAdmin',
+    },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [],
 
@@ -35,39 +38,35 @@ export default {
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
-        // https://go.nuxtjs.dev/eslint
-        '@nuxtjs/eslint-module',
-        // https://go.nuxtjs.dev/vuetify
+        // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: [
-        // https://go.nuxtjs.dev/axios
-        '@nuxtjs/axios',
-        '@nuxtjs/auth-next',
-    ],
+    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // proxy: true,
         credentials: true,
     },
 
-    proxy: {
-        // '/api': {
-        //     target: process.env.API_URL,
-        //     pathRewrite: { '^/api': '' },
-        // },
-    },
     auth: {
         strategies: {
             laravelSanctum: {
                 provider: 'laravel/sanctum',
                 url: process.env.APP_URL,
+
+                cookie: {
+                    // (optional) If set we check this cookie exsistence for loggedIn check
+                    name: 'XSRF-TOKEN',
+                },
                 endpoints: {
-                    login: { url: '/api/auth/login', method: 'post' },
+                    login: { url: '/api/auth/login', method: 'post', propertyName: 'user' },
                     logout: { url: '/api/auth/logout' },
-                    user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
+                    user: { url: '/api/auth/user', method: 'get', propertyName: null },
+                    csrf: {
+                        url: '/sanctum/csrf-cookie',
+                    },
                 },
 
                 redirect: {

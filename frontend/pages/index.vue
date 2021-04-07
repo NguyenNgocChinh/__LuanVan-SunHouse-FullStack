@@ -3,7 +3,6 @@
         <h1>Home Page</h1>
         <Member />
 
-        {{ $auth.user }}
         <BaiDangHost />
         <ChoThue />
         <RaoBan />

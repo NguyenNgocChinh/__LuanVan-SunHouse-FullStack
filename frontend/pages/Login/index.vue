@@ -1,11 +1,10 @@
 <template>
     <v-card class="mx-auto mt-10" style="max-width: 500px">
         <v-toolbar color="deep-purple accent-4" cards dark flat>
-            {{ $auth.user }}
             <v-btn icon @click="backButton">
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <v-card-title class="title font-weight-regular"> Đăng nhập </v-card-title>
+            <v-card-title class="title font-weight-regular"> Đăng nhập</v-card-title>
             <v-spacer></v-spacer>
         </v-toolbar>
         <v-form ref="form" v-model="form" class="pa-4 pt-6" @submit.prevent="login">
@@ -29,12 +28,14 @@
                 @click:append="show1 = !show1"
             ></v-text-field>
             <v-checkbox v-model="loginForm.remember" color="deep-purple">
-                <template #label> Ghi nhớ đăng nhập </template>
+                <template #label> Ghi nhớ đăng nhập</template>
             </v-checkbox>
 
             <v-divider></v-divider>
             <v-card-actions class="d-flex">
+
                 <v-btn class="white--text" color="deep-purple accent-4" depressed @click="btndangki"> Đăng Ký </v-btn>
+
                 <v-spacer></v-spacer>
 
                 <v-btn
@@ -79,15 +80,7 @@ export default {
         },
 
         async login() {
-            try {
-                this.$axios.defaults.withCredentials = true
-                await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((data) => {
-                    this.$auth.setUser(data.data.user)
-                    this.$router.push('/')
-                })
-            } catch (err) {
-                console.log('LOI: ', err)
-            }
+            await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((data) => {})
         },
         btndangki() {
             this.$router.push('/register')

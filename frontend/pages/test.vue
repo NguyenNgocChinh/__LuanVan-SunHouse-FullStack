@@ -1,29 +1,26 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="4">
-                <FormBaiDang />
-            </v-col>
-            <v-col cols="8">
-                <KQHienThi />
-            </v-col>
-        </v-row>
-        <FormGuiTaiSan />
+<!--        <FormGuiTaiSan />-->
+        {{ thanhpho }}
     </v-container>
 </template>
-
 <script>
-import { mapState } from 'vuex'
 import FormGuiTaiSan from '~/components/GuiTaiSan/FormGuiTaiSan'
-import FormBaiDang from '~/components/DSBaiDang/FormBaiDang'
-import KQHienThi from '~/components/DSBaiDang/KQHienThi'
 export default {
-    components: { KQHienThi, FormBaiDang, FormGuiTaiSan },
-    computed: {
-        ...mapState({
-            baidangs: (state) => state.SearchResult,
-        }),
+    components: { FormGuiTaiSan },
+    data: () =>{
+        return {
+            thanhpho: null,
+        }
     },
-    methods: {},
+    methods: {
+        async getthanhpho(){
+            this.thanhpho = await this.$axios.$get('https://thongtindoanhnghiep.co/api/city')
+        }
+    },
+    created() {
+        this.getthanhpho()
+    }
+
 }
 </script>

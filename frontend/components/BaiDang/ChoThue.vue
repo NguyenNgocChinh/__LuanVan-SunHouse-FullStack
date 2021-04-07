@@ -23,6 +23,7 @@
 </template>
 <script>
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
+import ENV from '@/api/baidang'
 export default {
     name: 'ChoThue',
     components: { BaiDangCard },
@@ -38,13 +39,12 @@ export default {
     methods: {
         async getChoThue() {
             try {
-                const baidangs = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/chothue')
-                this.baidanghots = baidangs
+                const baidangs = await this.$axios.$get(ENV.chothue)
+                this.baidanghots = baidangs.baidangs
             } catch (e) {
                 console.log(e)
             }
             this.baidanghots_loading = false
-            console.log(this.baidanghots)
         },
     },
 }

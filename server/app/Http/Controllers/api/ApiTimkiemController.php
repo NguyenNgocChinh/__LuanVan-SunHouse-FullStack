@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
+use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
 use App\Models\QuanHuyen;
 use App\Models\ThanhPho;
@@ -12,8 +14,16 @@ use Illuminate\Http\Request;
 
 class ApiTimkiemController extends Controller
 {
+    public $page_size;
 
-    public function timkiem(Request $request, $perpage = 6){
+    public function __construct(Request $request)
+    {
+        $this->page_size = 6;
+        if ($request->page_size)
+            $this->page_size = $request->page_size;
+    }
+
+    public function timkiem(Request $request){
         $baidangs = new BaiDang();
         $baidangs_new = $baidangs->show_new_post();
         $queries = [];
@@ -124,8 +134,8 @@ class ApiTimkiemController extends Controller
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
                 if (is_null($column2)) {
-                    if ($column == 'gia') $column2 = 8000;
-                    if ($column == 'dientich') $column2 = 5000;
+                    if ($column == 'gia') $column2 = BaiDang::max('gia');
+                    if ($column == 'dientich') $column2 = BaiDang::max('dientich');
                 }
                 $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 $queries[$column1] = request($column1);
@@ -157,9 +167,13 @@ class ApiTimkiemController extends Controller
         }
 
 
-        $baidangs = $baidangs->paginate($perpage)->appends($queries)->sortBy('created_at', SORT_REGULAR, true);
+        $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
 
-        return response()->json(BaiDangResource::collection($baidangs));
+
+        return response()->json( (object) [
+            'page' => new PaginateResource($baidangs),
+            'baidangs' => BaiDangResource::collection($baidangs)
+        ]);
 
     }
 

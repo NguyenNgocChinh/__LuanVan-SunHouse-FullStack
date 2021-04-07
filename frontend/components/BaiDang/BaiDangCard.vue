@@ -1,17 +1,10 @@
 <template>
     <v-card v-if="baidang" :loading="loading" class="mx-auto" flat>
         <template slot="progress">
-            <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
+            <v-progress-linear color="deep-purple" height="5" indeterminate></v-progress-linear>
         </template>
-        <!--        <v-img height="200" src="https://api.sunhouse.stuesports.info/img/no-image.png"></v-img>-->
-        <!--carousel-->
-        <v-carousel
-            v-if="baidang.hinhanh.length != 0"
-            cycle
-            height="200"
-            hide-delimiter-background
-            show-arrows-on-hover
-        >
+
+        <v-carousel v-if="baidang.hinhanh.length > 0" cycle height="200" hide-delimiter-background show-arrows-on-hover>
             <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i">
                 <v-img height="200" :src="'https://api.sunhouse.stuesports.info/images/upload/' + hinh.filename" />
             </v-carousel-item>
@@ -39,7 +32,9 @@
         </v-card-subtitle>
 
         <v-chip-group class="loainha">
-            <v-chip color="teal darken-1" class="white--text" label>Rao bán</v-chip>
+            <v-chip color="teal darken-1" class="white--text" label
+                >{{ baidang.isChoThue == 1 ? 'Cho thuê' : 'Rao bán' }}
+            </v-chip>
             <v-chip color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
         </v-chip-group>
         <v-btn class="mx-2 heart" fab dark small color="pink">
@@ -67,7 +62,6 @@ export default {
         loading: false,
         selection: 1,
     }),
-
     methods: {
         reserve() {
             this.loading = true

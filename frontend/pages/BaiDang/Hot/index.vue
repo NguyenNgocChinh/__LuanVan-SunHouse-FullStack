@@ -85,7 +85,7 @@ export default {
     methods: {
         getBaiDangHot() {
             this.$axios
-                .$get(`https://api.sunhouse.stuesports.info/api/baidang/chothue?page=${this.page}`, {
+                .$get(`https://api.sunhouse.stuesports.info/api/baidang/hot?page=${this.page}`, {
                     params: {
                         page_size: 6,
                     },
