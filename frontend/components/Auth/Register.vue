@@ -100,11 +100,8 @@ export default {
             this.isLoading = true
             // THanh cong.
             this.kq = await this.$axios
-<<<<<<< HEAD
-                    .$post('https://api.sunhouse.stuesports.info/api/auth/register', {
-=======
+
                 .$post(ENV.register, {
->>>>>>> a224f68adb4e17ff406b44e0d7455711da38ba58
                     name: this.name,
                     email: this.email,
                     username: this.username,
