@@ -96,6 +96,7 @@ export default {
                 { text: 'Tiêu đề', value: 'tieude' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },
+                { text: 'Trạng thái', value: 'trangthai' },
                 { text: 'Đã duyệt', value: 'choduyet' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
@@ -111,6 +112,7 @@ export default {
         fetchDSBaiDang() {
             this.$axios.$get(ENV.baidangs).then((data) => {
                 this.dsBaiDang = data.baidangs
+                console.log(data.baidangs)
                 this.loading = false
             })
         },
