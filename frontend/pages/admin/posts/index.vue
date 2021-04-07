@@ -30,10 +30,10 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn fab dark small color="green" class="mr-2">
+<!--                            <v-btn fab dark small color="green" class="mr-2">
                                 <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                            <v-btn fab dark small color="indigo" class="mr-2">
+                            </v-btn>-->
+                            <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                             <v-btn fab dark small color="red" class="mr-5">
@@ -119,9 +119,14 @@ export default {
         showItem(item) {
             this.$router.push('/baidang/' + item.id)
         },
-        editItem: (item) => console.log('EDIT FUNCTION'),
+        editItem(item){
+            this.$router.push('/suabaidang/' + item.id)
+        },
         deleteItem(item) {
             this.$axios.delete(ENV.delete + item.id)
+        },
+        openDangBai(){
+          this.$router.push("/GuiTaiSan")
         },
     },
 }
