@@ -49,10 +49,8 @@
 </template>
 
 <script>
-import ENV from '@/api/baidang'
+import ENV from '@/api/goi'
 export default {
-    name: 'Goi',
-    components: {},
     layout: 'admin',
     data() {
         return {
@@ -72,7 +70,6 @@ export default {
         async fetchDSBaiDang() {
             const data = await this.$axios.$get(ENV.info + this.$route.params.id)
             this.gois = data
-
             this.loading = false
         },
     },

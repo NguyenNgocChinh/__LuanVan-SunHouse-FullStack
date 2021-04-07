@@ -42,15 +42,15 @@
                     <v-card-title>Thông Tin Chi Tiết</v-card-title>
                     <v-card-text>
                         <v-row>
-                            <v-col
-                            ><b>Loại: {{ baidangs.loai }}</b></v-col
-                            >
-                            <v-col
-                            ><b>Diện tích: {{ baidangs.dientich }} m <sup>2</sup></b></v-col
-                            >
-                            <v-col
-                            ><b>Hướng nhà: {{ baidangs.huong }}</b></v-col
-                            >
+                            <v-col>
+                                <b>Loại: {{ baidangs.loai }}</b>
+                            </v-col>
+                            <v-col>
+                                <b>Diện tích: {{ baidangs.dientich }} m <sup>2</sup></b>
+                            </v-col>
+                            <v-col>
+                                <b>Hướng nhà: {{ baidangs.huong }}</b>
+                            </v-col>
                         </v-row>
                         <v-row>
                             <v-col
@@ -116,7 +116,7 @@
                                 <v-btn :ripple="{ center: true }" color="primary"> Ngân Hàng </v-btn>
                             </v-row>
                             <v-row>
-                                <div class="text-center">
+                                <div class="text-center ml-10">
                                     <p><i>Không có trung tâm nào gần địa điểm này!</i></p>
                                 </div>
                             </v-row>
@@ -127,7 +127,6 @@
                     <h3 class="post-content-title mb-4">Bản đồ</h3>
                     <div class="agent-map">
                         <div style="width: 100%">
-                            <
                             <iframe
                                 width="100%"
                                 height="300"

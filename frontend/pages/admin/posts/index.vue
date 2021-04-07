@@ -30,7 +30,7 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-<!--                            <v-btn fab dark small color="green" class="mr-2">
+                            <!--                            <v-btn fab dark small color="green" class="mr-2">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>-->
                             <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
@@ -111,22 +111,20 @@ export default {
         fetchDSBaiDang() {
             this.$axios.$get(ENV.baidangs).then((data) => {
                 this.dsBaiDang = data.baidangs
-                console.log(data)
-                console.log(this.dsBaiDang)
                 this.loading = false
             })
         },
         showItem(item) {
             this.$router.push('/baidang/' + item.id)
         },
-        editItem(item){
+        editItem(item) {
             this.$router.push('/suabaidang/' + item.id)
         },
         deleteItem(item) {
             this.$axios.delete(ENV.delete + item.id)
         },
-        openDangBai(){
-          this.$router.push("/GuiTaiSan")
+        openDangBai() {
+            this.$router.push('/GuiTaiSan')
         },
     },
 }
