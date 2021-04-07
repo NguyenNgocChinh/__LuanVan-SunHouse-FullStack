@@ -7,5 +7,4 @@ const ENV = {
     duyetbai: 'https://api.sunhouse.stuesports.info/api/baidang/duyetbai', // NOT INCLUDE /
     delete: 'https://api.sunhouse.stuesports.info/api/baidang/',
 }
-
 export default ENV
