@@ -121,7 +121,6 @@ export default {
         fetchDSBaiDang() {
             this.$axios.$get(ENV.choduyet).then((data) => {
                 this.dsBaiDang = data.baidangs
-
                 this.loading = false
             })
         },
@@ -172,17 +171,16 @@ export default {
         duyetbai(dsDuyet) {
             if (dsDuyet == null || dsDuyet.length < 1) return
             this.duyetbaiLoading = true
-            const paramList = []
 
             let isError = false
             if (Array.isArray(dsDuyet)) {
                 dsDuyet.forEach((item) => {
-                    paramList.push(item.id)
                     this.$axios
                         .$put(ENV.duyetbai, null, {
                             params: {
                                 id: item.id,
                             },
+                            withCredentials: true,
                         })
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
@@ -197,13 +195,28 @@ export default {
                                 $nuxt.$emit('openErrorModal')
                             }
                         })
-                    console.log(this)
                 })
             } else {
-                paramList.push(dsDuyet.id)
-                const index = this.dsBaiDang.indexOf(dsDuyet)
-                this.dsBaiDang.splice(index, 1)
-                this.duyetbaiLoading = false
+                this.$axios
+                    .$put(ENV.duyetbai, null, {
+                        params: {
+                            id: dsDuyet.id,
+                        },
+                        withCredentials: true,
+                    })
+                    .then(() => {
+                        const index = this.dsBaiDang.indexOf(dsDuyet)
+                        this.dsBaiDang.splice(index, 1)
+                        this.duyetbaiLoading = false
+                    })
+                    .catch((e) => {
+                        this.duyetbaiLoading = false
+
+                        if (!isError) {
+                            isError = true
+                            $nuxt.$emit('openErrorModal')
+                        }
+                    })
             }
         },
     },

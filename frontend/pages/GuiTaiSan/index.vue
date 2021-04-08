@@ -1,7 +1,5 @@
 <template>
-
-    <FormGuiTaiSan />
-
+    <FormGuiTaiSan/>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-card>
             <v-card-title>
-                Quản Lý Gói
+                Quản lý Gói
                 <v-spacer />
                 <v-text-field
                     v-model="search"
@@ -19,7 +19,7 @@
                 :sort-by="['id']"
                 :sort-desc="[true]"
                 :headers="headers"
-                :items="dsBaiDang"
+                :items="dsPackages"
                 :single-select="singleSelect"
                 item-key="name"
                 show-select
@@ -43,6 +43,18 @@
                     </div>
                 </template>
 
+                <<<<<<< HEAD
+                <template #[`item.choduyet`]="{ item }">
+                    <v-btn v-if="item == 1" icon color="teal">
+                        <v-icon>mdi-check</v-icon>
+                    </v-btn>
+
+                    <v-btn v-else icon color="red">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+
+                ======= >>>>>>> 6ef737b5d34ce8c94d5ad1b9368af17155092818
                 <template #[`item.hanhdong`]="{ item }">
                     <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
                     <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
@@ -55,7 +67,9 @@
                                 <v-toolbar class="red lighten-1" dark>XÁC NHẬN XÓA</v-toolbar>
                                 <v-card-text class="pa-0">
                                     <div class="font-weight-black pa-5">
-                                        Bạn có chắc chắn muốn xóa gói có ID : {{ item.id }} ?
+                                        <<<<<<< HEAD Bạn có chắc chắn muốn xóa bài đăng có ID : {{ item.id }} ? =======
+                                        Bạn có chắc chắn muốn xóa gói có ID : {{ item.id }} ? >>>>>>>
+                                        6ef737b5d34ce8c94d5ad1b9368af17155092818
                                     </div>
                                 </v-card-text>
                                 <v-card-actions class="justify-end">
@@ -72,6 +86,7 @@
 </template>
 
 <script>
+import ENV from '@/api/goi'
 export default {
     components: {},
     layout: 'admin',
@@ -89,22 +104,23 @@ export default {
                 { text: 'Hạn sử dụng', value: 'hansudung' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
-            dsBaiDang: [],
+            dsPackages: [],
             loading: true,
             fab: false,
         }
     },
     created() {
-        this.fetchDSBaiDang()
+        this.fetchDSPackages()
     },
     methods: {
-        async fetchDSBaiDang() {
-            const data = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/goi')
-            this.dsBaiDang = data
+        async fetchDSPackages() {
+            const data = await this.$axios.$get(ENV.packages)
+            this.dsPackages = data
             this.loading = false
         },
+
         showItem(item) {
-            this.$router.push('/admin/packages/'+ item.id)
+            this.$router.push('/admin/packages/' + item.id)
         },
         editItem: (item) => console.log('EDIT FUNCTION'),
         deleteItem: (item) => console.log('DELETE FUNCTION'),

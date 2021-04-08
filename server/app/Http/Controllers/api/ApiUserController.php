@@ -30,11 +30,12 @@ class ApiUserController extends Controller
     {
         $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
 
-        if (!Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password]))
+        if (!$user = Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password]))
 
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
+
         return true;
     }
 
@@ -53,13 +54,9 @@ class ApiUserController extends Controller
         return response()->json(1);
     }
 
-    public function findUser(Request $request)
+    public function findUser($id)
     {
-        $user = User::select('id')->where('email', $request->email)->first();
-        if (count($user) == 0) {
-            return response()->json(false);
-        }
-        return response()->json(true);
+        return response()->json(User::find($id));
     }
 
     public function getAllUsers()
@@ -67,4 +64,44 @@ class ApiUserController extends Controller
         return response()->json(UserResource::collection(User::get()->sortBy('created_at', SORT_REGULAR, true)));
     }
 
+    public function countUser(){
+        return response()->json(User::count());
+    }
+
+    public function disableUser($id){
+        $user = User::find($id);
+        if ($user)
+        {
+            $user->trangthai = 0;
+            $user->save();
+            return response()->json(
+                [
+                    'success' => "Vô hiệu hóa thành công"
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'error' => "Vô hiệu hóa thất bại"
+            ]
+        );
+    }
+    public function enableUser($id){
+        $user = User::find($id);
+        if ($user)
+        {
+            $user->trangthai = 1;
+            $user->save();
+            return response()->json(
+                [
+                    'success' => "Kích hoạt tài khoản thành công"
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'error' => "Kích hoạt tài khoản thất bại"
+            ]
+        );
+    }
 }

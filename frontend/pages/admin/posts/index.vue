@@ -30,10 +30,10 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn fab dark small color="green" class="mr-2">
+                            <!--                            <v-btn fab dark small color="green" class="mr-2">
                                 <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                            <v-btn fab dark small color="indigo" class="mr-2">
+                            </v-btn>-->
+                            <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                             <v-btn fab dark small color="red" class="mr-5">
@@ -96,6 +96,7 @@ export default {
                 { text: 'Tiêu đề', value: 'tieude' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },
+                { text: 'Trạng thái', value: 'trangthai' },
                 { text: 'Đã duyệt', value: 'choduyet' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
@@ -111,17 +112,21 @@ export default {
         fetchDSBaiDang() {
             this.$axios.$get(ENV.baidangs).then((data) => {
                 this.dsBaiDang = data.baidangs
-                console.log(data)
-                console.log(this.dsBaiDang)
+                console.log(data.baidangs)
                 this.loading = false
             })
         },
         showItem(item) {
             this.$router.push('/baidang/' + item.id)
         },
-        editItem: (item) => console.log('EDIT FUNCTION'),
+        editItem(item) {
+            this.$router.push('/suabaidang/' + item.id)
+        },
         deleteItem(item) {
             this.$axios.delete(ENV.delete + item.id)
+        },
+        openDangBai() {
+            this.$router.push('/GuiTaiSan')
         },
     },
 }

@@ -31,6 +31,7 @@ class BaiDangResource extends JsonResource
             "dientich" => $this->dientich,
             "thoigian" => $this->formattedCreatedDate(),
             "choduyet" => $this->choduyet,
+            "trangthai" => $this->trangthai,
         ];
     }
 }

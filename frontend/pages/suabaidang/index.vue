@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <H2 align="center">Gửi tài sản</H2>
+        <H2 align="center">Sửa Bài Đăng</H2>
         <H4>SunHouse trao trọn niềm tin</H4>
         <v-card>
             <v-card-title> Thông tin cơ bản</v-card-title>
@@ -14,7 +14,8 @@
                     required
                 ></v-text-field>
                 <H2>Loại tài sản</H2>
-                <v-select v-model="loai" name="loaitaisan" :items="items" item-text="ten_loai" item-value="id"></v-select>
+                <v-select v-model="loai" name="loaitaisan" :items="items" item-text="ten_loai"
+                          item-value="id"></v-select>
                 <H2>Giá bán</H2>
                 <v-text-field
                     v-model="gia"
@@ -23,12 +24,15 @@
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
                 <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
-                <v-card-title  >Hình nhà thứ nhất</v-card-title>
-                <v-file-input v-model="hinhanh1" label="File input" filled prepend-icon="mdi-camera" name="hinh_1"></v-file-input>
+                <v-card-title>Hình nhà thứ nhất</v-card-title>
+                <v-file-input v-model="hinhanh1" label="File input" filled prepend-icon="mdi-camera"
+                              name="hinh_1"></v-file-input>
                 <v-card-title>Hình nhà thứ Hai</v-card-title>
-                <v-file-input v-model="hinhanh2" label="File input" filled prepend-icon="mdi-camera" name="hinh_2"></v-file-input>
+                <v-file-input v-model="hinhanh2" label="File input" filled prepend-icon="mdi-camera"
+                              name="hinh_2"></v-file-input>
                 <v-card-title>Hình nhà thứ Ba</v-card-title>
-                <v-file-input v-model="hinhanh3" label="File input" filled prepend-icon="mdi-camera" name="hinh_3"></v-file-input>
+                <v-file-input v-model="hinhanh3" label="File input" filled prepend-icon="mdi-camera"
+                              name="hinh_3"></v-file-input>
             </v-card-text>
             <v-divider class="mt-12"></v-divider>
         </v-card>
@@ -114,13 +118,12 @@
         ></v-text-field>
 
         <div class="text-center">
-            <v-btn v-model="btndangbai"  text @click="xulydangbai" class="mt-6 mx-auto" color="primary" elevation="6" large> Đăng bài</v-btn>
+            <v-btn v-model="btndangbai" text class="mt-6 mx-auto" color="primary" elevation="6" large> Đăng bài</v-btn>
         </div>
     </v-container>
 </template>
 
 <script>
-import baidang from "~/api/baidang";
 
 export default {
     data() {
@@ -146,8 +149,8 @@ export default {
             hinh_3: '',
             btndangbai: '',
             noidung: '',
-            noithat:[],
-
+            noithat: [],
+            baidang: null,
         }
     },
     props: {
@@ -156,10 +159,36 @@ export default {
         },
     },
     created() {
+        this.getBaiDangSua()
         this.getDSTienNghi()
         this.getAllLoai()
     },
     methods: {
+        async getBaiDangSua() {
+            try {
+                this.$axios
+                    .$get('https://api.sunhouse.stuesports.info/api/baidang/' + this.$route.params.id)
+                    .then((data) => {
+                        this.baidang = data,
+                            this.tieude = data.tieude,
+                            this.loai = data.loai,
+                            this.gia = data.gia,
+                            this.noidung = data.noidung,
+                            this.phongngu = data.sophongngu,
+                            this.phongtam = data.sophongtam
+                        /*this.selectedhuong,
+                        this.noithat,
+                        this.namxaydung,
+                        this.dientich,
+                        this.diachi,
+                        this.hinhthuc,*/
+                        /*toadoX: 110,
+                        toadoY: 100,*/
+                    })
+            } catch (e) {
+                console.log(e)
+            }
+        },
         async getAllLoai() {
             try {
                 const loai = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/loai')
@@ -171,7 +200,7 @@ export default {
         async getDSTienNghi() {
             this.tiennghis = await this.$axios.$get('http://api.sunhouse.stuesports.info/api/tiennghi')
         },
-        async xulydangbai(){
+        async xulydangbai() {
             this.kq = await this.$axios
                 .$post('https://api.sunhouse.stuesports.info/api/baidang', {
                     tieude: this.tieude,
@@ -185,14 +214,14 @@ export default {
                     namxaydung: this.namxaydung,
                     dientich: this.dientich,
                     diachi: this.diachi,
-                    hinhthuc:this.hinhthuc,
+                    hinhthuc: this.hinhthuc,
                     toadoX: 110,
                     toadoY: 100,
                 })
                 .then((data) => {
                     console.log(data)
                     this.kq = data.id
-                    this.$router.push("/BaiDang/" +this.kq)
+                    this.$router.push("/BaiDang/" + this.kq)
 
                 })
                 .catch((e) => {
@@ -203,4 +232,3 @@ export default {
 }
 </script>
 
-<style scoped></style>
