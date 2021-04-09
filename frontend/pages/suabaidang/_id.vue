@@ -14,7 +14,7 @@
                     required
                 ></v-text-field>
                 <H2>Loại tài sản</H2>
-                <v-select v-model="loai" name="loaitaisan" :items="items" item-text="ten_loai"
+                <v-select v-model="loai" :items="loais" item-text="ten_loai"
                           item-value="id"></v-select>
                 <H2>Giá bán</H2>
                 <v-text-field
@@ -91,7 +91,7 @@
             <v-card-title>Nội thất nhà bạn</v-card-title>
             <v-card-text>
                 <v-container fluid>
-                    <v-row>
+                        <v-row>
                         <v-checkbox
                             v-model="noithat"
                             v-for="tiennghi in tiennghis"
@@ -118,7 +118,7 @@
         ></v-text-field>
 
         <div class="text-center">
-            <v-btn v-model="btndangbai" text class="mt-6 mx-auto" color="primary" elevation="6" large> Đăng bài</v-btn>
+            <v-btn v-model="btndangbai" text class="mt-6 mx-auto" color="primary" @click="suaBaiDang" elevation="6" large>Sửa</v-btn>
         </div>
     </v-container>
 </template>
@@ -128,14 +128,14 @@
 export default {
     data() {
         return {
-            items: [],
+            loais: [],
             selected: 'Căn hộ',
             itemhinhthuc: ['Cho thuê', 'Rao bán'],
-            hinhthuc: '',
+            hinhthuc: null,
             huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
             selectedhuong: '',
             namxaydung: null,
-            loai: '',
+            loai: null,
             diachi: '',
             name: 'FormGuiTaiSan',
             tiennghis: [],
@@ -151,17 +151,15 @@ export default {
             noidung: '',
             noithat: [],
             baidang: null,
+            arrayTN:[],
         }
-    },
-    props: {
-        baidang: {
-            default: null,
-        },
     },
     created() {
         this.getBaiDangSua()
         this.getDSTienNghi()
         this.getAllLoai()
+
+
     },
     methods: {
         async getBaiDangSua() {
@@ -169,19 +167,30 @@ export default {
                 this.$axios
                     .$get('https://api.sunhouse.stuesports.info/api/baidang/' + this.$route.params.id)
                     .then((data) => {
-                        this.baidang = data,
-                            this.tieude = data.tieude,
-                            this.loai = data.loai,
-                            this.gia = data.gia,
-                            this.noidung = data.noidung,
-                            this.phongngu = data.sophongngu,
-                            this.phongtam = data.sophongtam
-                        /*this.selectedhuong,
-                        this.noithat,
-                        this.namxaydung,
-                        this.dientich,
-                        this.diachi,
-                        this.hinhthuc,*/
+                        this.baidang = data
+                        console.log(this.baidang.loai)
+                        this.tieude = this.baidang.tieude
+                        this.gia = this.baidang.gia
+                        this.noidung = this.baidang.noidung
+                        this.phongngu = this.baidang.sophongngu
+                        this.phongtam = this.baidang.sophongtam
+                        this.selectedhuong = this.baidang.huong
+                        this.namxaydung = this.baidang.namxaydung
+                        this.dientich = this.baidang.dientich
+                        this.diachi = this.baidang.diachi
+                        this.hinhthuc = this.baidang.isChoThue
+                        this.loais.forEach((l) =>{
+                           if (l.ten_loai === this.baidang.loai){
+                                this.loai = l.id
+                           }
+                        })
+
+                        this.baidang.tiennghi.forEach( (item) => {
+                            this.noithat.push(item.id)
+                        })
+
+
+
                         /*toadoX: 110,
                         toadoY: 100,*/
                     })
@@ -192,7 +201,7 @@ export default {
         async getAllLoai() {
             try {
                 const loai = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/loai')
-                this.items = loai
+                this.loais = loai
             } catch (e) {
 
             }
@@ -200,9 +209,11 @@ export default {
         async getDSTienNghi() {
             this.tiennghis = await this.$axios.$get('http://api.sunhouse.stuesports.info/api/tiennghi')
         },
-        async xulydangbai() {
+
+
+        async suaBaiDang() {
             this.kq = await this.$axios
-                .$post('https://api.sunhouse.stuesports.info/api/baidang', {
+                .$put(ENV.baidangs+ this.$route.params.id, {
                     tieude: this.tieude,
                     loai: this.loai,
                     gia: this.gia,
