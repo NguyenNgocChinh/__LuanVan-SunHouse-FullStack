@@ -26,12 +26,9 @@
             <NotLogin v-if="!$auth.user" />
             <!--Loggin: true-->
             <HasLogin v-else />
-            <v-btn elevation="2" rounded color="sunhouse_pinkLinght">
+            <v-btn elevation="2" rounded color="sunhouse_pinkLinght" to="/GuiTaiSan">
                 <!--<v-icon dark> mdi-plus</v-icon>-->
-                <v-list-item link to="/GuiTaiSan">
-                    <span class="text-uppercase">Đăng tin</span>
-                </v-list-item>
-
+                <span class="text-uppercase">Đăng tin</span>
             </v-btn>
         </v-app-bar>
         <!--IS MOBILE-->
@@ -49,7 +46,7 @@
                     <NotLogin v-if="!$auth.user" />
                     <HasLogin v-else />
                 </div>
-                <v-btn elevation="2" rounded color="sunhouse_pinkLinght">
+                <v-btn elevation="2" rounded color="sunhouse_pinkLinght" to="/GuiTaiSan">
                     <!--<v-icon dark> mdi-plus</v-icon>-->
                     <span class="text-uppercase">Đăng tin</span>
                 </v-btn>
@@ -107,7 +104,7 @@ export default {
                 { menu: 'Nhà cho thuê', href: '/BaiDang/rent', icon: 'mdi-home-city' },
                 { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
                 { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
-                { menu: 'Tìm kiếm', href: '/timkiem/', icon: 'mdi-magnify' },
+                { menu: 'Tìm kiếm', href: '/timkiem', icon: 'mdi-magnify' },
             ],
         }
     },
@@ -124,7 +121,7 @@ export default {
     },
     methods: {
         onResize() {
-            this.isMobile = window.innerWidth < 1280
+            this.isMobile = window.innerWidth < 1376
             this.isVerySmall = window.innerWidth < 580
         },
     },

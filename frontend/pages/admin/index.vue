@@ -6,24 +6,24 @@
                 <v-spacer />
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Số Thành Viên</v-card-title>
-                    <v-card-text >{{thanhvien}} thành viên</v-card-text>
+                    <v-card-text>{{ thanhvien }} thành viên</v-card-text>
                 </v-card>
                 <v-spacer />
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Tổng Bài Viết</v-card-title>
-                    <v-card-text>{{baiviet}} bài viết</v-card-text>
+                    <v-card-text>{{ baiviet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Đang Chờ Duyệt</v-card-title>
-                    <v-card-text>{{choduyet}} bài viết</v-card-text>
+                    <v-card-text>{{ choduyet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
                 <v-card elevation="2" outlined width="200">
                     <v-card-title class="justify-center">Số Gói</v-card-title>
-                    <v-card-text>{{sogoi}} gói</v-card-text>
+                    <v-card-text>{{ sogoi }} gói</v-card-text>
                 </v-card>
                 <v-spacer />
             </v-row>
@@ -39,6 +39,10 @@
                 :headers="headers"
                 :items="dsBaiDang"
                 :single-select="singleSelect"
+                :multi-sort="true"
+                loading-text="Đang tải danh sách bài đăng chờ duyệt từ hệ thống"
+                no-data-text="Hiện tại không có bài đăng nào đang chờ được duyệt"
+                no-results-text="Không tìm thấy kết quả nào trùng khớp"
                 item-key="id"
                 show-select
                 class="elevation-4"
@@ -83,6 +87,7 @@
 
 <script>
 import ENV from '@/api/baidang'
+import THONGKE from '@/api/thongke'
 import ModalError from '@/components/Error/modalError'
 export default {
     components: { ModalError },
@@ -104,10 +109,10 @@ export default {
             loading: true,
             fab: false,
             duyetbaiLoading: false,
-            thanhvien: '',
-            baiviet: '',
-            choduyet: '',
-            sogoi: '',
+            thanhvien: 0,
+            baiviet: 0,
+            choduyet: 0,
+            sogoi: 0,
         }
     },
     created() {
@@ -124,45 +129,41 @@ export default {
                 this.loading = false
             })
         },
-       async getSoThanhVien(){
-
-                     this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/count')
-                    .then((data) => {
-                        this.thanhvien = data
-                        console.log(data)
-                    })
-                    .catch((e) => {
-                        console.log(e)
-                    })
+        async getSoThanhVien() {
+            await this.$axios
+                .$get(THONGKE.user)
+                .then((data) => {
+                    this.thanhvien = data
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         },
-        async getSoBaiViet(){
-
-            this.$axios.$get('https://api.sunhouse.stuesports.info/api/users/count')
+        async getSoBaiViet() {
+            await this.$axios
+                .$get(THONGKE.baidang)
                 .then((data) => {
                     this.baiviet = data
-                    console.log(data)
                 })
                 .catch((e) => {
                     console.log(e)
                 })
         },
-        async getSoChoDuyet(){
-
-            this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/choduyet/count')
+        async getSoChoDuyet() {
+            await this.$axios
+                .$get(THONGKE.choduyet)
                 .then((data) => {
                     this.choduyet = data
-                    console.log(data)
                 })
                 .catch((e) => {
                     console.log(e)
                 })
         },
-        async getSoGoi(){
-
-            this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/choduyet/count')
+        async getSoGoi() {
+            await this.$axios
+                .$get(THONGKE.goi)
                 .then((data) => {
                     this.sogoi = data
-                    console.log(data)
                 })
                 .catch((e) => {
                     console.log(e)
