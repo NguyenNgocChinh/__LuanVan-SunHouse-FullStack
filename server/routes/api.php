@@ -56,7 +56,8 @@ Route::group(['prefix' => 'baidang'], function () {
     Route::put('/duyetbai', [ApiBaiDangController::class, 'duyetBai']);
     Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
 
-
+    Route::put('/updateDuyetBai', [ApiBaiDangController::class, 'updateDuyetBai']);
+    Route::put('/updateTrangThai', [ApiBaiDangController::class, 'updateTrangThai']);
 
 });
 

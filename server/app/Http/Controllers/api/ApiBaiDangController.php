@@ -98,6 +98,32 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
+    public function updateDuyetBai(Request $request){
+        $post = BaiDang::find($request->id);
+        $post->choduyet = $request->choduyet;
+        $ok = $post->save();
+        if ($ok)
+            return response()->json([
+                'success' => 'Cập nhật thành công'
+            ]);
+        return response()->json([
+            'fail' => 'Cập nhật thất bại'
+        ]);
+    }
+
+    public function updateTrangThai(Request $request){
+        $post = BaiDang::find($request->id);
+        $post->trangthai = $request->trangthai;
+        $ok = $post->save();
+        if ($ok)
+            return response()->json([
+                'success' => 'Cập nhật thành công'
+            ]);
+        return response()->json([
+            'fail' => 'Cập nhật thất bại'
+        ]);
+    }
+
     public function duyetBai(Request $request){
 
         $post = BaiDang::find($request->id);
