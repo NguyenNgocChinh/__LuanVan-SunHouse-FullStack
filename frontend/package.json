@@ -16,6 +16,7 @@
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "nuxt-gmaps": "^1.2.10",
+    "v-snackbars": "^3.1.0",
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {

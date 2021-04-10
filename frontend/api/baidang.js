@@ -9,5 +9,7 @@ const ENV = {
     edit: 'https://api.sunhouse.stuesports.info/api/baidang/',
     info: 'https://api.sunhouse.stuesports.info/api/baidang/',
     store: 'https://api.sunhouse.stuesports.info/api/baidang',
+    update_status: 'https://api.sunhouse.stuesports.info/api/baidang/updateTrangThai',
+    update_choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/updateDuyetBai',
 }
 export default ENV

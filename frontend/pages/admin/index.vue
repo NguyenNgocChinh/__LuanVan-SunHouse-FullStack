@@ -181,7 +181,6 @@ export default {
                             params: {
                                 id: item.id,
                             },
-                            withCredentials: true,
                         })
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
