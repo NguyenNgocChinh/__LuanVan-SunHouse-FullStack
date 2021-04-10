@@ -58,15 +58,15 @@
                 <v-col cols="12" sm="4">
                     <v-card-title>Hướng</v-card-title>
                     <v-form>
-                        <v-select v-model="selectedhuong" item-value="v" item-text="v" :items="[
-                    { k: 'Dong', v: 'Hướng nhà: Đông' },
-                    { k: 'Tay', v: 'Hướng nhà: Tây' },
+                        <v-select v-model="selectedhuong" item-value="k" item-text="v" :items="[
+                    { k: 'Đông', v: 'Hướng nhà: Đông' },
+                    { k: 'Tây', v: 'Hướng nhà: Tây' },
                     { k: 'Nam', v: 'Hướng nhà: Nam' },
-                    { k: 'Bac', v: 'Hướng nhà: Bắc' },
-                    { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
-                    { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
-                    { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
-                    { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
+                    { k: 'Bắc', v: 'Hướng nhà: Bắc' },
+                    { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
+                    { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
+                    { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
+                    { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
                     { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                 ]" solo></v-select>
                     </v-form>
@@ -141,9 +141,9 @@ export default {
             phongtam: '1',
             dientich: '',
             gia: '',
-            hinh_1: '',
-            hinh_2: '',
-            hinh_3: '',
+            hinhanh1: '',
+            hinhanh2: '',
+            hinhanh3: '',
             btndangbai: '',
             noidung: '',
             noithat:[],

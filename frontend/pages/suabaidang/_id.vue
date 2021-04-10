@@ -62,15 +62,15 @@
                 <v-col cols="12" sm="4">
                     <v-card-title>Hướng</v-card-title>
                     <v-form>
-                        <v-select v-model="selectedhuong" item-value="v" item-text="v" :items="[
-                    { k: 'Dong', v: 'Hướng nhà: Đông' },
-                    { k: 'Tay', v: 'Hướng nhà: Tây' },
+                        <v-select v-model="selectedhuong" item-value="k" item-text="v" :items="[
+                    { k: 'Đông', v: 'Hướng nhà: Đông' },
+                    { k: 'Tây', v: 'Hướng nhà: Tây' },
                     { k: 'Nam', v: 'Hướng nhà: Nam' },
-                    { k: 'Bac', v: 'Hướng nhà: Bắc' },
-                    { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
-                    { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
-                    { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
-                    { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
+                    { k: 'Bắc', v: 'Hướng nhà: Bắc' },
+                    { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
+                    { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
+                    { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
+                    { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
                     { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                 ]" solo></v-select>
                     </v-form>
@@ -129,10 +129,8 @@ export default {
     data() {
         return {
             loais: [],
-            selected: 'Căn hộ',
-            itemhinhthuc: ['Cho thuê', 'Rao bán'],
+            loaiTemp: '',
             hinhthuc: null,
-            huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
             selectedhuong: '',
             namxaydung: null,
             loai: null,
@@ -144,21 +142,19 @@ export default {
             phongtam: '1',
             dientich: '',
             gia: '',
-            hinh_1: '',
-            hinh_2: '',
-            hinh_3: '',
+            hinhanh1: '',
+            hinhanh2: '',
+            hinhanh3: '',
             btndangbai: '',
             noidung: '',
             noithat: [],
             baidang: null,
-            arrayTN:[],
         }
     },
     created() {
-        this.getBaiDangSua()
-        this.getDSTienNghi()
         this.getAllLoai()
-
+        this.getDSTienNghi()
+        this.getBaiDangSua()
 
     },
     methods: {
@@ -168,7 +164,6 @@ export default {
                     .$get('https://api.sunhouse.stuesports.info/api/baidang/' + this.$route.params.id)
                     .then((data) => {
                         this.baidang = data
-                        console.log(this.baidang.loai)
                         this.tieude = this.baidang.tieude
                         this.gia = this.baidang.gia
                         this.noidung = this.baidang.noidung
@@ -179,18 +174,14 @@ export default {
                         this.dientich = this.baidang.dientich
                         this.diachi = this.baidang.diachi
                         this.hinhthuc = this.baidang.isChoThue
-                        this.loais.forEach((l) =>{
-                           if (l.ten_loai === this.baidang.loai){
-                                this.loai = l.id
-                           }
-                        })
-
                         this.baidang.tiennghi.forEach( (item) => {
                             this.noithat.push(item.id)
                         })
-
-
-
+                        this.loais.forEach((l)=>{
+                            if (l.ten_loai===this.baidang.loai){
+                                this.loai = l.id
+                            }
+                        })
                         /*toadoX: 110,
                         toadoY: 100,*/
                     })
@@ -206,10 +197,10 @@ export default {
 
             }
         },
+
         async getDSTienNghi() {
             this.tiennghis = await this.$axios.$get('http://api.sunhouse.stuesports.info/api/tiennghi')
         },
-
 
         async suaBaiDang() {
             this.kq = await this.$axios
