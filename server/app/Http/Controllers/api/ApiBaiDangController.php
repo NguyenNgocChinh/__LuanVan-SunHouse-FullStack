@@ -67,7 +67,7 @@ class ApiBaiDangController extends Controller
         return response()->json(BaiDang::count());
     }
     public function countChoDuyetPosts(){
-        return response()->json(BaiDang::count());
+        return response()->json(BaiDang::where('choduyet',1)->count());
     }
 
     public function getDetailPost($id)

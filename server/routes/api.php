@@ -43,8 +43,8 @@ Route::group(['prefix' => 'users'], function () {
  */
 Route::group(['prefix' => 'baidang'], function () {
     Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
-    Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
     Route::post('/', [ApiBaiDangController::class, 'storeBaiDang']);
+    Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
     Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
     Route::put('/{id}', [ApiBaiDangController::class, 'updateBaiDang'])->whereNumber('id');
 

@@ -62,7 +62,7 @@
                         </template>
                         <template #default="dialog">
                             <v-card>
-                                <v-toolbar class="red lighten-1" dark>XÁC NHẬN XÓA</v-toolbar>
+                                <v-toolbar class="red lighten-1" @click="deleteItem(item)" dark>XÁC NHẬN XÓA</v-toolbar>
                                 <v-card-text class="pa-0">
                                     <div class="font-weight-black pa-5">
                                         Bạn có chắc chắn muốn xóa bài đăng có ID : {{ item.id }} ?
@@ -70,7 +70,7 @@
                                 </v-card-text>
                                 <v-card-actions class="justify-end">
                                     <v-btn text @click="dialog.value = false">Hủy</v-btn>
-                                    <v-btn color="red" class="white--text" @click="deleteItem(item.id)">XÓA</v-btn>
+                                    <v-btn color="red" class="white--text" @click="deleteItem(item)">XÓA</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </template>
@@ -123,7 +123,13 @@ export default {
             this.$router.push('/suabaidang/' + item.id)
         },
         deleteItem(item) {
-            this.$axios.delete(ENV.delete + item.id)
+            this.$axios.$delete('https://api.sunhouse.stuesports.info/api/baidang/' + item.id).then((data)=>{
+                console.log(data)
+            })
+            .catch((e)=>{
+                console.log(e)
+            })
+
         },
         openDangBai() {
             this.$router.push('/GuiTaiSan')

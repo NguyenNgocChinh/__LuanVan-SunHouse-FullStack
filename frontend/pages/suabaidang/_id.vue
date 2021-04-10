@@ -85,17 +85,17 @@
                     <v-form>
                         <v-select
                             v-model="selectedhuong"
-                            item-value="v"
+                            item-value="k"
                             item-text="v"
                             :items="[
-                                { k: 'Dong', v: 'Hướng nhà: Đông' },
-                                { k: 'Tay', v: 'Hướng nhà: Tây' },
+                                { k: 'Đông', v: 'Hướng nhà: Đông' },
+                                { k: 'Tây', v: 'Hướng nhà: Tây' },
                                 { k: 'Nam', v: 'Hướng nhà: Nam' },
-                                { k: 'Bac', v: 'Hướng nhà: Bắc' },
-                                { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
-                                { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
-                                { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
-                                { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
+                                { k: 'Bắc', v: 'Hướng nhà: Bắc' },
+                                { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
+                                { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
+                                { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
+                                { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
                                 { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                             ]"
                             solo
@@ -166,10 +166,8 @@ export default {
     data() {
         return {
             loais: [],
-            selected: 'Căn hộ',
-            itemhinhthuc: ['Cho thuê', 'Rao bán'],
+            loaiTemp: '',
             hinhthuc: null,
-            huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
             selectedhuong: '',
             namxaydung: null,
             loai: null,
@@ -181,9 +179,9 @@ export default {
             phongtam: '1',
             dientich: '',
             gia: '',
-            hinh_1: '',
-            hinh_2: '',
-            hinh_3: '',
+            hinhanh1: '',
+            hinhanh2: '',
+            hinhanh3: '',
             btndangbai: '',
             noidung: '',
             noithat: [],
@@ -192,9 +190,9 @@ export default {
         }
     },
     created() {
-        this.getBaiDangSua()
-        this.getDSTienNghi()
         this.getAllLoai()
+        this.getDSTienNghi()
+        this.getBaiDangSua()
     },
     methods: {
         async getBaiDangSua() {
@@ -235,6 +233,7 @@ export default {
                 this.loais = loai
             } catch (e) {}
         },
+
         async getDSTienNghi() {
             this.tiennghis = await this.$axios.$get(ENVTN.default.all)
         },
