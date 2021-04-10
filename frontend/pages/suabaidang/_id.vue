@@ -14,8 +14,7 @@
                     required
                 ></v-text-field>
                 <H2>Loại tài sản</H2>
-                <v-select v-model="loai" :items="loais" item-text="ten_loai"
-                          item-value="id"></v-select>
+                <v-select v-model="loai" :items="loais" item-text="ten_loai" item-value="id"></v-select>
                 <H2>Giá bán</H2>
                 <v-text-field
                     v-model="gia"
@@ -25,14 +24,29 @@
                 <v-card-title>Nội dung bài viết</v-card-title>
                 <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
                 <v-card-title>Hình nhà thứ nhất</v-card-title>
-                <v-file-input v-model="hinhanh1" label="File input" filled prepend-icon="mdi-camera"
-                              name="hinh_1"></v-file-input>
+                <v-file-input
+                    v-model="hinhanh1"
+                    label="File input"
+                    filled
+                    prepend-icon="mdi-camera"
+                    name="hinh_1"
+                ></v-file-input>
                 <v-card-title>Hình nhà thứ Hai</v-card-title>
-                <v-file-input v-model="hinhanh2" label="File input" filled prepend-icon="mdi-camera"
-                              name="hinh_2"></v-file-input>
+                <v-file-input
+                    v-model="hinhanh2"
+                    label="File input"
+                    filled
+                    prepend-icon="mdi-camera"
+                    name="hinh_2"
+                ></v-file-input>
                 <v-card-title>Hình nhà thứ Ba</v-card-title>
-                <v-file-input v-model="hinhanh3" label="File input" filled prepend-icon="mdi-camera"
-                              name="hinh_3"></v-file-input>
+                <v-file-input
+                    v-model="hinhanh3"
+                    label="File input"
+                    filled
+                    prepend-icon="mdi-camera"
+                    name="hinh_3"
+                ></v-file-input>
             </v-card-text>
             <v-divider class="mt-12"></v-divider>
         </v-card>
@@ -42,9 +56,16 @@
                 <v-col cols="12" sm="4">
                     <v-card-title>Hình thức</v-card-title>
                     <v-form>
-                        <v-select v-model="hinhthuc" item-text="v" item-value="k" :items="[
-                    { k: '1', v: 'Thuê' },
-                    { k: '0', v: 'Rao Bán' },]" solo></v-select>
+                        <v-select
+                            v-model="hinhthuc"
+                            item-text="v"
+                            item-value="k"
+                            :items="[
+                                { k: '1', v: 'Thuê' },
+                                { k: '0', v: 'Rao Bán' },
+                            ]"
+                            solo
+                        ></v-select>
                     </v-form>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -62,17 +83,23 @@
                 <v-col cols="12" sm="4">
                     <v-card-title>Hướng</v-card-title>
                     <v-form>
-                        <v-select v-model="selectedhuong" item-value="v" item-text="v" :items="[
-                    { k: 'Dong', v: 'Hướng nhà: Đông' },
-                    { k: 'Tay', v: 'Hướng nhà: Tây' },
-                    { k: 'Nam', v: 'Hướng nhà: Nam' },
-                    { k: 'Bac', v: 'Hướng nhà: Bắc' },
-                    { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
-                    { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
-                    { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
-                    { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
-                    { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
-                ]" solo></v-select>
+                        <v-select
+                            v-model="selectedhuong"
+                            item-value="v"
+                            item-text="v"
+                            :items="[
+                                { k: 'Dong', v: 'Hướng nhà: Đông' },
+                                { k: 'Tay', v: 'Hướng nhà: Tây' },
+                                { k: 'Nam', v: 'Hướng nhà: Nam' },
+                                { k: 'Bac', v: 'Hướng nhà: Bắc' },
+                                { k: 'Dong+Bac', v: 'Hướng nhà: Đông Bắc' },
+                                { k: 'Dong+Nam', v: 'Hướng nhà: Đông Nam' },
+                                { k: 'Tay+Bac', v: 'Hướng nhà: Tây Bắc' },
+                                { k: 'Tay+Nam', v: 'Hướng nhà: Tây Nam' },
+                                { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
+                            ]"
+                            solo
+                        ></v-select>
                     </v-form>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -91,17 +118,16 @@
             <v-card-title>Nội thất nhà bạn</v-card-title>
             <v-card-text>
                 <v-container fluid>
-                        <v-row>
+                    <v-row>
                         <v-checkbox
-                            v-model="noithat"
                             v-for="tiennghi in tiennghis"
                             :key="tiennghi.id"
+                            v-model="noithat"
                             :label="tiennghi.ten_tiennghi"
                             color="primary"
                             :value="tiennghi.id"
                             class="ml-10"
                         ></v-checkbox>
-
                     </v-row>
                 </v-container>
             </v-card-text>
@@ -118,13 +144,24 @@
         ></v-text-field>
 
         <div class="text-center">
-            <v-btn v-model="btndangbai" text class="mt-6 mx-auto" color="primary" @click="suaBaiDang" elevation="6" large>Sửa</v-btn>
+            <v-btn
+                v-model="btndangbai"
+                text
+                class="mt-6 mx-auto"
+                color="primary"
+                elevation="6"
+                large
+                @click="suaBaiDang"
+                >Sửa</v-btn
+            >
         </div>
     </v-container>
 </template>
 
 <script>
-
+import ENV from '@/api/baidang'
+import * as ENVL from '@/api/loai'
+import * as ENVTN from '@/api/tiennghi'
 export default {
     data() {
         return {
@@ -151,69 +188,60 @@ export default {
             noidung: '',
             noithat: [],
             baidang: null,
-            arrayTN:[],
+            arrayTN: [],
         }
     },
     created() {
         this.getBaiDangSua()
         this.getDSTienNghi()
         this.getAllLoai()
-
-
     },
     methods: {
         async getBaiDangSua() {
             try {
-                this.$axios
-                    .$get('https://api.sunhouse.stuesports.info/api/baidang/' + this.$route.params.id)
-                    .then((data) => {
-                        this.baidang = data
-                        console.log(this.baidang.loai)
-                        this.tieude = this.baidang.tieude
-                        this.gia = this.baidang.gia
-                        this.noidung = this.baidang.noidung
-                        this.phongngu = this.baidang.sophongngu
-                        this.phongtam = this.baidang.sophongtam
-                        this.selectedhuong = this.baidang.huong
-                        this.namxaydung = this.baidang.namxaydung
-                        this.dientich = this.baidang.dientich
-                        this.diachi = this.baidang.diachi
-                        this.hinhthuc = this.baidang.isChoThue
-                        this.loais.forEach((l) =>{
-                           if (l.ten_loai === this.baidang.loai){
-                                this.loai = l.id
-                           }
-                        })
-
-                        this.baidang.tiennghi.forEach( (item) => {
-                            this.noithat.push(item.id)
-                        })
-
-
-
-                        /*toadoX: 110,
-                        toadoY: 100,*/
+                await this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
+                    this.baidang = data
+                    console.log(this.baidang.loai)
+                    this.tieude = this.baidang.tieude
+                    this.gia = this.baidang.gia
+                    this.noidung = this.baidang.noidung
+                    this.phongngu = this.baidang.sophongngu
+                    this.phongtam = this.baidang.sophongtam
+                    this.selectedhuong = this.baidang.huong
+                    this.namxaydung = this.baidang.namxaydung
+                    this.dientich = this.baidang.dientich
+                    this.diachi = this.baidang.diachi
+                    this.hinhthuc = this.baidang.isChoThue
+                    this.loais.forEach((l) => {
+                        if (l.ten_loai === this.baidang.loai) {
+                            this.loai = l.id
+                        }
                     })
+
+                    this.baidang.tiennghi.forEach((item) => {
+                        this.noithat.push(item.id)
+                    })
+
+                    /* toadoX: 110,
+                        toadoY: 100, */
+                })
             } catch (e) {
                 console.log(e)
             }
         },
         async getAllLoai() {
             try {
-                const loai = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/loai')
+                const loai = await this.$axios.$get(ENVL.default.all)
                 this.loais = loai
-            } catch (e) {
-
-            }
+            } catch (e) {}
         },
         async getDSTienNghi() {
-            this.tiennghis = await this.$axios.$get('http://api.sunhouse.stuesports.info/api/tiennghi')
+            this.tiennghis = await this.$axios.$get(ENVTN.default.all)
         },
-
 
         async suaBaiDang() {
             this.kq = await this.$axios
-                .$put(ENV.baidangs+ this.$route.params.id, {
+                .$put(ENV.baidangs + this.$route.params.id, {
                     tieude: this.tieude,
                     loai: this.loai,
                     gia: this.gia,
@@ -232,8 +260,7 @@ export default {
                 .then((data) => {
                     console.log(data)
                     this.kq = data.id
-                    this.$router.push("/BaiDang/" + this.kq)
-
+                    this.$router.push('/BaiDang/' + this.kq)
                 })
                 .catch((e) => {
                     console.log(e)
@@ -242,4 +269,3 @@ export default {
     },
 }
 </script>
-
