@@ -9,6 +9,7 @@
     >
         <div v-show="images.length" class="upload-control">
             <label for="file">Chọn hình ảnh</label>
+            <!--            <v-btn @click="upload">up</v-btn>-->
         </div>
 
         <div v-show="!images.length">
@@ -23,7 +24,7 @@
 
         <div v-show="images.length" class="images-preview">
             <div v-for="(image, index) in images" :key="index" class="img-wrapper">
-                <img :src="image" :alt="`Image Uplaoder ${index}`" />
+                <img :src="image" :alt="`Image uploader ${index}`" />
                 <div class="details">
                     <span class="name" v-text="files[index].name"></span>
                     <span class="size" v-text="getFileSize(files[index].size)"></span>
@@ -91,6 +92,9 @@ export default {
 
             this.files.forEach((file) => {
                 formData.append('images[]', file, file.name)
+            })
+            this.$axios.$put('http://localhost:8000/api/baidang/12', formData).then((res) => {
+                console.log(res)
             })
             // axios.post('/images-upload', formData).then((response) => {
             //     this.$toastr.s('All images uplaoded successfully')

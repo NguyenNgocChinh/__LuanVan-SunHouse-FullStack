@@ -6,7 +6,7 @@ const ENV = {
     choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/choduyet',
     duyetbai: 'https://api.sunhouse.stuesports.info/api/baidang/duyetbai', // NOT INCLUDE /
     delete: 'https://api.sunhouse.stuesports.info/api/baidang/',
-    edit: 'http://localhost:8000/api/baidang/',
+    edit: 'http://localhost:8000/api/baidang/edit/',
     info: 'http://localhost:8000/api/baidang/',
     store: 'https://api.sunhouse.stuesports.info/api/baidang',
     update_status: 'https://api.sunhouse.stuesports.info/api/baidang/updateTrangThai',

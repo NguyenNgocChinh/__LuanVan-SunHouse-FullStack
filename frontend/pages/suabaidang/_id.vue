@@ -25,8 +25,9 @@
                     <v-card-title>Nội dung bài viết</v-card-title>
                     <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
                     <v-card-title>Hình ảnh</v-card-title>
-                    <image-upload />
+                    <!--                    <image-upload />-->
                     <v-file-input
+                        ref="files"
                         v-model="files"
                         accept="image/*"
                         label="Có thể chọn nhiều hình ảnh"
@@ -60,8 +61,8 @@
                                 item-text="v"
                                 item-value="k"
                                 :items="[
-                                    { k: '1', v: 'Thuê' },
-                                    { k: '0', v: 'Rao Bán' },
+                                    { k: 1, v: 'Thuê' },
+                                    { k: 0, v: 'Rao Bán' },
                                 ]"
                                 solo
                             ></v-select>
@@ -155,10 +156,9 @@
 import ENV from '@/api/baidang'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
-import ImageUpload from '@/components/ImageUploadComponent/imageUpload'
-const data = new FormData()
+// import ImageUpload from '@/components/ImageUploadComponent/imageUpload'
 export default {
-    components: { ImageUpload },
+    components: {},
     data() {
         return {
             loais: [],
@@ -197,7 +197,7 @@ export default {
             try {
                 await this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
                     this.baidang = data
-                    console.log(this.baidang)
+                    console.log(this.hinhthuc)
                     this.tieude = this.baidang.tieude
                     this.gia = this.baidang.gia
                     this.noidung = this.baidang.noidung
@@ -207,7 +207,7 @@ export default {
                     this.namxaydung = this.baidang.namxaydung
                     this.dientich = this.baidang.dientich
                     this.diachi = this.baidang.diachi
-                    this.hinhthuc = this.baidang.isChoThue
+                    this.hinhthuc = parseInt(this.baidang.isChoThue)
                     this.loais.forEach((l) => {
                         if (l.ten_loai === this.baidang.loai) {
                             this.loai = l.id
@@ -218,8 +218,7 @@ export default {
                         this.noithat.push(item.id)
                     })
 
-                    /* toadoX: 110,
-                        toadoY: 100, */
+                    // this.readers
                 })
             } catch (e) {
                 console.log(e)
@@ -237,47 +236,35 @@ export default {
         },
 
         async suaBaiDang() {
-            // data.append('id', this.baidang.id)
-            // data.append('tieude', this.tieude)
-            // data.append('loai_id', this.loai)
-            // data.append('gia', this.gia)
-            // data.append('noidung', this.noidung)
-            // data.append('sophongngu', this.phongngu)
-            // data.append('sophongtam', this.phongtam)
-            // data.append('huong', this.selectedhuong)
-            // data.append('dstiennghi', this.noithat)
-            // data.append('namxaydung', this.namxaydung)
-            // data.append('dientich', this.dientich)
-            // data.append('diachi', this.diachi)
-            // data.append('hinhthuc', this.hinhthuc)
-            // data.append('toadoX', 110)
-            // data.append('toadoY', 100)
-            // this.files.forEach((file) => {
-            //     hinhanhs.push({ name: file.name, file })
-            //     console.log('file', file)
-            // })
-            data.append('file', this.hinhanh)
+            const data = new FormData()
+            data.append('id', this.baidang.id)
+            data.append('tieude', this.tieude)
+            data.append('loai_id', this.loai)
+            data.append('gia', this.gia)
+            data.append('noidung', this.noidung)
+            data.append('sophongngu', this.phongngu)
+            data.append('sophongtam', this.phongtam)
+            data.append('huong', this.selectedhuong)
+            for (let i = 0; i < this.noithat.length; i++) {
+                data.append('dstiennghi[' + i + ']', this.noithat[i])
+            }
+            data.append('namxaydung', this.namxaydung)
+            data.append('dientich', this.dientich)
+            data.append('diachi', this.diachi)
+            data.append('hinhthuc', this.hinhthuc)
+            data.append('toadoX', 110)
+            data.append('toadoY', 100)
+            this.files.forEach((file, index) => {
+                data.append('file[' + index + ']', file)
+            })
+
             this.kq = await this.$axios
-                .$put(ENV.edit + this.$route.params.id, {
-                    tieude: this.tieude,
-                    loai: this.loai,
-                    gia: this.gia,
-                    noidung: this.noidung,
-                    sophongngu: this.phongngu,
-                    sophongtam: this.phongtam,
-                    huong: this.selectedhuong,
-                    dstiennghi: this.noithat,
-                    namxaydung: this.namxaydung,
-                    dientich: this.dientich,
-                    diachi: this.diachi,
-                    hinhthuc: this.hinhthuc,
-                    toadoX: 110,
-                    toadoY: 100,
+                .$post(ENV.edit + this.$route.params.id, data, {
+                    headers: { 'content-type': 'multipart/form-data' },
                 })
                 .then((data) => {
-                    console.log(data)
                     this.kq = data.id
-                    // this.$router.push('/BaiDang/' + this.kq)
+                    this.$router.push('/BaiDang/' + this.kq)
                 })
                 .catch((e) => {
                     console.log(e)
@@ -285,21 +272,16 @@ export default {
         },
 
         addFiles() {
-            console.log('files', this.files)
             this.files.forEach((file, f) => {
                 this.readers[f] = new FileReader()
                 this.readers[f].onloadend = (e) => {
                     const fileData = this.readers[f].result
                     const imgRef = this.$refs.file[f]
-                    this.hinhanh.push(this.$ref.file[f])
+                    this.hinhanh.push(this.$refs.file[f])
                     imgRef.src = fileData
-                    console.log(fileData)
-                    // send to server here...
-                    // data.append('file', fileData)
                 }
 
                 this.readers[f].readAsDataURL(this.files[f])
-                data.append('file', this.files[f])
             })
         },
     },
