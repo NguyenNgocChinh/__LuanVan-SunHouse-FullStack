@@ -12,12 +12,13 @@ use App\Models\TienNghiBaiDang;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ApiBaiDangController extends Controller
 {
-    public $page_size ;
+    public $page_size;
 
     public function __construct(Request $request)
     {
@@ -59,25 +60,29 @@ class ApiBaiDangController extends Controller
         $chothue_posts = BaiDang::where('isChoThue', 1)->orderBy('created_at', 'desc')->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($chothue_posts),
-           'baidangs' => BaiDangResource::collection($chothue_posts),
+            'baidangs' => BaiDangResource::collection($chothue_posts),
         ]);
     }
 
-    public function countPosts(){
+    public function countPosts()
+    {
         return response()->json(BaiDang::count());
     }
-    public function countChoDuyetPosts(){
-        return response()->json(BaiDang::where('choduyet',1)->count());
+
+    public function countChoDuyetPosts()
+    {
+        return response()->json(BaiDang::where('choduyet', 1)->count());
     }
 
     public function getDetailPost($id)
     {
         return response()->json(
-           new BaiDangDetailResource(BaiDang::find($id))
+            new BaiDangDetailResource(BaiDang::find($id))
         );
     }
 
-    public function getChoDuyetPosts(){
+    public function getChoDuyetPosts()
+    {
         $choduyet = BaiDang::where('choduyet', 1)->orderBy('created_at', 'desc')->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($choduyet),
@@ -85,9 +90,10 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
-    public function deletePost($id){
+    public function deletePost($id)
+    {
         $post = BaiDang::find($id);
-        if ($post){
+        if ($post) {
             $post->delete();
             return response()->json([
                 'success' => 'Xóa thành công'
@@ -98,7 +104,8 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
-    public function updateDuyetBai(Request $request){
+    public function updateDuyetBai(Request $request)
+    {
         $post = BaiDang::find($request->id);
         $post->choduyet = $request->choduyet;
         $ok = $post->save();
@@ -111,7 +118,8 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
-    public function updateTrangThai(Request $request){
+    public function updateTrangThai(Request $request)
+    {
         $post = BaiDang::find($request->id);
         $post->trangthai = $request->trangthai;
         $ok = $post->save();
@@ -124,39 +132,42 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
-    public function duyetBai(Request $request){
+    public function duyetBai(Request $request)
+    {
 
         $post = BaiDang::find($request->id);
         $post->choduyet = 0;
         $ok = $post->save();
-       if ($ok)
-           return response()->json([
-               'success' => 'Duyệt thành công'
-           ]);
+        if ($ok)
+            return response()->json([
+                'success' => 'Duyệt thành công'
+            ]);
         return response()->json([
             'fail' => 'Duyệt thất bại'
         ]);
     }
 
-    public function storeBaiDang(Request $request){
+    public function storeBaiDang(Request $request)
+    {
 
         $request->validate(
             [
                 'tieude' => 'required',
                 'loai' => 'required',
                 'gia' => 'required',
-                'hinhthuc'=> 'required',
-                'noidung'=> 'required',
+                'hinhthuc' => 'required',
+                'noidung' => 'required',
                 'sophongngu' => 'required',
                 'sophongtam' => 'required',
                 'namxaydung' => 'required',
                 'huong' => 'required',
                 'dientich' => 'required',
-                'diachi'=> 'required',
-                'toadoX'=> 'required',
+                'diachi' => 'required',
+                'toadoX' => 'required',
                 'toadoY' => 'required',
             ]
         );
+
 
         $data = $this->saveImage($request);
         $baidang = new BaiDang();
@@ -181,11 +192,8 @@ class ApiBaiDangController extends Controller
         $baidang->choduyet = 1;
         $kq = $baidang->save();
 
-
-
         if ($kq) {
-            if (is_array($request->dstiennghi ))
-            {
+            if (is_array($request->dstiennghi)) {
                 foreach ($request->dstiennghi as $tiennghi) {
                     $tiennghi_bd = new TienNghiBaiDang();
                     $tiennghi_bd->baidang_id = $baidang->id;
@@ -204,15 +212,18 @@ class ApiBaiDangController extends Controller
         return response()->json(new BaiDangDetailResource($baidang));
     }
 
-    public function updateBaiDang(Request $request){
+    public function updateBaiDang(Request $request)
+    {
+
         $baidang = BaiDang::find($request->id);
         $data = $this->saveImage($request);
-        $baidang->loai_id = $request->loai;
+        $baidang->tieude = $request->tieude;
+        $baidang->loai_id = $request->loai_id;
         $baidang->gia = $request->gia;
         $baidang->isChoThue = $request->hinhthuc;
         $baidang->noidung = $request->noidung;
-        $baidang->sophongngu = $request->phongngu;
-        $baidang->sophongtam = $request->phongtam;
+        $baidang->sophongngu = $request->sophongngu;
+        $baidang->sophongtam = $request->sophongtam;
         $baidang->namxaydung = $request->namxaydung;
         $baidang->huong = $request->huong;
         $baidang->dientich = $request->dientich;
@@ -228,7 +239,7 @@ class ApiBaiDangController extends Controller
         /**********************************************/
 
         $baidang->choduyet = 1;
-        $kq = $baidang->update();
+        $kq = $baidang->save();
 
         if ($kq) {
             if (count($request->dstiennghi) > 0) {
@@ -248,11 +259,19 @@ class ApiBaiDangController extends Controller
             //Kiem tra neu co send img tu request thi thuc hien xoa hinh cu di va import hinh moi
             if (count($data) > 0) {
                 if (count($baidang->hinhanh) > 0) {
+
                     foreach ($baidang->hinhanh as $hinhanh) {
-                        $hinhanh->delete();
+                        $file_path = '/images/upload/' . $hinhanh->filename;
+                        if (File::exists($file_path))
+                            File::delete($file_path);
+
+                        foreach (BaiDangHinhAnh::all() as $h){
+                            if ($h->baidang_id == $baidang->id)
+                                $h->delete();
+                        }
+
                     }
                 }
-
                 foreach ($data as $hinhanh) {
                     $hinhanh_new = new BaiDangHinhAnh();
                     $hinhanh_new->baidang_id = $baidang->id;
@@ -261,7 +280,7 @@ class ApiBaiDangController extends Controller
                 }
             }
         }
-        return response()->json(new BaiDangDetailResource($baidang));
+        return response()->json(new BaiDangDetailResource($baidang->fresh()));
     }
 
     function saveImage(Request $request)
