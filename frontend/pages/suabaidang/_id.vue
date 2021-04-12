@@ -40,9 +40,16 @@
                     ></v-file-input>
 
                     <v-container>
+                        <v-row v-if="baidang != null">
+                            <v-col v-for="(file, f) in baidang.hinhanh" :key="f">
+                                {{ file.filename }}
+                                <img width="250" :src="URI_DICRECTORY_UPLOAD + file.filename" />
+                            </v-col>
+                        </v-row>
                         <v-row>
                             <v-col v-for="(file, f) in files" :key="f">
-                                {{ file.name }}
+                                {{ file.name }} -
+                                <span class="size" v-text="getFileSize(files[f].size)"></span>
                                 <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
                             </v-col>
                         </v-row>
@@ -156,6 +163,7 @@
 import ENV from '@/api/baidang'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
+import URI_DICRECTORY from '@/api/directory'
 // import ImageUpload from '@/components/ImageUploadComponent/imageUpload'
 export default {
     components: {},
@@ -187,12 +195,27 @@ export default {
             readers: [],
         }
     },
+    computed: {
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
+    },
     created() {
         this.getAllLoai()
         this.getDSTienNghi()
         this.getBaiDangSua()
     },
     methods: {
+        getFileSize(size) {
+            const fSExt = ['Bytes', 'KB', 'MB', 'GB']
+            let i = 0
+
+            while (size > 900) {
+                size /= 1024
+                i++
+            }
+            return `${Math.round(size * 100) / 100} ${fSExt[i]}`
+        },
         async getBaiDangSua() {
             try {
                 await this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
@@ -217,8 +240,6 @@ export default {
                     this.baidang.tiennghi.forEach((item) => {
                         this.noithat.push(item.id)
                     })
-
-                    // this.readers
                 })
             } catch (e) {
                 console.log(e)
@@ -272,6 +293,7 @@ export default {
         },
 
         addFiles() {
+            this.baidang.hinhanh = null
             this.files.forEach((file, f) => {
                 this.readers[f] = new FileReader()
                 this.readers[f].onloadend = (e) => {
