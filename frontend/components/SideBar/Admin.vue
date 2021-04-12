@@ -24,15 +24,17 @@
             </v-list-item>
             <!---USer Area -->
             <!---Sidebar Items -->
-            <v-list-item v-for="item in items" :key="item.title" :to="item.to" :active-class="`primary--text`" link>
-                <v-list-item-icon>
-                    <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-icon>
+            <v-list-item-group active-class="sunhouse_primary white--text">
+                <v-list-item v-for="(item, index) in items" :key="index" link :to="item.to">
+                    <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-icon>
 
-                <v-list-item-content>
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list-item-group>
             <!---Sidebar Items -->
         </v-list>
     </v-navigation-drawer>
@@ -95,49 +97,49 @@ export default {
     methods: {},
 }
 </script>
-<style lang="scss">
-#main-sidebar {
-    box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);
-    -webkit-box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);
-    .v-navigation-drawer__border {
-        display: none;
-    }
-    .v-list {
-        padding: 8px 15px;
-    }
-    .v-list-item {
-        min-height: 35px;
-        &__icon--text,
-        &__icon:first-child {
-            justify-content: center;
-            text-align: center;
-            width: 20px;
-        }
-    }
-    .v-list-item__icon i {
-        width: 20px;
-    }
-    .icon-size .v-list-group__items i {
-        width: 16px;
-        font-size: 16px;
-    }
-    .profile-bg {
-        &.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-            opacity: 1;
-        }
-        .v-avatar {
-            padding: 15px 0;
-        }
-    }
-    .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-        opacity: 0.5;
-        &:hover {
-            opacity: 1;
-        }
-    }
-}
+<!--<style lang="scss">-->
+<!--#main-sidebar {-->
+<!--    box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);-->
+<!--    -webkit-box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);-->
+<!--    .v-navigation-drawer__border {-->
+<!--        display: none;-->
+<!--    }-->
+<!--    .v-list {-->
+<!--        padding: 8px 15px;-->
+<!--    }-->
+<!--    .v-list-item {-->
+<!--        min-height: 35px;-->
+<!--        &__icon&#45;&#45;text,-->
+<!--        &__icon:first-child {-->
+<!--            justify-content: center;-->
+<!--            text-align: center;-->
+<!--            width: 20px;-->
+<!--        }-->
+<!--    }-->
+<!--    .v-list-item__icon i {-->
+<!--        width: 20px;-->
+<!--    }-->
+<!--    .icon-size .v-list-group__items i {-->
+<!--        width: 16px;-->
+<!--        font-size: 16px;-->
+<!--    }-->
+<!--    .profile-bg {-->
+<!--        &.theme&#45;&#45;dark.v-list-item:not(.v-list-item&#45;&#45;active):not(.v-list-item&#45;&#45;disabled) {-->
+<!--            opacity: 1;-->
+<!--        }-->
+<!--        .v-avatar {-->
+<!--            padding: 15px 0;-->
+<!--        }-->
+<!--    }-->
+<!--    .theme&#45;&#45;dark.v-list-item:not(.v-list-item&#45;&#45;active):not(.v-list-item&#45;&#45;disabled) {-->
+<!--        opacity: 0.5;-->
+<!--        &:hover {-->
+<!--            opacity: 1;-->
+<!--        }-->
+<!--    }-->
+<!--}-->
 
-.theme--dark.v-navigation-drawer {
-    background-color: #242a33 !important;
-}
-</style>
+<!--.theme&#45;&#45;dark.v-navigation-drawer {-->
+<!--    background-color: #242a33 !important;-->
+<!--}-->
+<!--</style>-->

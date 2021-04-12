@@ -40,7 +40,7 @@
                             <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <v-btn fab dark small color="red" class="mr-5">
+                            <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItems(selected)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                         </div>
@@ -244,6 +244,35 @@ export default {
                         timeout: 5000,
                     })
                 })
+        },
+
+        deleteMultipleItems(dsBaiDang) {
+            if (Array.isArray(dsBaiDang)) {
+                dsBaiDang.forEach((item) => {
+                    this.$axios
+                        .$delete(ENV.delete + item.id)
+                        .then(() => {
+                            const index = this.dsBaiDang.indexOf(item)
+                            this.dsBaiDang.splice(index, 1)
+                            this.message.push({
+                                message: 'Xóa Bài Đăng Thành Công',
+                                color: 'green',
+                                timeout: 5000,
+                            })
+                            this.choduyet = this.choduyet - 1
+                            this.duyetbaiLoading = false
+                        })
+                        .catch((e) => {
+                            this.duyetbaiLoading = false
+                            this.message.push({
+                                message: 'Xóa Bài Viết Thất Bại',
+                                color: 'red',
+                                timeout: -1,
+                            })
+                            this.choduyet = this.choduyet - 1
+                        })
+                })
+            }
         },
     },
 }

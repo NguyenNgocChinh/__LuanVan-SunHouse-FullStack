@@ -1,7 +1,7 @@
 <template>
     <v-app-bar app clipped-left clipped-right color="white" light>
         <v-toolbar-title class="align-center d-flex">
-            <span class="logo-text ml-2"> SUNHOUSE </span>
+            <v-btn text to="/" class="logo-text ml-2"> SUNHOUSE </v-btn>
         </v-toolbar-title>
         <v-app-bar-nav-icon
             class="d-block d-md-none"

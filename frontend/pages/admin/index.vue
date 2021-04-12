@@ -80,6 +80,7 @@
                     <v-btn small :loading="duyetbaiLoading" @click="duyetbai(item)">DUYỆT</v-btn>
                 </template>
             </v-data-table>
+            <v-snackbars :objects.sync="message" bottom right />
         </v-container>
         <ModalError />
     </div>
@@ -89,8 +90,10 @@
 import ENV from '@/api/baidang'
 import THONGKE from '@/api/thongke'
 import ModalError from '@/components/Error/modalError'
+import VSnackbars from 'v-snackbars'
+
 export default {
-    components: { ModalError },
+    components: { ModalError, VSnackbars },
     layout: 'admin',
     data() {
         return {
@@ -113,6 +116,7 @@ export default {
             baiviet: 0,
             choduyet: 0,
             sogoi: 0,
+            message: [],
         }
     },
     created() {
@@ -185,6 +189,12 @@ export default {
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
+                            this.message.push({
+                                message: 'Duyệt Bài Thành Công',
+                                color: 'green',
+                                timeout: 5000,
+                            })
+                            this.choduyet = this.choduyet - 1
                             this.duyetbaiLoading = false
                         })
                         .catch((e) => {
@@ -207,6 +217,12 @@ export default {
                     .then(() => {
                         const index = this.dsBaiDang.indexOf(dsDuyet)
                         this.dsBaiDang.splice(index, 1)
+                        this.message.push({
+                            message: 'Duyệt Bài Thành Công',
+                            color: 'green',
+                            timeout: 5000,
+                        })
+                        this.choduyet = this.choduyet - 1
                         this.duyetbaiLoading = false
                     })
                     .catch((e) => {
