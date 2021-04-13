@@ -26,9 +26,11 @@
                     v-model="gia"
                     :rules="[() => !!gia || 'không được để trống!!!']"
                     label="ví dụ: 1000"
+                    placeholder="Đơn vị nghìn đồng!!"
+                    type="number"
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
-                <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
+                <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..." :rules="[() => !!noidung || 'Nội dung   không được để trống!!!']"></v-textarea>
                 <v-card-title>Hình ảnh</v-card-title>
                 <v-file-input
                     ref="files"
@@ -106,12 +108,15 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Năm xây dựng</v-card-title>
-                    <v-text-field v-model="namxaydung" type="number" solo></v-text-field>
+                    <v-text-field v-model="namxaydung" type="number" solo placeholder="Năm xây dựng nhập bằng số!!"
+                    >
+
+                    </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Diện tích(m2)</v-card-title>
                     <v-form>
-                        <v-text-field v-model="dientich" label="ví dụ: 10" solo></v-text-field>
+                        <v-text-field v-model="dientich" label="ví dụ: 10" solo type="number" placeholder="Diện tích nhập bằng số!!"></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -134,7 +139,6 @@
                 </v-container>
             </v-card-text>
         </v-card>
-
         <v-card-title>Địa chỉ của bạn</v-card-title>
         <v-text-field
             v-model="diachi"
