@@ -28,6 +28,7 @@
                     :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']"
                     type="number"
                     label="ví dụ: 1000"
+                    placeholder="Đơn vị nghìn đồng!!"
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
                 <v-textarea v-model="noidung" :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']" counter label="Nhập nội dung bài viết..."></v-textarea>
@@ -101,7 +102,6 @@
                                 { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
                                 { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
                                 { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
-                                { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                             ]"
                             solo
                         ></v-select>
@@ -114,7 +114,7 @@
                 <v-col cols="12" sm="4">
                     <v-card-title>Diện tích(m2)</v-card-title>
                     <v-form>
-                        <v-text-field v-model="dientich" :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
+                        <v-text-field v-model="dientich" type="number":rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -137,7 +137,6 @@
                 </v-container>
             </v-card-text>
         </v-card>
-
         <v-card-title>Địa chỉ của bạn</v-card-title>
         <v-text-field
             v-model="diachi"

@@ -105,7 +105,6 @@
                                     { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
                                     { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
                                     { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
-                                    { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                                 ]"
                                 solo
                             ></v-select>
