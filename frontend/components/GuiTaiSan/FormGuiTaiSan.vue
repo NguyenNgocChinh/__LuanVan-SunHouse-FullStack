@@ -8,7 +8,7 @@
                 <H2>Tiêu đề</H2>
                 <v-text-field
                     v-model="tieude"
-                    :rules="[() => !!tieude || 'không được để trống!!!']"
+                    :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!']"
                     label="Tiêu Đề"
                     placeholder="Nhập tiêu đề bài đăng"
                     required
@@ -18,17 +18,20 @@
                     v-model="loai"
                     name="loaitaisan"
                     :items="items"
+                    :rules="[v => !!v || 'Vui lòng chọn loại']"
                     item-text="ten_loai"
                     item-value="id"
                 ></v-select>
                 <H2>Giá bán</H2>
                 <v-text-field
                     v-model="gia"
-                    :rules="[() => !!gia || 'không được để trống!!!']"
+                    :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']"
+                    type="number"
                     label="ví dụ: 1000"
+                    placeholder="Đơn vị nghìn đồng!!"
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
-                <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
+                <v-textarea v-model="noidung" :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']" counter label="Nhập nội dung bài viết..."></v-textarea>
                 <v-card-title>Hình ảnh</v-card-title>
                 <v-file-input
                     ref="files"
@@ -72,12 +75,12 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Số phòng ngủ</v-card-title>
-                    <v-text-field v-model="phongngu" type="number" solo></v-text-field>
+                    <v-text-field v-model="phongngu" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Số phòng tắm</v-card-title>
                     <v-form>
-                        <v-text-field v-model="phongtam" type="number" solo></v-text-field>
+                        <v-text-field v-model="phongtam" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"  solo></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -89,6 +92,7 @@
                             v-model="selectedhuong"
                             item-value="k"
                             item-text="v"
+                            :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
                             :items="[
                                 { k: 'Đông', v: 'Hướng nhà: Đông' },
                                 { k: 'Tây', v: 'Hướng nhà: Tây' },
@@ -98,7 +102,6 @@
                                 { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
                                 { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
                                 { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
-                                { k: 'tatca', v: 'Hướng nhà: Tất Cả' },
                             ]"
                             solo
                         ></v-select>
@@ -106,12 +109,12 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Năm xây dựng</v-card-title>
-                    <v-text-field v-model="namxaydung" type="number" solo></v-text-field>
+                    <v-text-field v-model="namxaydung" :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']" type="number" label="ví dụ: 2020" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Diện tích(m2)</v-card-title>
                     <v-form>
-                        <v-text-field v-model="dientich" label="ví dụ: 10" solo></v-text-field>
+                        <v-text-field v-model="dientich" type="number":rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -134,13 +137,12 @@
                 </v-container>
             </v-card-text>
         </v-card>
-
         <v-card-title>Địa chỉ của bạn</v-card-title>
         <v-text-field
             v-model="diachi"
             class="text-center"
             solo
-            :rules="[() => !!diachi || 'không được để trống!!!']"
+            :rules="[() => !!diachi || 'Vui lòng nhập địa chỉ!']"
             label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8 TPHCM"
             required
         ></v-text-field>
@@ -164,18 +166,18 @@ export default {
             items: [],
             selected: 'Căn hộ',
             itemhinhthuc: ['Cho thuê', 'Rao bán'],
-            hinhthuc: '',
+            hinhthuc: '1',
             huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
-            selectedhuong: '',
+            selectedhuong: 'Đông',
             namxaydung: null,
-            loai: '',
+            loai: 1,
             diachi: '',
             name: 'FormGuiTaiSan',
             tiennghis: [],
             tieude: '',
             phongngu: '1',
             phongtam: '1',
-            dientich: '',
+            dientich: '10',
             gia: '',
 
             noidung: '',
@@ -201,6 +203,7 @@ export default {
             this.tiennghis = await this.$axios.$get(ENVTN.default.all)
         },
         xulydangbai() {
+
             const data = new FormData()
             data.append('tieude', this.tieude)
             data.append('loai_id', this.loai)
