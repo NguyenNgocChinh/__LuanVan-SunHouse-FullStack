@@ -1,15 +1,15 @@
 const ENV = {
-    baidangs: 'https://api.sunhouse.stuesports.info/api/baidang',
-    chothue: 'https://api.sunhouse.stuesports.info/api/baidang/chothue',
-    raoban: 'https://api.sunhouse.stuesports.info/api/baidang/raoban',
-    hot: 'https://api.sunhouse.stuesports.info/api/baidang/hot',
-    choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/choduyet',
-    duyetbai: 'https://api.sunhouse.stuesports.info/api/baidang/duyetbai', // NOT INCLUDE /
-    delete: 'https://api.sunhouse.stuesports.info/api/baidang/',
-    edit: 'https://api.sunhouse.stuesports.info/api/baidang/edit/',
-    info: 'https://api.sunhouse.stuesports.info/api/baidang/',
-    store: 'https://api.sunhouse.stuesports.info/api/baidang',
-    update_status: 'https://api.sunhouse.stuesports.info/api/baidang/updateTrangThai',
-    update_choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/updateDuyetBai',
+    baidangs: 'http://localhost:8000/api/baidang',
+    chothue: 'http://localhost:8000/api/baidang/chothue',
+    raoban: 'http://localhost:8000/api/baidang/raoban',
+    hot: 'http://localhost:8000/api/baidang/hot',
+    choduyet: 'http://localhost:8000/api/baidang/choduyet',
+    duyetbai: 'http://localhost:8000/api/baidang/duyetbai', // NOT INCLUDE /
+    delete: 'http://localhost:8000/api/baidang/',
+    edit: 'http://localhost:8000/api/baidang/edit/',
+    info: 'http://localhost:8000/api/baidang/',
+    store: 'http://localhost:8000/api/baidang',
+    update_status: 'http://localhost:8000/api/baidang/updateTrangThai',
+    update_choduyet: 'http://localhost:8000/api/baidang/updateDuyetBai',
 }
 export default ENV

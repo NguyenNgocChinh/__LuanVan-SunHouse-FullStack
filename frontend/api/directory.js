@@ -1,4 +1,4 @@
 const URI_DICRECTORY = {
-    upload: 'https://api.sunhouse.stuesports.info/images/upload/',
+    upload: 'http://localhost:8000/images/upload/',
 }
 export default URI_DICRECTORY

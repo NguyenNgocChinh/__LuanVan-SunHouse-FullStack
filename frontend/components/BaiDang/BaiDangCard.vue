@@ -6,12 +6,12 @@
 
         <v-carousel v-if="baidang.hinhanh.length > 0" cycle height="200" hide-delimiter-background show-arrows-on-hover>
             <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i">
-                <v-img height="200" :src="'https://api.sunhouse.stuesports.info/images/upload/' + hinh.filename" />
+                <v-img height="200" :src="URI_DICRECTORY_UPLOAD + hinh.filename" />
             </v-carousel-item>
         </v-carousel>
 
         <div v-else>
-            <v-img height="200" src="https://api.sunhouse.stuesports.info/images/upload/no-image.png" />
+            <v-img height="200" src="http://localhost:8000/images/upload/no-image.png" />
         </div>
         <v-card-title class="font-weight-bold red--text">{{ baidang.loai }}</v-card-title>
         <v-card-subtitle class="noidung">
@@ -30,7 +30,7 @@
                 <span class="mr-2">Phòng tắm: {{ baidang.sophongtam }}</span>
             </div>
         </v-card-subtitle>
-
+        ads{{ URI_DICRECTORY_UPLOAD + 'no-image.png' }}
         <v-chip-group class="loainha">
             <v-chip color="teal darken-1" class="white--text" label
                 >{{ baidang.isChoThue == 1 ? 'Cho thuê' : 'Rao bán' }}
@@ -51,6 +51,7 @@
     </v-card>
 </template>
 <script>
+import URI_DICRECTORY from '@/api/directory'
 export default {
     name: 'BaiDangCard',
     props: {
@@ -62,6 +63,11 @@ export default {
         loading: false,
         selection: 1,
     }),
+    computed: {
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
+    },
     methods: {
         reserve() {
             this.loading = true

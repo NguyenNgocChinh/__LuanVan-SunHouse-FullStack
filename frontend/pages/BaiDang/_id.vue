@@ -4,22 +4,22 @@
         <div class="blo-singl mb-4">
             <v-row>
                 <v-col
-                ><a href="#url" class="cost-estate m-o"
-                ><v-icon>mdi-map-marker-radius</v-icon>{{ baidangs.diachi }}</a
-                ></v-col
+                    ><a href="#url" class="cost-estate m-o"
+                        ><v-icon>mdi-map-marker-radius</v-icon>{{ baidangs.diachi }}</a
+                    ></v-col
                 >
                 <v-col><v-icon>mdi-bed</v-icon> Phòng ngủ:{{ baidangs.sophongngu }}</v-col>
                 <v-col><v-icon>mdi-shower</v-icon> Phòng tắm:{{ baidangs.sophongtam }}</v-col>
                 <v-col><v-icon>mdi-earth</v-icon>sqrft :{{ baidangs.dientich }} m<sup>2</sup></v-col>
                 <v-col
-                ><v-icon>mdi-currency-usd</v-icon><b>{{ baidangs.gia }}</b></v-col
+                    ><v-icon>mdi-currency-usd</v-icon><b>{{ baidangs.gia }}</b></v-col
                 >
             </v-row>
         </div>
         <v-row>
             <v-col class="col-lg-8">
                 <v-carousel class="mt-5">
-                    <div v-if="hinhanhArr.length === 0">
+                    <div v-if="hinhanhArr != [] > 0">
                         <v-img src="https://api.sunhouse.stuesports.info/images/upload/no-image.png" />
                     </div>
                     <div v-else>
@@ -54,18 +54,18 @@
                         </v-row>
                         <v-row>
                             <v-col
-                            ><b>Phòng tắm: {{ baidangs.sophongtam }}</b></v-col
+                                ><b>Phòng tắm: {{ baidangs.sophongtam }}</b></v-col
                             >
                             <v-col
-                            ><b>Phòng ngủ: {{ baidangs.sophongngu }}</b></v-col
+                                ><b>Phòng ngủ: {{ baidangs.sophongngu }}</b></v-col
                             >
                             <v-col
-                            ><b>Giá bán: {{ baidangs.gia }} $</b></v-col
+                                ><b>Giá bán: {{ baidangs.gia }} $</b></v-col
                             >
                         </v-row>
                         <v-row>
                             <v-col
-                            ><b>Năm xây dưng:{{ baidangs.namxaydung }}</b></v-col
+                                ><b>Năm xây dưng:{{ baidangs.namxaydung }}</b></v-col
                             >
                             <v-col>
                                 <b>
@@ -83,27 +83,11 @@
                     <v-card-text>
                         <div id="app-4">
                             <v-row>
-
-                                    <v-col v-for="tn in tiennghiArr" :key="tn.id" class="col-lg-4"
+                                <v-col v-for="tn in tiennghiArr" :key="tn.id" class="col-lg-4"
                                     ><b>{{ tn.ten_tiennghi }}</b></v-col
-                                    >
+                                >
                             </v-row>
                         </div>
-                        <!--                        <v-row>
-                            <v-col><b>Tủ lạnh</b></v-col>
-                            <v-col><b>Máy lạnh</b></v-col>
-                            <v-col><b>Lò vi sóng</b></v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col><b>Máy giặt</b></v-col>
-                            <v-col><b>Phòng gym</b></v-col>
-                            <v-col><b>Hồ bơi</b></v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col><b>Bình nóng lạnh</b> </v-col>
-                            <v-col></v-col>
-                            <v-col></v-col>
-                        </v-row>-->
                     </v-card-text>
                 </v-card>
                 <v-card class="mt-5">
@@ -146,12 +130,12 @@
                     <v-card-title>Liên hệ người bán</v-card-title>
                     <v-row>
                         <v-col class="ml-5 col-lg-3"
-                        ><v-img
-                            v-if="user.profile_photo_path == null"
-                            width="80px"
-                            height="80px"
-                            :src="user.profile_photo_url"
-                        />
+                            ><v-img
+                                v-if="user.profile_photo_path == null"
+                                width="80px"
+                                height="80px"
+                                :src="user.profile_photo_url"
+                            />
                             <div v-else>
                                 <v-img
                                     width="80px"
@@ -165,7 +149,7 @@
                         <v-col class="col-lg-8">
                             <v-row></v-row>
                             <v-row
-                            ><h3>{{ user.name }}</h3></v-row
+                                ><h3>{{ user.name }}</h3></v-row
                             >
                             <v-row><v-icon>mdi-phone-classic</v-icon>{{ user.sdt }} </v-row>
                         </v-col>
@@ -180,29 +164,44 @@
                     <v-card-text v-for="(bdhot, i) in baidanghots" :key="i">
                         <div>
                             <v-row>
-                                <v-col v-if="bdhot.hinhanh!=[] > 0">
+                                <v-col v-if="bdhot.hinhanh != [] > 0">
                                     <v-carousel height="100" cycle hide-delimiter-background show-arrows-on-hover>
                                         <v-carousel-item v-for="(hinh, i) in bdhot.hinhanh" :key="i">
-                                            <v-img height="100" width="100" :src="'https://api.sunhouse.stuesports.info/images/upload/' + hinh.filename" />
+                                            <v-img
+                                                height="100"
+                                                width="100"
+                                                :src="
+                                                    'https://api.sunhouse.stuesports.info/images/upload/' +
+                                                    hinh.filename
+                                                "
+                                            />
                                         </v-carousel-item>
                                     </v-carousel>
                                 </v-col>
-                                <v-col v-else ><img height="100" width="100" src="https://api.sunhouse.stuesports.info/images/upload/no-image.png" /> </v-col>
+                                <v-col v-else
+                                    ><img
+                                        height="100"
+                                        width="100"
+                                        src="https://api.sunhouse.stuesports.info/images/upload/no-image.png"
+                                    />
+                                </v-col>
                                 <v-col>
-                                    <v-row style="color: #cd5b65"><h4>{{ bdhot.tieude }}</h4></v-row>
+                                    <v-row style="color: #cd5b65"
+                                        ><h4>{{ bdhot.tieude }}</h4></v-row
+                                    >
                                     <v-row>
-                                        <h3>{{bdhot.gia}}</h3>
+                                        <h3>{{ bdhot.gia }}</h3>
                                         <v-icon>mdi-currency-usd</v-icon>
                                     </v-row>
-                                    <v-row><span class="pr-5">So phong ngu :{{bdhot.sophongngu}}</span></v-row>
+                                    <v-row
+                                        ><span class="pr-5">So phong ngu :{{ bdhot.sophongngu }}</span></v-row
+                                    >
                                     <v-row>
-                                        <span>Dien tich:{{bdhot.dientich}} m <sup>2</sup></span>
+                                        <span>Dien tich:{{ bdhot.dientich }} m <sup>2</sup></span>
                                     </v-row>
                                 </v-col>
                             </v-row>
                         </div>
-
-
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -211,11 +210,13 @@
 </template>
 
 <script>
+import ENV from '@/api/baidang'
+import URI_DICRECTORY from '@/api/directory'
 export default {
     data() {
         return {
             user: {
-                default: null,
+                profile_photo_path: '',
             },
             tiennghiArr: {
                 default: [],
@@ -223,24 +224,8 @@ export default {
             hinhanhArr: {
                 default: [],
             },
-
-            items: [
-                {
-                    src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-                },
-                {
-                    src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-                },
-                {
-                    src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-                },
-                {
-                    src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-                },
-            ],
             baidangs: false,
             baidanghots: [],
-
         }
     },
     head() {
@@ -257,16 +242,15 @@ export default {
     methods: {
         getchitietsp() {
             try {
-                this.$axios
-                    .$get('https://api.sunhouse.stuesports.info/api/baidang/' + this.$route.params.id)
-                    .then((data) => {
-                        this.baidangs = data
-                        this.user = this.baidangs.user
-                        this.tiennghiArr = this.baidangs.tiennghi
-                        this.hinhanhArr = this.baidangs.hinhanh
-                        console.log(this.tiennghiArr)
-                        this.baidanghots = data
-                    })
+                this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
+                    this.baidangs = data
+                    console.log('DB', this.baidangs)
+                    this.user = this.baidangs.user
+                    this.tiennghiArr = this.baidangs.tiennghi
+                    this.hinhanhArr = this.baidangs.hinhanh
+                    console.log(this.tiennghiArr)
+                    this.baidanghots = data
+                })
 
                 console.log(this.baidangs)
             } catch (e) {
@@ -275,7 +259,7 @@ export default {
         },
         async getBaiDangHot() {
             try {
-                const bdhots = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/baidang/hot')
+                const bdhots = await this.$axios.$get(ENV.hot)
                 this.baidanghots = bdhots.baidangs
             } catch (e) {
                 console.log(e)
@@ -286,13 +270,3 @@ export default {
     },
 }
 </script>
-<!--
-<script>
-var app4 = new Vue({
-    el: '#app-4',
-    data: {
-        todos: [{ text: 'Learn JavaScript' }, { text: 'Learn Vue' }, { text: 'Build something awesome' }],
-    },
-})
-</script>
--->

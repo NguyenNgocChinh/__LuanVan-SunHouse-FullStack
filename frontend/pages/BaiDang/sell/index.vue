@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import ENV from '@/api/baidang'
 export default {
     data() {
         return {
@@ -85,7 +86,7 @@ export default {
     methods: {
         getBaiDangHot() {
             this.$axios
-                .$get(`https://api.sunhouse.stuesports.info/api/baidang/raoban?page=${this.page}`, {
+                .$get(`${ENV.raoban}?page=${this.page}`, {
                     params: {
                         page_size: 6,
                     },

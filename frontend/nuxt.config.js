@@ -25,7 +25,7 @@ export default {
         script: [{ src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' }],
     },
     router: {
-        middleware: 'checkAdmin',
+        // middleware: 'checkAdmin',
     },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [],

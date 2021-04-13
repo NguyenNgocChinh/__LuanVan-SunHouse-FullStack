@@ -1,7 +1,7 @@
 const THONG_KE = {
-    baidang: 'https://api.sunhouse.stuesports.info/api/baidang/count',
-    user: 'https://api.sunhouse.stuesports.info/api/users/count',
-    choduyet: 'https://api.sunhouse.stuesports.info/api/baidang/choduyet/count',
-    goi: 'https://api.sunhouse.stuesports.info/api/baidang/choduyet/count',
+    baidang: 'http://localhost:8000/api/baidang/count',
+    user: 'http://localhost:8000/api/users/count',
+    choduyet: 'http://localhost:8000/api/baidang/choduyet/count',
+    goi: 'http://localhost:8000/api/baidang/choduyet/count',
 }
 export default THONG_KE

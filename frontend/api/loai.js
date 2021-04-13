@@ -1,4 +1,4 @@
 const ENV = {
-    all: 'https://api.sunhouse.stuesports.info/api/loai',
+    all: 'http://localhost:8000/api/loai',
 }
 export default ENV

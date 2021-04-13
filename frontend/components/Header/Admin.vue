@@ -9,7 +9,7 @@
         />
         <v-spacer />
         <!---right part -->
-        <v-btn dark color="primary" class="elevation-0" href="#">Đăng xuất</v-btn>
+        <v-btn dark color="red lighten-1" class="elevation-0" @click="$auth.logout()">Đăng xuất</v-btn>
         <v-menu bottom left transition="scale-transition">
             <template #activator="{ on }">
                 <v-btn light icon v-on="on">

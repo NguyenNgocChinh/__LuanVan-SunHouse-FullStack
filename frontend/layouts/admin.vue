@@ -18,12 +18,12 @@ import Header from '@/components/Header/Admin'
 import Footer from '@/components/Footer/Admin'
 export default {
     name: 'Layout',
-
     components: {
         Footer,
         Sidebar,
         Header,
     },
+    middleware: ['auth', 'checkAdmin'],
 
     props: {
         source: String,

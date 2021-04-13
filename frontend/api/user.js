@@ -1,9 +1,9 @@
 const ENV = {
-    register: 'https://api.sunhouse.stuesports.info/api/auth/register',
-    info: 'https://api.sunhouse.stuesports.info/api/users/',
-    users: 'https://api.sunhouse.stuesports.info/api/users',
-    disable: 'https://api.sunhouse.stuesports.info/api/users/disable/',
-    enable: 'https://api.sunhouse.stuesports.info/api/users/enable/',
+    register: 'http://localhost:8000/api/auth/register',
+    info: 'http://localhost:8000/api/users/',
+    users: 'http://localhost:8000/api/users',
+    disable: 'http://localhost:8000/api/users/disable/',
+    enable: 'http://localhost:8000/api/users/enable/',
 }
 
 export default ENV

@@ -1,6 +1,3 @@
-export default function () {
-    // Add the userAgent property to the context
-    // if (route.name === 'admin'&&!store.state.authenticated){
-    //     return redirect('/login')
-    // }
+export default function ({ $auth, redirect }) {
+    if ($auth.user.vaitro !== 'admin') return redirect('/login')
 }

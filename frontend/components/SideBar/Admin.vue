@@ -14,12 +14,17 @@
             <!---USer Area -->
             <v-list-item two-line class="px-0">
                 <v-list-item-avatar>
-                    <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+                    <div v-if="$auth.user.profile_photo_path == null">
+                        <v-img :src="$auth.user.profile_photo_url" style="width: 45px; height: 45px"></v-img>
+                    </div>
+                    <div v-else>
+                        <v-img :src="$auth.user.profile_photo_path" style="width: 45px; height: 45px"></v-img>
+                    </div>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                    <v-list-item-title>Dohn Deo</v-list-item-title>
-                    <v-list-item-subtitle class="caption">Webdesigner</v-list-item-subtitle>
+                    <v-list-item-title>{{ $auth.user.name }}</v-list-item-title>
+                    <v-list-item-subtitle class="caption">{{ $auth.user.vaitro }}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <!---USer Area -->

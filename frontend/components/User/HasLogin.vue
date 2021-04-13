@@ -13,10 +13,12 @@
                     @click="isClickUser = !isClickUser"
                 >
                     <v-avatar color="sunhouse_secondary" class="mr-1" size="30">
-                        <div v-if="profile_photo_path == null">
-                            <v-img :src="profile_photo_url" style="width: 50px; height: 50px"></v-img>
+                        <div v-if="$auth.user.profile_photo_path == null">
+                            <v-img :src="$auth.user.profile_photo_url" style="width: 35px; height: 35px"></v-img>
                         </div>
-                        <div v-else>CV</div>
+                        <div v-else>
+                            <v-img :src="$auth.user.profile_photo_path" style="width: 35px; height: 35px"></v-img>
+                        </div>
                     </v-avatar>
 
                     <span :style="'color:' + color">{{ $auth.user.name }}</span>
