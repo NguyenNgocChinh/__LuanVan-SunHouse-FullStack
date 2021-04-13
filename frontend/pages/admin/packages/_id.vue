@@ -55,11 +55,6 @@ export default {
     data() {
         return {
             search: '',
-            singleSelect: false,
-            selected: [],
-            dsBaiDang: [],
-            loading: true,
-            fab: false,
             gois: false,
         }
     },
