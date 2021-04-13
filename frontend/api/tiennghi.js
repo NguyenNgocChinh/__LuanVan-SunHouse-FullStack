@@ -1,5 +1,5 @@
 const ENV = {
-    all: 'http://localhost:8000/api/tiennghi',
+    all: 'https://api.sunhouse.stuesports.info/api/tiennghi',
 }
 
 export default ENV

@@ -1,7 +1,7 @@
 <template>
     <v-container>
-        <H2 align="center">Gửi tài sản</H2>
-        <H4>SunHouse trao trọn niềm tin</H4>
+        <H2 align="center" class="mt-4">Gửi tài sản</H2>
+        <H4 class="mb-4">SunHouse trao trọn niềm tin</H4>
         <v-card>
             <v-card-title> Thông tin cơ bản</v-card-title>
             <v-card-text>
@@ -29,35 +29,26 @@
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
                 <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
-                <v-card-title>Hình nhà thứ nhất</v-card-title>
+                <v-card-title>Hình ảnh</v-card-title>
                 <v-file-input
-                    v-model="hinhanh"
-                    :rules="rules"
-                    accept="image/png, image/jpeg, image/bmp"
-                    label="File input"
-                    filled
-                    placeholder="Chọn hình ảnh thứ 1"
+                    ref="files"
+                    v-model="files"
+                    accept="image/*"
+                    label="Có thể chọn nhiều hình ảnh"
+                    placeholder="Có thể chọn nhiều hình ảnh"
                     prepend-icon="mdi-camera"
-                    name="hinh_1"
+                    multiple
+                    chips
+                    color="pink"
+                    @change="addFiles"
                 ></v-file-input>
-                <v-card-title>Hình nhà thứ Hai</v-card-title>
-                <v-file-input
-                    v-model="hinhanh"
-                    :rules="rules"
-                    label="File input"
-                    filled
-                    prepend-icon="mdi-camera"
-                    name="hinh_2"
-                ></v-file-input>
-                <v-card-title>Hình nhà thứ Ba</v-card-title>
-                <v-file-input
-                    v-model="hinhanh"
-                    :rules="rules"
-                    label="File input"
-                    filled
-                    prepend-icon="mdi-camera"
-                    name="hinh_3"
-                ></v-file-input>
+                <v-row>
+                    <v-col v-for="(file, f) in files" :key="f">
+                        {{ file.name }} -
+                        <span class="size" v-text="getFileSize(files[f].size)"></span>
+                        <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-divider class="mt-12"></v-divider>
         </v-card>
@@ -150,35 +141,26 @@
             class="text-center"
             solo
             :rules="[() => !!diachi || 'không được để trống!!!']"
-            label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8"
+            label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8 TPHCM"
             required
         ></v-text-field>
 
         <div class="text-center">
-            <v-btn
-                v-model="btndangbai"
-                text
-                class="mt-6 mx-auto"
-                color="primary"
-                elevation="6"
-                large
-                @click="xulydangbai"
-            >
-                Đăng bài</v-btn
-            >
+            <v-btn text class="mt-6 mx-auto" color="primary" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
         </div>
     </v-container>
 </template>
 
 <script>
 import ENV from '@/api/baidang'
-import CSRF from '@/api/csrf-token'
+// import CSRF from '@/api/csrf-token'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
 export default {
     data() {
         return {
             rules: [(value) => !value || value.size < 2000000 || 'Hình ảnh phải thấp hơn 2 MB!'],
+
             items: [],
             selected: 'Căn hộ',
             itemhinhthuc: ['Cho thuê', 'Rao bán'],
@@ -195,13 +177,13 @@ export default {
             phongtam: '1',
             dientich: '',
             gia: '',
-            hinhanh1: '',
-            hinhanh: [],
-            hinhanh2: '',
-            hinhanh3: '',
-            btndangbai: '',
+
             noidung: '',
             noithat: [],
+
+            hinhanh: [],
+            files: [],
+            readers: [],
         }
     },
     created() {
@@ -219,35 +201,62 @@ export default {
             this.tiennghis = await this.$axios.$get(ENVTN.default.all)
         },
         xulydangbai() {
-            console.log(this.hinhanh)
-            // this.kq = this.$axios
-            //     .$post(ENV.store, {
-            //         tieude: this.tieude,
-            //         loai: this.loai,
-            //         gia: this.gia,
-            //         noidung: this.noidung,
-            //         sophongngu: this.phongngu,
-            //         sophongtam: this.phongtam,
-            //         huong: this.selectedhuong,
-            //         dstiennghi: this.noithat,
-            //         namxaydung: this.namxaydung,
-            //         dientich: this.dientich,
-            //         diachi: this.diachi,
-            //         hinhthuc: this.hinhthuc,
-            //         toadoX: 110,
-            //         toadoY: 100,
-            //     })
-            //     .then((data) => {
-            //         console.log(data)
-            //         this.kq = data.id
-            //         this.$router.push('/BaiDang/' + this.kq)
-            //     })
-            //     .catch((e) => {
-            //         console.log(e)
-            //     })
+            const data = new FormData()
+            data.append('tieude', this.tieude)
+            data.append('loai_id', this.loai)
+            data.append('gia', this.gia)
+            data.append('noidung', this.noidung)
+            data.append('sophongngu', this.phongngu)
+            data.append('sophongtam', this.phongtam)
+            data.append('huong', this.selectedhuong)
+            for (let i = 0; i < this.noithat.length; i++) {
+                data.append('dstiennghi[' + i + ']', this.noithat[i])
+            }
+            data.append('namxaydung', this.namxaydung)
+            data.append('dientich', this.dientich)
+            data.append('diachi', this.diachi)
+            data.append('hinhthuc', this.hinhthuc)
+            data.append('toadoX', 110)
+            data.append('toadoY', 100)
+            this.files.forEach((file, index) => {
+                data.append('file[' + index + ']', file)
+            })
+
+            this.kq = this.$axios
+                .$post(ENV.store, data, {
+                    headers: { 'content-type': 'multipart/form-data' },
+                })
+                .then((data) => {
+                    this.kq = data.id
+                    this.$router.push('/BaiDang/' + this.kq)
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+        },
+        getFileSize(size) {
+            const fSExt = ['Bytes', 'KB', 'MB', 'GB']
+            let i = 0
+
+            while (size > 900) {
+                size /= 1024
+                i++
+            }
+            return `${Math.round(size * 100) / 100} ${fSExt[i]}`
+        },
+        addFiles() {
+            this.files.forEach((file, f) => {
+                this.readers[f] = new FileReader()
+                this.readers[f].onloadend = (e) => {
+                    const fileData = this.readers[f].result
+                    const imgRef = this.$refs.file[f]
+                    this.hinhanh.push(this.$refs.file[f])
+                    imgRef.src = fileData
+                }
+
+                this.readers[f].readAsDataURL(this.files[f])
+            })
         },
     },
 }
 </script>
-
-<style scoped></style>
