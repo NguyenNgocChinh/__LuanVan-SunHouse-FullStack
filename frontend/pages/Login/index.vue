@@ -33,7 +33,6 @@
 
             <v-divider></v-divider>
             <v-card-actions class="d-flex">
-
                 <v-btn class="white--text" color="deep-purple accent-4" depressed @click="btndangki"> Đăng Ký </v-btn>
 
                 <v-spacer></v-spacer>
@@ -50,10 +49,16 @@
                 </v-btn>
             </v-card-actions>
         </v-form>
+        <div v-if="$route.params.error">
+            <v-snackbars :messages.sync="message" :timeout="-1" color="red" bottom right />
+        </div>
     </v-card>
 </template>
 <script>
+import VSnackbars from 'v-snackbars'
+
 export default {
+    components: { VSnackbars },
     data: () => ({
         loginForm: {
             remember: false,

@@ -19,14 +19,14 @@
         <v-row>
             <v-col class="col-lg-8">
                 <v-carousel class="mt-5">
-                    <div v-if="hinhanhArr != [] > 0">
-                        <v-img src="https://api.sunhouse.stuesports.info/images/upload/no-image.png" />
+                    <div v-if="hinhanhArr.length < 1">
+                        <v-img :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                     </div>
                     <div v-else>
                         <v-carousel-item
                             v-for="(hinh, i) in hinhanhArr"
                             :key="i"
-                            :src="'https://api.sunhouse.stuesports.info/images/upload/' + hinh.filename"
+                            :src="URI_DICRECTORY_UPLOAD + hinh.filename"
                             reverse-transition="fade-transition"
                             transition="fade-transition"
                         ></v-carousel-item>
@@ -140,9 +140,7 @@
                                 <v-img
                                     width="80px"
                                     height="80px"
-                                    :src="
-                                        'https://api.sunhouse.stuesports.info/images/upload/' + user.profile_photo_path
-                                    "
+                                    :src="URI_DICRECTORY_UPLOAD + user.profile_photo_path"
                                 />
                             </div>
                         </v-col>
@@ -170,20 +168,13 @@
                                             <v-img
                                                 height="100"
                                                 width="100"
-                                                :src="
-                                                    'https://api.sunhouse.stuesports.info/images/upload/' +
-                                                    hinh.filename
-                                                "
+                                                :src="URI_DICRECTORY_UPLOAD + hinh.filename"
                                             />
                                         </v-carousel-item>
                                     </v-carousel>
                                 </v-col>
                                 <v-col v-else
-                                    ><img
-                                        height="100"
-                                        width="100"
-                                        src="https://api.sunhouse.stuesports.info/images/upload/no-image.png"
-                                    />
+                                    ><img height="100" width="100" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                                 </v-col>
                                 <v-col>
                                     <v-row style="color: #cd5b65"
@@ -221,38 +212,31 @@ export default {
             tiennghiArr: {
                 default: [],
             },
-            hinhanhArr: {
-                default: [],
-            },
+            hinhanhArr: [],
             baidangs: false,
             baidanghots: [],
         }
     },
-    head() {
-        return {
-            script: [],
-            link: [],
-        }
+    computed: {
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
     },
+
     created() {
         this.getchitietsp()
         this.getBaiDangHot()
     },
-
     methods: {
         getchitietsp() {
             try {
                 this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
                     this.baidangs = data
-                    console.log('DB', this.baidangs)
                     this.user = this.baidangs.user
                     this.tiennghiArr = this.baidangs.tiennghi
                     this.hinhanhArr = this.baidangs.hinhanh
-                    console.log(this.tiennghiArr)
                     this.baidanghots = data
                 })
-
-                console.log(this.baidangs)
             } catch (e) {
                 console.log(e)
             }
@@ -260,12 +244,11 @@ export default {
         async getBaiDangHot() {
             try {
                 const bdhots = await this.$axios.$get(ENV.hot)
-                this.baidanghots = bdhots.baidangs
+                this.baidanghots = bdhots.baidangs.slice(0, 5)
             } catch (e) {
                 console.log(e)
             }
             this.baidanghots_loading = false
-            console.log(this.baidanghots)
         },
     },
 }

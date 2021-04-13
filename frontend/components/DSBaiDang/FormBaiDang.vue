@@ -157,8 +157,8 @@
                         <v-col class="px-4">
                             <v-range-slider
                                 v-model="rangeGia"
-                                :max="maxGia"
-                                :min="minGia"
+                                :min="gia1"
+                                :max="gia2"
                                 hide-details
                                 :label="ex3.label"
                                 :thumb-color="ex3.color"
@@ -178,8 +178,8 @@
                         <v-col class="px-4">
                             <v-range-slider
                                 v-model="rangeDienTich"
-                                :max="maxDienTich"
-                                :min="minDienTich"
+                                :min="dientich1"
+                                :max="dientich2"
                                 hide-details
                                 :label="ex4.label"
                                 :thumb-color="ex4.color"
@@ -193,14 +193,14 @@
             </v-card>
         </div>
         <div class="ml-1">
-            <v-btn block class="deep-orange lighten-1">Tìm kiếm</v-btn>
+            <v-btn block class="deep-orange lighten-1" @click="$nuxt.$emit('search')">Tìm kiếm</v-btn>
         </div>
     </v-card>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { mapFields } from 'vuex-map-fields'
-
+import ENV from '@/api/timkiem'
 export default {
     data() {
         return {
@@ -223,22 +223,25 @@ export default {
             quanhuyen: [],
             xaphuong: [],
 
+            gia1: 0,
+            gia2: 99999,
             rangeGia: [0, 99999],
+            dientich1: 0,
+            dientich2: 99999,
             rangeDienTich: [0, 99999],
         }
     },
     watch: {
         rangeGia() {
-            _.debounce(function () {
+            setTimeout(() => {
                 this.$store.commit('search/updateGia1Field', this.rangeGia[0])
                 this.$store.commit('search/updateGia2Field', this.rangeGia[1])
             }, 600)
         },
         rangeDienTich() {
-            _.debounce(function () {
+            setTimeout(() => {
                 this.$store.commit('search/updateDienTich1Field', this.rangeDienTich[0])
                 this.$store.commit('search/updateDienTich2Field', this.rangeDienTich[1])
-                console.log('UP', this.$store.state)
             }, 600)
         },
     },
@@ -271,7 +274,7 @@ export default {
         // SELECT Theo vi tri
         async getAllLoai() {
             try {
-                const loai = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/loai')
+                const loai = await this.$axios.$get(ENV.loai)
                 this.loaiNha = loai
             } catch (e) {
                 console.log(e)
@@ -279,10 +282,10 @@ export default {
         },
         getGiaMinMax() {
             try {
-                this.$axios.$get('https://api.sunhouse.stuesports.info/api/gia').then((data) => {
+                this.$axios.$get(ENV.gia).then((data) => {
                     this.rangeGia = [0, data.max]
-                    this.minGia = 0
-                    this.maxGia = data.max
+                    this.gia1 = 0
+                    this.gia2 = data.max
                 })
             } catch (e) {
                 console.log(e)
@@ -290,12 +293,11 @@ export default {
         },
         getDienTich() {
             try {
-                this.$axios.$get('https://api.sunhouse.stuesports.info/api/dientich').then((data) => {
+                this.$axios.$get(ENV.dientich).then((data) => {
                     this.rangeDienTich = [0, data.max]
 
-                    this.minDienTich = 0
-                    this.maxDienTich = data.max
-                    console.log(this.minDienTich)
+                    this.dientich1 = 0
+                    this.dientich2 = data.max
                 })
             } catch (e) {
                 console.log(e)
@@ -303,7 +305,7 @@ export default {
         },
         async getThanhPho() {
             try {
-                const thanhPhoArr = await this.$axios.$get('https://api.sunhouse.stuesports.info/api/ThanhPho')
+                const thanhPhoArr = await this.$axios.$get(ENV.thanhpho)
                 this.thanhpho = thanhPhoArr
             } catch (e) {
                 console.log(e)
@@ -311,23 +313,13 @@ export default {
         },
 
         async getQuanHuyen(id) {
-            const quanhuyen = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/QuanHuyen/${id}`)
+            const quanhuyen = await this.$axios.$get(ENV.quanhuyen + id)
             this.quanhuyen = quanhuyen
         },
 
         async getXaPhuong(id) {
-            const xaphuong = await this.$axios.$get(`https://api.sunhouse.stuesports.info/api/XaPhuong/${id}`)
+            const xaphuong = await this.$axios.$get(ENV.xaphuong + id)
             this.xaphuong = xaphuong
-        },
-
-        checkType() {
-            // let kq = null
-            // if (this.type === 'Thuê') {
-            //     kq = 'thue'
-            // } else if (this.type === 'Tất Cả') {
-            //     kq = 'tatca'
-            // }
-            // return kq
         },
     },
 }
