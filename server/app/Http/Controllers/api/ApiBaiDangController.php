@@ -153,7 +153,7 @@ class ApiBaiDangController extends Controller
         $request->validate(
             [
                 'tieude' => 'required',
-                'loai' => 'required',
+                'loai_id' => 'required',
                 'gia' => 'required',
                 'hinhthuc' => 'required',
                 'noidung' => 'required',
@@ -169,10 +169,10 @@ class ApiBaiDangController extends Controller
         );
 
 
-        $data = $this->saveImage($request);
+
         $baidang = new BaiDang();
         $baidang->tieude = $request->tieude;
-        $baidang->loai_id = $request->loai;
+        $baidang->loai_id = $request->loai_id;
         $baidang->gia = $request->gia;
         $baidang->isChoThue = $request->hinhthuc;
         $baidang->noidung = $request->noidung;
@@ -201,11 +201,15 @@ class ApiBaiDangController extends Controller
                     $tiennghi_bd->save();
                 }
             }
+
+            $data = $this->saveImage($request);
+
             if (count($data) > 0) {
                 foreach ($data as $hinhanh) {
                     $hinhanh_new = new BaiDangHinhAnh();
                     $hinhanh_new->baidang_id = $baidang->id;
                     $hinhanh_new->filename = $hinhanh;
+                    $hinhanh_new->save();
                 }
             }
         }
