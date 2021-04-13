@@ -9,7 +9,7 @@
                     <H2>Tiêu đề</H2>
                     <v-text-field
                         v-model="tieude"
-                        :rules="[() => !!tieude || 'không được để trống!!!']"
+                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!']"
                         label="Tiêu Đề"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
@@ -19,11 +19,12 @@
                     <H2>Giá bán</H2>
                     <v-text-field
                         v-model="gia"
-                        :rules="[() => !!gia || 'không được để trống!!!']"
+                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']"
+                        type="number"
                         label="ví dụ: 1000"
                     ></v-text-field>
                     <v-card-title>Nội dung bài viết</v-card-title>
-                    <v-textarea v-model="noidung" counter label="Nhập nội dung bài viết..."></v-textarea>
+                    <v-textarea v-model="noidung" :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']" counter label="Nhập nội dung bài viết..."></v-textarea>
                     <v-card-title>Hình ảnh</v-card-title>
                     <!--                    <image-upload />-->
                     <v-file-input
@@ -77,12 +78,12 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Số phòng ngủ</v-card-title>
-                        <v-text-field v-model="phongngu" type="number" solo></v-text-field>
+                        <v-text-field v-model="phongngu" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Số phòng tắm</v-card-title>
                         <v-form>
-                            <v-text-field v-model="phongtam" type="number" solo></v-text-field>
+                            <v-text-field v-model="phongtam" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"  solo></v-text-field>
                         </v-form>
                     </v-col>
                 </v-row>
@@ -94,6 +95,7 @@
                                 v-model="selectedhuong"
                                 item-value="k"
                                 item-text="v"
+                                :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
                                 :items="[
                                     { k: 'Đông', v: 'Hướng nhà: Đông' },
                                     { k: 'Tây', v: 'Hướng nhà: Tây' },
@@ -111,12 +113,12 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Năm xây dựng</v-card-title>
-                        <v-text-field v-model="namxaydung" type="number" solo></v-text-field>
+                        <v-text-field v-model="namxaydung" :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']" type="number" label="ví dụ: 2020" solo></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Diện tích(m2)</v-card-title>
                         <v-form>
-                            <v-text-field v-model="dientich" label="ví dụ: 10" solo></v-text-field>
+                            <v-text-field v-model="dientich" :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
                         </v-form>
                     </v-col>
                 </v-row>
@@ -145,8 +147,8 @@
                 v-model="diachi"
                 class="text-center"
                 solo
-                :rules="[() => !!diachi || 'không được để trống!!!']"
-                label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8"
+                :rules="[() => !!diachi || 'Vui lòng nhập địa chỉ!']"
+                label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8 TPHCM"
                 required
             ></v-text-field>
 
@@ -171,7 +173,7 @@ export default {
         return {
             loais: [],
             loaiTemp: '',
-            hinhthuc: null,
+            hinhthuc: '',
             selectedhuong: '',
             namxaydung: null,
             loai: null,
