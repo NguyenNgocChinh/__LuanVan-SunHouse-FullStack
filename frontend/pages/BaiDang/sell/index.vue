@@ -86,7 +86,7 @@ export default {
     methods: {
         getBaiDangHot() {
             this.$axios
-                .$get(`${ENV.raoban}?page=${this.page}`, {
+                .$get(ENV.raoban +`?page=${this.page}`, {
                     params: {
                         page_size: 6,
                     },

@@ -70,7 +70,7 @@
                             <v-col>
                                 <b>
                                     Hình thức:
-                                    <div v-if="baidangs.hinhthuc == 1">Cho Thuê</div>
+                                    <div v-if="baidangs.isChoThue == 1">Cho Thuê</div>
                                     <div v-else>Rao Bán</div></b
                                 >
                             </v-col>
