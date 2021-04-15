@@ -8,9 +8,9 @@
                 <H2>Tiêu đề</H2>
                 <v-text-field
                     v-model="tieude"
-                    :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!']"
                     label="Tiêu Đề"
-                    placeholder="Nhập tiêu đề bài đăng"
+                    clearable
+                    :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!']"
                     required
                 ></v-text-field>
                 <H2>Loại tài sản</H2>

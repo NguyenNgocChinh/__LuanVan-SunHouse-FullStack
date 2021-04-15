@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="baidang" :loading="loading" class="mx-auto" flat>
+    <v-card v-if="baidang" :loading="loading" class="mx-auto" flat @click="showChiTietBaiDang(baidang)">
         <template slot="progress">
             <v-progress-linear color="deep-purple" height="5" indeterminate></v-progress-linear>
         </template>
@@ -30,7 +30,6 @@
                 <span class="mr-2">Phòng tắm: {{ baidang.sophongtam }}</span>
             </div>
         </v-card-subtitle>
-        ads{{ URI_DICRECTORY_UPLOAD + 'no-image.png' }}
         <v-chip-group class="loainha">
             <v-chip color="teal darken-1" class="white--text" label
                 >{{ baidang.isChoThue == 1 ? 'Cho thuê' : 'Rao bán' }}
@@ -71,8 +70,10 @@ export default {
     methods: {
         reserve() {
             this.loading = true
-
             setTimeout(() => (this.loading = false), 2000)
+        },
+        showChiTietBaiDang(item) {
+            this.$router.push('/baidang/' + item.id)
         },
     },
 }
