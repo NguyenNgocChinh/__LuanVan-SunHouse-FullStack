@@ -12,7 +12,7 @@
                         </v-col>
 
                         <v-col cols="6" class="d-flex align-center">
-                            <v-col cols="6">`
+                            <v-col cols="6">
                                 <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
                             </v-col>
                             <v-col cols="6">
@@ -54,7 +54,7 @@
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import { mapFields } from 'vuex-map-fields'
-
+import ENV from '@/api/baidang'
 export default {
     components: { BaiDangCard },
     data: () => ({
@@ -93,12 +93,12 @@ export default {
         }),
     },
     watch: {
-        searchParams: {
-            handler: _.debounce(function (newVal) {
-                console.log(newVal)
-            }, 600),
-            deep: true,
-        },
+        // searchParams: {
+        //     handler: _.debounce(function (newVal) {
+        //         console.log(newVal)
+        //     }, 600),
+        //     deep: true,
+        // },
         page() {
             this.baidangs = null
             window.scrollTo({
@@ -119,11 +119,15 @@ export default {
 
     created() {
         this.getbaidangs()
+        $nuxt.$on('search', () => {
+            this.baidangs = null
+            this.getbaidangs()
+        })
     },
     methods: {
         getbaidangs() {
             this.$axios
-                .$get(`https://api.sunhouse.stuesports.info/api/timkiem?page=${this.page}&pagesize=6`, {
+                .$get(`${ENV.timiem}?page=${this.page}&pagesize=6`, {
                     params: {
                         // diadiem: this.inputThanhPho,
                         gia1: this.gia1,

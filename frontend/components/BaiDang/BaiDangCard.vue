@@ -11,7 +11,7 @@
         </v-carousel>
 
         <div v-else>
-            <v-img height="200" src="http://localhost:8000/images/upload/no-image.png" />
+            <v-img height="200" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
         </div>
         <v-card-title class="font-weight-bold red--text">{{ baidang.loai }}</v-card-title>
         <v-card-subtitle class="noidung">

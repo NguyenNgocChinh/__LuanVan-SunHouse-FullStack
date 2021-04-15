@@ -1,3 +1,3 @@
 export default function ({ $auth, redirect }) {
-    if ($auth.user.vaitro !== 'admin') return redirect('/login')
+    if ($auth.user.vaitro !== 'admin') return redirect('/AccessDeny')
 }
