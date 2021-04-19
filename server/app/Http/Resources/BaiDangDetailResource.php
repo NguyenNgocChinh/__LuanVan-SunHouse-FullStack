@@ -16,8 +16,11 @@ class BaiDangDetailResource extends JsonResource
     public function toArray($request)
     {
         $tiennghi = [] ;
-        foreach ($this->tiennghi_baidang as $tn){
-            $tiennghi[] = TienNghi::find($tn->tiennghi_id);
+        if (isset($this->tiennghi_baidang))
+        {
+            foreach ($this->tiennghi_baidang as $tn){
+                $tiennghi[] = TienNghi::find($tn->tiennghi_id);
+            }
         }
         return [
             "id" => $this->id,

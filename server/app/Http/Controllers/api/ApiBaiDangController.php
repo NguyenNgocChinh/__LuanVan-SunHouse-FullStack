@@ -76,6 +76,7 @@ class ApiBaiDangController extends Controller
 
     public function getDetailPost($id)
     {
+
         return response()->json(
             new BaiDangDetailResource(BaiDang::find($id))
         );
@@ -168,8 +169,6 @@ class ApiBaiDangController extends Controller
             ]
         );
 
-
-
         $baidang = new BaiDang();
         $baidang->tieude = $request->tieude;
         $baidang->loai_id = $request->loai_id;
@@ -185,7 +184,7 @@ class ApiBaiDangController extends Controller
         $baidang->toadoX = $request->toadoX;
         $baidang->toadoY = $request->toadoY;
         /**********************************************/
-        $baidang->user_id = 1;
+        $baidang->user_id = Auth::user()->id;
         $baidang->id_goi = 1;
         /**********************************************/
 
@@ -239,7 +238,7 @@ class ApiBaiDangController extends Controller
         $baidang->toadoX = $request->toadoX;
         $baidang->toadoY = $request->toadoY;
         /**********************************************/
-        $baidang->user_id = 1;
+        $baidang->user_id = Auth::user()->id;
         /**********************************************/
 
         $baidang->choduyet = 1;

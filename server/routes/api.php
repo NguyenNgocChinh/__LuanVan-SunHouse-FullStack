@@ -10,6 +10,8 @@ use App\Http\Controllers\api\ApiGoiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use Laravel\Socialite\Facades\Socialite;
+
 Route::apiResource('HomeApi', HomeController::class);
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -25,6 +27,38 @@ Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/logout', [ApiUserController::class, "logout"]);
         Route::get('/user', [ApiUserController::class, "userInfo"]);
+    });
+    Route::get('/google', function () {
+        return Socialite ::driver('google')->redirect();
+    });
+    Route::get('/google/callback', function () {
+        try {
+            $user = Socialite::driver('google')->stateless()->user();
+        } catch (Exception $e) {
+            return redirect('/login');
+        }
+        return response()->json($user);
+
+        $name = $user->getName();
+        $id = $user->getId();
+        $email = $user->getEmail();
+        $avatar = $user->getAvatar();
+
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser)
+            auth()->login($existingUser, true);
+        else {
+            $newUser = new User();
+            $newUser->name = $name;
+            $newUser->email = $email;
+            $newUser->avatar_origin = $avatar;
+            $newUser->google_id = $id;
+            $newUser->save();
+            auth()->login($newUser, true);
+
+        }
+
     });
 });
 /*

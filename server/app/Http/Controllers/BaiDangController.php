@@ -25,7 +25,7 @@ class BaiDangController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('show'); //only('store', 'update','create','destro');
+//        $this->middleware('auth')->except('show'); //only('store', 'update','create','destro');
     }
 
     function saveImage(Request $request)
