@@ -5,7 +5,7 @@
             <v-row>
                 <v-col
                     ><a href="#url" class="cost-estate m-o"
-                        ><v-icon>mdi-map-marker-radius</v-icon>{{ baidangs.diachi }}</a
+                        ><v-icon>mdi-map-marker-radius</v-icon><span id="address">{{ baidangs.diachi }}</span></a
                     ></v-col
                 >
                 <v-col><v-icon>mdi-bed</v-icon> Phòng ngủ:{{ baidangs.sophongngu }}</v-col>
@@ -94,16 +94,40 @@
                     <v-card-title>Các trung tâm gần đây</v-card-title>
                     <v-card-text>
                         <v-card>
-                            <v-row class="py-12" justify="space-around">
-                                <v-btn color="primary"> Trường Học </v-btn>
-                                <v-btn :ripple="false" color="primary"> Bệnh viện </v-btn>
-                                <v-btn :ripple="{ center: true }" color="primary"> Ngân Hàng </v-btn>
-                            </v-row>
-                            <v-row>
-                                <div class="text-center ml-10">
-                                    <p><i>Không có trung tâm nào gần địa điểm này!</i></p>
-                                </div>
-                            </v-row>
+                            <v-tabs v-model="tabs">
+                                <v-tab>Trường Học</v-tab>
+                                <v-tab>Bệnh Viện</v-tab>
+                                <v-tab>Ngân Hàng</v-tab>
+                            </v-tabs>
+                            <v-tabs-items v-model="tabs">
+                                <v-tab-item>
+                                    <v-data-table
+                                        :headers="headers"
+                                        :items="dsTruongHoc"
+                                        :items-per-page="5"
+                                        class="elevation-1"
+                                    ></v-data-table>
+                                </v-tab-item>
+                                <v-tab-item>
+                                    <v-data-table
+                                        :headers="headers"
+                                        :items="dsBenhVien"
+                                        :items-per-page="5"
+                                        class="elevation-1"
+                                    ></v-data-table>
+                                </v-tab-item>
+                                <v-tab-item>
+                                    <v-data-table
+                                        :loading="servicesLoading"
+                                        :headers="headers"
+                                        :items="dsNganHang"
+                                        :items-per-page="5"
+                                        class="elevation-1"
+                                    ></v-data-table>
+                                </v-tab-item>
+                                <v-tab-item><div id="benhVien"></div></v-tab-item>
+                                <v-tab-item><div id="nganHang"></div></v-tab-item>
+                            </v-tabs-items>
                         </v-card>
                     </v-card-text>
                 </v-card>
@@ -203,9 +227,21 @@
 <script>
 import ENV from '@/api/baidang'
 import URI_DICRECTORY from '@/api/directory'
+import * as serviceNear from '@/static/js/servicesNear'
 export default {
     data() {
         return {
+            tabs: null,
+            headers: [
+                { text: 'Tên', value: 'name', width: '55%' },
+                { text: 'Khoảng cách', value: 'distance', width: '22.5%' },
+                { text: 'Thời gian', value: 'time', width: '22.5%' },
+            ],
+            dsTruongHoc: [],
+            dsBenhVien: [],
+            dsNganHang: [],
+            servicesLoading: false,
+
             user: {
                 profile_photo_path: '',
             },
@@ -230,12 +266,27 @@ export default {
     methods: {
         getchitietsp() {
             try {
-                this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
+                this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
                     this.baidangs = data
                     this.user = this.baidangs.user
                     this.tiennghiArr = this.baidangs.tiennghi
                     this.hinhanhArr = this.baidangs.hinhanh
-                    this.baidanghots = data
+                    await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
+                        if (typeof postLocate !== 'undefined') {
+                            this.servicesLoading = true
+                            serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
+                                this.dsTruongHoc = data
+                            })
+                            serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
+                                this.dsBenhVien = data
+                                this.servicesLoading = false
+                            })
+                            serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
+                                this.dsNganHang = data
+                                this.servicesLoading = false
+                            })
+                        }
+                    })
                 })
             } catch (e) {
                 console.log(e)
