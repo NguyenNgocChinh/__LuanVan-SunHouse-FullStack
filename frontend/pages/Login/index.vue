@@ -12,8 +12,8 @@
                 ref="email"
                 v-model="loginForm.username"
                 :rules="[rules.required]"
-                label="Địa Chỉ Email"
-                placeholder="Nhập địa chỉ email của bạn"
+                label="Địa Chỉ Email hoặc Username"
+                placeholder="Nhập địa chỉ email hoặc username của bạn"
                 required
             ></v-text-field>
 
@@ -49,16 +49,10 @@
                 </v-btn>
             </v-card-actions>
         </v-form>
-        <div v-if="$route.params.error">
-            <v-snackbars :messages.sync="message" :timeout="-1" color="red" bottom right />
-        </div>
     </v-card>
 </template>
 <script>
-import VSnackbars from 'v-snackbars'
-
 export default {
-    components: { VSnackbars },
     data: () => ({
         loginForm: {
             remember: false,
@@ -85,7 +79,23 @@ export default {
         },
 
         async login() {
-            await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((data) => {})
+            try {
+                this.$nextTick(() => {
+                    this.$nuxt.$loading.start()
+                })
+                this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
+                await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then(() => {
+                    this.$nuxt.$toast.success('Đăng nhập thành công')
+                })
+            } catch (e) {
+                this.$nuxt.$toast.show(e, {
+                    duration: null,
+                    theme: 'outline',
+                    type: 'error',
+                })
+            } finally {
+                this.$nuxt.$loading.finish()
+            }
         },
         btndangki() {
             this.$router.push('/register')

@@ -1,13 +1,11 @@
 <template>
     <div v-if="loading" class="loading-page">
-        <fulfilling-bouncing-circle-spinner
+        <looping-rhombuses-spinner
             class="center_loading"
-            :animation-duration="2000"
-            :size="100"
-            :color="'#ff5638'"
+            :animation-duration="2500"
+            :rhombus-size="15"
+            color="#ff1d5e"
         />
-        <br />
-        <p class="lead">Đang tải...</p>
     </div>
 </template>
 
@@ -42,7 +40,7 @@ export default {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
     text-align: center;
     padding-top: 20%;
     font-size: 30px;

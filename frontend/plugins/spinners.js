@@ -1,4 +1,4 @@
-import Vue from 'vue';
-import { FulfillingBouncingCircleSpinner } from 'epic-spinners'
+import Vue from 'vue'
+import { LoopingRhombusesSpinner } from 'epic-spinners'
 
-Vue.component('fulfilling-bouncing-circle-spinner', FulfillingBouncingCircleSpinner);
+Vue.component('LoopingRhombusesSpinner', LoopingRhombusesSpinner)

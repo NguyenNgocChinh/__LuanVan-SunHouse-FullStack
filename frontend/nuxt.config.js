@@ -31,7 +31,7 @@ export default {
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [],
+    plugins: [{ src: '@/plugins/spinners.js', ssr: false }],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -43,7 +43,7 @@ export default {
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
+    modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // proxy: true,
@@ -80,11 +80,24 @@ export default {
             },
         },
     },
-    loading: {
-        color: '#3CB372',
-        failedColor: 'red',
-        height: '5px',
-        continuous: true,
+    // loading: {
+    //     color: '#3CB372',
+    //     failedColor: 'red',
+    //     height: '5px',
+    //     continuous: true,
+    // },
+    loading: '@/components/Loading.vue',
+    toast: {
+        position: 'top-right',
+        duration: 2000,
+        action: {
+            text: 'Đóng',
+            onClick: (e, toastObject) => {
+                toastObject.goAway(0)
+            },
+        },
+        theme: 'outline',
+        keepOnHover: true,
     },
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {

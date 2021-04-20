@@ -72,7 +72,16 @@ export default {
         },
 
         async logout() {
-            await this.$auth.logout()
+            try {
+                this.$nextTick(() => {
+                    this.$nuxt.$loading.start()
+                })
+                await this.$auth.logout().then(() => this.$nuxt.$toast.success('Đăng xuất thành công'))
+            } catch (e) {
+                this.$nuxt.$toast.error('Lỗi đăng xuất')
+            } finally {
+                this.$nuxt.$loading.finish()
+            }
         },
     },
 }
