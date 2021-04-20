@@ -20,14 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('sdt')->nullable();
             $table->boolean('trangthai')->default(1);
-            $table->enum('vaitro', ['user', 'seller', 'admin'])->default('user');
+            $table->enum('vaitro', ['user', 'admin'])->default('user');
             $table->string('password');
             $table->string('diachi')->nullable();
             $table->date('namsinh')->nullable();
             $table->text('profile_photo_path')->nullable();
-            $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
-            $table->enum('provideID',['google','facebook'])->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

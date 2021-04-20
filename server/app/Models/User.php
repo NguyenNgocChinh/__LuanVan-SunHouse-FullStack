@@ -32,6 +32,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'profile_photo_url',
     ];
 
     /**
@@ -77,6 +78,14 @@ class User extends Authenticatable
     public function goi()
     {
         return $this->hasMany('App\Models\UserGoi', 'user_id', 'id')->orderBy('ngaydangky', 'desc');
+    }
+
+    /*SOCIAL*/
+    public function social(){
+        return $this->hasMany(UserSocial::class,'user_id','id');
+    }
+    public function hasSocialLinked($service){
+        return (bool) $this->social->where('service',$service)->count();
     }
 
 }

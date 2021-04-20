@@ -14,18 +14,18 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        $url = parse_url($request->url());
-        $path = $url['path'];
-        $url = explode('/', $path)[1];
-
-        if ($url == 'ad') {
-            if (!$request->expectsJson()) {
-                return route('login_admin');
-            }
-        } else {
-            if (!$request->expectsJson()) {
-                return route('login');
-            }
-        }
+//        $url = parse_url($request->url());
+//        $path = $url['path'];
+//        $url = explode('/', $path)[1];
+//
+//        if ($url == 'ad') {
+//            if (!$request->expectsJson()) {
+//                return route('login_admin');
+//            }
+//        } else {
+//            if (!$request->expectsJson()) {
+//                return route('login');
+//            }
+//        }
     }
 }
