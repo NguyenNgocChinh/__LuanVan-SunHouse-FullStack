@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-container class="yellow accent-1 py-10 chothue">
+    <v-container fluid class="yellow accent-1">
+        <v-container class="py-10 chothue">
             <h3 class="pt-8 Black--text">NHÀ CHO THUÊ MỚI NHẤT</h3>
             <h4 class="py-2 red--text">Sun House trao trọn niềm tin</h4>
             <v-row>
@@ -19,11 +19,11 @@
                 </v-slide-group>
             </v-row>
         </v-container>
-    </div>
+    </v-container>
 </template>
 <script>
-import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 import ENV from '@/api/baidang'
+import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'ChoThue',
     components: { BaiDangCard },

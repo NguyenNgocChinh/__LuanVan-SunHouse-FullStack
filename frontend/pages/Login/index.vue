@@ -48,11 +48,25 @@
                     Đăng Nhập
                 </v-btn>
             </v-card-actions>
+            <div class="text-center">--- OR ---</div>
+
+            <v-row class="mt-4 mb-1">
+                <v-btn large width="100%" class="white--text" color="red lighten-1" @click="loginGG"
+                    >Tiếp tục với Google</v-btn
+                >
+            </v-row>
+            <v-row>
+                <v-btn large width="100%" class="white--text" color="blue lighten-1" @click="loginFB"
+                    >Tiếp tục với Facebook</v-btn
+                >
+            </v-row>
         </v-form>
     </v-card>
 </template>
 <script>
 export default {
+    middleware: 'auth',
+    auth: 'guest',
     data: () => ({
         loginForm: {
             remember: false,
@@ -93,12 +107,28 @@ export default {
                     theme: 'outline',
                     type: 'error',
                 })
+                console.log(e)
             } finally {
                 this.$nuxt.$loading.finish()
             }
         },
         btndangki() {
             this.$router.push('/register')
+        },
+
+        loginGG() {
+            try {
+                window.location.href = 'http://localhost:8000/auth/google'
+            } catch (e) {
+                this.$nuxt.$toast.error(e, { duration: null })
+            }
+        },
+        loginFB() {
+            try {
+                window.location.href = 'http://localhost:8000/auth/facebook'
+            } catch (e) {
+                this.$nuxt.$toast.error(e, { duration: null })
+            }
         },
     },
 }

@@ -12,13 +12,21 @@
                     v-on="on"
                     @click="isClickUser = !isClickUser"
                 >
-                    <v-avatar color="sunhouse_secondary" class="mr-1" size="30">
-                        <div v-if="$auth.user.profile_photo_path == null">
-                            <v-img :src="$auth.user.profile_photo_url" style="width: 35px; height: 35px"></v-img>
-                        </div>
-                        <div v-else>
-                            <v-img :src="$auth.user.profile_photo_path" style="width: 35px; height: 35px"></v-img>
-                        </div>
+                    <v-avatar class="mr-1 text-center" size="30">
+                        <v-img
+                            v-if="$auth.user.profile_photo_path == null"
+                            :src="$auth.user.profile_photo_url"
+                            style="width: 35px; height: 35px"
+                        ></v-img>
+                        <v-img
+                            v-else
+                            :src="
+                                isValidHttpUrl($auth.user.profile_photo_path)
+                                    ? $auth.user.profile_photo_path
+                                    : '/images/upload/' + $auth.user.profile_photo_path
+                            "
+                            style="width: 30px"
+                        ></v-img>
                     </v-avatar>
 
                     <span :style="'color:' + color">{{ $auth.user.name }}</span>
@@ -38,9 +46,9 @@
                                 </v-list-item-content>
                             </v-list-item>
                             <v-divider />
-                            <v-list-item>
+                            <v-list-item @click="logout">
                                 <v-list-item-content>
-                                    <div class="text-decoration-none white--dark" @click="logout">
+                                    <div class="text-decoration-none white--dark">
                                         <span>Đăng xuất</span>
                                     </div>
                                 </v-list-item-content>
@@ -82,6 +90,18 @@ export default {
             } finally {
                 this.$nuxt.$loading.finish()
             }
+        },
+
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
     },
 }

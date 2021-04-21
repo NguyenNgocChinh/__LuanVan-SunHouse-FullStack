@@ -61,9 +61,9 @@ export default {
                     name: 'XSRF-TOKEN',
                 },
                 endpoints: {
-                    login: { url: '/api/auth/login', method: 'post', propertyName: 'user' },
+                    login: { url: '/api/auth/login', method: 'post', propertyName: false },
                     logout: { url: '/api/auth/logout' },
-                    user: { url: '/api/auth/user', method: 'get', propertyName: null },
+                    user: { url: '/api/auth/user', method: 'get', propertyName: false },
                     csrf: {
                         url: '/sanctum/csrf-cookie',
                     },
@@ -75,9 +75,23 @@ export default {
                     home: '/',
                 },
                 user: {
-                    property: null,
+                    property: false,
                 },
             },
+            google: {
+                responseType: 'code',
+                clientId: '824756884382-m5p5icl9lgeqtmd9lmftj1m5moho6cuo.apps.googleusercontent.com',
+                accessType: 'offline',
+                codeChallengeMethod: 'S256',
+                grantType: 'authorization_code',
+                redirectUri: 'http://localhost:3000/login',
+            },
+        },
+        redirect: {
+            login: '/login',
+            logout: '/',
+            callback: '/login',
+            home: '/',
         },
     },
     // loading: {

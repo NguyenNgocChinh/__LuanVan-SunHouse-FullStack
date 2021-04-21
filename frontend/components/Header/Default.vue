@@ -54,7 +54,7 @@
             <v-navigation-drawer v-model="isMenuResponsive" absolute temporary>
                 <v-list nav dense>
                     <v-list-item-group active-class="sunhouse_primary white--text">
-                        <div v-if="$auth.user">
+                        <div v-if="$auth.loggedIn">
                             <HasLogin color="black" />
                         </div>
                         <div v-else>
