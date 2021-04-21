@@ -5,13 +5,14 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\QuanHuyen;
 use App\Models\ThanhPho;
+use Illuminate\Http\Response;
 
 class DiaDiemController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function thanhpho()
     {

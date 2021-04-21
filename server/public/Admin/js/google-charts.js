@@ -76,7 +76,7 @@ function drawStuff() {
 
   var chart = new google.charts.Bar(document.getElementById('Bar-chart'));
   chart.draw(data, options);
-};
+}
 
 
 // Bar Charts Ends

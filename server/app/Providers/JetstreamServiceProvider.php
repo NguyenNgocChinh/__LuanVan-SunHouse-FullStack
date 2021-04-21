@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
+use App\Http\Responses\LoginResponse;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
@@ -55,7 +56,7 @@ class JetstreamServiceProvider extends ServiceProvider
         /*Khai bao Reponse class*/
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LoginResponse::class,
-            \App\Http\Responses\LoginResponse::class
+            LoginResponse::class
         );
     }
 

@@ -5,20 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserSocial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialLoginController extends Controller
 {
+    public $graphUrl = 'https://graph.facebook.com';
+    public $version = 'v10.0';
 
-    public function redirect(){
-        return \Laravel\Socialite\Facades\Socialite ::driver('google')->redirect();
+    public function redirect($service)
+    {
+        return Socialite::driver($service)->redirect();
     }
 
-    public function callback($service){
-        $serviceUser  = Socialite::driver($service)->stateless()->user();
-        if ( $service != 'google') {
+    public function getFacebookAvatar($userID, $access_token)
+    {
+
+        $path = "{$this->graphUrl}/{$this->version}/{$userID}/picture?type=large&redirect=false&access_token={$access_token}";
+        $res = Http::get($path);
+
+        // Get the final User Image URL out of the response
+        return Arr::get($res->json(), 'data.url', false);
+    }
+
+    public function callback($service)
+    {
+        $serviceUser = Socialite::driver($service)->stateless()->user();
+
+
+        if ($service != 'google') {
             $email = $serviceUser->getId() . '@' . $service . '.local';
+            $image = $this->getFacebookAvatar($serviceUser->getId(), $serviceUser->token);
         } else {
             $email = $serviceUser->getEmail();
         }
@@ -32,7 +51,12 @@ class SocialLoginController extends Controller
             $user->name = $serviceUser->getName();
             $user->email = $email;
             $user->password = '';
-            $user->profile_photo_path = $serviceUser->getAvatar();
+
+            if ($service == 'facebook')
+                $user->profile_photo_path = $image;
+            else
+                $user->profile_photo_path = $serviceUser->getAvatar();
+
             $user->save();
         }
 
@@ -44,40 +68,12 @@ class SocialLoginController extends Controller
             ]);
 
         }
+        if ($user->tokens()->get()) {
+            $user->tokens()->delete();
+        }
+        $token = $user->createToken('tokenSocial')->plainTextToken;
 
-
-
-
-
-//        try {
-//            $user = Socialite::driver('google')->stateless()->user();
-//        } catch (Exception $e) {
-//            return $e;
-//        }
-//        auth()->loginUsingId(1);
-//        return response()->json($user);
-//
-//        $name = $user->getName();
-//        $id = $user->getId();
-//        $email = $user->getEmail();
-//        $avatar = $user->getAvatar();
-//
-//        $existingUser = User::where('email', $email)->first();
-//
-//        if ($existingUser)
-//            auth()->login($existingUser, true);
-//        else {
-//            $newUser = new User();
-//            $newUser->name = $name;
-//            $newUser->email = $email;
-//            $newUser->avatar_origin = $avatar;
-//            $newUser->google_id = $id;
-//            $newUser->save();
-//            auth()->login($newUser, true);
-//
-//        }
-
-        return "LOGIN";
+        return redirect(env('CLIENT_BASE_URL') . '/login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));
     }
 
     public function needsToCreateSocial(User $user, $service)
@@ -91,7 +87,7 @@ class SocialLoginController extends Controller
             $userSocial = UserSocial::where('social_id', $serviceUser->getId())->first();
             return $userSocial ? $userSocial->user : null;
         }
-        return User::where('email', $email)->orWhereHas('social', function($q) use ($serviceUser, $service) {
+        return User::where('email', $email)->orWhereHas('social', function ($q) use ($serviceUser, $service) {
             $q->where('social_id', $serviceUser->getId())->where('service', $service);
         })->first();
     }

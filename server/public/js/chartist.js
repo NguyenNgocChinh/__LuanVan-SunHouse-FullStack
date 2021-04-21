@@ -31,7 +31,7 @@
   }, {
     labels: [],
     series: times(4).map(function() {
-      return new Array()
+      return []
     })
   });
 

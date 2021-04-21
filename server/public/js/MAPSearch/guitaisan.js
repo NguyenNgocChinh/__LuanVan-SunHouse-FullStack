@@ -138,7 +138,7 @@ async function dragMarker(e) {
 
     setAddress(address, x, y);
 
-};
+}
 
 
 async function showPosition(position) {

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Admin_TienNghiController;
 use App\Http\Controllers\BaiDangController;
 use App\Http\Controllers\BinhLuanController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\TimKiemController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/auth/google',[\App\Http\Controllers\SocialLoginController::class, 'redirect']);
+Route::get('/auth/{service}',[SocialLoginController::class, 'redirect']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

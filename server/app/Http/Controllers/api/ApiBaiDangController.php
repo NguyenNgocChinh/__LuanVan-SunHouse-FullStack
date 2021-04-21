@@ -10,6 +10,7 @@ use App\Models\BaiDang;
 use App\Models\BaiDangHinhAnh;
 use App\Models\TienNghiBaiDang;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -291,7 +292,7 @@ class ApiBaiDangController extends Controller
         $data = [];
         if ($request->hasfile('file')) {
             foreach ($request->file('file') as $file) {
-                $date = new \DateTime("now");
+                $date = new DateTime("now");
                 $name = $date->format('U') . "_";
                 $name .= $file->getClientOriginalName();
                 $img_resize = Image::make($file->getPathName());

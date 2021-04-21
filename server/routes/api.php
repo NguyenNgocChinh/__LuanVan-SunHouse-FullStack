@@ -3,10 +3,12 @@
 use App\Http\Controllers\api\ApiBaiDangController;
 use App\Http\Controllers\api\ApiLoaiController;
 use App\Http\Controllers\api\ApiTienNghiController;
+use App\Http\Controllers\api\ApiTimkiemController;
 use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\DiaDiemController;
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ApiGoiController;
+use App\Http\Controllers\SocialLoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
     });
 
 
-    Route::get('/{service}/callback', [\App\Http\Controllers\SocialLoginController::class, 'callback']);
+    Route::get('/{service}/callback', [SocialLoginController::class, 'callback']);
 });
 /*
  * USER API
@@ -88,7 +90,7 @@ Route::get('XaPhuong/{id_quanhuyen}', [DiaDiemController::class, "xaphuong"])
 /*
  * TIM KIEM
  */
-Route::get('timkiem', [\App\Http\Controllers\api\ApiTimkiemController::class, "timkiem"]);
+Route::get('timkiem', [ApiTimkiemController::class, "timkiem"]);
 /*
  * GOI API
  */

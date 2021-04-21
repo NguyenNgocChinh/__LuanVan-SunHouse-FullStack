@@ -15,7 +15,7 @@ window.initMap = function() {
          scrollwheel: false
     }
     var map = new google.maps.Map(document.getElementById("map"), option);
-    
+
     //list markers
     var features = [
           {
@@ -46,7 +46,7 @@ window.initMap = function() {
         marker.addListener('mouseout', function() {
             this.setOpacity(1);
         });
-    };
+    }
 };
 
 // Append the 'script' element to 'head'
