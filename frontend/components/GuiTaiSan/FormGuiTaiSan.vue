@@ -18,7 +18,7 @@
                     v-model="loai"
                     name="loaitaisan"
                     :items="items"
-                    :rules="[v => !!v || 'Vui lòng chọn loại']"
+                    :rules="[(v) => !!v || 'Vui lòng chọn loại']"
                     item-text="ten_loai"
                     item-value="id"
                 ></v-select>
@@ -31,7 +31,12 @@
                     placeholder="Đơn vị nghìn đồng!!"
                 ></v-text-field>
                 <v-card-title>Nội dung bài viết</v-card-title>
-                <v-textarea v-model="noidung" :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']" counter label="Nhập nội dung bài viết..."></v-textarea>
+                <v-textarea
+                    v-model="noidung"
+                    :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']"
+                    counter
+                    label="Nhập nội dung bài viết..."
+                ></v-textarea>
                 <v-card-title>Hình ảnh</v-card-title>
                 <v-file-input
                     ref="files"
@@ -75,12 +80,22 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Số phòng ngủ</v-card-title>
-                    <v-text-field v-model="phongngu" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
+                    <v-text-field
+                        v-model="phongngu"
+                        :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']"
+                        type="number"
+                        solo
+                    ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Số phòng tắm</v-card-title>
                     <v-form>
-                        <v-text-field v-model="phongtam" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"  solo></v-text-field>
+                        <v-text-field
+                            v-model="phongtam"
+                            type="number"
+                            :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"
+                            solo
+                        ></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -109,12 +124,24 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Năm xây dựng</v-card-title>
-                    <v-text-field v-model="namxaydung" :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']" type="number" label="ví dụ: 2020" solo></v-text-field>
+                    <v-text-field
+                        v-model="namxaydung"
+                        :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']"
+                        type="number"
+                        label="ví dụ: 2020"
+                        solo
+                    ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-card-title>Diện tích(m2)</v-card-title>
                     <v-form>
-                        <v-text-field v-model="dientich" type="number":rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
+                        <v-text-field
+                            v-model="dientich"
+                            type="number"
+                            :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"
+                            label="ví dụ: 10"
+                            solo
+                        ></v-text-field>
                     </v-form>
                 </v-col>
             </v-row>
@@ -147,6 +174,8 @@
             required
         ></v-text-field>
 
+        <GoogleMap />
+
         <div class="text-center">
             <v-btn text class="mt-6 mx-auto" color="primary" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
         </div>
@@ -155,10 +184,13 @@
 
 <script>
 import ENV from '@/api/baidang'
-// import CSRF from '@/api/csrf-token'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
+import GoogleMap from '@/components/Map/GoogleMap'
+// import { gmapApi } from 'vue2-google-maps'
+
 export default {
+    components: { GoogleMap },
     data() {
         return {
             rules: [(value) => !value || value.size < 2000000 || 'Hình ảnh phải thấp hơn 2 MB!'],
@@ -203,7 +235,6 @@ export default {
             this.tiennghis = await this.$axios.$get(ENVTN.default.all)
         },
         xulydangbai() {
-
             const data = new FormData()
             data.append('tieude', this.tieude)
             data.append('loai_id', this.loai)

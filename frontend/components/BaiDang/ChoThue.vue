@@ -5,13 +5,17 @@
             <h4 class="py-2 red--text">Sun House trao trọn niềm tin</h4>
             <v-row>
                 <v-progress-circular
-                    v-if="baidanghots_loading"
+                    v-if="baidangs_loading"
                     class="loading"
                     indeterminate
                     color="white"
                 ></v-progress-circular>
+
+                <div v-if="(baidangs.length === 0) & !baidangs_loading" class="ml-3 mt-4">
+                    Hiện tại không có bài đăng nào là cho thuê trên hệ thống!
+                </div>
                 <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
-                    <v-slide-item v-for="baidang in baidanghots" :key="baidang.id" v-slot="{}">
+                    <v-slide-item v-for="baidang in baidangs" :key="baidang.id" v-slot="{}">
                         <v-card tile :outlined="false" color="white" class="ma-4" width="315" height="500">
                             <bai-dang-card :baidang="baidang" />
                         </v-card>
@@ -30,8 +34,8 @@ export default {
     data: () => ({
         model: null,
         isActive: true,
-        baidanghots: null,
-        baidanghots_loading: true,
+        baidangs: [],
+        baidangs_loading: true,
     }),
     created() {
         this.getChoThue()
@@ -40,11 +44,11 @@ export default {
         async getChoThue() {
             try {
                 const baidangs = await this.$axios.$get(ENV.chothue)
-                this.baidanghots = baidangs.baidangs
+                this.baidangs = baidangs.baidangs
             } catch (e) {
                 console.log(e)
             }
-            this.baidanghots_loading = false
+            this.baidangs_loading = false
         },
     },
 }

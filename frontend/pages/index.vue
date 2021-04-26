@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import BaiDangHost from '@/components/BaiDang/BaiDangHost'
+import BaiDangHost from '@/components/BaiDang/BaiDangHot'
 import ChoThue from '@/components/BaiDang/ChoThue'
 import RaoBan from '@/components/BaiDang/RaoBan'
 

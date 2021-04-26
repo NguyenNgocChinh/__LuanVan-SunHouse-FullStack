@@ -19,6 +19,7 @@
     "nuxt": "^2.15.4",
     "nuxt-gmaps": "^1.2.10",
     "v-snackbars": "^3.2.2",
+    "vue2-google-maps": "^0.10.7",
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {

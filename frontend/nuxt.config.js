@@ -22,7 +22,16 @@ export default {
             { hid: 'description', name: 'description', content: '' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-        script: [{ src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' }],
+        script: [
+            { src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' },
+            {
+                src: ' https://cdn.onesignal.com/sdks/OneSignalSDK.js',
+                async: true,
+            },
+            {
+                src: '/notify.js',
+            },
+        ],
     },
     router: {
         // middleware: 'checkAdmin',
@@ -31,7 +40,7 @@ export default {
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: '@/plugins/spinners.js', ssr: false }],
+    plugins: [{ src: '@/plugins/spinners.js', ssr: false }, '@/plugins/googlemaps.js'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,

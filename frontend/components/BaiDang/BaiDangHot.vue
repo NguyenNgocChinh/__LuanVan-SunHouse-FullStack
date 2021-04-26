@@ -17,6 +17,13 @@
                         </v-card>
                     </v-slide-item>
                 </v-slide-group>
+                <div
+                    v-if="(baidanghots.length === 0) & !baidanghots_loading"
+                    class="white--text mt-4"
+                    style="margin: 0 auto"
+                >
+                    Hiện tại không có bài đăng nào được đánh giá là HOT trên hệ thống!
+                </div>
             </v-row>
         </v-container>
     </div>
@@ -30,7 +37,7 @@ export default {
     data: () => ({
         model: null,
         isActive: true,
-        baidanghots: null,
+        baidanghots: [],
         baidanghots_loading: true,
     }),
     created() {
