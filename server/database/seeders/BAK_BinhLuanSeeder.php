@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
-class BinhLuanSeeder extends Seeder
+class BAkBinhLuanSeeder extends Seeder
 {
     /**
      * Run the database seeds.

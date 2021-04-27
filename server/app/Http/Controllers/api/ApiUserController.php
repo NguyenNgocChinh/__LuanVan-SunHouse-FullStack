@@ -30,7 +30,7 @@ class ApiUserController extends Controller
     {
         $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
 
-        if (!$user = Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password, $request->remember]))
+        if (!$user = Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password],$request->remember))
 
             return response()->json([
                 'message' => 'Invalid login details'

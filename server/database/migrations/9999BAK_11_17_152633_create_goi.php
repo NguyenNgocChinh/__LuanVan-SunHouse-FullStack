@@ -13,14 +13,14 @@ class CreateGoi extends Migration
      */
     public function up()
     {
-        Schema::create('goi', function (Blueprint $table) {
-            $table->id();
-            $table->string('ten');
-            $table->double('gia', 8, 2);
-            $table->integer('douutien');
-            $table->integer('slbaidang');
-            $table->float('hansudung', 8, 2)->nullable();
-        });
+//        Schema::create('goi', function (Blueprint $table) {
+//            $table->id();
+//            $table->string('ten');
+//            $table->double('gia', 8, 2);
+//            $table->integer('douutien');
+//            $table->integer('slbaidang');
+//            $table->float('hansudung', 8, 2)->nullable();
+//        });
     }
 
     /**
