@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMessageTable extends Migration
+class CreateUserGoiTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateMessageTable extends Migration
      */
     public function up()
     {
-        Schema::create('message', function (Blueprint $table) {
+        Schema::create('user-goi', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('to_user_id');
-            $table->foreign('to_user_id')->references('id')->on('users');
-            $table->longText('noidung');
-            $table->timestamps();
+            $table->unsignedBigInteger('goi_id');
+            $table->foreign('goi_id')->references('id')->on('goi');
+            $table->date('ngaydangky')->useCurrent();
+            $table->date('ngayhethan')->nullable();
         });
     }
 
@@ -31,6 +31,6 @@ class CreateMessageTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('message');
+        Schema::dropIfExists('user-goi');
     }
 }

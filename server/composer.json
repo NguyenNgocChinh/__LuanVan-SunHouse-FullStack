@@ -20,7 +20,6 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
-        "pusher/pusher-php-server": "^6.1",
         "socialiteproviders/facebook": "^4.1",
         "socialiteproviders/google": "^4.1"
     },

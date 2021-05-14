@@ -4,7 +4,7 @@ namespace Database\Seeders;
 use App\Models\Goi;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-class BAKGoiSeeder extends Seeder
+class GoiSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -33,8 +33,8 @@ class CreateBaidang extends Migration
             $table->float('toadoY');
             $table->boolean('choduyet');
             $table->double('dientich');
-//            $table->unsignedBigInteger('id_goi');
-//            $table->foreign('id_goi')->references('id')->on('goi');
+            $table->unsignedBigInteger('id_goi');
+            $table->foreign('id_goi')->references('id')->on('goi');
 
             $table->nullableTimestamps();
         });

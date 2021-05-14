@@ -19,6 +19,7 @@ class UserSocialTable extends Migration
             $table->string('social_id')->nullable();
             $table->string('service');
             $table->timestamps();
+
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

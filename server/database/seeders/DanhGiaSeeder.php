@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
-class BaoCaoSeeder extends Seeder
+class DanhGiaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,10 +18,10 @@ class BaoCaoSeeder extends Seeder
         //
         $faker = Faker::create();
         for($index=1;$index<=20;$index++){
-            DB::table('baocao')->insert([
+            DB::table('danhgia')->insert([
                 'user_id' => rand(1,10),
                 'baidang_id'=>rand(1,10),
-//                'sao' => rand(1,5),
+                'sao' => rand(1,5),
                 'noidung' => $faker->text(80),
 
             ]);
