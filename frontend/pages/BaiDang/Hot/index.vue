@@ -22,7 +22,7 @@
                     </v-row>
                 </v-card>
                 <v-row class="mt-4 ml-1">
-                    <v-row v-show="!baidangs" class="">
+                    <v-row v-show="$fetchState.pending" class="">
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
@@ -47,7 +47,7 @@
             </v-col>
         </v-row>
         <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangHot"></v-pagination>
+            <v-pagination v-model="page" :length="detail_page.last_page" circle></v-pagination>
         </div>
     </v-container>
 </template>
@@ -69,6 +69,18 @@ export default {
             },
         }
     },
+    async fetch() {
+        await this.$axios
+            .$get(ENV.hot + '?page=' + `${this.page}`, {
+                params: {
+                    page_size: 6,
+                },
+            })
+            .then((result) => {
+                this.baidangs = result.baidangs
+                this.detail_page = result.pages[0]
+            })
+    },
     watch: {
         page() {
             this.baidangs = null
@@ -77,24 +89,7 @@ export default {
                 left: 0,
                 behavior: 'smooth',
             })
-            this.getBaiDangHot()
-        },
-    },
-    created() {
-        this.getBaiDangHot()
-    },
-    methods: {
-        getBaiDangHot() {
-            this.$axios
-                .$get(ENV.hot + '?page=' + `${this.page}`, {
-                    params: {
-                        page_size: 6,
-                    },
-                })
-                .then((result) => {
-                    this.baidangs = result.baidangs
-                    this.detail_page = result.pages[0]
-                })
+            this.$fetch()
         },
     },
 }

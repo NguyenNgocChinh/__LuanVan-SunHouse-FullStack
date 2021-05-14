@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
-    // Target: https://go.nuxtjs.dev/config-target
-    target: 'static',
+    // Target: https://go.nuxtjs.dev/config-target|static
+    target: 'server',
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -36,20 +36,18 @@ export default {
     router: {
         // middleware: 'checkAdmin',
     },
-    // Global CSS: https://go.nuxtjs.dev/config-css
     css: [],
 
-    // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: '@/plugins/spinners.js', ssr: false }, '@/plugins/googlemaps.js'],
+    plugins: [
+        { src: '@/plugins/spinners.js', mode: 'client', ssr: false },
+        { src: '@/plugins/googlemaps.js', mode: 'client', ssr: false },
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-    buildModules: [
-        // '@nuxtjs/eslint-module',
-        '@nuxtjs/vuetify',
-    ],
+    buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
