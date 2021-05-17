@@ -167,6 +167,20 @@ class ApiBaiDangController extends Controller
                 'diachi' => 'required',
                 'toadoX' => 'required',
                 'toadoY' => 'required',
+            ], [
+                'tieude.required' => 'Tiêu đề không được để trống!',
+                'loai_id.required' => 'Chưa chọn loại của căn nhà!',
+                'gia.required' => 'Giá không được để trống!',
+                'hinhthuc.required' =>'Chưa chọn hình thức đăng tải!',
+                'noidung.required' => 'Nội dung mô tả không được trống!',
+                'sophongngu.required' => 'Số phòng ngủ không được để trống!',
+                'sophongtam.required' => 'Số phòng tắm không được để trống!',
+                'namxaydung.required' => 'Năm xây dựng không được để trống!',
+                'huong.required' => 'Chưa chọn hướng nhà!',
+                'dientich.required' => 'Diện tích không được để trống!',
+                'diachi.required' => 'Địa chỉ nhà không được để trống!',
+                'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
             ]
         );
 
@@ -186,7 +200,7 @@ class ApiBaiDangController extends Controller
         $baidang->toadoY = $request->toadoY;
         /**********************************************/
         $baidang->user_id = Auth::user()->id;
-        $baidang->id_goi = 1;
+//        $baidang->id_goi = 1;
         /**********************************************/
 
         $baidang->choduyet = 1;

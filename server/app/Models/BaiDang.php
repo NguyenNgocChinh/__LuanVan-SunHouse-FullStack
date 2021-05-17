@@ -98,9 +98,9 @@ class BaiDang extends Model
             foreach ($baidang->tiennghi_baidang as $tiennghi) {
                 $tiennghi->delete();
             }
-            foreach ($baidang->binhluan as $binhluan) {
-                $binhluan->delete();
-            }
+//            foreach ($baidang->binhluan as $binhluan) {
+//                $binhluan->delete();
+//            }
             foreach ($baidang->hinhanh as $hinhanh) {
                 $hinhanh->delete();
             }
