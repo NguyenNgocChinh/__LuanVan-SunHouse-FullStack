@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
-    // Target: https://go.nuxtjs.dev/config-target|static
-    target: 'server',
+    // Target: https://go.nuxtjs.dev/config-target
+    target: 'static',
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -23,11 +23,11 @@ export default {
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         script: [
-            { src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', type: 'text/javascript' },
             {
-                src: ' https://cdn.onesignal.com/sdks/OneSignalSDK.js',
-                async: true,
+                src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
+                type: 'text/javascript',
             },
+
             {
                 src: '/notify.js',
             },
@@ -36,18 +36,24 @@ export default {
     router: {
         // middleware: 'checkAdmin',
     },
-    css: [],
+    // Global CSS: https://go.nuxtjs.dev/config-css
+    css: ['~/assets/css/formatToast.css', '~/assets/css/formatGlobal.css'],
 
+    // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        { src: '@/plugins/spinners.js', mode: 'client', ssr: false },
-        { src: '@/plugins/googlemaps.js', mode: 'client', ssr: false },
+        { src: '~/plugins/spinners.js', ssr: false },
+        '~/plugins/rules.js',
+        { src: '~plugins/leaflet.js', ssr: false },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-    buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
+    buildModules: [
+        // '@nuxtjs/eslint-module',
+        '@nuxtjs/vuetify',
+    ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
@@ -68,9 +74,17 @@ export default {
                     name: 'XSRF-TOKEN',
                 },
                 endpoints: {
-                    login: { url: '/api/auth/login', method: 'post', propertyName: false },
+                    login: {
+                        url: '/api/auth/login',
+                        method: 'post',
+                        propertyName: false,
+                    },
                     logout: { url: '/api/auth/logout' },
-                    user: { url: '/api/auth/user', method: 'get', propertyName: false },
+                    user: {
+                        url: '/api/auth/user',
+                        method: 'get',
+                        propertyName: false,
+                    },
                     csrf: {
                         url: '/sanctum/csrf-cookie',
                     },
@@ -107,7 +121,7 @@ export default {
     //     height: '5px',
     //     continuous: true,
     // },
-    loading: '@/components/Loading.vue',
+    loading: '~/components/Loading.vue',
     toast: {
         position: 'top-right',
         duration: 2000,

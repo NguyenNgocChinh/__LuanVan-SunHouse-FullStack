@@ -1,0 +1,7 @@
+.toasted-container.top-right {
+    top: 10% !important;
+    right: 1% !important;
+}
+html {
+    scroll-behavior: smooth;
+}

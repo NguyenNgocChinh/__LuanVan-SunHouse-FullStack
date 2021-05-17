@@ -16,11 +16,13 @@
     "@nuxtjs/toast": "^3.3.1",
     "core-js": "^3.10.2",
     "epic-spinners": "^1.1.0",
+    "leaflet": "^1.7.1",
+    "leaflet-geosearch": "^3.3.2",
     "nuxt": "^2.15.4",
     "nuxt-gmaps": "^1.2.10",
     "v-emoji-picker": "^2.3.3",
     "v-snackbars": "^3.2.2",
-    "vue2-google-maps": "^0.10.7",
+    "vue2-leaflet": "^2.7.0",
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {

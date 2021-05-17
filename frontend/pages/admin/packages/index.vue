@@ -160,7 +160,8 @@
                             </span>
                         </div>
                         <div v-else class="font-weight-black pa-5">
-                            Bạn có chắc chắn muốn xóa gói có ID : {{ editedItem.id }}
+                            Bạn có chắc chắn muốn xóa gói có ID :
+                            {{ editedItem.id }}
                         </div>
                     </v-card-text>
                     <v-card-actions class="justify-end">

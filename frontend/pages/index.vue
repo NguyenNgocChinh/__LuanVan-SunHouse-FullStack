@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import BaiDangHot from '@/components/BaiDang/BaiDangHot'
-import ChoThue from '@/components/BaiDang/ChoThue'
-import RaoBan from '@/components/BaiDang/RaoBan'
+import BaiDangHot from "@/components/BaiDang/BaiDangHot";
+import ChoThue from "@/components/BaiDang/ChoThue";
+import RaoBan from "@/components/BaiDang/RaoBan";
 
 export default {
-    name: 'Index',
+    name: "Index",
     components: { BaiDangHot, ChoThue, RaoBan },
-    layout: 'default',
-}
+    layout: "default",
+};
 </script>

@@ -1,13 +1,20 @@
 <template>
     <v-card class="mx-auto mt-10" style="max-width: 500px">
         <v-toolbar color="deep-purple accent-4" cards dark flat>
-            <v-btn icon @click="backButton">
+            <v-btn icon @click="$router.back()">
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <v-card-title class="title font-weight-regular"> Đăng nhập</v-card-title>
+            <v-card-title class="title font-weight-regular">
+                Đăng nhập</v-card-title
+            >
             <v-spacer></v-spacer>
         </v-toolbar>
-        <v-form ref="form" v-model="form" class="pa-4 pt-6" @submit.prevent="login">
+        <v-form
+            ref="form"
+            v-model="form"
+            class="pa-4 pt-6"
+            @submit.prevent="login"
+        >
             <v-text-field
                 ref="email"
                 v-model="loginForm.username"
@@ -33,7 +40,14 @@
 
             <v-divider></v-divider>
             <v-card-actions class="d-flex">
-                <v-btn class="white--text" color="deep-purple accent-4" depressed @click="btndangki"> Đăng Ký </v-btn>
+                <v-btn
+                    class="white--text"
+                    color="deep-purple accent-4"
+                    depressed
+                    @click="$router.push('/register')"
+                >
+                    Đăng Ký
+                </v-btn>
 
                 <v-spacer></v-spacer>
 
@@ -51,12 +65,22 @@
             <div class="text-center">--- OR ---</div>
 
             <v-row class="mt-4 mb-1">
-                <v-btn large width="100%" class="white--text" color="red lighten-1" @click="loginGG"
+                <v-btn
+                    large
+                    width="100%"
+                    class="white--text"
+                    color="red lighten-1"
+                    @click="loginGG"
                     >Tiếp tục với Google</v-btn
                 >
             </v-row>
             <v-row>
-                <v-btn large width="100%" class="white--text" color="blue lighten-1" @click="loginFB"
+                <v-btn
+                    large
+                    width="100%"
+                    class="white--text"
+                    color="blue lighten-1"
+                    @click="loginFB"
                     >Tiếp tục với Facebook</v-btn
                 >
             </v-row>
@@ -64,14 +88,15 @@
     </v-card>
 </template>
 <script>
+import ENV from "@/api/user";
 export default {
-    middleware: 'auth',
-    auth: 'guest',
+    middleware: "auth",
+    auth: "guest",
     data: () => ({
         loginForm: {
             remember: false,
-            username: '',
-            password: '',
+            username: "",
+            password: "",
         },
         dialog: false,
         form: false,
@@ -79,57 +104,60 @@ export default {
         show1: false,
 
         rules: {
-            required: (v) => (v = !!v || 'Không được để trống!'),
-            min: (v) => v.length >= 8 || 'Ít nhất 8 kí tự',
+            required: (v) => (v = !!v || "Không được để trống!"),
+            min: (v) => v.length >= 8 || "Ít nhất 8 kí tự",
             email: (value) => {
-                const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                return pattern.test(value) || 'E-mail không hợp lệ!'
+                const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return pattern.test(value) || "E-mail không hợp lệ!";
             },
         },
     }),
     methods: {
-        backButton() {
-            this.$router.back()
-        },
-
         async login() {
             try {
                 this.$nextTick(() => {
-                    this.$nuxt.$loading.start()
-                })
-                this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
-                await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then(() => {
-                    this.$nuxt.$toast.success('Đăng nhập thành công')
-                })
+                    this.$nuxt.$loading.start();
+                });
+                this.$nuxt.$toast.show(
+                    "Đang tiến hành đăng nhập vào hệ thống!"
+                );
+                await this.$auth
+                    .loginWith("laravelSanctum", { data: this.loginForm })
+                    .then(() => {
+                        this.$nuxt.$toast.success("Đăng nhập thành công");
+                    });
             } catch (e) {
                 this.$nuxt.$toast.show(e, {
                     duration: null,
-                    theme: 'outline',
-                    type: 'error',
-                })
-                console.log(e)
+                    theme: "outline",
+                    type: "error",
+                });
+                console.log(e);
             } finally {
-                this.$nuxt.$loading.finish()
+                this.$nuxt.$loading.finish();
             }
-        },
-        btndangki() {
-            this.$router.push('/register')
         },
 
         loginGG() {
             try {
-                window.location.href = 'http://localhost:8000/auth/google'
+                window.location.href = ENV.GOOGLE_LOGIN_URL;
             } catch (e) {
-                this.$nuxt.$toast.error(e, { duration: null })
+                this.$nuxt.$toast.error(
+                    "Lỗi không xác định, vui lòng liên hệ QTV",
+                    { duration: null }
+                );
             }
         },
         loginFB() {
             try {
-                window.location.href = 'http://localhost:8000/auth/facebook'
+                window.location.href = ENV.FACEBOOK_LOGIN_URL;
             } catch (e) {
-                this.$nuxt.$toast.error(e, { duration: null })
+                this.$nuxt.$toast.error(
+                    "Lỗi không xác định, vui lòng liên hệ QTV",
+                    { duration: null }
+                );
             }
         },
     },
-}
+};
 </script>
