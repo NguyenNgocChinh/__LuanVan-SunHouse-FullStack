@@ -314,29 +314,43 @@
                                     class="mt-2"
                                     placeholder="Số nhà, tên tòa nhà, tên đường, ..."
                                     solo
+                                    :loading="loadingDiaChiCuThe"
                                 ></v-text-field>
                             </div>
                         </v-col>
                         <v-col cols="12" lg="8" sm="12">
-                            <!--                            <v-combobox-->
-                            <!--                                v-model="geoSeleted"-->
-                            <!--                                :search-input.sync="geoSearch"-->
-                            <!--                                :items="geoResult"-->
-                            <!--                                class="mt-7"-->
-                            <!--                                outlined-->
-                            <!--                                item-text="label"-->
-                            <!--                                placeholder="Tìm kiếm theo địa chỉ, tọa độ. Ví dụ: 4.2675,107.044513"-->
-                            <!--                                prepend-inner-icon="mdi-magnify"-->
-                            <!--                                :loading="geoSearchLoading"-->
-                            <!--                            ></v-combobox>-->
-
                             <v-card outlined elevation="4">
                                 <div style="height: 500px; width: 100%">
-                                    <l-map ref="map" :zoom="zoom" :center="center">
+                                    <l-map id="map" ref="map" :zoom="zoom" :center="center">
                                         <l-tile-layer
                                             :url="layer.url"
                                             :subdomains="layer.subdomains"
                                             :attribution="layer.attribution"
+                                        />
+                                        <v-geosearch :options="geoSearchOptions"></v-geosearch>
+                                        <l-control position="topleft" style="border-radius: 0.1em">
+                                            <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
+                                                <v-btn
+                                                    color="white"
+                                                    class="pa-0"
+                                                    style="width: 30px; height: 30px; min-width: 30px"
+                                                    @click="findMyLocationOnMap"
+                                                >
+                                                    <v-icon v-if="!isFound" size="22" color="blue darken-3"
+                                                        >mdi-map-marker-outline</v-icon
+                                                    >
+
+                                                    <v-icon v-else size="22" color="blue darken-3"
+                                                        >mdi-map-marker</v-icon
+                                                    >
+                                                </v-btn>
+                                            </div>
+                                        </l-control>
+                                        <l-marker
+                                            v-if="marker != null"
+                                            ref="marker"
+                                            :draggable="true"
+                                            :lat-lng.sync="marker"
                                         />
                                     </l-map>
                                 </div>
@@ -361,19 +375,25 @@ import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
 import * as ENVTK from '@/api/timkiem'
 
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch'
+import 'leaflet/dist/leaflet.css'
+import { LMap, LTileLayer, LControl, LMarker } from 'vue2-leaflet'
+import { OpenStreetMapProvider } from 'leaflet-geosearch'
+import VGeosearch from 'vue2-leaflet-geosearch'
 
-// import { CRS, latLng } from 'leaflet'
-// import { LMap } from 'vue2-leaflet'
+import { Icon } from 'leaflet'
 
 import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
-const provider = new OpenStreetMapProvider()
-const searchControl = new GeoSearchControl({
-    provider,
+delete Icon.Default.prototype._getIconUrl
+Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 })
+
 export default {
-    // components: { LMap },
+    components: { LMap, LTileLayer, VGeosearch, LControl, LMarker },
+
     data() {
         return {
             breadcumb: [
@@ -406,8 +426,8 @@ export default {
             phongtam: '1',
             dientich: '',
             gia: '',
-            toadoX: 110,
-            toadoY: 110,
+            toadoX: '',
+            toadoY: '',
             noidung: '',
             noithat: [],
 
@@ -417,6 +437,7 @@ export default {
 
             loadingTienNghi: true,
             loadingLoai: true,
+            loadingDiaChiCuThe: false,
 
             listThanhPho: [],
             listQuanHuyen: [],
@@ -429,22 +450,29 @@ export default {
             duong: '',
             searchDuong: null,
             diachicuthe: '',
-
-            zoom: 14,
-            center: [47.56, 7.59],
-
+            marker: null,
+            zoom: 15,
+            center: [100, 100],
+            isFound: false,
             layers: [
                 {
                     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 },
-                {
-                    url: 'https://vec01.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
-                    subdomains: '1,2,3,4',
-                    attribution: '&copy; <a href="http://yandex.ru/copyright">Yandex</a>',
-                    // crs: CRS.EPSG3395,
-                },
             ],
+            geoSearchOptions: {
+                provider: new OpenStreetMapProvider(),
+                style: 'bar',
+                searchLabel: 'Nhập địa chỉ ...',
+                animateZoom: true,
+                autoClose: true,
+                keepResult: true,
+                marker: {
+                    icon: new Icon.Default(),
+                    draggable: true,
+                },
+                maxMarkers: 1,
+            },
         }
     },
     head: {
@@ -482,10 +510,99 @@ export default {
         this.getAllLoai()
         this.getThanhPho()
         this.$nextTick(() => {
-            this.$refs.map.mapObject.addControl(searchControl)
+            const map = this.$refs.map.mapObject
+            map.on('geosearch/showlocation', (result) => {
+                this.marker = null
+                this.toadoX = result.location.x
+                this.toadoY = result.location.y
+
+                if ('label' in result.location) {
+                    this.diachicuthe = result.location.label
+                }
+            })
+
+            map.on('click', async (event) => {
+                if (
+                    event.containerPoint.x.toFixed(1) >= 170 &&
+                    event.containerPoint.x.toFixed(1) <= 573 &&
+                    event.containerPoint.y.toFixed(1) >= 10 &&
+                    event.containerPoint.y.toFixed(1) <= 50
+                )
+                    return
+                const map = this.$refs.map.mapObject
+                console.log(map)
+                map.eachLayer(function (layer) {
+                    console.log('layer', layer)
+                })
+                this.toadoX = event.latlng.lat
+                this.toadoY = event.latlng.lng
+                this.marker = [this.toadoX, this.toadoY]
+                this.center = [this.toadoX, this.toadoY]
+                await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
+                this.$refs.marker.mapObject.on('dragend', (event) => {
+                    const marker = event.target
+                    const position = marker.getLatLng()
+                    this.center = [position.lat, position.lng]
+                    this.toadoX = position.lat
+                    this.toadoY = position.lng
+                    this.setDisplayNameFromlatLng(position.lat, position.lng)
+                })
+            })
+            map.on('geosearch/marker/dragend', (result) => {
+                this.toadoX = result.location.lat
+                this.toadoY = result.location.lng
+
+                if ('label' in result.location) {
+                    this.diachicuthe = result.location.label
+                } else {
+                    this.loadingDiaChiCuThe = true
+                    this.center = [this.toadoX, this.toadoY]
+                    this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
+                }
+            })
+
+            // do we support geolocation
+            if (!('geolocation' in navigator)) {
+                alert('Dịch vụ định vị của máy tính bạn không hoạt động.')
+                return
+            }
+            // get position
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    this.center = [pos.coords.latitude, pos.coords.longitude]
+                },
+                (err) => {
+                    console.log(err)
+                }
+            )
         })
     },
     methods: {
+        async setDisplayNameFromlatLng(lat, lng) {
+            this.loadingDiaChiCuThe = true
+            await this.$nuxt.$axios
+                .$get('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&limit=1')
+                .then((result) => {
+                    if (result.display_name != null) {
+                        const diaChi = result.display_name.split(',')
+                        for (let i = 0; i < diaChi.length; i++) {
+                            const checkResult = /\(?([0-9]{2})\)?([ .-]?)([0-9]{3})\2([0-9]{3})?([ .-]?)([0-9]{3})/.test(
+                                diaChi[i]
+                            )
+                            if (checkResult) {
+                                diaChi.splice(i, 1)
+                            }
+                        }
+                        const displayName = diaChi.join(',')
+                        this.diachicuthe = displayName
+                        const glass = document.querySelector('.glass ')
+                        glass.value = displayName
+                    }
+                })
+                .finally(() => {
+                    this.loadingDiaChiCuThe = false
+                })
+        },
         async getAllLoai() {
             try {
                 const loai = await this.$axios.$get(ENVL.default.all)
@@ -493,6 +610,39 @@ export default {
             } catch (e) {
             } finally {
                 this.loadingLoai = false
+            }
+        },
+        addMarker(event) {
+            console.log(event.latlng)
+        },
+        findMyLocationOnMap() {
+            if (!this.isFound) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        this.toadoX = pos.coords.latitude
+                        this.toadoY = pos.coords.longitude
+                        this.center = [this.toadoX, this.toadoY]
+                        this.marker = this.center
+                        this.$refs.map.mapObject.flyTo([pos.coords.latitude, pos.coords.longitude], 15)
+                        this.isFound = true
+                        await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
+                        this.$refs.marker.mapObject.on('dragend', (event) => {
+                            const marker = event.target
+                            const position = marker.getLatLng()
+                            this.toadoX = position.lat
+                            this.toadoY = position.lng
+                            this.center = [position.lat, position.lng]
+                            this.setDisplayNameFromlatLng(position.lat, position.lng)
+                        })
+                    },
+                    (err) => {
+                        this.isFound = false
+                        console.log(err)
+                    }
+                )
+            } else {
+                this.marker = null
+                this.isFound = false
             }
         },
         async getThanhPho() {

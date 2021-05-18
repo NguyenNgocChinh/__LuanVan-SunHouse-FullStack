@@ -23,6 +23,7 @@
     "v-emoji-picker": "^2.3.3",
     "v-snackbars": "^3.2.2",
     "vue2-leaflet": "^2.7.0",
+    "vue2-leaflet-geosearch": "^1.0.6",
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {
