@@ -34,12 +34,13 @@ class ApiBaiDangController extends Controller
         return response()->json([
             'pages' => new PaginateResource($posts),
             'baidangs' => BaiDangResource::collection($posts),
-        ]);
+            ]);
     }
 
     public function getHotPosts()
     {
         $hot_posts = BaiDang::latest()->paginate($this->page_size);
+
         return response()->json([
             'pages' => new PaginateResource($hot_posts),
             'baidangs' => BaiDangResource::collection($hot_posts),

@@ -112,3 +112,9 @@ Route::get('gia', [HomeController::class, "getGia"]);
  */
 Route::get('dientich', [HomeController::class, "getDienTich"]);
 
+/*
+ * CHAT
+ */
+
+Route::get('messages', [\App\Http\Controllers\api\ChatsController::class , 'fetchMessages']);
+Route::post('messages', [\App\Http\Controllers\api\ChatsController::class, 'sendMessage']);

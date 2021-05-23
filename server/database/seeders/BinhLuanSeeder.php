@@ -16,14 +16,14 @@ class BinhLuanSeeder extends Seeder
     public function run()
     {
         //
-        $faker = Faker::create();
-        for ($index = 1; $index <= 20; $index++) {
-            DB::table('binhluan')->insert([
-                'user_id' => rand(1, 10),
-                'baidang_id' => rand(1, 10),
-                'noidung' => $faker->text(100),
-                'created_at' => $faker->dateTime(),
-            ]);
-        }
+//        $faker = Faker::create();
+//        for ($index = 1; $index <= 20; $index++) {
+//            DB::table('binhluan')->insert([
+//                'user_id' => rand(1, 10),
+//                'baidang_id' => rand(1, 10),
+//                'noidung' => $faker->text(100),
+//                'created_at' => $faker->dateTime(),
+//            ]);
+//        }
     }
 }
