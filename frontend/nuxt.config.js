@@ -53,7 +53,19 @@ export default {
     buildModules: [
         // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
+        [
+            '@nuxtjs/laravel-echo',
+            {
+                broadcaster: 'pusher',
+                key: '7c957645c57e4378d473',
+                cluster: 'ap1',
+                forceTLS: true,
+            },
+        ],
     ],
+    echo: {
+        plugins: ['~/plugins/echo.js'],
+    },
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],

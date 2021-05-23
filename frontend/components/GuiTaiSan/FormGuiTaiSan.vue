@@ -323,11 +323,11 @@
                                 <div style="height: 500px; width: 100%">
                                     <l-map id="map" ref="map" :zoom="zoom" :center="center">
                                         <l-tile-layer
-                                            :url="layer.url"
-                                            :subdomains="layer.subdomains"
-                                            :attribution="layer.attribution"
+                                            :url="layers.url"
+                                            :subdomains="layers.subdomains"
+                                            :attribution="layers.attribution"
                                         />
-                                        <v-geosearch :options="geoSearchOptions"></v-geosearch>
+
                                         <l-control position="topleft" style="border-radius: 0.1em">
                                             <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
                                                 <v-btn
@@ -377,8 +377,7 @@ import * as ENVTK from '@/api/timkiem'
 
 import 'leaflet/dist/leaflet.css'
 import { LMap, LTileLayer, LControl, LMarker } from 'vue2-leaflet'
-import { OpenStreetMapProvider } from 'leaflet-geosearch'
-import VGeosearch from 'vue2-leaflet-geosearch'
+import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
 
 import { Icon } from 'leaflet'
 
@@ -392,7 +391,7 @@ Icon.Default.mergeOptions({
 })
 
 export default {
-    components: { LMap, LTileLayer, VGeosearch, LControl, LMarker },
+    components: { LMap, LTileLayer, LControl, LMarker },
 
     data() {
         return {
@@ -454,24 +453,9 @@ export default {
             zoom: 15,
             center: [100, 100],
             isFound: false,
-            layers: [
-                {
-                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                },
-            ],
-            geoSearchOptions: {
-                provider: new OpenStreetMapProvider(),
-                style: 'bar',
-                searchLabel: 'Nhập địa chỉ ...',
-                animateZoom: true,
-                autoClose: true,
-                keepResult: true,
-                marker: {
-                    icon: new Icon.Default(),
-                    draggable: true,
-                },
-                maxMarkers: 1,
+            layers: {
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             },
         }
     },
@@ -481,14 +465,14 @@ export default {
                 rel: 'stylesheet',
                 href: 'https://unpkg.com/leaflet-geosearch@2.6.0/assets/css/leaflet.css',
             },
+            {
+                rel: 'stylesheet',
+                href: 'https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css',
+            },
         ],
+        script: [{ src: 'https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js' }],
     },
 
-    computed: {
-        layer() {
-            return this.layers[0]
-        },
-    },
     watch: {
         thanhpho() {
             this.listQuanHuyen = []
@@ -511,41 +495,48 @@ export default {
         this.getThanhPho()
         this.$nextTick(() => {
             const map = this.$refs.map.mapObject
+
+            const search = new GeoSearchControl({
+                provider: new OpenStreetMapProvider(),
+                style: 'bar',
+                searchLabel: 'Nhập địa chỉ ...',
+                animateZoom: true,
+                autoClose: true,
+                keepResult: true,
+                showMarker: false,
+                // maxMarkers: 1,
+            })
+
+            map.addControl(search)
+
             map.on('geosearch/showlocation', (result) => {
-                this.marker = null
-                this.toadoX = result.location.x
-                this.toadoY = result.location.y
+                this.marker = [result.location.y, result.location.x]
+                this.toadoX = result.location.y
+                this.toadoY = result.location.x
 
                 if ('label' in result.location) {
                     this.diachicuthe = result.location.label
+                } else {
+                    this.setDisplayNameFromlatLng(result.location.x, result.location.y)
                 }
             })
 
-            map.on('click', async (event) => {
-                if (
-                    event.containerPoint.x.toFixed(1) >= 170 &&
-                    event.containerPoint.x.toFixed(1) <= 573 &&
-                    event.containerPoint.y.toFixed(1) >= 10 &&
-                    event.containerPoint.y.toFixed(1) <= 50
-                )
-                    return
-                const map = this.$refs.map.mapObject
-                console.log(map)
-                map.eachLayer(function (layer) {
-                    console.log('layer', layer)
-                })
+            map.on('click', (event) => {
                 this.toadoX = event.latlng.lat
                 this.toadoY = event.latlng.lng
                 this.marker = [this.toadoX, this.toadoY]
                 this.center = [this.toadoX, this.toadoY]
-                await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
-                this.$refs.marker.mapObject.on('dragend', (event) => {
-                    const marker = event.target
-                    const position = marker.getLatLng()
-                    this.center = [position.lat, position.lng]
-                    this.toadoX = position.lat
-                    this.toadoY = position.lng
-                    this.setDisplayNameFromlatLng(position.lat, position.lng)
+
+                this.setDisplayNameFromlatLng(this.toadoX, this.toadoY).then(() => {
+                    this.$refs.marker.mapObject.on('dragend', (event) => {
+                        const marker = event.target
+                        const position = marker.getLatLng()
+                        this.center = [position.lat, position.lng]
+                        this.toadoX = position.lat
+                        this.toadoY = position.lng
+                        this.marker = [this.toadoX, this.toadoY]
+                        this.setDisplayNameFromlatLng(position.lat, position.lng)
+                    })
                 })
             })
             map.on('geosearch/marker/dragend', (result) => {
