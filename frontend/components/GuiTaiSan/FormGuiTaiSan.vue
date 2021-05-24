@@ -351,7 +351,10 @@
                                             ref="marker"
                                             :draggable="true"
                                             :lat-lng.sync="marker"
-                                        />
+                                            @add="openPopup"
+                                        >
+                                            <l-popup ref="popup" :content="diachicuthe"></l-popup>
+                                        </l-marker>
                                     </l-map>
                                 </div>
                             </v-card>
@@ -376,7 +379,7 @@ import * as ENVTN from '@/api/tiennghi'
 import * as ENVTK from '@/api/timkiem'
 
 import 'leaflet/dist/leaflet.css'
-import { LMap, LTileLayer, LControl, LMarker } from 'vue2-leaflet'
+import { LMap, LTileLayer, LControl, LMarker, LPopup } from 'vue2-leaflet'
 import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
 
 import { Icon } from 'leaflet'
@@ -391,7 +394,7 @@ Icon.Default.mergeOptions({
 })
 
 export default {
-    components: { LMap, LTileLayer, LControl, LMarker },
+    components: { LMap, LTileLayer, LControl, LMarker, LPopup },
 
     data() {
         return {
@@ -442,6 +445,7 @@ export default {
             listQuanHuyen: [],
             listXaPhuong: [],
             listDuong: [],
+            arrDiaChi: [],
 
             thanhpho: '',
             quanhuyen: '',
@@ -475,18 +479,40 @@ export default {
 
     watch: {
         thanhpho() {
+            this.arrDiaChi = []
             this.listQuanHuyen = []
             this.quanhuyen = ''
-            this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
-                this.listQuanHuyen = result
-            })
+            if (this.thanhpho != null) {
+                this.arrDiaChi.push(this.thanhpho.name)
+
+                this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
+                    this.listQuanHuyen = result
+                })
+                this.diachicuthe = this.arrDiaChi.join(',')
+                this.setViewFormAddress(this.diachicuthe)
+            }
         },
         quanhuyen() {
             this.listXaPhuong = []
             this.xaphuong = ''
-            this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
-                this.listXaPhuong = result
-            })
+
+            if (this.quanhuyen != null) {
+                this.arrDiaChi.unshift(this.quanhuyen.name)
+                this.diachicuthe = this.arrDiaChi.join(',')
+
+                this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
+                    this.listXaPhuong = result
+                })
+                this.setViewFormAddress(this.diachicuthe)
+            }
+        },
+        marker() {
+            if (this.marker == null) {
+                this.thanhpho = null
+                this.diachicuthe = null
+                const glass = document.querySelector('.glass ')
+                glass.value = null
+            }
         },
     },
     mounted() {
@@ -513,9 +539,14 @@ export default {
                 this.marker = [result.location.y, result.location.x]
                 this.toadoX = result.location.y
                 this.toadoY = result.location.x
-
                 if ('label' in result.location) {
-                    this.diachicuthe = result.location.label
+                    const diaChi = result.location.label.split(',')
+                    for (let i = 0; i < diaChi.length; i++) {
+                        const checkResult2 = /\d{5}/.test(diaChi[i])
+                        if (checkResult2) diaChi.splice(i, 1)
+                    }
+                    this.diachicuthe = diaChi.join(',')
+                    this.getSelectOnComboBox(this.diachicuthe)
                 } else {
                     this.setDisplayNameFromlatLng(result.location.x, result.location.y)
                 }
@@ -569,6 +600,25 @@ export default {
         })
     },
     methods: {
+        getSelectOnComboBox(address) {
+            const diaChi = address.split(',')
+
+            const indexTP = this._.findIndex(this.listThanhPho, { name: diaChi[diaChi.length - 2].trim() })
+            this.thanhpho = this.listThanhPho[indexTP]
+        },
+        setViewFormAddress(address) {
+            if (address !== '' || address != null) {
+                this.$nuxt.$axios
+                    .$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1')
+                    .then((res) => {
+                        const lat = res[0].lat
+                        const lng = res[0].lon
+                        this.marker = [lat, lng]
+                        this.$refs.map.mapObject.panTo(this.marker)
+                        this.center = this.marker
+                    })
+            }
+        },
         async setDisplayNameFromlatLng(lat, lng) {
             this.loadingDiaChiCuThe = true
             await this.$nuxt.$axios
@@ -580,7 +630,12 @@ export default {
                             const checkResult = /\(?([0-9]{2})\)?([ .-]?)([0-9]{3})\2([0-9]{3})?([ .-]?)([0-9]{3})/.test(
                                 diaChi[i]
                             )
+
+                            const checkResult2 = /\d{5}/.test(diaChi[i])
                             if (checkResult) {
+                                diaChi.splice(i, 1)
+                            }
+                            if (checkResult2) {
                                 diaChi.splice(i, 1)
                             }
                         }
@@ -588,6 +643,8 @@ export default {
                         this.diachicuthe = displayName
                         const glass = document.querySelector('.glass ')
                         glass.value = displayName
+
+                        this.getSelectOnComboBox(displayName)
                     }
                 })
                 .finally(() => {
@@ -733,6 +790,12 @@ export default {
                 }
 
                 this.readers[f].readAsDataURL(this.files[f])
+            })
+        },
+
+        openPopup(event) {
+            this.$nextTick(() => {
+                event.target.openPopup()
             })
         },
     },

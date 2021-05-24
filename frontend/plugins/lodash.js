@@ -1,5 +1,5 @@
+import Vue from 'vue'
+import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
 
-export default ({ app }, inject) => {
-    inject('lodash', lodash)
-}
+Vue.use(VueLodash, { name: '$_', lodash })

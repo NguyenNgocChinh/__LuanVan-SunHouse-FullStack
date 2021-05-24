@@ -43,6 +43,7 @@ export default {
     plugins: [
         { src: '~/plugins/spinners.js', ssr: false },
         '~/plugins/rules.js',
+        '~/plugins/lodash.js',
         { src: '~plugins/leaflet.js', ssr: false },
     ],
 
