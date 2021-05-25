@@ -42,9 +42,10 @@ export default {
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
         { src: '~/plugins/spinners.js', ssr: false },
-        '~/plugins/rules.js',
-        '~/plugins/lodash.js',
+        { src: '~/plugins/rules.js', ssr: false },
+        { src: '~/plugins/lodash.js', ssr: false },
         { src: '~plugins/leaflet.js', ssr: false },
+        { src: '~plugins/sweetAlert.js', ssr: false },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -128,12 +129,7 @@ export default {
             home: '/',
         },
     },
-    // loading: {
-    //     color: '#3CB372',
-    //     failedColor: 'red',
-    //     height: '5px',
-    //     continuous: true,
-    // },
+
     loading: '~/components/Loading.vue',
     toast: {
         position: 'top-right',

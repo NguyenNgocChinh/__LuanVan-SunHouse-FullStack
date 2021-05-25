@@ -1,5 +1,6 @@
 <template>
     <div>
+        <sweet-modal ref="modal" icon="warning"> This is a warning! </sweet-modal>
         <ChatMessage :messages="messages" />
         <ChatForm />
     </div>
@@ -14,6 +15,9 @@ export default {
         return {
             messages: [],
         }
+    },
+    mounted() {
+        this.$refs.modal.open()
     },
     created() {
         this.fetchMessages()

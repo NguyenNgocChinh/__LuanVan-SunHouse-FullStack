@@ -21,6 +21,7 @@
     "nuxt": "^2.15.4",
     "nuxt-gmaps": "^1.2.10",
     "pusher-js": "^7.0.3",
+    "sweet-modal-vue": "^2.0.0",
     "v-emoji-picker": "^2.3.3",
     "v-snackbars": "^3.2.2",
     "vue-lodash": "^2.1.2",

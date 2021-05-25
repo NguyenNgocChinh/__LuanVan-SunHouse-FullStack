@@ -369,6 +369,9 @@
                 Đăng bài</v-btn
             >
         </div>
+        <sweet-modal ref="modalPleaseMoveToMarker" icon="warning">
+            Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất
+        </sweet-modal>
     </v-container>
 </template>
 
@@ -454,7 +457,7 @@ export default {
             searchDuong: null,
             diachicuthe: '',
             marker: null,
-            zoom: 15,
+            zoom: 14,
             center: [100, 100],
             isFound: false,
             layers: {
@@ -494,7 +497,8 @@ export default {
         },
         quanhuyen() {
             this.listXaPhuong = []
-            this.xaphuong = ''
+            this.xaphuong = null
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
 
             if (this.quanhuyen != null) {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
@@ -503,7 +507,19 @@ export default {
                 this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
-                this.setViewFormAddress(this.diachicuthe)
+                this.setViewFormAddress(this.diachicuthe, 14)
+            }
+        },
+        xaphuong() {
+            this.listDuong = []
+            this.duong = null
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
+            console.log(this.xaphuong)
+            if (this.xaphuong != null) {
+                this.arrDiaChi.unshift(this.xaphuong.name)
+                this.diachicuthe = this.arrDiaChi.join(',')
+
+                this.setViewFormAddress(this.diachicuthe, 15)
             }
         },
         marker() {
@@ -606,16 +622,20 @@ export default {
             const indexTP = this._.findIndex(this.listThanhPho, { name: diaChi[diaChi.length - 2].trim() })
             this.thanhpho = this.listThanhPho[indexTP]
         },
-        setViewFormAddress(address) {
+        setViewFormAddress(address, zoom = 13) {
             if (address !== '' || address != null) {
                 this.$nuxt.$axios
                     .$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1')
-                    .then((res) => {
-                        const lat = res[0].lat
-                        const lng = res[0].lon
-                        this.marker = [lat, lng]
-                        this.$refs.map.mapObject.panTo(this.marker)
-                        this.center = this.marker
+                    .then(async (res) => {
+                        console.log(res)
+                        if (res.length === 0) {
+                            this.$refs.modalPleaseMoveToMarker.open()
+                        } else {
+                            const lat = res[0].lat
+                            const lng = res[0].lon
+                            await this.$refs.map.mapObject.flyTo([lat, lng], zoom)
+                            this.marker = [lat, lng]
+                        }
                     })
             }
         },
