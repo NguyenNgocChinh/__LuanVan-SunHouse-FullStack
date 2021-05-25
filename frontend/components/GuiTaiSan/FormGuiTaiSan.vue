@@ -1,11 +1,16 @@
 <template>
     <v-container>
-        <v-breadcrumbs :items="breadcumb">
+        <v-breadcrumbs :link="true" :items="breadcumb">
+            <template #item="{ item }">
+                <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
+                    {{ item.text }}
+                </v-breadcrumbs-item>
+            </template>
             <template #divider>
                 <v-icon>mdi-chevron-right</v-icon>
             </template>
         </v-breadcrumbs>
-        <v-form ref="form" v-model="vaild">
+        <v-form ref="form" v-model="vaild" class="mb-6">
             <v-card>
                 <v-card-title>THÔNG TIN CƠ BẢN</v-card-title>
                 <v-card-text>
@@ -336,7 +341,7 @@
                                                     style="width: 30px; height: 30px; min-width: 30px"
                                                     @click="findMyLocationOnMap"
                                                 >
-                                                    <v-icon v-if="!isFound" size="22" color="blue darken-3"
+                                                    <v-icon v-if="!isFound" size="22" color="blue darken-1"
                                                         >mdi-map-marker-outline</v-icon
                                                     >
 
@@ -363,9 +368,11 @@
                 </v-card-text>
             </v-card>
         </v-form>
-
+        <p class="font-weight-bold red--text text-center">
+            Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!
+        </p>
         <div class="text-center">
-            <v-btn class="mt-6 mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai">
+            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai">
                 Đăng bài</v-btn
             >
         </div>
@@ -627,7 +634,6 @@ export default {
                 this.$nuxt.$axios
                     .$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1')
                     .then(async (res) => {
-                        console.log(res)
                         if (res.length === 0) {
                             this.$refs.modalPleaseMoveToMarker.open()
                         } else {
@@ -679,9 +685,6 @@ export default {
             } finally {
                 this.loadingLoai = false
             }
-        },
-        addMarker(event) {
-            console.log(event.latlng)
         },
         findMyLocationOnMap() {
             if (!this.isFound) {
@@ -750,7 +753,7 @@ export default {
             }
             data.append('namxaydung', this.namxaydung)
             data.append('dientich', this.dientich)
-            data.append('diachi', this.diachi)
+            data.append('diachi', this.diachicuthe)
             data.append('hinhthuc', this.hinhthuc)
             data.append('toadoX', this.toadoX)
             data.append('toadoY', this.toadoY)
