@@ -9,10 +9,13 @@ use App\Http\Controllers\api\DiaDiemController;
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ApiGoiController;
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\api\ContactController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use Laravel\Socialite\Facades\Socialite;
+
+
 
 Route::apiResource('HomeApi', HomeController::class);
 
@@ -23,17 +26,17 @@ Route::apiResource('HomeApi', HomeController::class);
 /*
  * AUTH
  */
-Route::group(['prefix' => 'auth'], function () {
-    Route::post('/register', [ApiUserController::class, "register"]);
-    Route::post('/login', [ApiUserController::class, "login"]);
-    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::post('/logout', [ApiUserController::class, "logout"]);
-        Route::get('/user', [ApiUserController::class, "userInfo"]);
-    });
-
-
-    Route::get('/{service}/callback', [SocialLoginController::class, 'callback']);
-});
+//Route::group(['prefix' => 'auth'], function () {
+//    Route::post('/register', [ApiUserController::class, "register"]);
+//    Route::post('/login', [ApiUserController::class, "login"]);
+//    Route::group(['middleware' => ['auth:sanctum']], function () {
+//        Route::post('/logout', [ApiUserController::class, "logout"]);
+//        Route::get('/user', [ApiUserController::class, "userInfo"]);
+//    });
+//
+//
+//    Route::get('/{service}/callback', [SocialLoginController::class, 'callback']);
+//});
 /*
  * USER API
  */
@@ -118,3 +121,14 @@ Route::get('dientich', [HomeController::class, "getDienTich"]);
 
 Route::get('messages', [\App\Http\Controllers\api\ChatsController::class , 'fetchMessages']);
 Route::post('messages', [\App\Http\Controllers\api\ChatsController::class, 'sendMessage']);
+
+Route::get('/contacts', [ContactController::class, 'get' ]);
+Route::get('/conversation/{id}', [ContactController::class, 'getMessagesFor']);
+Route::post('/conversation/send', [ContactController::class,'send']);
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/user', [\App\Http\Controllers\api\ApiUserController::class, "userInfo"]);
+});
+

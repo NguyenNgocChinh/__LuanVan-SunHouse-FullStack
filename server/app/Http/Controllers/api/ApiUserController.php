@@ -28,15 +28,19 @@ class ApiUserController extends Controller
 
     public function login(ApiLoginRequest $request)
     {
+
         $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
 
-        if (!$user = Auth::attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password], $request->remember))
+        if (!$user = Auth::guard('web')->attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password], $request->remember))
 
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
-
-        return true;
+        Auth::user()->tokens()->delete();
+        $token = Auth::user()->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'token' => $token,
+        ]);
     }
 
     public function userInfo(Request $request)

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -21,12 +22,14 @@ class DatabaseSeeder extends Seeder
                 LoaiSeeder::class,
                 TienNghiSeeder::class,
                 BaiDangSeeder::class,
-                DanhGiaSeeder::class,
-                BinhLuanSeeder::class,
-                TinhThanhPhoSeeder::class,
-                QuanHuyenSeeder::class,
-                XaPhuongThiTranSeeder::class,
+//                DanhGiaSeeder::class,
+//                BinhLuanSeeder::class,
+//                TinhThanhPhoSeeder::class,
+//                QuanHuyenSeeder::class,
+//                XaPhuongThiTranSeeder::class,
             ]
         );
+        Message::factory(100)->create();
+
     }
 }

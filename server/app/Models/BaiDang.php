@@ -13,7 +13,6 @@ class BaiDang extends Model
     protected $table = "baidang";
     protected $primaryKey = "id";
 
-    // public $timestamps = false;
 
     public function user()
     {

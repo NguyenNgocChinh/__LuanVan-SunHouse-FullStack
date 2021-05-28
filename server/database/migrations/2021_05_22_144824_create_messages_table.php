@@ -15,6 +15,10 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->integer('from')->unsigned();
+            $table->integer('to')->unsigned();
+            $table->text('noidung');
+            $table->boolean('read')->default(false);
             $table->timestamps();
         });
     }
