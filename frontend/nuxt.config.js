@@ -1,9 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-    // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
-    // Target: https://go.nuxtjs.dev/config-target
     target: 'static',
 
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -34,7 +32,7 @@ export default {
         ],
     },
     router: {
-        // middleware: 'checkAdmin',
+        // middleware: 'auth',
     },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: ['~/assets/css/formatToast.css', '~/assets/css/formatGlobal.css'],
@@ -46,7 +44,11 @@ export default {
         { src: '~/plugins/lodash.js', ssr: false },
         { src: '~plugins/leaflet.js', ssr: false },
         { src: '~plugins/sweetAlert.js', ssr: false },
+        // { src: '~/plugins/echo.js' },
     ],
+    // echo: {
+    //     plugins: ['~/plugins/echo.js'],
+    // },
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -55,26 +57,13 @@ export default {
     buildModules: [
         // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
-        [
-            '@nuxtjs/laravel-echo',
-            {
-                broadcaster: 'pusher',
-                key: '7c957645c57e4378d473',
-                cluster: 'ap1',
-                forceTLS: true,
-            },
-        ],
     ],
-    echo: {
-        plugins: ['~/plugins/echo.js'],
-    },
 
-    // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
-    // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // proxy: true,
         credentials: true,
+        // baseURL: 'http://localhost:8000',
     },
 
     auth: {
@@ -83,43 +72,35 @@ export default {
                 provider: 'laravel/sanctum',
                 url: process.env.APP_URL,
 
-                cookie: {
-                    // (optional) If set we check this cookie exsistence for loggedIn check
-                    name: 'XSRF-TOKEN',
-                },
-                endpoints: {
-                    login: {
-                        url: '/api/auth/login',
-                        method: 'post',
-                        propertyName: false,
-                    },
-                    logout: { url: '/api/auth/logout' },
-                    user: {
-                        url: '/api/auth/user',
-                        method: 'get',
-                        propertyName: false,
-                    },
-                    csrf: {
-                        url: '/sanctum/csrf-cookie',
-                    },
-                },
+                // cookie: {
+                //     // (optional) If set we check this cookie exsistence for loggedIn check
+                //     name: 'XSRF-TOKEN',
+                // },
+                // endpoints: {
+                //     login: {
+                //         url: '/login',
+                //         method: 'post',
+                //         propertyName: false,
+                //     },
+                //     logout: { url: '/logout' },
+                //     user: {
+                //         url: '/api/auth/user',
+                //         method: 'get',
+                //         propertyName: false,
+                //     },
+                //     csrf: {
+                //         url: '/sanctum/csrf-cookie',
+                //     },
+                // },
 
                 redirect: {
                     login: '/login',
                     logout: '/',
                     home: '/',
                 },
-                user: {
-                    property: false,
+                token: {
+                    property: 'token',
                 },
-            },
-            google: {
-                responseType: 'code',
-                clientId: '824756884382-m5p5icl9lgeqtmd9lmftj1m5moho6cuo.apps.googleusercontent.com',
-                accessType: 'offline',
-                codeChallengeMethod: 'S256',
-                grantType: 'authorization_code',
-                redirectUri: 'http://localhost:3000/login',
             },
         },
         redirect: {
