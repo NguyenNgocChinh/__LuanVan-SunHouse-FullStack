@@ -92,6 +92,7 @@ export default {
     }),
     methods: {
         async login() {
+            const self = this
             try {
                 this.$nextTick(() => {
                     this.$nuxt.$loading.start()
@@ -99,6 +100,11 @@ export default {
                 this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
                 await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((res) => {
                     this.$auth.strategy.token.set(res.data.token)
+                    window.OneSignal.push(function () {
+                        // window.OneSignal.setExternalUserId(self.$auth.user.id)
+                        window.OneSignal.sendTag('user_id', self.$auth.user.id)
+                    })
+
                     this.$nuxt.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {

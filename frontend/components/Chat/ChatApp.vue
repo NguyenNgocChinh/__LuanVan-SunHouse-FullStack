@@ -5,6 +5,7 @@
     </div>
 </template>
 <script>
+import * as EVNAPP from '@/api/app'
 import ENV from '@/api/chat'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
@@ -28,6 +29,18 @@ export default {
     },
 
     mounted() {
+        // grant allow notify
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!Notification) {
+                alert(
+                    'Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.'
+                )
+                return
+            }
+
+            if (Notification.permission !== 'granted') Notification.requestPermission()
+        })
+        // set up laravel echo - pusherjs
         const self = this
         Pusher.logToConsole = true
         window.Echo = new Echo({
@@ -41,7 +54,7 @@ export default {
                     authorize: (socketId, callback) => {
                         self.$nuxt.$axios
                             .$post(
-                                'http://localhost:8000/broadcasting/auth',
+                                EVNAPP.default.broadcastAuth,
                                 {
                                     socket_id: socketId,
                                     channel_name: channel.name,
@@ -69,6 +82,18 @@ export default {
         })
     },
     methods: {
+        notify(title, message) {
+            if (Notification.permission !== 'granted') Notification.requestPermission()
+            else {
+                const notification = new Notification(title, {
+                    icon: EVNAPP.default.appURL + 'logo.png',
+                    body: message,
+                })
+                notification.onclick = function () {
+                    window.open(EVNAPP.default.chatURL + '/')
+                }
+            }
+        },
         startConversationWith(contact) {
             this.updateUnreadCount(contact, true)
 
@@ -81,6 +106,7 @@ export default {
             this.messages.push(message)
         },
         hanleIncoming(message) {
+            this.notify(message.from_contact.name, message.noidung)
             if (this.selectedContact && message.from === this.selectedContact.id) {
                 this.saveNewMessage(message)
                 return

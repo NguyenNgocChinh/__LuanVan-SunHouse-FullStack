@@ -28,6 +28,11 @@ export default {
 
             {
                 src: '/notify.js',
+                type: 'text/javascript',
+            },
+            {
+                src: 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
+                type: 'text/javascript',
             },
         ],
     },
@@ -44,12 +49,7 @@ export default {
         { src: '~/plugins/lodash.js', ssr: false },
         { src: '~plugins/leaflet.js', ssr: false },
         { src: '~plugins/sweetAlert.js', ssr: false },
-        // { src: '~/plugins/echo.js' },
     ],
-    // echo: {
-    //     plugins: ['~/plugins/echo.js'],
-    // },
-
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 

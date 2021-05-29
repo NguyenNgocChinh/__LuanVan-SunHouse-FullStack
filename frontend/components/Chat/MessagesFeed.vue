@@ -68,7 +68,7 @@ export default {
                 }
 
                 &.received {
-                    text-align: right;
+                    text-align: left;
 
                     .text {
                         background: #b2b2b2;
@@ -76,7 +76,7 @@ export default {
                 }
 
                 &.sent {
-                    text-align: left;
+                    text-align: right;
 
                     .text {
                         background: #81c4f9;
