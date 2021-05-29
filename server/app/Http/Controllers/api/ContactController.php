@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\NewMessage;
+use OneSignal;
 
 class ContactController extends Controller
 {
@@ -66,11 +67,18 @@ class ContactController extends Controller
         $message->to = $request->contact_id;
         $message->noidung = $request->text;
         $message->save();
-//        $message = Message::create([
-//            'from' => auth()->id(),
-//            'to' => $request->contact_id,
-//            'noidung' => $request->text
-//        ]);
+
+
+        OneSignal::sendNotificationUsingTags(
+            $message->noidung,
+            array(
+                ["field" => "tag", "key" => "user_id", "relation" => "=", "value" => $message->to],
+            ),
+            $url = 'http://localhost:3000/test',
+            $data = null,
+            $buttons = null,
+            $schedule = null
+        );
 
         broadcast(new NewMessage($message));
 

@@ -178,7 +178,8 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
-
+        /*OneSignal*/
+        Berkayk\OneSignal\OneSignalServiceProvider::class
     ],
 
     /*
@@ -231,6 +232,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        /*OneSignal*/
+        'OneSignal' => Berkayk\OneSignal\OneSignalFacade::class
 
     ],
 
