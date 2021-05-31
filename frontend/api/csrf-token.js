@@ -1,4 +1,4 @@
 const CSRF = {
-    csrf_cookie: 'https://api.sunhouse.stuesports.info/sanctum/csrf-cookie',
+    csrf_cookie: 'http://localhost:8000/sanctum/csrf-cookie',
 }
 export default CSRF

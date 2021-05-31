@@ -3,6 +3,9 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     ssr: false,
     target: 'static',
+    generate: {
+        fallback: true,
+    },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -76,30 +79,27 @@ export default {
                 //     // (optional) If set we check this cookie exsistence for loggedIn check
                 //     name: 'XSRF-TOKEN',
                 // },
-                // endpoints: {
-                //     login: {
-                //         url: '/login',
-                //         method: 'post',
-                //         propertyName: false,
-                //     },
-                //     logout: { url: '/logout' },
-                //     user: {
-                //         url: '/api/auth/user',
-                //         method: 'get',
-                //         propertyName: false,
-                //     },
-                //     csrf: {
-                //         url: '/sanctum/csrf-cookie',
-                //     },
-                // },
+                endpoints: {
+                    login: {
+                        url: '/login',
+                        method: 'post',
+                        propertyName: false,
+                    },
+                    logout: { url: '/logout' },
+                    user: {
+                        url: '/user',
+                        method: 'get',
+                        propertyName: false,
+                    },
+                    csrf: {
+                        url: '/sanctum/csrf-cookie',
+                    },
+                },
 
                 redirect: {
                     login: '/login',
                     logout: '/',
                     home: '/',
-                },
-                token: {
-                    property: 'token',
                 },
             },
         },
@@ -127,6 +127,7 @@ export default {
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
+        treeShake: true,
         theme: {
             dark: false,
             themes: {

@@ -1,8 +1,8 @@
 const ENV = {
-    messages: 'http://localhost:8000/api/messages',
-    send: 'http://localhost:8000/api/conversation/send',
-    contacts: 'http://localhost:8000/api/contacts',
-    conversation: 'http://localhost:8000/api/conversation',
-    conversationID: 'http://localhost:8000/api/conversation/',
+    messages: 'http://localhost:8000/messages',
+    send: 'http://localhost:8000/conversation/send',
+    contacts: 'http://localhost:8000/contacts',
+    conversation: 'http://localhost:8000/conversation',
+    conversationID: 'http://localhost:8000/conversation/',
 }
 export default ENV

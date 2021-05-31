@@ -90,11 +90,14 @@ export function getPostLocation(address) {
         try {
             axios.get(url).then(function (data) {
                 const result = data.data[0]
-                console.log('res', result)
-                const x = result.lat
-                const y = result.lon
-                const lngLat = y + ',' + x
-                resolve(lngLat)
+                if (result) {
+                    console.log('res', result)
+                    const x = result.lat
+                    const y = result.lon
+                    const lngLat = y + ',' + x
+                    resolve(lngLat)
+                }
+                // reject(result)
             })
         } catch (e) {
             reject(e)

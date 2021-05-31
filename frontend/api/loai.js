@@ -1,4 +1,4 @@
 const ENV = {
-    all: 'http://localhost:8000/api/loai',
+    all: 'http://localhost:8000/loai',
 }
 export default ENV

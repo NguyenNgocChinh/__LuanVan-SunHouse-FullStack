@@ -77,7 +77,7 @@ export default {
             self.hanleIncoming(e.message)
         })
 
-        self.$nuxt.$axios.$get(ENV.contacts).then((response) => {
+        self.$nuxt.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
             this.contacts = response
         })
     },
@@ -97,7 +97,7 @@ export default {
         startConversationWith(contact) {
             this.updateUnreadCount(contact, true)
 
-            this.$nuxt.$axios.$get(ENV.conversationID + contact.id).then((response) => {
+            this.$nuxt.$axios.$get(ENV.conversationID + contact.id, { withCredentials: true }).then((response) => {
                 this.messages = response
                 this.selectedContact = contact
             })
