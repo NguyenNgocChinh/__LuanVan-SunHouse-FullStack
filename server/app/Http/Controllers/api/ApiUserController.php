@@ -36,11 +36,12 @@ class ApiUserController extends Controller
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
-        Auth::user()->tokens()->delete();
-        $token = Auth::user()->createToken('auth_token')->plainTextToken;
-        return response()->json([
-            'token' => $token,
-        ]);
+        return  true;
+//        Auth::user()->tokens()->delete();
+//        $token = Auth::user()->createToken('auth_token')->plainTextToken;
+//        return response()->json([
+//            'token' => $token,
+//        ]);
     }
 
     public function userInfo(Request $request)
