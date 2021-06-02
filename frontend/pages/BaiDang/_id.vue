@@ -91,47 +91,6 @@
                             </div>
                         </v-card-text>
                     </v-card>
-                    <v-card class="mt-5">
-                        <v-card-title>Các trung tâm gần đây</v-card-title>
-                        <v-card-text>
-                            <v-card>
-                                <v-tabs v-model="tabs">
-                                    <v-tab>Trường Học</v-tab>
-                                    <v-tab>Bệnh Viện</v-tab>
-                                    <v-tab>Ngân Hàng</v-tab>
-                                </v-tabs>
-                                <v-tabs-items v-model="tabs">
-                                    <v-tab-item>
-                                        <v-data-table
-                                            :headers="headers"
-                                            :items="dsTruongHoc"
-                                            :items-per-page="5"
-                                            class="elevation-1"
-                                        ></v-data-table>
-                                    </v-tab-item>
-                                    <v-tab-item>
-                                        <v-data-table
-                                            :headers="headers"
-                                            :items="dsBenhVien"
-                                            :items-per-page="5"
-                                            class="elevation-1"
-                                        ></v-data-table>
-                                    </v-tab-item>
-                                    <v-tab-item>
-                                        <v-data-table
-                                            :loading="servicesLoading"
-                                            :headers="headers"
-                                            :items="dsNganHang"
-                                            :items-per-page="5"
-                                            class="elevation-1"
-                                        ></v-data-table>
-                                    </v-tab-item>
-                                    <v-tab-item><div id="benhVien"></div></v-tab-item>
-                                    <v-tab-item><div id="nganHang"></div></v-tab-item>
-                                </v-tabs-items>
-                            </v-card>
-                        </v-card-text>
-                    </v-card>
                     <div class="single-bg-white mt-8">
                         <h3 class="post-content-title mb-4">Bản đồ</h3>
                         <div class="agent-map">
@@ -223,6 +182,75 @@
                 </v-col>
             </v-row>
         </v-container>
+        <!--TOP-->
+        <v-container class="mt-5">
+            <v-card class="px-6 py-6">
+                <v-row>
+                    <v-col class="col-md-8">
+                        <div>
+                            <div v-if="hinhanhArr.length < 1">
+                                <v-img :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                            </div>
+                            <div v-else>
+                                <viewer
+                                    ref="viewer"
+                                    style="position: relative"
+                                    :options="options"
+                                    :images="hinhanhArr"
+                                    class="viewer"
+                                    @inited="inited"
+                                >
+                                    <owl-carousel id="carouselTop">
+                                        <template #body>
+                                            <img
+                                                v-for="src in hinhanhArr"
+                                                :key="src"
+                                                class="owl-carousel-item"
+                                                :src="src"
+                                            />
+                                        </template>
+                                    </owl-carousel>
+                                    <v-btn icon class="btn-preview" @click="showImgIndex">
+                                        <v-icon style="color: rgba(255, 255, 255, 0.8)" size="18"
+                                            >mdi-arrow-expand-all</v-icon
+                                        >
+                                    </v-btn>
+                                </viewer>
+                            </div>
+                        </div>
+                    </v-col>
+                    <v-col class="col-md-4 pl-3">
+                        <div class="special-highlight mb-3">Đặc điểm nổi trội</div>
+                        <ul class="special-wrapper list-unstyled">
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">
+                                {{ baidang.gia || '--' }} $
+                            </li>
+                            <li
+                                class="special-wrapper-item text-overflow-ellipsis"
+                                :class="{ disable: !baidang.dientich }"
+                            >
+                                Diện tích: {{ baidang.dientich || '--' }} m²
+                            </li>
+                            <li
+                                class="special-wrapper-item text-overflow-ellipsis"
+                                :class="{ disable: !baidang.sophongngu }"
+                            >
+                                Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng
+                            </li>
+                            <li
+                                class="special-wrapper-item text-overflow-ellipsis"
+                                :class="{ disable: !baidang.huong }"
+                            >
+                                Hướng nhà: {{ baidang.huong || '--' }}
+                            </li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.loai }">
+                                Loại nhà: {{ baidang.loai || '-' }}
+                            </li>
+                        </ul>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-container>
 
         <v-container>
             <v-banner sticky>
@@ -241,44 +269,48 @@
 
             <v-divider />
         </v-container>
-
+        <!--RIGHT-->
         <v-container class="pt-0">
             <div class="mota px-3">
                 <v-card elevation="1" class="px-6 py-7">
                     <v-row>
                         <v-col class="col-lg-8">
-                            <h1 class="title">
-                                CHÍNH CHỦ BÁN GẤP CĂN HỘ OFICTEL SKY CENTER PHỔ QUANG DIỆN TÍCH 42M2 CHỈ 2.15 TỶ BAO
-                                SANG TÊN
+                            <h1 class="title text--upercase">
+                                {{ baidang.tieude }}
                             </h1>
                             <div class="mb-2">
-                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon> Sky Center, Đường Phổ Quang,
-                                Quận Tân Bình, Thành phố Hồ Chí Minh
+                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                {{ baidang.diachi }}
                             </div>
                             <div class="introduce-line d-flex mb-2">
-                                <div>Ngày đăng: 30/05/2021</div>
-                                <div>Lượt xem: 170</div>
+                                <div>Ngày đăng: {{ this.$moment(baidang.created_at).format('DD/MM/YYYY') || '-' }}</div>
+                                <div>Lượt xem: {{ baidang.luotxem || '-' }}</div>
                             </div>
                             <div class="col-12 d-flex align-items-center pl-0 mb-2 price-sec">
                                 <div class="item">
                                     Mức giá:
-                                    <div class="price">5000$</div>
+                                    <div class="price">{{ baidang.gia }}$</div>
                                 </div>
                                 <div class="item">
                                     Diện tích:
-                                    <div class="font-weight-bold">500 m²</div>
+                                    <div class="font-weight-bold">{{ baidang.dientich }} m²</div>
+                                </div>
+                                <div class="item">
+                                    Mục đích:
+                                    <div class="font-weight-bold">{{ baidang.isChoThue ? 'Cho thuê' : 'Rao bán' }}</div>
+                                </div>
+                                <div class="item">
+                                    Hướng nhà:
+                                    <div class="font-weight-bold">{{ baidang.huong }}</div>
                                 </div>
                             </div>
                             <div class="info-description">
                                 <h2>Thông tin mô tả</h2>
                                 <v-divider />
                                 <p style="letter-spacing: 0.5px" class="my-4">
-                                    Vị trí: chạy qua đường Nguyễn Văn Bứa Hóc Môn (Mỹ Hạnh Bắc) trên đường tỉnh lộ 9
-                                    <br />Diện tích: 50m2 đường trước nhà 5m <br />Pháp lý: Xây dựng trên nền đất thổ cư
-                                    100% Hỗ trợ đưa trước 100 triệu nhận nhà liền Bao công chứng sang tên Liên hệ xem
-                                    nhà liền ạ Đình Đức 0796814796
+                                    {{ baidang.noidung }}
                                 </p>
-                                <v-expansion-panels multiple tile :value="[0, 1]" flat hover accordion>
+                                <v-expansion-panels multiple tile :value="[0, 1, 2]" flat hover accordion>
                                     <v-expansion-panel>
                                         <v-expansion-panel-header class="accordion-header">
                                             Thông tin cơ bản
@@ -287,26 +319,27 @@
                                             <ul class="list-unstyled pl-0 mt-3">
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Địa chỉ:</span>
-                                                    <span class="attribute-info"
-                                                        >Đường Nguyễn Văn Bứa, Xã Xuân Thới Sơn, Huyện Hóc Môn, Thành
-                                                        phố Hồ Chí Minh</span
-                                                    >
+                                                    <span class="attribute-info">{{ baidang.diachi }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Nhu cầu:</span>
-                                                    <span class="attribute-info">Cho Thuê</span>
+                                                    <span class="attribute-info">{{
+                                                        baidang.isChoThue ? 'Cho thuê' : 'Rao bán'
+                                                    }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Loại nhà:</span>
-                                                    <span class="attribute-info">Nhà ở</span>
+                                                    <span class="attribute-info">{{ baidang.loai }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Diện tích:</span>
-                                                    <span class="attribute-info">50 m<sup>2</sup></span>
+                                                    <span class="attribute-info"
+                                                        >{{ baidang.dientich }} m<sup>2</sup></span
+                                                    >
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Hướng nhà:</span>
-                                                    <span class="attribute-info">Đông</span>
+                                                    <span class="attribute-info">{{ baidang.huong }}</span>
                                                 </li>
                                             </ul>
                                         </v-expansion-panel-content>
@@ -319,38 +352,56 @@
                                             <ul class="list-unstyled pl-0 mt-3">
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Số phòng ngủ:</span>
-                                                    <span class="attribute-info">4</span>
+                                                    <span class="attribute-info">{{ baidang.sophongngu }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Số phòng tắm:</span>
-                                                    <span class="attribute-info">4</span>
+                                                    <span class="attribute-info">{{ baidang.sophongtam }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Năm xây dựng:</span>
-                                                    <span class="attribute-info">2000</span>
+                                                    <span class="attribute-info">{{ baidang.namxaydung }}</span>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Tiện nghi:</span>
-                                                    <div id="app-4" class="attribute-info">
+                                                    <div class="attribute-info">
                                                         <v-row>
-                                                            <!--                                                        <v-col v-for="tn in tiennghiArr" :key="tn.id" class="col-lg-4"-->
-                                                            <!--                                                            ><b>{{ tn.ten_tiennghi }}</b></v-col-->
-                                                            <!--                                                        >-->
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
-                                                            <v-col>Máy giặt</v-col>
+                                                            <v-col>{{ tiennghiArr.join(', ') || 'Không có' }}</v-col>
                                                         </v-row>
                                                     </div>
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Hướng nhà:</span>
-                                                    <span class="attribute-info">Đông</span>
+                                                    <span class="attribute-info">{{ baidang.huong }}</span>
                                                 </li>
                                             </ul>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header class="accordion-header">
+                                            Các thông tin gần đây
+                                        </v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <v-tabs v-model="tabs">
+                                                <v-tab>Trường Học</v-tab>
+                                                <v-tab>Bệnh Viện</v-tab>
+                                                <v-tab>Ngân Hàng</v-tab>
+                                            </v-tabs>
+                                            <v-tabs-items v-model="tabs">
+                                                <v-tab-item>
+                                                    <data-table :items="dsTruongHoc" :headers="headers" />
+                                                </v-tab-item>
+                                                <v-tab-item>
+                                                    <data-table :items="dsBenhVien" :headers="headers" />
+                                                </v-tab-item>
+                                                <v-tab-item>
+                                                    <data-table
+                                                        :items="dsNganHang"
+                                                        :headers="headers"
+                                                        :loading="servicesLoading"
+                                                    />
+                                                </v-tab-item>
+                                            </v-tabs-items>
                                         </v-expansion-panel-content>
                                     </v-expansion-panel>
                                 </v-expansion-panels>
@@ -384,7 +435,7 @@
                                 </v-row>
                                 <v-row class="mb-2"><v-divider /></v-row>
                                 <v-row class="pl-3 mb-2">
-                                    <div>Tham gia từ: {{ user.created_at || '-' }}</div>
+                                    <div>Tham gia từ: {{ this.$moment(user.created_at).format('MM/YYYY') || '-' }}</div>
                                 </v-row>
                                 <v-row class="pl-3 mb-2">
                                     <div>Số tin đăng: {{ user.sobaidang || '-' }}</div>
@@ -394,8 +445,19 @@
                                 </v-row>
                             </v-card>
                             <div class="d-flex justify-space-between align-center ml-3 wrapper-phone">
-                                <div class="phone">0796***</div>
-                                <a class="white--text" href="javascript:void(0)">Bấm để hiện số</a>
+                                <div id="numberphone" class="phone" :data-phone="user.sdt">
+                                    {{ this.numberphone }}
+                                </div>
+                                <a
+                                    v-if="isHideNumberPhone"
+                                    class="white--text"
+                                    href="javascript:void(0)"
+                                    @click="showNumberPhone"
+                                    >Bấm để hiện số</a
+                                >
+                                <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone"
+                                    >Thu gọn</a
+                                >
                             </div>
                         </v-col>
                     </v-row>
@@ -406,13 +468,22 @@
 </template>
 
 <script>
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
+import Vue from 'vue'
 import ENV from '@/api/baidang'
 import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
+import OwlCarousel from '@/components/UIComponent/owlCarousel'
+import DataTable from '@/components/UIComponent/dataTable'
+Vue.use(Viewer)
 export default {
+    components: { DataTable, OwlCarousel },
     data() {
         return {
             tabs: null,
+            numberphone: 'Chưa đặt số',
+            isHideNumberPhone: true,
             headers: [
                 { text: 'Tên', value: 'name', width: '55%' },
                 { text: 'Khoảng cách', value: 'distance', width: '22.5%' },
@@ -426,16 +497,41 @@ export default {
             user: {
                 profile_photo_path: '',
             },
-            tiennghiArr: {
-                default: [],
-            },
+            tiennghiArr: [],
             hinhanhArr: [],
             baidang: false,
             baidanghots: [],
+            options: {
+                inline: false,
+                button: true,
+                navbar: true,
+                title: 2, // show if screen > 768px
+                toolbar: {
+                    zoomIn: 1,
+                    zoomOut: 1,
+                    oneToOne: 1,
+                    reset: 1,
+                    prev: 1,
+                    play: {
+                        show: 1,
+                        size: 'large',
+                    },
+                    next: 1,
+                    rotateLeft: 1,
+                    rotateRight: 1,
+                    flipHorizontal: 1,
+                    flipVertical: 1,
+                },
+                tooltip: true,
+                movable: true,
+                zoomable: true,
+                rotatable: true,
+                scalable: true,
+                transition: true,
+                fullscreen: true,
+                keyboard: true,
+            },
         }
-    },
-    head: {
-        script: [{ src: 'https://momentjs.com/downloads/moment-with-locales.min.js' }],
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
@@ -443,9 +539,8 @@ export default {
         },
     },
 
-    created() {
+    mounted() {
         this.getchitietsp()
-        this.getBaiDangHot()
     },
     methods: {
         getchitietsp() {
@@ -453,8 +548,15 @@ export default {
                 this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
                     this.baidang = data
                     this.user = this.baidang.user
-                    this.tiennghiArr = this.baidang.tiennghi
-                    this.hinhanhArr = this.baidang.hinhanh
+                    this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
+                    const self = this
+                    this.baidang.tiennghi.forEach((item) => {
+                        self.tiennghiArr.push(item.ten_tiennghi)
+                    })
+                    this.baidang.hinhanh.forEach((item) => {
+                        const name = this.URI_DICRECTORY_UPLOAD + item.filename
+                        self.hinhanhArr.push(name)
+                    })
                     await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
                         if (typeof postLocate !== 'undefined') {
                             this.servicesLoading = true
@@ -476,112 +578,37 @@ export default {
                 console.log(e)
             }
         },
-        async getBaiDangHot() {
-            try {
-                const bdhots = await this.$axios.$get(ENV.hot)
-                this.baidanghots = bdhots.baidang.slice(0, 5)
-            } catch (e) {
-                console.log(e)
+        showNumberPhone() {
+            this.numberphone = document.getElementById('numberphone').dataset.phone.toString().trim()
+            this.isHideNumberPhone = false
+        },
+        hideNumberPhone() {
+            const num = document.getElementById('numberphone').dataset.phone.toString().trim()
+            this.numberphone = num.slice(0, 5) + '***'
+            this.isHideNumberPhone = true
+        },
+        inited(viewer) {
+            this.$viewer = viewer
+        },
+        showImgIndex() {
+            // const viewer = this.$el.querySelector('.images')
+            // console.log(viewer)
+            // viewer.show()
+            let index = 0
+            const carousel = document.getElementById('carouselTop')
+            const items = carousel.getElementsByClassName('owl-item')
+            for (let i = 0; i < items.length; i++) {
+                const classItem = items[i].className.split(' ')
+                for (let j = 0; j < classItem.length; j++) {
+                    if (classItem[j] === 'active') {
+                        index = i
+                        break
+                    }
+                }
             }
-            this.baidanghots_loading = false
+            this.$viewer.view(index)
         },
     },
 }
 </script>
-<style scoped>
-* {
-    font-size: 14px;
-}
-.list-unstyled {
-    list-style: none;
-}
-.title {
-    text-transform: uppercase;
-    color: #993393;
-    display: flex;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-.introduce-line div + div {
-    margin-left: 20px;
-    padding-left: 20px;
-    position: relative;
-}
-.introduce-line div + div:before {
-    content: '|';
-    color: #909090;
-    position: absolute;
-    left: 0;
-}
-.price {
-    color: #e7843f;
-    font-weight: bold;
-}
-.price-sec .item + .item {
-    margin-left: 24px;
-    padding-left: 24px;
-    border-left: 1px solid #e0e0e0;
-}
-.accordion-header {
-    font-weight: bold;
-    color: #1a4bb7;
-    height: 38px;
-    line-height: 38px;
-    border-radius: 4px;
-    background-color: #f7f7f7;
-    padding-left: 12px;
-}
-.label {
-    font-weight: 700;
-    color: #2b2b2b;
-    width: 100px;
-    font-size: 14px;
-}
-/*USER */
-.btn-chat {
-    height: 40px;
-    padding: 8px 3px 8px 32px;
-    border-radius: 8px;
-    border: solid 1px #e0e0e0;
-    width: 100%;
-    position: relative;
-    outline: none;
-    color: #ab8843;
-}
-.btn-chat:before {
-    content: '';
-    position: absolute;
-    background-image: url('https://cdn.meeyland.com/img/icons/messenge.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 16px;
-    left: 5px;
-    top: 3px;
-}
-/*PHONE*/
-.wrapper-phone {
-    height: 48px;
-    background: rgba(26, 75, 183, 0.8);
-    border: solid 1px #e0e0e0;
-    padding: 8px 16px;
-    margin-top: 16px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-}
-.phone {
-    position: relative;
-    font-size: 20px;
-    font-weight: bold;
-    margin-left: 6px;
-    padding-left: 35px;
-    color: #fff;
-}
-.phone:before {
-    content: '';
-    background: url('https://cdn.meeyland.com/img/icons/call.svg') no-repeat center;
-    width: 27px;
-    height: 30px;
-    position: absolute;
-    left: 0;
-}
-</style>
+<style scoped src="~/assets/css/detailPost.css"></style>

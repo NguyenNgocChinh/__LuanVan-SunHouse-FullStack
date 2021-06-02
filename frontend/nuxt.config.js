@@ -52,6 +52,7 @@ export default {
         { src: '~/plugins/lodash.js', ssr: false },
         { src: '~plugins/leaflet.js', ssr: false },
         { src: '~plugins/sweetAlert.js', ssr: false },
+        { src: '~plugins/moment.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -64,9 +65,7 @@ export default {
 
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
     axios: {
-        // proxy: true,
         credentials: true,
-        // baseURL: 'http://localhost:8000',
     },
 
     auth: {
@@ -74,11 +73,6 @@ export default {
             laravelSanctum: {
                 provider: 'laravel/sanctum',
                 url: process.env.APP_URL,
-
-                // cookie: {
-                //     // (optional) If set we check this cookie exsistence for loggedIn check
-                //     name: 'XSRF-TOKEN',
-                // },
                 endpoints: {
                     login: {
                         url: '/login',
