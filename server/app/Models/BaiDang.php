@@ -40,9 +40,9 @@ class BaiDang extends Model
         return $this->hasMany('App\Models\BinhLuan', 'baidang_id', 'id');
     }
 
-    public function tiennghi_baidang()
+    public function tiennghi()
     {
-        return $this->hasMany('App\Models\TienNghiBaiDang', 'baidang_id', 'id');
+        return $this->hasManyThrough(TienNghi::class, TienNghiBaiDang::class, 'baidang_id', 'id', 'id','id');
     }
 
     public function hinhanh()

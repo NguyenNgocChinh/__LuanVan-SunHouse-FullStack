@@ -36,6 +36,7 @@ class BaiDangSeeder extends Seeder
                 'toadoY' => rand(1, 100),
                 'choduyet' => 0,
                 'dientich' => rand(50, 3000),
+                'luotxem' => rand(1,500),
                 'created_at' => $faker->dateTime(),
             ]);
         }

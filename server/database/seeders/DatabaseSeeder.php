@@ -24,9 +24,9 @@ class DatabaseSeeder extends Seeder
                 BaiDangSeeder::class,
 //                DanhGiaSeeder::class,
 //                BinhLuanSeeder::class,
-//                TinhThanhPhoSeeder::class,
-//                QuanHuyenSeeder::class,
-//                XaPhuongThiTranSeeder::class,
+                TinhThanhPhoSeeder::class,
+                QuanHuyenSeeder::class,
+                XaPhuongThiTranSeeder::class,
             ]
         );
         Message::factory(100)->create();

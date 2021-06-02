@@ -33,6 +33,7 @@ class CreateBaidang extends Migration
             $table->float('toadoY');
             $table->boolean('choduyet');
             $table->double('dientich');
+            $table->integer('luotxem')->default(0);
 
             $table->nullableTimestamps();
         });

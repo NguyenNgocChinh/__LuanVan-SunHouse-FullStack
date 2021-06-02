@@ -16,13 +16,6 @@ class BaiDangDetailResource extends JsonResource
      */
     public function toArray($request)
     {
-        $tiennghi = [] ;
-        if (isset($this->tiennghi_baidang))
-        {
-            foreach ($this->tiennghi_baidang as $tn){
-                $tiennghi[] = TienNghi::find($tn->tiennghi_id);
-            }
-        }
         return [
             "id" => $this->id,
             "user" => (object) [
@@ -35,6 +28,7 @@ class BaiDangDetailResource extends JsonResource
                 "profile_photo_path" => $this->user->profile_photo_path,
                 "created_at" => $this->user->created_at
             ],
+            "luotxem" => $this->luotxem,
             "noidung" => $this->noidung,
             "tieude" => $this->tieude,
             "hinhanh" => $this->hinhanh,
@@ -47,11 +41,11 @@ class BaiDangDetailResource extends JsonResource
             "namxaydung" => $this->namxaydung,
             "diachi" => $this->diachi,
             "dientich" => $this->dientich,
-            "tiennghi" => $tiennghi,
+            "tiennghi" => $this->tiennghi,
             "thoigian" => $this->formattedCreatedDate(),
-            "ngaydang" => $this->created_at,
             "toadoX"=>$this->toadoX,
             "toadoY"=>$this->toadoY,
+            "created_at" => $this->created_at
 
         ];
     }
