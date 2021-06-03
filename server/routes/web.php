@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 /*
  * Broadcast
  */
+Route::put('users/{user}/online', [\App\Http\Controllers\UserOnlineController::class, 'userOnline'])->middleware('auth:sanctum');
 Broadcast::routes(['middleware' => ['auth:sanctum'] ]);
 /*
  * AUTH

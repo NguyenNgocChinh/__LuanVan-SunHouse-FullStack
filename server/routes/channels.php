@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-//Broadcast::channel('chat', function ($user) {
-//    return \Illuminate\Support\Facades\Auth::check();
-//});
+
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int) $id;
 });
+//SOON DELETE
 Broadcast::channel('private-messages.{id}', function ($user, $id) {
     return (int)$user->id === (int) $id;
+});
+
+Broadcast::channel('chat', function ($user) {
+    \Illuminate\Support\Facades\Log::info( $user);
+    return $user;
 });

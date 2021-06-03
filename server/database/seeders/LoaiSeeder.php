@@ -14,7 +14,7 @@ class LoaiSeeder extends Seeder
      */
     public function run()
     {
-        $loai = array('Căn hộ', 'Biệt thự', 'Nhà ở', 'Phòng trọ','Nhà mặt tiền');
+        $loai = array('Căn hộ', 'Biệt thự', 'Nhà ở', 'Phòng trọ','Nhà mặt tiền', 'Nhà phố', 'Villa', 'Cửa hàng', 'Studio', 'Văn phòng', 'Khác');
         foreach($loai as $value){
             DB::table('loai')->insert(
                 [

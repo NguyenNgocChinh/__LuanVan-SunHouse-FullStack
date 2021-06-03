@@ -36,9 +36,20 @@ class BaiDangSeeder extends Seeder
                 'toadoY' => rand(1, 100),
                 'choduyet' => 0,
                 'dientich' => rand(50, 3000),
-                'luotxem' => rand(1,500),
+                'luotxem' => rand(1, 500),
                 'created_at' => $faker->dateTime(),
             ]);
         }
+        DB::table('baidang-hinhanh')->insert([
+            ['baidang_id' => 10,
+                'filename' => '10a.jpg'],
+            ['baidang_id' => 10,
+                'filename' => '10b.png'],
+            ['baidang_id' => 10,
+                'filename' => '10c.jpg'],
+            ['baidang_id' => 10,
+                'filename' => '10d.jpg'],
+
+        ]);
     }
 }
