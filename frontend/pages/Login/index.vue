@@ -67,6 +67,8 @@
 </template>
 <script>
 import ENV from '@/api/user'
+// import ENVCHAT from '@/api/chat'
+// import * as EVNAPP from '@/api/app'
 export default {
     middleware: 'auth',
     auth: 'guest',
@@ -90,6 +92,7 @@ export default {
             },
         },
     }),
+
     methods: {
         async login() {
             const self = this
@@ -100,11 +103,11 @@ export default {
                 this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
                 await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((res) => {
                     this.$auth.strategy.token.set(res.data.token)
+                    console.log(res.data.token)
                     window.OneSignal.push(function () {
-                        // window.OneSignal.setExternalUserId(self.$auth.user.id)
                         window.OneSignal.sendTag('user_id', self.$auth.user.id)
                     })
-
+                    // self.connectBroadcast()
                     this.$nuxt.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {
@@ -132,6 +135,17 @@ export default {
             } catch (e) {
                 this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: null })
             }
+        },
+
+        connectBroadcast() {
+            // window.Echo.join('chat').joining((user) => {}
+            window.Echo.join('user.online')
+                .here((data) => {
+                    console.log('here', data)
+                })
+                .joining((user) => {
+                    console.log(user)
+                })
         },
     },
 }

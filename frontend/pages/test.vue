@@ -1,12 +1,10 @@
 <template>
-    <div class="container">
+    <div class="container-fuild">
         <div class="row justify-content-center">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">Tin nhắn</div>
-
                     <div id="app" class="card-body">
-                        <chat-app :user="$auth.user"></chat-app>
+                        <chat-app></chat-app>
                     </div>
                 </div>
             </div>

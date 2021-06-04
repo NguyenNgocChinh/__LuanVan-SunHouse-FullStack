@@ -1,6 +1,6 @@
 <template>
-    <div ref="feed" class="feed">
-        <ul v-if="contact">
+    <div ref="feed" class="feed" :class="{ overflowYHidden: messages.length < 1 }" style="position: relative">
+        <ul v-if="messages.length > 0">
             <li
                 v-for="message in messages"
                 :key="message.id"
@@ -11,11 +11,22 @@
                 </div>
             </li>
         </ul>
+        <div v-else class="pt-8 mt-8">
+            <p class="text-center">
+                <i
+                    >Bạn và <b class="blue--text">{{ contact.name }}</b> chưa từng trò chuyện với nhau. <br />
+                    Hãy gửi tin nhắn đầu tiên ngay thôi!
+                </i>
+            </p>
+            <typing style="width: 25%; height: 400px" class="center-element mt-8" />
+        </div>
     </div>
 </template>
 
 <script>
+import Typing from '@/components/svg/typing'
 export default {
+    components: { Typing },
     props: {
         contact: {
             type: Object,
@@ -45,10 +56,12 @@ export default {
 
 <style lang="scss" scoped>
 .feed {
-    background: #f0f0f0;
+    background: #fff;
     height: 100%;
-    max-height: 470px;
     overflow: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    height: 500px;
 
     ul {
         list-style-type: none;
@@ -61,7 +74,7 @@ export default {
 
                 .text {
                     max-width: 200px;
-                    border-radius: 5px;
+                    border-radius: 8px;
                     padding: 12px;
                     display: inline-block;
                     word-break: break-word;
@@ -69,21 +82,26 @@ export default {
 
                 &.received {
                     text-align: left;
+                    padding-left: 12px;
 
                     .text {
-                        background: #b2b2b2;
+                        background: #e4e6eb;
                     }
                 }
 
                 &.sent {
                     text-align: right;
-
+                    padding-right: 12px;
                     .text {
-                        background: #81c4f9;
+                        background: #0084ff;
+                        color: #fff;
                     }
                 }
             }
         }
     }
+}
+.overflowYHidden {
+    overflow-y: hidden;
 }
 </style>

@@ -53,6 +53,7 @@ export default {
         { src: '~plugins/leaflet.js', ssr: false },
         { src: '~plugins/sweetAlert.js', ssr: false },
         { src: '~plugins/moment.js', ssr: false },
+        { src: '~/plugins/echo.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -61,7 +62,11 @@ export default {
     buildModules: [
         // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
+        ['@nuxtjs/laravel-echo'],
     ],
+    // echo: {
+    //     plugins: [],
+    // },
 
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
     axios: {

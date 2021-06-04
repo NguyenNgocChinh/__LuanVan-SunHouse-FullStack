@@ -1,6 +1,16 @@
 <template>
     <div class="composer">
-        <textarea v-model="message" placeholder="Message..." @keydown.enter="send"></textarea>
+        <v-row>
+            <v-col class="col-lg-12 d-flex flex-row align-center">
+                <textarea
+                    id="composerTextArea"
+                    v-model="message"
+                    placeholder="Tin nhắn..."
+                    @keydown.enter="send"
+                ></textarea>
+                <v-btn icon :disabled="message === ''"><v-icon color="blue darken-1">mdi-send</v-icon></v-btn>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -10,6 +20,9 @@ export default {
         return {
             message: '',
         }
+    },
+    mounted() {
+        // document.getElementById('composerTextArea').focus()
     },
     methods: {
         send(e) {
@@ -27,12 +40,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.composer {
+    width: 100%;
+}
 .composer textarea {
-    width: 96%;
+    width: 100%;
     margin: 10px;
     resize: none;
-    border-radius: 3px;
+    outline: none;
+    border-radius: 8px;
     border: 1px solid lightgray;
     padding: 6px;
+    margin-right: 10px;
 }
 </style>

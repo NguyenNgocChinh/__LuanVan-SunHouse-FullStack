@@ -521,7 +521,6 @@ export default {
             this.listDuong = []
             this.duong = null
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
-            console.log(this.xaphuong)
             if (this.xaphuong != null) {
                 this.arrDiaChi.unshift(this.xaphuong.name)
                 this.diachicuthe = this.arrDiaChi.join(',')

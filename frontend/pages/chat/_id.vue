@@ -83,6 +83,7 @@ import ContactsList from '@/components/Chat/ContactsList'
 
 export default {
     components: { Conversation, ContactsList },
+    middleware: ['auth'],
     data() {
         return {
             searchContactID: null,
@@ -131,11 +132,18 @@ export default {
 
         this.$nuxt.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
             this.contacts = response
+
+            if (this.$route.params.id != null) {
+                this.contacts.forEach((item) => {
+                    if (parseInt(item.id) === parseInt(this.$route.params.id)) {
+                        this.selectedContact = item
+                        this.searchContact(this.$route.params.id)
+                    }
+                })
+            }
         })
         // fetch Cache
         this.fetchMessageToCache()
-
-        console.log(this.$route.params)
     },
     methods: {
         notify(title, message) {
@@ -153,7 +161,9 @@ export default {
         startConversationWith(contact) {
             this.selectedContact = contact
             this.updateUnreadCount(contact, true)
+            // load cache
             this.messages = this.loadCacheMessage(contact.id)
+            // end loadcache
             this.$nuxt.$axios.$get(ENV.conversationID + contact.id, { withCredentials: true }).then((response) => {
                 this.messages = response
             })
