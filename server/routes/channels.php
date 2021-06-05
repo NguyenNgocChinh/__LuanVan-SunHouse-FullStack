@@ -16,16 +16,13 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-
+//WORK...
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int) $id;
 });
-//SOON DELETE
-Broadcast::channel('private-messages.{id}', function ($user, $id) {
-    return (int)$user->id === (int) $id;
-});
 
-Broadcast::channel('chat', function ($user) {
-    \Illuminate\Support\Facades\Log::info( $user);
-    return $user;
+// POST http://localhost:8000/broadcasting/auth net::ERR_FAILED [CORS error]
+Broadcast::channel('user.online', function ($user) {
+    \Illuminate\Support\Facades\Log::info( $user); //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,
+    return ['id' => $user->id];
 });

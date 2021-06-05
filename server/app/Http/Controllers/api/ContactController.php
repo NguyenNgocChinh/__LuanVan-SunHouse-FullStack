@@ -84,4 +84,11 @@ class ContactController extends Controller
 
         return response()->json($message);
     }
+    public function getAllMessage(){
+        $message = Message::select(\DB::raw('*'))
+            ->where('to', auth()->id())
+            ->orWhere('from', auth()->id())
+            ->get();
+        return response()->json($message);
+    }
 }

@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
  * SERVICES (GG-FB)
  */
 Route::get('/auth/{service}',[SocialLoginController::class, 'redirect']);
-Route::get('/{service}/callback', [SocialLoginController::class, 'callback']);
+Route::get('/auth/{service}/callback', [SocialLoginController::class, 'callback']);
 /*
  * USER
  */
@@ -99,6 +99,10 @@ Route::get('dientich', [HomeController::class, "getDienTich"]);
 /*
  * CHAT
  */
-Route::get('/contacts', [ContactController::class, 'get' ]);
-Route::get('/conversation/{id}', [ContactController::class, 'getMessagesFor']);
-Route::post('/conversation/send', [ContactController::class,'send']);
+Route::group(['middleware' => 'auth:sanctum'], function (){
+    Route::get('/contacts', [ContactController::class, 'get' ]);
+    Route::get('/messages', [ContactController::class, 'getAllMessage' ]);
+    Route::get('/conversation/{id}', [ContactController::class, 'getMessagesFor']);
+    Route::post('/conversation/send', [ContactController::class,'send']);
+});
+
