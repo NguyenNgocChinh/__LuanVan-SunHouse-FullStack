@@ -416,13 +416,13 @@
                                                 v-if="user.profile_photo_path == null"
                                                 width="100%"
                                                 height="100%"
-                                                :src="user.profile_photo_url"
+                                                :src="user.profile_photo_path"
                                             />
                                             <v-img
                                                 v-else
                                                 width="100%"
                                                 height="100%"
-                                                :src="URI_DICRECTORY_UPLOAD + user.profile_photo_path"
+                                                :src="URI_DICRECTORY_UPLOAD + user.profile_photo_url"
                                             />
                                         </v-avatar>
                                     </v-col>

@@ -1,0 +1,135 @@
+<template>
+    <div>
+        <div class="sidebar">
+            <div class="logo_content">
+                <div class="logo">
+                    <div class="logo_name ml-2">SunHouse</div>
+                </div>
+                <i id="btn" class="bx bx-menu"></i>
+            </div>
+            <ul class="nav_list">
+                <li
+                    v-for="item in navItems"
+                    :key="item.id"
+                    :class="{ active: indexNav === item.id }"
+                    @click="setActive(item.id)"
+                >
+                    <a :href="item.href">
+                        <i :class="item.icon"></i>
+                        <span class="links_name">{{ item.label }}</span>
+                    </a>
+                    <span class="tooltip">{{ item.tooltip }}</span>
+                </li>
+            </ul>
+            <div class="profile_content">
+                <div class="profile">
+                    <div class="profile_details">
+                        <img v-if="$auth.user.profile_photo_path == null" :src="$auth.user.profile_photo_url" />
+                        <img v-else :src="$auth.user.profile_photo_url" />
+                        <div class="name_job">
+                            <div class="name">{{ $auth.user.name }}</div>
+                            <div class="job">{{ $auth.user.vaitro === 'user' ? 'Thành viên' : 'Quản trị viên' }}</div>
+                        </div>
+                    </div>
+                    <i id="log_out" class="bx bx-log-out"></i>
+                </div>
+            </div>
+        </div>
+        <div class="home_content">
+            <nuxt />
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+export default {
+    data() {
+        return {
+            navItems: [
+                {
+                    id: 0,
+                    icon: 'bx bx-home',
+                    href: '#',
+                    label: 'Trang chủ',
+                    tooltip: 'Trang chủ',
+                },
+                {
+                    id: 1,
+                    icon: 'bx bx-user',
+                    href: '#',
+                    label: 'Thông tin cá nhân',
+                    tooltip: 'Thông tin cá nhân',
+                },
+                {
+                    id: 2,
+                    icon: 'bx bx-key bx-rotate-270',
+                    href: '#',
+                    label: 'Đổi mật khẩu',
+                    tooltip: 'Đổi mật khẩu',
+                },
+                {
+                    id: 3,
+                    icon: 'bx bx-file-blank',
+                    href: '#',
+                    label: 'Tin đăng',
+                    tooltip: 'Tin đăng',
+                },
+                {
+                    id: 4,
+                    icon: 'bx bx-time-five',
+                    href: '#',
+                    label: 'Lịch sử',
+                    tooltip: 'Lịch sử',
+                },
+                {
+                    id: 5,
+                    icon: 'bx bx-error-circle',
+                    href: '#',
+                    label: 'Thông báo',
+                    tooltip: 'Thông báo',
+                },
+            ],
+        }
+    },
+    computed: {
+        ...mapState({ indexNav: (state) => state.user.indexNav }),
+    },
+    head: {
+        link: [
+            { href: 'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css', rel: 'stylesheet' },
+            { href: require('~/assets/css/sidebarUserLayout.css'), rel: 'stylesheet' },
+        ],
+    },
+
+    mounted() {
+        const btn = document.querySelector('#btn')
+        const sidebar = document.querySelector('.sidebar')
+
+        sidebar.classList.toggle('active')
+        btn.classList.replace('bx-menu', 'bx-menu-alt-right')
+        btn.onclick = function () {
+            sidebar.classList.toggle('active')
+            if (btn.classList.contains('bx-menu')) {
+                btn.classList.replace('bx-menu', 'bx-menu-alt-right')
+                sidebar.classList.remove('border-right')
+            } else {
+                btn.classList.replace('bx-menu-alt-right', 'bx-menu')
+                sidebar.classList.add('border-right')
+            }
+        }
+    },
+    methods: {
+        setActive(id) {
+            this.$store.commit('user/SET_INDEX_NAV', id)
+        },
+    },
+}
+</script>
+
+<style scoped lang="scss">
+.v-application ul,
+.v-application ol {
+    padding-left: unset;
+}
+</style>
