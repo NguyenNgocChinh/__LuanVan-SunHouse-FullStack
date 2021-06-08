@@ -416,13 +416,17 @@
                                                 v-if="user.profile_photo_path == null"
                                                 width="100%"
                                                 height="100%"
-                                                :src="user.profile_photo_path"
+                                                :src="user.profile_photo_url"
                                             />
                                             <v-img
                                                 v-else
                                                 width="100%"
                                                 height="100%"
-                                                :src="URI_DICRECTORY_UPLOAD + user.profile_photo_url"
+                                                :src="
+                                                    isValidHttpUrl($auth.user.profile_photo_path)
+                                                        ? $auth.user.profile_photo_path
+                                                        : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path
+                                                "
                                             />
                                         </v-avatar>
                                     </v-col>
@@ -607,6 +611,17 @@ export default {
                 }
             }
             this.$viewer.view(index)
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
     },
 }

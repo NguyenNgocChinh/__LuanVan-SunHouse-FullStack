@@ -139,13 +139,13 @@ export default {
 
         connectBroadcast() {
             // window.Echo.join('chat').joining((user) => {}
-            window.Echo.join('user.online')
-                .here((data) => {
-                    console.log('here', data)
-                })
-                .joining((user) => {
-                    console.log(user)
-                })
+            // window.Echo.join('user.online')
+            //     .here((data) => {
+            //         console.log('here', data)
+            //     })
+            //     .joining((user) => {
+            //         console.log(user)
+            //     })
         },
     },
 }

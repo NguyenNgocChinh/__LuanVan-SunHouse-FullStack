@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="sidebar">
-            <div class="logo_content">
+            <div class="logo_content animate__animated animate__fadeInLeft">
                 <div class="logo">
                     <div class="logo_name ml-2">SunHouse</div>
                 </div>
@@ -11,21 +11,29 @@
                 <li
                     v-for="item in navItems"
                     :key="item.id"
+                    class="animate__animated animate__fadeInLeft"
                     :class="{ active: indexNav === item.id }"
                     @click="setActive(item.id)"
                 >
-                    <a :href="item.href">
+                    <nuxt-link :to="item.href">
                         <i :class="item.icon"></i>
                         <span class="links_name">{{ item.label }}</span>
-                    </a>
+                    </nuxt-link>
                     <span class="tooltip">{{ item.tooltip }}</span>
                 </li>
             </ul>
-            <div class="profile_content">
+            <div class="profile_content animate__animated animate__fadeInUp animate__delay-1s">
                 <div class="profile">
                     <div class="profile_details">
                         <img v-if="$auth.user.profile_photo_path == null" :src="$auth.user.profile_photo_url" />
-                        <img v-else :src="$auth.user.profile_photo_url" />
+                        <img
+                            v-else
+                            :src="
+                                isValidHttpUrl($auth.user.profile_photo_path)
+                                    ? $auth.user.profile_photo_path
+                                    : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path
+                            "
+                        />
                         <div class="name_job">
                             <div class="name">{{ $auth.user.name }}</div>
                             <div class="job">{{ $auth.user.vaitro === 'user' ? 'Thành viên' : 'Quản trị viên' }}</div>
@@ -43,6 +51,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import URI_DICRECTORY from '@/api/directory'
 export default {
     data() {
         return {
@@ -50,7 +59,7 @@ export default {
                 {
                     id: 0,
                     icon: 'bx bx-home',
-                    href: '#',
+                    href: '/',
                     label: 'Trang chủ',
                     tooltip: 'Trang chủ',
                 },
@@ -94,6 +103,9 @@ export default {
     },
     computed: {
         ...mapState({ indexNav: (state) => state.user.indexNav }),
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
     },
     head: {
         link: [
@@ -122,6 +134,17 @@ export default {
     methods: {
         setActive(id) {
             this.$store.commit('user/SET_INDEX_NAV', id)
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
     },
 }

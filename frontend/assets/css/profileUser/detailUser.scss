@@ -1,10 +1,10 @@
 .bg-color {
     background-color: #46a1de;
-    transition-duration: 0.5s;
+    transition-duration: 0.2s;
 }
 .text-color {
     color: #46a1de;
-    transition-duration: 0.5s;
+    transition-duration: 0.2s;
 }
 
 .tabs {
@@ -22,6 +22,10 @@
         overflow: hidden;
         cursor: pointer;
         color: #787878;
+
+        &:hover{
+            color: #1a4bb7;
+        }
 
         &:before {
             z-index: -1;
@@ -59,10 +63,10 @@
 }
 
 .tab__content {
-    background-color: white;
     position: relative;
     width: 100%;
     border-radius: 5px;
+    background-color: white;
 
     > li {
         width: 100%;
@@ -74,7 +78,6 @@
         list-style: none;
 
         .content__wrapper {
-            text-align: center;
             border-radius: 5px;
             width: 100%;
             padding: 45px 40px 40px 40px;
@@ -95,5 +98,173 @@
         width: 100%;
         height: auto;
         border-radius: 5px;
+    }
+    .label{
+        font-weight: 700;
+        color: #2b2b2b;
+    }
+    .container-img{
+        border-radius: 50%;
+        cursor: pointer;
+        width: 80px;
+        height: 80px;
+        position: relative;
+        display: inline-block;
+        background-color: #fff;
+        overflow: hidden;
+
+        .outer{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            .inner{
+                background-color: #000;
+                display: block;
+                width: 100%;
+                height: 25px;
+                position: absolute;
+                bottom: 0;
+                opacity: .5;
+                overflow: hidden;
+
+                label{
+                    padding-top: 3px;
+                    text-align: center;
+                    display: block;
+                    width: 100%;
+                    height: 26px;
+
+                    i{
+                        width: 20px;
+                        height: 15px;
+                        font-size: 20px;
+                    }
+                }
+
+                .inputfile{
+                    opacity: 0;
+                    overflow: hidden;
+                    position: absolute;
+                    z-index: 1;
+
+                }
+            }
+        }
+    }
+}
+.vdp-datepicker input{
+    padding: 0.7rem;
+    width: 100%;
+    height: 38.4px;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,.2);
+    outline: none;
+}
+
+input[type="text"], input[type="email"], input[type="password"]{
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: all .2s ease;
+}
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus{
+    border-color: blue;
+    box-shadow: 0 0 8px 0 blue;
+}
+
+.inputWithIcon{
+    position: relative;
+
+    ~ .inputError{
+        border-color: red;
+        box-shadow: 0 0 8px 0 red;
+
+        i{
+            border-color: red;
+            color: red;
+        }
+    }
+
+    input[type="text"], input[type="email"]{
+        padding-left: 40px;
+        margin-top: 20px;
+    }
+    input[type="password"]{
+        padding-left: 40px;
+        margin-top: 20px;
+        padding-right: 40px;
+    }
+     input[type="password"]:focus + div + i {
+        color: blue;
+        border-right-color: rgba(0, 0, 255, .4);
+    }
+    i {
+        position: absolute;
+        left: 0;
+        bottom: 13px;
+        padding: 9px 8px;
+        color: #aaa;
+        transition: all .2s ease;
+        border-right: 1px solid rgba(0, 0, 0, .1);
+    }
+     input[type="text"]:focus + i, input[type="email"]:focus + i , input[type="password"]:focus + i {
+         color: blue;
+         border-right-color: rgba(0, 0, 255, .4);
+     }
+    .placeholder-input{
+        color: #aaa;
+        position: absolute;
+        font-size: 13px;
+        top: 0;
+        left: 0;
+    }
+    .hint-input{
+        color: red;
+        position: absolute;
+        font-size: 12px;
+        bottom: -15px;
+        left: 0;
+    }
+
+    .showPassword{
+        position: absolute;
+        bottom: 0;
+        right: 34px;
+
+        i{
+            border-right: none;
+            cursor: pointer;
+            border-left: 1px solid rgba(0, 0, 0, .1);
+        }
+    }
+
+}
+.btn-save{
+    background-color: #1a4bb7 !important;
+    color: #fff !important;
+    transition: all .2s ease !important;
+    border-radius: 8px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+}
+.btn-cancel{
+    border: 1px solid rgb(98, 98, 98) !important;
+    background: transparent !important;
+    color: rgb(98, 98, 98) !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+}
+.btn-save:hover{
+    box-shadow: 0 8px 25px -8px rgba(0,0,255,1);
+}
+@for $i from 2 through 10 {
+    .content__wrapper .animate__fadeInUp:nth-child(#{$i}n) {
+        animation-delay: #{$i * 0.1}s;
     }
 }

@@ -1,5 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-
 export default {
     ssr: false,
     target: 'static',
@@ -22,7 +21,10 @@ export default {
             },
             { hid: 'description', name: 'description', content: '' },
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' },
+        ],
         script: [
             {
                 src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',

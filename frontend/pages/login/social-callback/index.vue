@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="loader"></div>
-        <p>Please wait while we're logging you in...</p>
+        <p>Vui lòng chờ hệ thống xử lý yêu cầu đăng nhập</p>
     </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
                     })
                     .catch((e) => {
                         this.$auth.logout()
-                        this.$nuxt.$toast.error('Bạn đã bị QTV cấm xóa tài khoản', {
+                        this.$nuxt.$toast.error('Bạn đã bị QTV cấm tài khoản', {
                             duration: null,
                         })
                     })

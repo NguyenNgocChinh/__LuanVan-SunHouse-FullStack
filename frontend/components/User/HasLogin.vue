@@ -40,7 +40,7 @@
                             <v-list-item-title class="caption">Quản lý tài khoản</v-list-item-title>
                             <v-list-item>
                                 <v-list-item-content>
-                                    <nuxt-link class="d-block text-decoration-none white--dark" to="/user/profile">
+                                    <nuxt-link class="d-block text-decoration-none white--dark" to="/users">
                                         <span>Hồ sơ</span>
                                     </nuxt-link>
                                 </v-list-item-content>
