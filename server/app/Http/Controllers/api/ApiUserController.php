@@ -113,4 +113,41 @@ class ApiUserController extends Controller
     public function userOnline(){
 
     }
+    public function updateInfomationUser(Request $request){
+        $user = Auth::user();
+        if ($user){
+            $user->email = $request->email;
+            $user->sdt = $request->sdt;
+            $namsinh = str_replace('/', '-', $request->namsinh);
+            $user->namsinh = date('Y-m-d', strtotime($namsinh));
+            $user->name = $request->name;
+
+            if ($request->hasfile('file')) {
+                $date = new \DateTime("now");
+
+                $path = 'images/upload/avatar/';
+                $fileName = $user->id .'_'. $date->format('U') .'.'. $request->file->getClientOriginalExtension();
+                $diskType = 'local';
+                $request->file('file')->storeAs($path, $fileName, $diskType);
+
+//                $name = $date->format('U') . "_";
+//                $name .= $request->file->getClientOriginalName();
+//                $img = $request->file->getPathName();
+//                $img->save(public_path('images/upload/avatar/' . $name));
+//                //$img_resize->move(public_path() . '/images/', $name);
+                $user->profile_photo_path = $fileName;
+            }
+
+            $user->update();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cập nhật thành công!'
+            ]);
+        }
+        else
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Cập nhật thất bại!'
+            ]);
+    }
 }

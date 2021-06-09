@@ -41,6 +41,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/count', [ApiUserController::class, "countUser"]);
     Route::put('/disable/{id}', [ApiUserController::class, "disableUser"])->whereNumber('id');
     Route::put('/enable/{id}', [ApiUserController::class, "enableUser"])->whereNumber('id');
+    Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
 });
 
 /*
