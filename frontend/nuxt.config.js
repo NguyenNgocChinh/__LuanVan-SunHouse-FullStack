@@ -39,7 +39,7 @@ export default {
                 src: 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
                 type: 'text/javascript',
             },
-            { src: 'jquery-3.6.0.min.js' },
+            { src: '/jquery-3.6.0.min.js' },
         ],
     },
     router: {

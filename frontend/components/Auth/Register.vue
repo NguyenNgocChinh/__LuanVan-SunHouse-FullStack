@@ -109,7 +109,6 @@ export default {
                     .catch((error) => {
                         if (error.response) {
                             for (const key of Object.keys(error.response.data.errors)) {
-                                console.log(key)
                                 this.$nuxt.$toast.error(error.response.data.errors[key], {
                                     duration: null,
                                 })

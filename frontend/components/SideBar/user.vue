@@ -39,7 +39,7 @@
                             <div class="job">{{ $auth.user.vaitro === 'user' ? 'Thành viên' : 'Quản trị viên' }}</div>
                         </div>
                     </div>
-                    <i id="log_out" class="bx bx-log-out"></i>
+                    <i id="log_out" class="bx bx-log-out" @click="logout"></i>
                 </div>
             </div>
         </div>
@@ -145,6 +145,18 @@ export default {
             }
 
             return url.protocol === 'http:' || url.protocol === 'https:'
+        },
+        async logout() {
+            try {
+                this.$nextTick(() => {
+                    this.$nuxt.$loading.start()
+                })
+                await this.$auth.logout().then(() => this.$nuxt.$toast.success('Đăng xuất thành công'))
+            } catch (e) {
+                this.$nuxt.$toast.error('Lỗi đăng xuất')
+            } finally {
+                this.$nuxt.$loading.finish()
+            }
         },
     },
 }

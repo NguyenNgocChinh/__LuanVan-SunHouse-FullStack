@@ -15,24 +15,16 @@
                                 <v-col class="col-12">
                                     <div class="container-img">
                                         <div class="outer">
-                                            <img
-                                                v-if="$auth.user.profile_photo_path == null"
-                                                :src="$auth.user.profile_photo_url"
-                                            />
-                                            <img
-                                                v-else
-                                                :src="
-                                                    isValidHttpUrl($auth.user.profile_photo_path)
-                                                        ? $auth.user.profile_photo_path
-                                                        : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path
-                                                "
-                                            />
+                                            <img id="imgAvatar" :src="imgAvatar" />
+
                                             <div class="inner">
                                                 <input
+                                                    id="inputAvatar"
                                                     type="file"
                                                     name="pic"
                                                     accept="image/x-png,image/jpeg"
                                                     class="inputfile"
+                                                    @change="onFileChange"
                                                 />
                                                 <label><i class="bx bx-camera white--text"></i></label>
                                             </div>
@@ -66,12 +58,7 @@
                                     <v-row>
                                         <v-col cols="12" sm="12" md="4">
                                             <div class="inputWithIcon">
-                                                <input
-                                                    v-model="fullname"
-                                                    type="text"
-                                                    placeholder="Họ và tên"
-                                                    pattern="\S+\s+\S+"
-                                                />
+                                                <input v-model="fullname" type="text" placeholder="Họ và tên" />
                                                 <i class="bx bx-user"></i>
                                                 <span class="placeholder-input">Họ và Tên</span>
                                             </div>
@@ -101,8 +88,8 @@
                             </v-row>
                             <v-row class="content_item">
                                 <v-col class="col-md-12 d-flex flex-row justify-end mt-7">
-                                    <v-btn class="btn-cancel">Hủy</v-btn>
-                                    <v-btn type="submit" class="btn-save ml-4">Lưu</v-btn>
+                                    <v-btn class="btn-cancel" :disabled="loadingSave" @click="initalizeData">Hủy</v-btn>
+                                    <v-btn type="submit" class="btn-save ml-4" :loading="loadingSave">Lưu</v-btn>
                                 </v-col>
                             </v-row>
                         </div>
@@ -219,12 +206,15 @@
 </template>
 <script>
 import URI_DICRECTORY from '@/api/directory'
+import ENV from '@/api/user'
 import Datepicker from 'vuejs-datepicker'
 export default {
     components: { Datepicker },
     layout: 'user',
     data: () => {
         return {
+            imgAvatar: undefined,
+            file: undefined,
             birthday: undefined,
             numberPhone: undefined,
             email: undefined,
@@ -235,6 +225,7 @@ export default {
             isSame: true,
             isValidLength: true,
             isValidLength2: true,
+            loadingSave: false,
             disabledDates: {
                 customPredictor(date) {
                     const today = new Date()
@@ -246,9 +237,7 @@ export default {
             },
         }
     },
-    head: {
-        link: [{ href: require('~/assets/css/profileUser/detailUser.css'), rel: 'stylesheet' }],
-    },
+
     computed: {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
@@ -315,13 +304,29 @@ export default {
                 })
             })
         })
-
-        this.numberPhone = this.$auth.user.sdt
-        this.email = this.$auth.user.email
-        this.fullname = this.$auth.user.name
-        this.birthday = this.$auth.user.namsinh
+        this.initalizeData()
+        const imgInp = document.getElementById('inputAvatar')
+        imgInp.onchange = (evt) => {
+            const [file] = imgInp.files
+            if (file) {
+                // avatar.src = URL.createObjectURL(file)
+                this.imgAvatar = URL.createObjectURL(file)
+            }
+        }
     },
     methods: {
+        initalizeData() {
+            this.imgAvatar = this.$auth.user.profile_photo_path
+                ? this.isValidHttpUrl(this.$auth.user.profile_photo_path)
+                    ? this.$auth.user.profile_photo_path
+                    : this.URI_DICRECTORY_UPLOAD + this.$auth.user.profile_photo_path
+                : this.$auth.user.profile_photo_url
+
+            this.numberPhone = this.$auth.user.sdt
+            this.email = this.$auth.user.email
+            this.fullname = this.$auth.user.name
+            this.birthday = this.$auth.user.namsinh
+        },
         formatDate(date) {
             return this.$moment(date).format('DD/MM/YYYY')
         },
@@ -330,7 +335,43 @@ export default {
             console.log(this.birthday)
         },
         updateUserInfo() {
-            console.log('OK')
+            this.loadingSave = true
+            const data = new FormData()
+            data.append('name', this.fullname)
+            data.append('sdt', this.numberPhone)
+            data.append('email', this.email)
+            data.append('namsinh', this.birthday)
+            data.append('file', this.file)
+            this.$axios
+                .$post(ENV.update, data, {
+                    withCredentials: true,
+                    headers: { 'content-type': 'multipart/form-data' },
+                })
+                .then(async (res) => {
+                    if (res.status === 'success') {
+                        await this.$auth.fetchUser()
+                        this.initalizeData()
+                        this.$toast.success(res.message)
+                    } else {
+                        this.$toast.error(res.message || 'Cập nhật thất bại', {
+                            duration: 5000,
+                        })
+                    }
+                    // this.$toast.success('Cập nhật thành công')
+                })
+                .catch((error) => {
+                    console.log(error)
+                    if (error.response) {
+                        for (const key of Object.keys(error.response.data.errors)) {
+                            this.$nuxt.$toast.error(error.response.data.errors[key], {
+                                duration: null,
+                            })
+                        }
+                    }
+                })
+                .finally(() => {
+                    this.loadingSave = false
+                })
         },
         updatePasswordUser() {
             console.log('PASSWORD')
@@ -390,12 +431,27 @@ export default {
                 this.isValidLength2 = true
             }
         },
+        onFileChange(e) {
+            const files = e.target.files || e.dataTransfer.files
+            if (!files.length) return
+            this.file = e.target.files[0]
+        },
     },
 }
 </script>
-<style scoped>
+<style>
 .v-application ul,
 .v-application ol {
     padding-left: unset;
 }
+
+.vdp-datepicker input {
+    padding: 0.7rem;
+    width: 100%;
+    height: 38.4px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+}
 </style>
+<style scoped src="~/assets/css/profileUser/detailUser.css"></style>
