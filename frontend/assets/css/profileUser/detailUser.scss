@@ -257,8 +257,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 .btn-save:hover{
     box-shadow: 0 8px 25px -8px rgba(0,0,255,1);
 }
-@for $i from 2 through 10 {
-    .content__wrapper .animate__fadeInUp:nth-child(#{$i}n) {
-        animation-delay: #{$i * 0.1}s;
-    }
-}
+//@for $i from 2 through 10 {
+//    .content__wrapper .animate__fadeInUp:nth-child(#{$i}n) {
+//        animation-delay: #{$i * 0.1}s;
+//    }
+//}

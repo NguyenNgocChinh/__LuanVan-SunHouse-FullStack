@@ -66,14 +66,14 @@ export default {
                 {
                     id: 1,
                     icon: 'bx bx-user',
-                    href: '#',
+                    href: '#1',
                     label: 'Thông tin cá nhân',
                     tooltip: 'Thông tin cá nhân',
                 },
                 {
                     id: 2,
                     icon: 'bx bx-key bx-rotate-270',
-                    href: '#',
+                    href: '#2',
                     label: 'Đổi mật khẩu',
                     tooltip: 'Đổi mật khẩu',
                 },
@@ -104,7 +104,7 @@ export default {
     computed: {
         ...mapState({ indexNav: (state) => state.user.indexNav }),
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return URI_DICRECTORY.avatar
         },
     },
     head: {

@@ -2,12 +2,20 @@
     <v-container>
         <section class="wrapper">
             <ul class="tabs">
-                <li class="active"><i class="bx bx-user"></i> Thông tin cá nhân</li>
-                <li><i class="bx bx-lock-alt"></i> Đổi mật khẩu</li>
+                <li id="1" class="active">
+                    <nuxt-link v-slot="{ navigate }" to="#1" custom>
+                        <span @click="navigate"><i class="bx bx-user"></i> Thông tin cá nhân</span>
+                    </nuxt-link>
+                </li>
+                <li id="2">
+                    <nuxt-link v-slot="{ navigate }" to="#2" custom>
+                        <span @click="navigate"><i class="bx bx-lock-alt"></i> Đổi mật khẩu</span>
+                    </nuxt-link>
+                </li>
             </ul>
 
             <ul class="tab__content">
-                <li class="active animate__animated animate__fadeInRight">
+                <li class="active animate__animated animate__fadeIn">
                     <form @submit.prevent="updateUserInfo">
                         <div class="content__wrapper">
                             <v-row class="content_item">
@@ -95,7 +103,7 @@
                         </div>
                     </form>
                 </li>
-                <li>
+                <li class="">
                     <div class="content__wrapper">
                         <form @submit.prevent="updatePasswordUser">
                             <v-row class="content_item">
@@ -131,7 +139,7 @@
                                                     type="password"
                                                     placeholder="Mật khẩu mới"
                                                     required
-                                                    @input=";[checkSamePass, checkValidLength(newPassword, 6)]"
+                                                    @input=";[checkSamePass, checkValidLength(newPassword, 8)]"
                                                 />
                                                 <i class="bx bx-lock-alt"></i>
                                                 <div id="showNewPassword" class="showPassword">
@@ -149,7 +157,7 @@
                                                 </div>
                                                 <span class="placeholder-input">Mật khẩu mới</span>
                                                 <span v-if="!isValidLength" class="hint-input"
-                                                    >Mật khẩu tối thiểu 6 ký tự</span
+                                                    >Mật khẩu tối thiểu 8 ký tự</span
                                                 >
                                             </div>
                                         </v-col>
@@ -163,7 +171,7 @@
                                                     type="password"
                                                     placeholder="Xác nhận mật khẩu mới"
                                                     required
-                                                    @input="checkSamePass, checkValidLength2(reNewPassword, 6)"
+                                                    @input="checkValidLength2(reNewPassword, 8)"
                                                 />
                                                 <i class="bx bx-lock-alt"></i>
                                                 <div id="reShowNewPassword" class="showPassword">
@@ -181,7 +189,7 @@
                                                 </div>
                                                 <span class="placeholder-input">Xác nhận mật khẩu mới</span>
                                                 <span v-if="!isValidLength2" class="hint-input"
-                                                    >Mật khẩu tối thiểu 6 ký tự</span
+                                                    >Mật khẩu tối thiểu 8 ký tự</span
                                                 >
                                                 <span v-if="!isSame" class="hint-input"
                                                     >Xác nhận mật khẩu không khớp</span
@@ -193,8 +201,8 @@
                             </v-row>
                             <v-row class="content_item animate__animated animate__fadeInUp">
                                 <v-col class="col-md-12 d-flex flex-row justify-end mt-7">
-                                    <v-btn class="btn-cancel">Hủy</v-btn>
-                                    <v-btn type="submit" class="btn-save ml-4">Lưu</v-btn>
+                                    <v-btn class="btn-cancel" :disabled="loadingSave">Hủy</v-btn>
+                                    <v-btn type="submit" class="btn-save ml-4" :loading="loadingSave">Lưu</v-btn>
                                 </v-col>
                             </v-row>
                         </form>
@@ -208,6 +216,7 @@
 import URI_DICRECTORY from '@/api/directory'
 import ENV from '@/api/user'
 import Datepicker from 'vuejs-datepicker'
+
 export default {
     components: { Datepicker },
     layout: 'user',
@@ -219,6 +228,7 @@ export default {
             numberPhone: undefined,
             email: undefined,
             fullname: undefined,
+
             password: undefined,
             newPassword: undefined,
             reNewPassword: undefined,
@@ -239,12 +249,22 @@ export default {
     },
 
     computed: {
-        URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+        URI_AVATAR() {
+            return URI_DICRECTORY.avatar
+        },
+        ParamIndex() {
+            return this.$route.hash.charAt(1) || this.$store.state.user.indexNav
+        },
+    },
+    watch: {
+        ParamIndex(index) {
+            console.log('watch', index)
+            this.initilizeView(index)
         },
     },
     mounted() {
-        this.$store.commit('user/SET_INDEX_NAV', 1)
+        console.log('mounted', this.ParamIndex - 1)
+        this.initilizeView(this.ParamIndex)
 
         // TAB
         window.$(document).ready(function () {
@@ -260,6 +280,38 @@ export default {
             // Set height of wrapper on page load
             tabWrapper.height(activeTabHeight)
 
+            activeTab.fadeOut(50, function () {
+                // Remove active class all tabs
+                window.$('.tab__content > li').removeClass('active')
+
+                // Get index of clicked tab
+                const clickedTabIndex = clickedTab.index()
+
+                // Add class active to corresponding tab
+                window.$('.tab__content > li').eq(clickedTabIndex).addClass('active')
+
+                // update new active tab
+                activeTab = window.$('.tab__content > .active')
+
+                // Update variable
+                activeTabHeight = activeTab.outerHeight()
+
+                // Animate height of wrapper to new tab height
+                tabWrapper
+                    .stop()
+                    .delay(50)
+                    .animate(
+                        {
+                            height: activeTabHeight,
+                        },
+                        500,
+                        function () {
+                            // Fade in active tab
+                            activeTab.delay(50).fadeIn(100)
+                        }
+                    )
+            })
+
             window.$('.tabs > li').on('click', function () {
                 // Remove class from active tab
                 window.$('.tabs > li').removeClass('active')
@@ -269,9 +321,8 @@ export default {
 
                 // Update clickedTab variable
                 clickedTab = window.$('.tabs .active')
-
                 // fade out active tab
-                activeTab.fadeOut(250, function () {
+                activeTab.fadeOut(50, function () {
                     // Remove active class all tabs
                     window.$('.tab__content > li').removeClass('active')
 
@@ -295,16 +346,17 @@ export default {
                             {
                                 height: activeTabHeight,
                             },
-                            500,
+                            200,
                             function () {
                                 // Fade in active tab
-                                activeTab.delay(50).fadeIn(250)
+                                activeTab.delay(50).fadeIn(100)
                             }
                         )
                 })
             })
         })
         this.initalizeData()
+
         const imgInp = document.getElementById('inputAvatar')
         imgInp.onchange = (evt) => {
             const [file] = imgInp.files
@@ -319,7 +371,7 @@ export default {
             this.imgAvatar = this.$auth.user.profile_photo_path
                 ? this.isValidHttpUrl(this.$auth.user.profile_photo_path)
                     ? this.$auth.user.profile_photo_path
-                    : this.URI_DICRECTORY_UPLOAD + this.$auth.user.profile_photo_path
+                    : this.URI_AVATAR + this.$auth.user.profile_photo_path
                 : this.$auth.user.profile_photo_url
 
             this.numberPhone = this.$auth.user.sdt
@@ -327,12 +379,21 @@ export default {
             this.fullname = this.$auth.user.name
             this.birthday = this.$auth.user.namsinh
         },
+        initilizeView(index) {
+            console.log('i', index)
+            if (parseInt(index) === 1) {
+                window.$('#1').click()
+                this.$store.commit('user/SET_INDEX_NAV', 1)
+            } else {
+                window.$('#2').click()
+                this.$store.commit('user/SET_INDEX_NAV', 2)
+            }
+        },
         formatDate(date) {
             return this.$moment(date).format('DD/MM/YYYY')
         },
         formatDateModel(date) {
             this.birthday = this.formatDate(date)
-            console.log(this.birthday)
         },
         updateUserInfo() {
             this.loadingSave = true
@@ -374,7 +435,40 @@ export default {
                 })
         },
         updatePasswordUser() {
-            console.log('PASSWORD')
+            this.loadingSave = true
+            this.$axios
+                .$put(
+                    ENV.updatePass,
+                    {
+                        current_password: this.password,
+                        new_password: this.newPassword,
+                        password_confirmation: this.reNewPassword,
+                    },
+                    { withCredentials: true }
+                )
+                .then(async (res) => {
+                    if (res.status === 'success') {
+                        this.$toast.success(res.message)
+                        this.$toast.show('Vui lòng đăng nhập lại, sau khi đổi mật khẩu')
+                        await this.$auth.logout()
+                    } else {
+                        this.$toast.error(res.message || 'Cập nhật thất bại', {
+                            duration: 5000,
+                        })
+                    }
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        for (const key of Object.keys(error.response.data.errors)) {
+                            this.$nuxt.$toast.error(error.response.data.errors[key], {
+                                duration: 5000,
+                            })
+                        }
+                    }
+                })
+                .finally(() => {
+                    this.loadingSave = false
+                })
         },
         isValidHttpUrl(string) {
             let url
@@ -417,18 +511,21 @@ export default {
         },
         checkSamePass() {
             this.isSame = this.newPassword === this.reNewPassword
-            console.log(this.isSame)
         },
         checkValidLength(data, characterNumRequired) {
             this.isValidLength = false
+            this.isSame = true
             if (data.length >= characterNumRequired) {
                 this.isValidLength = true
+                this.checkSamePass()
             }
         },
         checkValidLength2(data, characterNumRequired) {
             this.isValidLength2 = false
+            this.isSame = true
             if (data.length >= characterNumRequired) {
                 this.isValidLength2 = true
+                this.checkSamePass()
             }
         },
         onFileChange(e) {

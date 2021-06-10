@@ -23,7 +23,7 @@
                             :src="
                                 isValidHttpUrl($auth.user.profile_photo_path)
                                     ? $auth.user.profile_photo_path
-                                    : '/images/upload/' + $auth.user.profile_photo_path
+                                    : URI_AVATAR + $auth.user.profile_photo_path
                             "
                             style="width: 30px"
                         ></v-img>
@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import URI_DICRECTORY from '@/api/directory'
+
 export default {
     name: 'HasLogin',
     props: {
@@ -73,6 +75,11 @@ export default {
         return {
             isClickUser: false,
         }
+    },
+    computed: {
+        URI_AVATAR() {
+            return URI_DICRECTORY.avatar
+        },
     },
     methods: {
         isClickUserOutSide() {

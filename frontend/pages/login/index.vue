@@ -111,8 +111,8 @@ export default {
                     this.$nuxt.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {
-                this.$nuxt.$toast.show(e, {
-                    duration: null,
+                this.$nuxt.$toast.show('Thông tin đăng nhập không chính xác!', {
+                    duration: 5000,
                     theme: 'outline',
                     type: 'error',
                 })

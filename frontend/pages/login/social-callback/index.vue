@@ -34,8 +34,8 @@ export default {
                         })
                     })
             } catch (e) {
-                this.$nuxt.$toast.error(e, {
-                    duration: null,
+                this.$nuxt.$toast.error('Thông tin đăng nhập không chính xác', {
+                    duration: 500,
                 })
             }
         },
