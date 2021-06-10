@@ -7,9 +7,11 @@ use App\Http\Requests\ApiLoginRequest;
 use App\Http\Requests\ApiRegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Rules\match_old_password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ApiUserController extends Controller
 {
@@ -123,19 +125,18 @@ class ApiUserController extends Controller
             $user->name = $request->name;
 
             if ($request->hasfile('file')) {
-                $date = new \DateTime("now");
+                $arrPath = explode('/', $user->profile_photo_path);
+                unset($arrPath[0]);
+                $oldFile = 'public/'.implode('/',$arrPath);
+                Storage::delete($oldFile);
 
-                $path = 'images/upload/avatar/';
+                //save file
+                $date = new \DateTime("now");
+                $path = 'public/profile-photos';
                 $fileName = $user->id .'_'. $date->format('U') .'.'. $request->file->getClientOriginalExtension();
                 $diskType = 'local';
                 $request->file('file')->storeAs($path, $fileName, $diskType);
-
-//                $name = $date->format('U') . "_";
-//                $name .= $request->file->getClientOriginalName();
-//                $img = $request->file->getPathName();
-//                $img->save(public_path('images/upload/avatar/' . $name));
-//                //$img_resize->move(public_path() . '/images/', $name);
-                $user->profile_photo_path = $fileName;
+                $user->profile_photo_path =  'storage/profile-photos/' .  $fileName;
             }
 
             $user->update();
@@ -150,4 +151,34 @@ class ApiUserController extends Controller
                 'message' => 'Cập nhật thất bại!'
             ]);
     }
+    public function updatePassword(Request $request){
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'required',
+        ], [
+            'new_password.same' => 'Xác nhận mật khẩu chưa trùng khớp với nhau',
+        ]);
+
+        $user = Auth::user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Mật khẩu cũ nhập vào không đúng!'
+            ]);
+        }else{
+            $user->forceFill([
+                'password' => Hash::make($request->new_password),
+            ])->save();
+//            $user->password = Hash::make($request->password);
+//            $user->update();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cập nhật thành công!'
+            ]);
+        }
+
+    }
+
 }

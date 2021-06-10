@@ -42,6 +42,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/disable/{id}', [ApiUserController::class, "disableUser"])->whereNumber('id');
     Route::put('/enable/{id}', [ApiUserController::class, "enableUser"])->whereNumber('id');
     Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
+    Route::put('/updatepass', [ApiUserController::class, "updatePassword"])->middleware('auth:sanctum');
 });
 
 /*
