@@ -445,7 +445,7 @@
                                     <div>Số tin đăng: {{ user.sobaidang || '-' }}</div>
                                 </v-row>
                                 <v-row class="px-3">
-                                    <button class="btn-chat">Chat với người đăng tin</button>
+                                    <button class="btn-chat" @click="chatWithSeller">Chat với người đăng tin</button>
                                 </v-row>
                             </v-card>
                             <div class="d-flex justify-space-between align-center ml-3 wrapper-phone">
@@ -622,6 +622,9 @@ export default {
             }
 
             return url.protocol === 'http:' || url.protocol === 'https:'
+        },
+        chatWithSeller() {
+            this.$router.push({ path: '/chat/', query: { id: this.user.id } })
         },
     },
 }

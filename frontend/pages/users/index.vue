@@ -253,7 +253,7 @@ export default {
             return URI_DICRECTORY.avatar
         },
         ParamIndex() {
-            return this.$route.hash.charAt(1) || this.$store.state.user.indexNav
+            return this.$route.hash.charAt(1) || 1
         },
     },
     watch: {
@@ -263,7 +263,6 @@ export default {
         },
     },
     mounted() {
-        console.log('mounted', this.ParamIndex - 1)
         this.initilizeView(this.ParamIndex)
 
         // TAB
@@ -380,7 +379,6 @@ export default {
             this.birthday = this.$auth.user.namsinh
         },
         initilizeView(index) {
-            console.log('i', index)
             if (parseInt(index) === 1) {
                 window.$('#1').click()
                 this.$store.commit('user/SET_INDEX_NAV', 1)

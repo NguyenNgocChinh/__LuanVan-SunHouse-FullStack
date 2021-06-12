@@ -12,5 +12,6 @@ const ENV = {
     update_status: 'http://localhost:8000/baidang/updateTrangThai',
     update_choduyet: 'http://localhost:8000/baidang/updateDuyetBai',
     timiem: 'http://localhost:8000/timkiem',
+    forUser: 'http://localhost:8000/baidang/getUserPost',
 }
 export default ENV

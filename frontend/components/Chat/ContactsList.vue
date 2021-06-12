@@ -42,11 +42,14 @@ export default {
         contacts: {
             type: Array,
         },
+        selectedContact: {
+            default: null,
+        },
     },
     data() {
         return {
             // selected: this.contacts.length ? this.contacts[0] : null,
-            selected: null,
+            selected: this.selectedContact || null,
         }
     },
     computed: {

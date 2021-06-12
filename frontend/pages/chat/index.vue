@@ -27,7 +27,12 @@
                     indeterminate
                     color="green"
                 ></v-progress-circular>
-                <ContactsList v-else :contacts="tempContacts || contacts" @selected="startConversationWith" />
+                <ContactsList
+                    v-else
+                    :selected-contact="selectedContact"
+                    :contacts="tempContacts || contacts"
+                    @selected="startConversationWith"
+                />
             </v-col>
             <v-col class="col-md-9">
                 <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage" />
@@ -130,14 +135,15 @@ export default {
             self.hanleIncoming(e.message)
         })
 
-        this.$nuxt.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+        this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
             this.contacts = response
 
-            if (this.$route.params.id != null) {
+            if (this.$route.query.id != null) {
                 this.contacts.forEach((item) => {
-                    if (parseInt(item.id) === parseInt(this.$route.params.id)) {
-                        this.selectedContact = item
-                        this.searchContact(this.$route.params.id)
+                    if (parseInt(item.id) === parseInt(this.$route.query.id)) {
+                        // this.selectedContact = item
+                        // this.searchContact(this.$route.query.id)
+                        this.startConversationWith(item)
                     }
                 })
             }

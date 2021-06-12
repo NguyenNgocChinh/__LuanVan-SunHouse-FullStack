@@ -73,7 +73,7 @@ export default {
                 width: 100%;
 
                 .text {
-                    max-width: 200px;
+                    max-width: 700px;
                     border-radius: 8px;
                     padding: 12px;
                     display: inline-block;

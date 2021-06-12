@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+import vi from './locale/vi'
 export default {
     ssr: false,
     target: 'static',
@@ -130,6 +131,10 @@ export default {
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
         treeShake: true,
+        lang: {
+            locales: { vi },
+            current: 'vi',
+        },
         theme: {
             dark: false,
             themes: {
