@@ -9,13 +9,19 @@ use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\DiaDiemController;
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ContactController;
+use App\Http\Controllers\UserOnlineController;
+use \App\Http\Controllers\ThongTinDangKyController;
+use App\Mail\MailRegistered;
+use App\Models\BaiDang;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
  * Broadcast
  */
-Route::put('users/{user}/online', [\App\Http\Controllers\UserOnlineController::class, 'userOnline'])->middleware('auth:sanctum');
+Route::put('users/{user}/online', [UserOnlineController::class, 'userOnline'])->middleware('auth:sanctum');
 Broadcast::routes(['middleware' => ['auth:sanctum'] ]);
 /*
  * AUTH
@@ -43,6 +49,8 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('/enable/{id}', [ApiUserController::class, "enableUser"])->whereNumber('id');
     Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
     Route::put('/updatepass', [ApiUserController::class, "updatePassword"])->middleware('auth:sanctum');
+
+    Route::post('/dangkynhantin', [ThongTinDangKyController::class, "store"])->middleware('auth:sanctum');
 });
 
 /*
@@ -50,7 +58,7 @@ Route::group(['prefix' => 'users'], function () {
  */
 Route::group(['prefix' => 'baidang'], function () {
     Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
-    Route::post('/', [ApiBaiDangController::class, 'storeBaiDang']);
+    Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware('auth:sanctum');
     Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
     Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
     Route::post('/edit/{id}', [ApiBaiDangController::class, 'updateBaiDang'])->whereNumber('id');
@@ -65,6 +73,9 @@ Route::group(['prefix' => 'baidang'], function () {
 
     Route::put('/updateDuyetBai', [ApiBaiDangController::class, 'updateDuyetBai']);
     Route::put('/updateTrangThai', [ApiBaiDangController::class, 'updateTrangThai']);
+
+    Route::get('/getUserPost', [ApiBaiDangController::class, 'getAllBaiDangOfUser'])->middleware('auth:sanctum');
+    Route::get('/test', [ApiBaiDangController::class, 'test']);
 
 });
 
@@ -108,3 +119,18 @@ Route::group(['middleware' => 'auth:sanctum'], function (){
     Route::post('/conversation/send', [ContactController::class,'send']);
 });
 
+//MAIL
+Route::get('/send-mail', function () {
+    $user = User::find(11);
+    Mail::to('chinhnguyen.210399@gmail.com')->send(new MailRegistered($user));
+
+    return 'A message has been sent!';
+
+});
+Route::get('/test-mail', function (){
+    return view('mails.matchTinDang', ['name' => 'Chinh', 'baidang' => BaiDang::find(10)]);
+});
+
+Route::get('/test', function (){
+   return ThongTinDangKyController::find(1)->user;
+});

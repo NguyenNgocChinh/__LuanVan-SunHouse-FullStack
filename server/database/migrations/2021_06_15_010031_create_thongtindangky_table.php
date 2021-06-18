@@ -17,13 +17,17 @@ class CreateThongtindangkyTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->double('gia');
-            $table->string('loai', 100);
-            $table->double('dientich');
-            $table->integer('sophongngu');
-            $table->integer('sophongtam');
+            $table->double('giamin')->nullable();
+            $table->double('giamax')->nullable();
+            $table->double('dientichmin')->nullable();
+            $table->double('dientichmax')->nullable();
+            $table->unsignedBigInteger('loai_id')->nullable();
+            $table->foreign('loai_id')->references('id')->on('loai');
+            $table->integer('sophongngu')->nullable();
+            $table->integer('sophongtam')->nullable();
+            $table->boolean('isChoThue')->nullable();
+            $table->string('huong')->nullable();
             $table->text('diachi')->nullable();
-            $table->text('tiennghi');
             $table->timestamps();
         });
     }

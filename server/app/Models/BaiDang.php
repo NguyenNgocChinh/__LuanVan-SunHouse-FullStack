@@ -19,7 +19,6 @@ class BaiDang extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-
     public function loai()
     {
         return $this->belongsTo('App\Models\Loai', 'loai_id', 'id');

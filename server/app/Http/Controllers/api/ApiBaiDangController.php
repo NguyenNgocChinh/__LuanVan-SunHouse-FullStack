@@ -22,6 +22,17 @@ class ApiBaiDangController extends Controller
 {
     public $page_size;
 
+    private function searchEqual($collection, $field, $value){
+        return $collection->$field == $value;
+    }
+
+    public function test()
+    {
+
+        $collection = BaiDang::find(1);
+        return $this->searchEqual($collection,'gia',3204);
+    }
+
     public function __construct(Request $request)
     {
         $this->page_size = BaiDang::count();
@@ -35,7 +46,7 @@ class ApiBaiDangController extends Controller
         return response()->json([
             'pages' => new PaginateResource($posts),
             'baidangs' => BaiDangResource::collection($posts),
-            ]);
+        ]);
     }
 
     public function getHotPosts()
@@ -173,7 +184,7 @@ class ApiBaiDangController extends Controller
                 'tieude.required' => 'Tiêu đề không được để trống!',
                 'loai_id.required' => 'Chưa chọn loại của căn nhà!',
                 'gia.required' => 'Giá không được để trống!',
-                'hinhthuc.required' =>'Chưa chọn hình thức đăng tải!',
+                'hinhthuc.required' => 'Chưa chọn hình thức đăng tải!',
                 'noidung.required' => 'Nội dung mô tả không được trống!',
                 'sophongngu.required' => 'Số phòng ngủ không được để trống!',
                 'sophongtam.required' => 'Số phòng tắm không được để trống!',
@@ -285,7 +296,7 @@ class ApiBaiDangController extends Controller
                         if (File::exists($file_path))
                             File::delete($file_path);
 
-                        foreach (BaiDangHinhAnh::all() as $h){
+                        foreach (BaiDangHinhAnh::all() as $h) {
                             if ($h->baidang_id == $baidang->id)
                                 $h->delete();
                         }
@@ -319,5 +330,18 @@ class ApiBaiDangController extends Controller
             }
         }
         return $data;
+    }
+
+    public function getAllBaiDangOfUser()
+    {
+        $user = Auth::user();
+        if ($user) {
+            return response()->json(BaiDangDetailResource::collection(BaiDang::where('user_id', '=', $user->id)->get()));
+        } else {
+            return response()->json([
+                'status' => 'faild',
+                'message' => 'Lấy dữ liệu thất bại!'
+            ]);
+        }
     }
 }

@@ -39,7 +39,7 @@ class ApiUserController extends Controller
                 'message' => 'Invalid login details'
             ], 401);
 //        return  true;
-        Auth::user()->tokens()->delete();
+//        Auth::user()->tokens()->delete();
         $token = Auth::user()->createToken('auth_token')->plainTextToken;
         return response()->json([
             'token' => $token,

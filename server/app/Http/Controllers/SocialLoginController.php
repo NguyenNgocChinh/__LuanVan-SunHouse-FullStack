@@ -73,7 +73,7 @@ class SocialLoginController extends Controller
         }
         $token = $user->createToken('tokenSocial')->plainTextToken;
 
-        return redirect(env('CLIENT_BASE_URL') . '/login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));
+        return redirect(env('CLIENT_BASE_URL') . 'login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));
     }
 
     public function needsToCreateSocial(User $user, $service)
