@@ -6,6 +6,7 @@ const ENV = {
     enable: 'http://localhost:8000/users/enable/',
     update: 'http://localhost:8000/users/update',
     updatePass: 'http://localhost:8000/users/updatepass',
+    dangKyNhanTin: 'http://localhost:8000/users/dangkynhantin',
 
     GOOGLE_LOGIN_URL: 'http://localhost:8000/auth/google',
     FACEBOOK_LOGIN_URL: 'http://localhost:8000/auth/facebook',

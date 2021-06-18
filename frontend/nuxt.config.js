@@ -3,9 +3,9 @@ import vi from './locale/vi'
 export default {
     ssr: false,
     target: 'static',
-    generate: {
-        fallback: true,
-    },
+    // generate: {
+    //     fallback: true,
+    // },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {

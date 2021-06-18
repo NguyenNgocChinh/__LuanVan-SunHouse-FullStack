@@ -423,9 +423,9 @@
                                                 width="100%"
                                                 height="100%"
                                                 :src="
-                                                    isValidHttpUrl($auth.user.profile_photo_path)
-                                                        ? $auth.user.profile_photo_path
-                                                        : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path
+                                                    isValidHttpUrl(user.profile_photo_path)
+                                                        ? user.profile_photo_path
+                                                        : URI_DICRECTORY_UPLOAD + user.profile_photo_path
                                                 "
                                             />
                                         </v-avatar>

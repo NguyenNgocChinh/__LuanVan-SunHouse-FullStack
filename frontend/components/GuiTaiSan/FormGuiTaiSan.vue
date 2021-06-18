@@ -638,6 +638,8 @@ export default {
                         } else {
                             const lat = res[0].lat
                             const lng = res[0].lon
+                            this.toadoX = lat
+                            this.toadoY = lng
                             await this.$refs.map.mapObject.flyTo([lat, lng], zoom)
                             this.marker = [lat, lng]
                         }
@@ -767,6 +769,7 @@ export default {
                 this.kq = this.$axios
                     .$post(ENV.store, data, {
                         headers: { 'content-type': 'multipart/form-data' },
+                        withCredentials: true,
                     })
                     .then((data) => {
                         this.$nuxt.$toast.success('Đăng bài thành công!')
