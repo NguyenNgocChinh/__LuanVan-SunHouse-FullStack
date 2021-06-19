@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\BaiDang;
+use App\Models\ThongTinDangKy;
+use App\Policies\BaiDangPolicy;
+use App\Policies\ThongTinDangKyPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 
@@ -14,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        BaiDang::class => BaiDangPolicy::class,
+        ThongTinDangKy::class => ThongTinDangKyPolicy::class
     ];
 
     /**

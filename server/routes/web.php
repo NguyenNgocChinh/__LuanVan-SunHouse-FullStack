@@ -50,7 +50,10 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
     Route::put('/updatepass', [ApiUserController::class, "updatePassword"])->middleware('auth:sanctum');
 
+    Route::get('/dangkynhantin', [ThongTinDangKyController::class, "show"])->middleware('auth:sanctum');
     Route::post('/dangkynhantin', [ThongTinDangKyController::class, "store"])->middleware('auth:sanctum');
+    Route::put('/dangkynhantin/{id}', [ThongTinDangKyController::class, "update"])->middleware('auth:sanctum')->whereNumber('id');
+    Route::delete('/dangkynhantin/{id}', [ThongTinDangKyController::class, "delete"])->middleware('auth:sanctum')->whereNumber('id');
 });
 
 /*

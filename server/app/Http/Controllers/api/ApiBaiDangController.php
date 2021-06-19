@@ -108,6 +108,7 @@ class ApiBaiDangController extends Controller
     public function deletePost($id)
     {
         $post = BaiDang::find($id);
+        $this->authorize('delete', $post);
         if ($post) {
             $post->delete();
             return response()->json([

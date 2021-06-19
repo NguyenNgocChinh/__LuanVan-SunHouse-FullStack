@@ -89,7 +89,7 @@ class BaiDang extends Model
     {
         parent::boot();
         static::deleting(function ($baidang) {
-            foreach ($baidang->tiennghi_baidang as $tiennghi) {
+            foreach ($baidang->tiennghi as $tiennghi) {
                 $tiennghi->delete();
             }
 //            foreach ($baidang->binhluan as $binhluan) {
