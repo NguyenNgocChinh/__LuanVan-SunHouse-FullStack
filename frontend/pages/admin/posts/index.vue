@@ -176,9 +176,10 @@ export default {
                 })
                 .catch((e) => {
                     this.loadingDelete = false
-                    console.log(e)
+                    let message = 'Xóa Thất Bại'
+                    if (e.response.data.message) message = e.response.data.message
                     this.message.push({
-                        message: 'Xóa Thất Bại',
+                        message,
                         color: 'red',
                         timeout: 5000,
                     })

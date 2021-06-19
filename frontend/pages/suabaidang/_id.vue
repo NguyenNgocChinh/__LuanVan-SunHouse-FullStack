@@ -24,7 +24,12 @@
                         label="ví dụ: 1000"
                     ></v-text-field>
                     <v-card-title>Nội dung bài viết</v-card-title>
-                    <v-textarea v-model="noidung" :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']" counter label="Nhập nội dung bài viết..."></v-textarea>
+                    <v-textarea
+                        v-model="noidung"
+                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']"
+                        counter
+                        label="Nhập nội dung bài viết..."
+                    ></v-textarea>
                     <v-card-title>Hình ảnh</v-card-title>
                     <!--                    <image-upload />-->
                     <v-file-input
@@ -78,12 +83,22 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Số phòng ngủ</v-card-title>
-                        <v-text-field v-model="phongngu" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
+                        <v-text-field
+                            v-model="phongngu"
+                            :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']"
+                            type="number"
+                            solo
+                        ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Số phòng tắm</v-card-title>
                         <v-form>
-                            <v-text-field v-model="phongtam" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"  solo></v-text-field>
+                            <v-text-field
+                                v-model="phongtam"
+                                type="number"
+                                :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"
+                                solo
+                            ></v-text-field>
                         </v-form>
                     </v-col>
                 </v-row>
@@ -112,12 +127,23 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Năm xây dựng</v-card-title>
-                        <v-text-field v-model="namxaydung" :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']" type="number" label="ví dụ: 2020" solo></v-text-field>
+                        <v-text-field
+                            v-model="namxaydung"
+                            :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']"
+                            type="number"
+                            label="ví dụ: 2020"
+                            solo
+                        ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-card-title>Diện tích(m2)</v-card-title>
                         <v-form>
-                            <v-text-field v-model="dientich" :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"  label="ví dụ: 10" solo></v-text-field>
+                            <v-text-field
+                                v-model="dientich"
+                                :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"
+                                label="ví dụ: 10"
+                                solo
+                            ></v-text-field>
                         </v-form>
                     </v-col>
                 </v-row>
@@ -221,7 +247,6 @@ export default {
             try {
                 await this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
                     this.baidang = data
-                    console.log(this.hinhthuc)
                     this.tieude = this.baidang.tieude
                     this.gia = this.baidang.gia
                     this.noidung = this.baidang.noidung

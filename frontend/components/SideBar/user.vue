@@ -93,6 +93,13 @@ export default {
                 },
                 {
                     id: 5,
+                    icon: 'bx bx-user-plus',
+                    href: '/users/thongtindangky',
+                    label: 'Thông tin đăng ký',
+                    tooltip: 'Thông tin đăng ký',
+                },
+                {
+                    id: 6,
                     icon: 'bx bx-error-circle',
                     href: '#',
                     label: 'Thông báo',

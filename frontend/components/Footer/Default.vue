@@ -148,7 +148,7 @@
                         </div>
                     </v-col>
                     <v-col cols="12" lg="4" md="12" class="border-left-grey pt-0">
-                        <v-card>
+                        <v-card v-if="$auth.loggedIn">
                             <v-card-title>CHỌN VỊ TRÍ</v-card-title>
                             <v-card-text>
                                 <v-row>
@@ -242,8 +242,9 @@
                                 </v-row>
                             </v-card-text>
                         </v-card>
+                        <div v-else class="imgNhanTin"></div>
                     </v-col>
-                    <v-row class="pl-5 pb-5 flex-end">
+                    <v-row v-if="$auth.loggedIn" class="pl-5 pb-5 flex-end">
                         <v-btn class="mr-3 btn-rounded" @click="$refs.nhanTinModal.close()">Hủy</v-btn>
                         <v-btn color="blue" class="btn-rounded white--text" @click="dangKyNhanTin">Xác nhận</v-btn>
                     </v-row>
