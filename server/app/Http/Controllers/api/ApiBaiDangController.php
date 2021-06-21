@@ -92,7 +92,6 @@ class ApiBaiDangController extends Controller
 
     public function getDetailPost($id)
     {
-
         return response()->json(
             new BaiDangDetailResource(BaiDang::find($id))
         );

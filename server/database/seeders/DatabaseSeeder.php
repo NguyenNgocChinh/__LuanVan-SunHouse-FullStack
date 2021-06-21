@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Message;
+use App\Models\ThongTinDangKy;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 

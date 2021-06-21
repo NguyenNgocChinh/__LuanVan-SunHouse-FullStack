@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Mail\MailMatchTinDang;
 use App\Models\BaiDang;
 use App\Models\ThongTinDangKy;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class BaiDangObserver
@@ -16,22 +17,30 @@ class BaiDangObserver
     {
         return false !== stristr($collection->$field, $keyword);
     }
-    private function searchBetweenCollection($collection, $field, $value1, $value2){
+
+    private function searchBetweenCollection($collection, $field, $value1, $value2)
+    {
         return $collection->$field >= $value1 && $collection->$field <= $value2;
     }
-    private function searchRank($collection, $field, $value, $higher = true){
+
+    private function searchRank($collection, $field, $value, $higher = true)
+    {
         if ($higher)
             return $collection->$field >= $value;
         return $collection->$field <= $value;
     }
-    private function searchEqual($collection, $field, $value){
+
+    private function searchEqual($collection, $field, $value)
+    {
         return $collection->$field == $value;
     }
+
     //Handler Function
-    private function notifyPostRelate(BaiDang $baiDang){
+    private function notifyPostRelate(BaiDang $baiDang)
+    {
         $collections = ThongTinDangKy::all();
 
-        foreach ($collections as $thongtin){
+        foreach ($collections as $thongtin) {
             $gia = true;
             $dientich = true;
             $loai = true;
@@ -42,34 +51,28 @@ class BaiDangObserver
             $huong = true;
             $user = $thongtin->user;
             if ($user->id != $baiDang->user->id) {
-                if ($thongtin->giamin && $thongtin->giamax)
-                {
+                if ($thongtin->giamin && $thongtin->giamax) {
                     $gia = $this->searchBetweenCollection($baiDang, 'gia', $thongtin->giamin, $thongtin->giamax);
                 }
-                if ($thongtin->dientichmin && $thongtin->dientichmax)
-                {
+                if ($thongtin->dientichmin && $thongtin->dientichmax) {
                     $dientich = $this->searchBetweenCollection($baiDang, 'dientich', $thongtin->dientichmin, $thongtin->dientichmax);
                 }
-                if ($thongtin->loai)
-                {
+                if ($thongtin->loai) {
                     $loai = $this->searchEqual($baiDang, 'loai_id', $thongtin->loai_id);
                 }
-                if ($thongtin->sophongngu)
-                {
+                if ($thongtin->sophongngu) {
                     $sophongngu = $this->searchRank($baiDang, 'sophongtam', $thongtin->sophongngu);
                 }
-                if ($thongtin->sophongtam)
-                {
+                if ($thongtin->sophongtam) {
                     $sophongtam = $this->searchRank($baiDang, 'sophongtam', $thongtin->sophongtam);
                 }
-                if($thongtin->isChoThue){
+                if ($thongtin->isChoThue) {
                     $isChoThue = $this->searchEqual($baiDang, 'isChoThue', $thongtin->isChoThue);
                 }
-                if ($thongtin->diachi)
-                {
+                if ($thongtin->diachi) {
                     $diachi = $this->searchLikeCollection($baiDang, 'diachi', $thongtin->diachi);
                 }
-                if ($thongtin->huong){
+                if ($thongtin->huong) {
                     $huong = $this->searchEqual($baiDang, 'huong', $thongtin->huong);
                 }
                 if ($gia && $loai && $sophongngu && $dientich && $sophongtam && $diachi && $isChoThue && $huong) {
@@ -81,14 +84,16 @@ class BaiDangObserver
 
 
     }
-    /**
-     * Handle the BaiDang "created" event.
-     *
-     * @param BaiDang $baiDang
-     * @return void
-     */
+
+    private function addLocationTable(BaiDang $baiDang)
+    {
+        DB::statement("INSERT INTO location(baidang_id,position)
+        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoY $baiDang->toadoX)',4326))");
+    }
+
     public function created(BaiDang $baiDang)
     {
+        $this->addLocationTable($baiDang);
         $this->notifyPostRelate($baiDang);
     }
 
