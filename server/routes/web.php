@@ -62,6 +62,7 @@ Route::group(['prefix' => 'users'], function () {
 Route::group(['prefix' => 'baidang'], function () {
     Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
     Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware('auth:sanctum');
+    Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
     Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
     Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
     Route::post('/edit/{id}', [ApiBaiDangController::class, 'updateBaiDang'])->whereNumber('id');
@@ -71,8 +72,7 @@ Route::group(['prefix' => 'baidang'], function () {
     Route::get('/chothue', [ApiBaiDangController::class, 'getChoThuePosts']);
     Route::get('/choduyet', [ApiBaiDangController::class, 'getChoDuyetPosts']);
     Route::get('/choduyet/count', [ApiBaiDangController::class, 'countChoDuyetPosts']);
-    Route::put('/duyetbai', [ApiBaiDangController::class, 'duyetBai']);
-    Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
+    Route::put('/duyetbai', [ApiBaiDangController::class, 'duyetBai'])->middleware('auth:sanctum');
 
     Route::put('/updateDuyetBai', [ApiBaiDangController::class, 'updateDuyetBai']);
     Route::put('/updateTrangThai', [ApiBaiDangController::class, 'updateTrangThai']);

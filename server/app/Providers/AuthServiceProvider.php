@@ -6,6 +6,7 @@ use App\Models\BaiDang;
 use App\Models\ThongTinDangKy;
 use App\Policies\BaiDangPolicy;
 use App\Policies\ThongTinDangKyPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 
@@ -31,6 +32,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-
+        Gate::define('duyet-bai', [BaiDangPolicy::class, 'duyetBai']);
     }
 }

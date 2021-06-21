@@ -96,4 +96,10 @@ class BaiDangPolicy
     {
         //
     }
+
+    public function duyetBai(User $user){
+        if ( $user->vaitro === 'admin')
+            return Response::allow();
+        return Response::deny('Bạn không có quyền duyệt bài.');
+    }
 }

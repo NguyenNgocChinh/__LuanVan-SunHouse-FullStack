@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -22,7 +23,8 @@ class ApiBaiDangController extends Controller
 {
     public $page_size;
 
-    private function searchEqual($collection, $field, $value){
+    private function searchEqual($collection, $field, $value)
+    {
         return $collection->$field == $value;
     }
 
@@ -30,7 +32,7 @@ class ApiBaiDangController extends Controller
     {
 
         $collection = BaiDang::find(1);
-        return $this->searchEqual($collection,'gia',3204);
+        return $this->searchEqual($collection, 'gia', 3204);
     }
 
     public function __construct(Request $request)
@@ -122,13 +124,16 @@ class ApiBaiDangController extends Controller
 
     public function updateDuyetBai(Request $request)
     {
-        $post = BaiDang::find($request->id);
-        $post->choduyet = $request->choduyet;
-        $ok = $post->save();
-        if ($ok)
-            return response()->json([
-                'success' => 'Cập nhật thành công'
-            ]);
+        $user = Auth::user();
+        if (Gate::forUser($user)->allows('duyet-bai')) {
+            $post = BaiDang::find($request->id);
+            $post->choduyet = $request->choduyet;
+            $ok = $post->save();
+            if ($ok)
+                return response()->json([
+                    'success' => 'Cập nhật thành công'
+                ]);
+        }
         return response()->json([
             'fail' => 'Cập nhật thất bại'
         ]);
@@ -136,13 +141,16 @@ class ApiBaiDangController extends Controller
 
     public function updateTrangThai(Request $request)
     {
-        $post = BaiDang::find($request->id);
-        $post->trangthai = $request->trangthai;
-        $ok = $post->save();
-        if ($ok)
-            return response()->json([
-                'success' => 'Cập nhật thành công'
-            ]);
+        $user = Auth::user();
+        if (Gate::forUser($user)->allows('duyet-bai')) {
+            $post = BaiDang::find($request->id);
+            $post->trangthai = $request->trangthai;
+            $ok = $post->save();
+            if ($ok)
+                return response()->json([
+                    'success' => 'Cập nhật thành công'
+                ]);
+        }
         return response()->json([
             'fail' => 'Cập nhật thất bại'
         ]);
@@ -150,16 +158,18 @@ class ApiBaiDangController extends Controller
 
     public function duyetBai(Request $request)
     {
-
-        $post = BaiDang::find($request->id);
-        $post->choduyet = 0;
-        $ok = $post->save();
-        if ($ok)
-            return response()->json([
-                'success' => 'Duyệt thành công'
-            ]);
+        $user = Auth::user();
+        if (Gate::forUser($user)->allows('duyet-bai')) {
+            $post = BaiDang::find($request->id);
+            $post->choduyet = 0;
+            $ok = $post->save();
+            if ($ok)
+                return response()->json([
+                    'success' => 'Duyệt thành công'
+                ]);
+        }
         return response()->json([
-            'fail' => 'Duyệt thất bại'
+            'fail' => 'Bạn không có quyền duyệt bài!'
         ]);
     }
 
