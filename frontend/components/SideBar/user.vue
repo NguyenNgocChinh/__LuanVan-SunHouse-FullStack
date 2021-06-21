@@ -52,6 +52,20 @@
 <script>
 import { mapState } from 'vuex'
 import URI_DICRECTORY from '@/api/directory'
+
+import 'leaflet/dist/leaflet.css'
+import { LMap, LTileLayer, LControl, LMarker, LPopup } from 'vue2-leaflet'
+import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
+
+import { Icon } from 'leaflet'
+
+delete Icon.Default.prototype._getIconUrl
+Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+})
+
 export default {
     data() {
         return {

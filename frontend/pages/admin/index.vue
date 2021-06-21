@@ -52,16 +52,7 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn
-                                dark
-                                small
-                                color="green"
-                                class="mr-2"
-                                :loading="duyetbaiLoading"
-                                @click="duyetbai(selected)"
-                            >
-                                PHÊ DUYỆT
-                            </v-btn>
+                            <v-btn dark small color="green" class="mr-2" @click="duyetbai(selected)"> PHÊ DUYỆT </v-btn>
                         </div>
                     </div>
                 </template>
@@ -77,7 +68,7 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-btn small :loading="duyetbaiLoading" @click="duyetbai(item)">DUYỆT</v-btn>
+                    <v-btn small @click="duyetbai(item)">DUYỆT</v-btn>
                 </template>
             </v-data-table>
             <v-snackbars :objects.sync="message" bottom right />
@@ -186,15 +177,23 @@ export default {
                                 id: item.id,
                             },
                         })
-                        .then(() => {
-                            const index = this.dsBaiDang.indexOf(item)
-                            this.dsBaiDang.splice(index, 1)
-                            this.message.push({
-                                message: 'Duyệt Bài Thành Công',
-                                color: 'green',
-                                timeout: 5000,
-                            })
-                            this.choduyet = this.choduyet - 1
+                        .then((data) => {
+                            if (data.success) {
+                                const index = this.dsBaiDang.indexOf(item)
+                                this.dsBaiDang.splice(index, 1)
+                                this.choduyet = this.choduyet - 1
+                                this.message.push({
+                                    message: 'Duyệt Bài Thành Công',
+                                    color: 'green',
+                                    timeout: 5000,
+                                })
+                            } else {
+                                this.message.push({
+                                    message: 'Duyệt Bài Thất Bại',
+                                    color: 'red',
+                                    timeout: 5000,
+                                })
+                            }
                             this.duyetbaiLoading = false
                         })
                         .catch((e) => {
@@ -214,15 +213,23 @@ export default {
                         },
                         withCredentials: true,
                     })
-                    .then(() => {
-                        const index = this.dsBaiDang.indexOf(dsDuyet)
-                        this.dsBaiDang.splice(index, 1)
-                        this.message.push({
-                            message: 'Duyệt Bài Thành Công',
-                            color: 'green',
-                            timeout: 5000,
-                        })
-                        this.choduyet = this.choduyet - 1
+                    .then((data) => {
+                        if (data.success) {
+                            const index = this.dsBaiDang.indexOf(dsDuyet)
+                            this.dsBaiDang.splice(index, 1)
+                            this.message.push({
+                                message: data.success,
+                                color: 'green',
+                                timeout: 5000,
+                            })
+                            this.choduyet = this.choduyet - 1
+                        } else {
+                            this.message.push({
+                                message: data.fail,
+                                color: 'red',
+                                timeout: 5000,
+                            })
+                        }
                         this.duyetbaiLoading = false
                     })
                     .catch((e) => {

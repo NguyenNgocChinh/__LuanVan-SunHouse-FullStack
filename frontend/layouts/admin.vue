@@ -23,7 +23,7 @@ export default {
         Sidebar,
         Header,
     },
-    middleware: ['auth', 'checkAdmin'],
+    middleware: ['auth'],
 
     props: {
         source: String,
