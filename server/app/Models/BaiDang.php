@@ -12,7 +12,24 @@ class BaiDang extends Model
 
     protected $table = "baidang";
     protected $primaryKey = "id";
-
+    protected $fillable = [
+        'user_id',
+        'tieude',
+        'noidung',
+        'loai_id',
+        'gia',
+        'trangthai',
+        'huong',
+        'isChoThue',
+        'sophongngu',
+        'sophongtam',
+        'namxaydung',
+        'diachi',
+        'toadoX',
+        'toadoY',
+        'choduyet',
+        'dientich',
+    ];
 
     public function user()
     {
@@ -41,7 +58,7 @@ class BaiDang extends Model
 
     public function tiennghi()
     {
-        return $this->hasManyThrough(TienNghi::class, TienNghiBaiDang::class, 'baidang_id', 'id', 'id','id');
+        return $this->hasManyThrough(TienNghi::class, TienNghiBaiDang::class, 'baidang_id', 'id', 'id', 'id');
     }
 
     public function hinhanh()

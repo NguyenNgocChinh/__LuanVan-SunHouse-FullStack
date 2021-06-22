@@ -27,10 +27,10 @@ class CreateBaidang extends Migration
             $table->boolean('isChoThue');
             $table->integer('sophongngu')->default(0);
             $table->integer('sophongtam')->default(0);
-            $table->integer('namxaydung')->useCurrent();
+            $table->integer('namxaydung')->nullable();
             $table->text('diachi');
-            $table->float('toadoX');
-            $table->float('toadoY');
+            $table->double('toadoX');
+            $table->double('toadoY');
             $table->boolean('choduyet');
             $table->double('dientich');
             $table->integer('luotxem')->default(0);

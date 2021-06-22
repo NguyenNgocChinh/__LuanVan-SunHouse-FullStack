@@ -28,12 +28,6 @@ class ApiBaiDangController extends Controller
         return $collection->$field == $value;
     }
 
-    public function test()
-    {
-
-        $collection = BaiDang::find(1);
-        return $this->searchEqual($collection, 'gia', 3204);
-    }
 
     public function __construct(Request $request)
     {

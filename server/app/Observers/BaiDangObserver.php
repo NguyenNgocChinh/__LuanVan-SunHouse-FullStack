@@ -88,7 +88,7 @@ class BaiDangObserver
     private function addLocationTable(BaiDang $baiDang)
     {
         DB::statement("INSERT INTO location(baidang_id,position)
-        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoY $baiDang->toadoX)',4326))");
+        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326))");
     }
 
     public function created(BaiDang $baiDang)
@@ -140,4 +140,5 @@ class BaiDangObserver
     {
         //
     }
+
 }
