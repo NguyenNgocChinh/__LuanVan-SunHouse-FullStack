@@ -23,6 +23,7 @@ class CreateLocationTable extends Migration
               PRIMARY KEY (id),
               SPATIAL KEY position (position)
             ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+            CREATE INDEX INDEX_POSITION ON location (position);
         ");
     }
 

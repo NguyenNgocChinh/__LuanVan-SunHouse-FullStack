@@ -34,7 +34,6 @@ class SocialLoginController extends Controller
     {
         $serviceUser = Socialite::driver($service)->stateless()->user();
 
-
         if ($service != 'google') {
             $email = $serviceUser->getId() . '@' . $service . '.local';
             $image = $this->getFacebookAvatar($serviceUser->getId(), $serviceUser->token);
@@ -43,7 +42,6 @@ class SocialLoginController extends Controller
         }
 
         $user = $this->getExistingUser($serviceUser, $email, $service);
-
         $newUser = false;
         if (!$user) {
             $newUser = true;
@@ -73,6 +71,9 @@ class SocialLoginController extends Controller
         }
         $token = $user->createToken('tokenSocial')->plainTextToken;
 
+//          $result = Auth::loginUsingId($user->id, true);
+
+//        return redirect(env('CLIENT_BASE_URL'));
         return redirect(env('CLIENT_BASE_URL') . 'login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));
     }
 

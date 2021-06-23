@@ -135,26 +135,31 @@ Route::get('/test-mail', function () {
 });
 
 Route::get('/test', function () {
-    DB::enableQueryLog(); // Enable query log
+
     $toadoX = '14.637517864181';
     $toadoY = '108.66037951208';
-//    dd(DB::select(DB::raw("")));
-//    ST_GeomFromText('point($toadoX $toadoY)',4326)
-//    $distance = DB::select(DB::raw("
-//        SELECT * FROM location
-//WHERE ST_Distance_Sphere((position), (ST_GeomFromText('point(106.668637950571 10.781884305295984)',4326))) <= 500* 1609.344
-//   "));
-    $R = 500 * 1609.344;
+    $R = 1;
 
-    $distance = DB::select("select * from location WHERE ST_Distance_Sphere((position), (ST_GeomFromText('point(106.668637950571 10.781884305295984)',4326))) <= 500 * 1609.344");
+    for ($R; $R <= 10; $R++) {
+        $begin = microtime(true);
+        $distance = DB::select("
+            select count(*) as distance from location
+            WHERE ST_Distance_Sphere((position), (ST_GeomFromText('point($toadoY $toadoX)',4326)))
+            <= $R * 1609.344 and trangthai = 1");
+        $end = round(microtime(true) - $begin, 2);
+        echo "Trong bán kính <b style='color: blue'>" . $R . "km</b> tìm thấy <b style='color: red'>" . $distance[0]->distance . "</b> tin đăng trong thời gian: <b>" . $end . "</b> s";
+        echo "<br />";
 
-//    $distance = DB::table('location')->select('*')->where(
-//        DB::raw("ST_Distance_Sphere((position), (ST_GeomFromText('point(106.668637950571 10.781884305295984)',4326)))"), "<=", DB::raw("500 * 1609.344")
-//    )->get();
-    dd(DB::getQueryLog()); // Show results of log
-    \Illuminate\Support\Facades\Log::info(DB::getQueryLog());
-    return response()->json($distance);
-// Your Eloquent query executed by using get()
+    }
 
-//    dd($distance);
+});
+
+Route::get('/testView',function (){
+    $begin = microtime(true);
+    $result = DB::select("
+        SELECT * FROM view_location
+    ");
+    $end = round(microtime(true) - $begin, 2);
+    echo "Kết quả từ view là: <b>". $result[0]->sl . "</b> record. Với thời gian là: " . $end . "s";
+
 });
