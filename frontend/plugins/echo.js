@@ -4,17 +4,18 @@ import * as EVNAPP from '@/api/app'
 import axios from 'axios'
 
 Pusher.logToConsole = true
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '7c957645c57e4378d473',
     cluster: 'ap1',
     forceTLS: false,
     encrypted: true,
+    enabledTransports: ['ws'],
     authorizer: (channel, options) => {
-        console.log(11)
         return {
             authorize: (socketId, callback) => {
-                console.log(111)
+                console.log('Authorizing....')
                 axios
                     .post(
                         EVNAPP.default.broadcastAuth,
@@ -22,7 +23,12 @@ window.Echo = new Echo({
                             socket_id: socketId,
                             channel_name: channel.name,
                         },
-                        { withCredentials: true }
+                        {
+                            withCredentials: true,
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('auth._token.laravelSanctum'),
+                            },
+                        }
                     )
                     .then((response) => {
                         console.log('suc', response.data)

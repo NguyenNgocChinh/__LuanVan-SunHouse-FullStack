@@ -79,6 +79,7 @@
                             </template>
                             <template #[`item.hanhdong`]="{}">
                                 <v-icon>mdi-pencil</v-icon>
+                                <v-icon>mdi-pencil</v-icon>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -95,16 +96,15 @@ export default {
     components: {},
     layout: 'user',
     data: () => ({
-        drawer: true,
-        group: null,
         selectedMenu: 0,
         searchInput: undefined,
         items: [
-            { text: 'Tất cả tin đăng', icon: 'bx bx-layer' },
+            { text: 'Tin đăng thành công', icon: 'bx bx-layer' },
             { text: 'Tin chờ duyệt', icon: 'bx bx-loader-alt bx-spin' },
             { text: 'Tin bị hạ', icon: 'bx bx-x' },
         ],
-        tindangs: undefined,
+        posts: undefined,
+        allPosts: undefined,
         loadingData: false,
         headers: [
             { text: 'Tin đăng', value: 'tieude' },
@@ -115,11 +115,32 @@ export default {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
         },
+        tindangs: {
+            get() {
+                return this.posts
+            },
+            // setter
+            set(newValue) {
+                this.posts = newValue
+            },
+        },
+        daDang() {
+            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 0)
+        },
+        choDuyet() {
+            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 1)
+        },
+        biHa() {
+            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 0)
+        },
     },
-
     watch: {
-        group() {
-            this.drawer = false
+        selectedMenu(val) {
+            if (val === 0) {
+                this.tindangs = this.daDang
+            } else if (val === 1) {
+                this.tindangs = this.choDuyet
+            } else this.tindangs = this.biHa
         },
     },
     mounted() {
@@ -132,7 +153,8 @@ export default {
             this.$axios
                 .$get(ENV.forUser, { withCredentials: true })
                 .then((respone) => {
-                    this.tindangs = respone
+                    this.allPosts = respone
+                    this.posts = this.daDang
                 })
                 .catch(() => {
                     this.$toast.error('Gặp lỗi trong quá trình lấy dữ liệu', { duration: 5000 })

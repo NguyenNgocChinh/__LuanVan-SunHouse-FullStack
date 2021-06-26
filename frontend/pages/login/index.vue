@@ -92,7 +92,6 @@ export default {
             },
         },
     }),
-
     methods: {
         async login() {
             const self = this
@@ -103,11 +102,10 @@ export default {
                 this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
                 await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then((res) => {
                     this.$auth.strategy.token.set(res.data.token)
-                    console.log(res.data.token)
                     window.OneSignal.push(function () {
                         window.OneSignal.sendTag('user_id', self.$auth.user.id)
                     })
-                    // self.connectBroadcast()
+                    self.connectBroadcast()
                     this.$nuxt.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {
@@ -123,6 +121,7 @@ export default {
         },
 
         loginGG() {
+            // this.$auth.loginWith('google')
             try {
                 window.location.href = ENV.GOOGLE_LOGIN_URL
             } catch (e) {
@@ -139,12 +138,29 @@ export default {
 
         connectBroadcast() {
             // window.Echo.join('chat').joining((user) => {}
+            // console.log('broadcasting....')
             // window.Echo.join('user.online')
             //     .here((data) => {
             //         console.log('here', data)
             //     })
             //     .joining((user) => {
-            //         console.log(user)
+            //         console.log('joining', user)
+            //     })
+            //     .leaving((user) => {
+            //         console.log('leaving', user)
+            //     })
+            // window.Echo.join('chat')
+            //     .here((user) => {
+            //         console.log('here', user)
+            //         this.$axios.$put('http://localhost:8000/users/online').then((data) => {
+            //             console.log(data)
+            //         })
+            //     })
+            //     .joining((user) => {
+            //         console.log('joining', user)
+            //     })
+            //     .leaving((user) => {
+            //         console.log('leaving', user)
             //     })
         },
     },

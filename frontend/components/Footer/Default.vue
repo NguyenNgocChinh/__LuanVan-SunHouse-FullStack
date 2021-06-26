@@ -415,7 +415,9 @@ export default {
                             isChoThue: this.hinhthuc,
                             diachi: this.diachicuthe,
                         },
-                        { withCredentials: true }
+                        {
+                            withCredentials: true,
+                        }
                     )
                     .then((data) => {
                         Object.keys(data).forEach((item) => {

@@ -58,6 +58,7 @@ export default {
         { src: '~plugins/sweetAlert.js', ssr: false },
         { src: '~plugins/moment.js', ssr: false },
         { src: '~/plugins/echo.js', ssr: false },
+        { src: '~/plugins/axios.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -66,7 +67,7 @@ export default {
     buildModules: [
         // '@nuxtjs/eslint-module',
         '@nuxtjs/vuetify',
-        ['@nuxtjs/laravel-echo'],
+        // ['@nuxtjs/laravel-echo'],
     ],
     // echo: {
     //     plugins: [],
