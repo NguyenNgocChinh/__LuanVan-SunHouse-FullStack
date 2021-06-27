@@ -88,7 +88,7 @@ export default {
                 {
                     id: 4,
                     icon: 'bx bx-time-five',
-                    href: '#',
+                    href: '/users/lichsu',
                     label: 'Lịch sử',
                     tooltip: 'Lịch sử',
                 },
@@ -102,7 +102,7 @@ export default {
                 {
                     id: 6,
                     icon: 'bx bx-error-circle',
-                    href: '#',
+                    href: '/users/thongbao',
                     label: 'Thông báo',
                     tooltip: 'Thông báo',
                 },

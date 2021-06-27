@@ -1,32 +1,7 @@
 <template>
     <v-container>
         <v-row class="mt-4 rounded-lg">
-            <v-col
-                cols="12"
-                lg="3"
-                style="z-index: 222; box-shadow: 3px 0 5px -5px #aaa"
-                class="d-flex flex-column white pa-3"
-            >
-                <v-btn
-                    class="rounded-lg white--text blue darken-3 mb-2 mt-2 animate__animated animate__backInDown"
-                    @click="$router.push({ path: '/GuiTaiSan' })"
-                    ><v-icon size="18" class="bx bx-plus-circle mr-1"></v-icon>Đăng tin</v-btn
-                >
-                <v-list dense>
-                    <v-subheader>QUẢN LÝ TIN ĐĂNG</v-subheader>
-                    <v-list-item-group v-model="selectedMenu" color="primary">
-                        <v-list-item v-for="(item, i) in items" :key="i" class="animate__animated animate__fadeInUp">
-                            <v-list-item-icon>
-                                <v-icon v-text="item.icon"></v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title v-text="item.text"></v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-list>
-            </v-col>
-            <v-col cols="12" lg="9" sm="12" class="white">
+            <v-col cols="12" class="white">
                 <v-row>
                     <v-col cols="12" lg="12">
                         <v-text-field
@@ -72,7 +47,7 @@
                                         <v-col cols="12" lg="3" sm="12">
                                             <v-img
                                                 v-if="item.hinhanh.length > 0"
-                                                aspect-ratio="1.5"
+                                                aspect-ratio="1"
                                                 width="100%"
                                                 height="100%"
                                                 class="thumb-nail"
@@ -103,15 +78,15 @@
                                                 <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
                                                     Lượt xem: {{ item.luotxem || '-' }}
                                                 </div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
+                                                    Ngày xem: {{ item.timeSave || '-' }}
+                                                </div>
                                             </div>
                                         </v-col>
                                     </v-row>
                                 </v-container>
                             </template>
                             <template #[`item.hanhdong`]="{ item }">
-                                <v-btn icon color="warning" @click="$router.push({ path: '/suabaidang/' + item.id })">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
                                 <v-btn icon color="red" @click="deleteItem(item)"><v-icon>mdi-delete</v-icon></v-btn>
                             </template>
                         </v-data-table>
@@ -129,17 +104,10 @@ export default {
     components: {},
     layout: 'user',
     data: () => ({
-        selectedMenu: 0,
         selectedTable: [],
         searchInput: undefined,
-        items: [
-            { text: 'Tin đăng thành công', icon: 'bx bx-layer' },
-            { text: 'Tin chờ duyệt', icon: 'bx bx-loader-alt bx-spin' },
-            { text: 'Tin bị hạ', icon: 'bx bx-x' },
-        ],
-        posts: undefined,
-        allPosts: undefined,
         loadingData: false,
+        tindangs: [],
         headers: [
             { text: 'Tin đăng', value: 'tieude' },
             { text: '', value: 'hanhdong', sortable: false },
@@ -149,64 +117,53 @@ export default {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
         },
-        tindangs: {
-            get() {
-                return this.posts
-            },
-            // setter
-            set(newValue) {
-                this.posts = newValue
-            },
-        },
-        daDang() {
-            const p = this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 0)
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            return this._.sortBy(p, ['created_at']).reverse()
-        },
-        choDuyet() {
-            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 1)
-        },
-        biHa() {
-            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 0)
-        },
     },
-    watch: {
-        selectedMenu(val) {
-            if (val === 0) {
-                this.tindangs = this.daDang
-            } else if (val === 1) {
-                this.tindangs = this.choDuyet
-            } else this.tindangs = this.biHa
-        },
-    },
+
     mounted() {
-        this.$store.commit('user/SET_INDEX_NAV', 3)
+        this.$store.commit('user/SET_INDEX_NAV', 4)
+        this.getLocalStorage()
         this.getAllPost()
     },
     methods: {
+        getLocalStorage() {
+            this.tindangs = JSON.parse(localStorage.getItem('history')) || []
+        },
         getAllPost() {
             this.loadingData = true
             this.$axios
-                .$get(ENV.forUser, { withCredentials: true })
+                .$get(ENV.baidangs, { withCredentials: true })
                 .then((respone) => {
-                    this.allPosts = respone
-                    this.posts = this.daDang
+                    const allPosts = respone.baidangs
+                    const localPosts = JSON.parse(localStorage.getItem('history')) || []
+
+                    const bIds = {}
+                    allPosts.forEach(function (obj) {
+                        bIds[obj.id] = obj
+                    })
+                    const canDelete = localPosts.filter(function (obj) {
+                        return !(obj.id in bIds)
+                    })
+                    canDelete.forEach((item) => {
+                        this.deleteItem(item)
+                    })
                 })
-                .catch(() => {
-                    this.$toast.error('Gặp lỗi trong quá trình lấy dữ liệu', { duration: 5000 })
-                })
+                .catch(() => {})
                 .finally(() => {
                     this.loadingData = false
                 })
         },
         deleteItem(item) {
-            this.$axios.$delete(ENV.delete + item.id).then((res) => {
-                if (res.success) {
-                    this.$toast.success(res.success)
-                    this.allPosts.splice(this.allPosts.indexOf(item), 1)
-                    this.posts.splice(this.posts.indexOf(item), 1)
-                } else this.$toast.error(res.fail, { duration: 5000 })
-            })
+            const history = JSON.parse(localStorage.getItem('history'))
+            const saveToLocalStorage = history || []
+            if (saveToLocalStorage.length > 0) {
+                const index = saveToLocalStorage.findIndex((x) => x.id === item.id)
+                console.log('index', index)
+                if (index > -1) {
+                    saveToLocalStorage.splice(index, 1)
+                    this.tindangs.splice(this.tindangs.indexOf(item), 1)
+                    localStorage.setItem('history', JSON.stringify(saveToLocalStorage))
+                }
+            }
         },
         deleteArrayItem(list) {
             this.$nextTick(() => {

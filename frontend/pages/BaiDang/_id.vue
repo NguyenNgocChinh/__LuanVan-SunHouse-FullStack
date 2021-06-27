@@ -551,6 +551,23 @@ export default {
             try {
                 this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
                     this.baidang = data
+                    // Save localStorage
+                    const history = JSON.parse(localStorage.getItem('history'))
+                    let saveToLocalStorage = history || []
+                    if (this._.some(saveToLocalStorage, data)) {
+                        saveToLocalStorage.splice(
+                            saveToLocalStorage.findIndex((x) => x.id === data.id),
+                            1
+                        )
+                    }
+                    data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
+                    saveToLocalStorage.unshift(data)
+                    saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
+                    if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
+
+                    localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
+                    // Save localStorage
+
                     this.user = this.baidang.user
                     this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
                     const self = this

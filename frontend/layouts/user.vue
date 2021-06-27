@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Sidebar from '@/components/SideBar/user'
+import Sidebar from '@/components/SideBar/User'
 export default {
     name: 'Layout',
     components: {
