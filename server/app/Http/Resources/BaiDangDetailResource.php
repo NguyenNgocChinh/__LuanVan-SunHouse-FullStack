@@ -33,6 +33,8 @@ class BaiDangDetailResource extends JsonResource
             "tieude" => $this->tieude,
             "hinhanh" => $this->hinhanh,
             "loai" => $this->loai->ten_loai,
+            "trangthai" => $this->trangthai,
+            "choduyet" => $this->choduyet,
             "gia" => $this->gia,
             "huong" => $this->huong,
             "isChoThue" => $this->isChoThue,

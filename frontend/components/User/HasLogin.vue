@@ -38,11 +38,9 @@
                     <v-container fluid>
                         <v-list-item-group v-model="isClickUser" class="text-center">
                             <v-list-item-title class="caption">Quản lý tài khoản</v-list-item-title>
-                            <v-list-item>
+                            <v-list-item to="/users">
                                 <v-list-item-content>
-                                    <nuxt-link class="d-block text-decoration-none white--dark" to="/users">
-                                        <span>Hồ sơ</span>
-                                    </nuxt-link>
+                                    <span>Hồ sơ</span>
                                 </v-list-item-content>
                             </v-list-item>
                             <v-divider />

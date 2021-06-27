@@ -125,7 +125,7 @@ export default {
                 toastObject.goAway(0)
             },
         },
-        theme: 'outline',
+        // theme: 'outline',
         keepOnHover: true,
     },
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

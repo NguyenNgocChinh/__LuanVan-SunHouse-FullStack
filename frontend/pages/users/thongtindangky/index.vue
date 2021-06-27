@@ -1,7 +1,8 @@
 <template>
     <v-container>
-        <v-row class="my-4 rounded-lg">
+        <v-row class="my-4 rounded-lg animate__animated animate__bounceIn">
             <v-data-table
+                :loading="isLoading"
                 calculate-widths
                 :headers="listHeaders"
                 :items="items"
@@ -332,7 +333,7 @@ export default {
     data() {
         return {
             expanded: [],
-
+            isLoading: true,
             listHeaders: [
                 { text: 'Ngày yêu cầu', value: 'created_at' },
                 { text: 'Ngày chỉnh sửa', value: 'updated_at' },
@@ -423,6 +424,7 @@ export default {
     methods: {
         async getListThongTinDangKy() {
             this.items = await this.$axios.$get(ENV.dangKyNhanTin, { withCredentials: true })
+            this.isLoading = false
         },
         editItem(item) {
             this.indexEdit = item.id

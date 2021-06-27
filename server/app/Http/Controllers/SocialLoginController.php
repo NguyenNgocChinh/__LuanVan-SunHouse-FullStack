@@ -7,6 +7,7 @@ use App\Models\UserSocial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -30,7 +31,7 @@ class SocialLoginController extends Controller
         return Arr::get($res->json(), 'data.url', false);
     }
 
-    public function callback($service)
+    public function callback($service, Request $request)
     {
         $serviceUser = Socialite::driver($service)->stateless()->user();
 
@@ -66,12 +67,15 @@ class SocialLoginController extends Controller
             ]);
 
         }
+//        USE TOKEN
         if ($user->tokens()->get()) {
             $user->tokens()->delete();
         }
         $token = $user->createToken('tokenSocial')->plainTextToken;
-
+        //USE COOKIE
 //          $result = Auth::loginUsingId($user->id, true);
+//        Auth::setUser($user);
+
 
 //        return redirect(env('CLIENT_BASE_URL'));
         return redirect(env('CLIENT_BASE_URL') . 'login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));

@@ -340,7 +340,21 @@ class ApiBaiDangController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            return response()->json(BaiDangDetailResource::collection(BaiDang::where('user_id', '=', $user->id)->get()));
+            return json_encode(BaiDangDetailResource::collection(BaiDang::where('user_id', '=', $user->id)->get()));
+        } else {
+            return response()->json([
+                'status' => 'faild',
+                'message' => 'Lấy dữ liệu thất bại!'
+            ]);
+        }
+    }
+    public function getWaitingBaiDangOfUser()
+    {
+        if (Auth::check()) {
+           return  json_encode(BaiDangDetailResource::collection(
+                BaiDang::where('user_id', '=', Auth::id())
+                ->where('choduyet', '=' , 1)
+                ->get()));
         } else {
             return response()->json([
                 'status' => 'faild',

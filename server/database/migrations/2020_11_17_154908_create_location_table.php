@@ -20,10 +20,11 @@ class CreateLocationTable extends Migration
               id int(11) NOT NULL AUTO_INCREMENT,
               baidang_id bigint(20) NOT NULL,
               position point NOT NULL,
+              trangthai tinyint(1) DEFAULT 1,
               PRIMARY KEY (id),
-              SPATIAL KEY position (position)
+              SPATIAL KEY position (position),
+              INDEX INDEX_POSITION (position)
             ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-            CREATE INDEX INDEX_POSITION ON location (position);
         ");
     }
 

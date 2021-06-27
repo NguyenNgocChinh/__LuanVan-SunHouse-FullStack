@@ -1,7 +1,16 @@
+.toasted-container .toasted{
+    border-radius: 8px !important;
+    padding-block: 15px !important;
+}
+
 .toasted-container.top-right {
-    top: 10% !important;
+    top: 3% !important;
     right: 1% !important;
 }
 html {
     scroll-behavior: smooth;
+}
+.toasted-container .toasted .action{
+    /*text-decoration: none !important;*/
+    color: #ffffff !important;
 }

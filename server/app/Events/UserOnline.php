@@ -15,16 +15,15 @@ use Illuminate\Support\Facades\Log;
 class UserOnline implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $user;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public $user;
     public function __construct(User $user)
     {
-        Log::info("UserOnline" . $user);
+        Log::info("UserOnline");
         $this->user = $user;
     }
 

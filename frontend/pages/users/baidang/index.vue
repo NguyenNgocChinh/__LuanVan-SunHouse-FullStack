@@ -1,14 +1,21 @@
 <template>
     <v-container>
         <v-row class="mt-4 rounded-lg">
-            <v-col cols="12" lg="3" class="d-flex flex-column white pa-3" style="">
-                <v-btn class="rounded-lg white--text blue darken-3 mb-2 mt-2"
+            <v-col
+                cols="12"
+                lg="3"
+                style="z-index: 222; box-shadow: 3px 0 5px -5px #aaa"
+                class="d-flex flex-column white pa-3"
+            >
+                <v-btn
+                    class="rounded-lg white--text blue darken-3 mb-2 mt-2 animate__animated animate__backInDown"
+                    @click="$router.push({ path: '/GuiTaiSan' })"
                     ><v-icon size="18" class="bx bx-plus-circle mr-1"></v-icon>Đăng tin</v-btn
                 >
                 <v-list dense>
                     <v-subheader>QUẢN LÝ TIN ĐĂNG</v-subheader>
                     <v-list-item-group v-model="selectedMenu" color="primary">
-                        <v-list-item v-for="(item, i) in items" :key="i">
+                        <v-list-item v-for="(item, i) in items" :key="i" class="animate__animated animate__fadeInUp">
                             <v-list-item-icon>
                                 <v-icon v-text="item.icon"></v-icon>
                             </v-list-item-icon>
@@ -25,61 +32,83 @@
                         <v-text-field
                             v-model="searchInput"
                             placeholder="Tiêu đề tin đăng"
-                            class="rounded-lg"
+                            class="rounded-lg animate__animated animate__fadeInDown"
                             prepend-inner-icon="mdi-magnify"
                             filled
                             solo
                             rounded
                         ></v-text-field>
                         <v-data-table
+                            v-model="selectedTable"
+                            class="animate__animated animate__fadeIn"
                             :headers="headers"
                             :loading="loadingData"
+                            :single-select="false"
+                            must-sort
+                            show-select
                             :items="tindangs"
                             :search="searchInput"
-                            multi-sort
-                            calculate-widths
+                            :calculate-widths="true"
                         >
-                            <template #[`item.tieude`]="{ item }">
-                                <v-row class="my-1">
-                                    <v-col cols="12" lg="3">
-                                        <v-img
-                                            v-if="item.hinhanh.length > 0"
-                                            width="100px"
-                                            height="100px"
-                                            class="thumb-nail"
-                                            :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename"
-                                        />
-                                        <v-img
-                                            v-else
-                                            width="100px"
-                                            height="100px"
-                                            class="thumb-nail"
-                                            :src="URI_DICRECTORY_UPLOAD + 'no-image.png'"
-                                        />
-                                    </v-col>
-                                    <v-col cols="12" lg="9">
-                                        <h1 class="title text--upercase">
-                                            {{ item.tieude }}
-                                        </h1>
-                                        <div class="mb-2">
-                                            <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
-                                            {{ item.diachi }}
-                                        </div>
-                                        <div class="introduce-line d-flex mb-2">
-                                            <div>
-                                                Ngày đăng:
-                                                {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
-                                            </div>
-                                            <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
-                                                Lượt xem: {{ item.luotxem || '-' }}
-                                            </div>
-                                        </div>
-                                    </v-col>
+                            <template #top>
+                                <v-row class="justify-end mr-2">
+                                    <v-btn
+                                        class="red white--text"
+                                        small
+                                        :disabled="selectedTable.length < 1"
+                                        @click="deleteArrayItem(selectedTable)"
+                                    >
+                                        Xóa
+                                    </v-btn>
                                 </v-row>
                             </template>
-                            <template #[`item.hanhdong`]="{}">
-                                <v-icon>mdi-pencil</v-icon>
-                                <v-icon>mdi-pencil</v-icon>
+                            <template #[`item.tieude`]="{ item }">
+                                <v-container>
+                                    <v-row class="my-1">
+                                        <v-col cols="12" lg="3" sm="12">
+                                            <v-img
+                                                v-if="item.hinhanh.length > 0"
+                                                aspect-ratio="1"
+                                                width="100%"
+                                                height="100%"
+                                                class="thumb-nail"
+                                                :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename"
+                                            />
+                                            <v-img
+                                                v-else
+                                                width="100%"
+                                                height="100%"
+                                                aspect-ratio="1"
+                                                class="thumb-nail"
+                                                :src="URI_DICRECTORY_UPLOAD + 'no-image.png'"
+                                            />
+                                        </v-col>
+                                        <v-col cols="12" lg="9" sm="12" class="text-left">
+                                            <h1 class="title text--upercase">
+                                                {{ item.tieude }}
+                                            </h1>
+                                            <div class="mb-2">
+                                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                                {{ item.diachi }}
+                                            </div>
+                                            <div class="introduce-line d-flex mb-2">
+                                                <div>
+                                                    Ngày đăng:
+                                                    {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
+                                                </div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
+                                                    Lượt xem: {{ item.luotxem || '-' }}
+                                                </div>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </template>
+                            <template #[`item.hanhdong`]="{ item }">
+                                <v-btn icon color="warning" @click="$router.push({ path: '/suabaidang/' + item.id })">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn icon color="red" @click="deleteItem(item)"><v-icon>mdi-delete</v-icon></v-btn>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -97,6 +126,7 @@ export default {
     layout: 'user',
     data: () => ({
         selectedMenu: 0,
+        selectedTable: [],
         searchInput: undefined,
         items: [
             { text: 'Tin đăng thành công', icon: 'bx bx-layer' },
@@ -108,7 +138,7 @@ export default {
         loadingData: false,
         headers: [
             { text: 'Tin đăng', value: 'tieude' },
-            { text: 'Hành động', value: 'hanhdong', width: '15%' },
+            { text: '', value: 'hanhdong', sortable: false },
         ],
     }),
     computed: {
@@ -125,7 +155,9 @@ export default {
             },
         },
         daDang() {
-            return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 0)
+            const p = this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 0)
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            return this._.sortBy(p, ['created_at']).reverse()
         },
         choDuyet() {
             return this._.filter(this.allPosts, (v) => parseInt(v.trangthai) === 1 && parseInt(v.choduyet) === 1)
@@ -141,6 +173,9 @@ export default {
             } else if (val === 1) {
                 this.tindangs = this.choDuyet
             } else this.tindangs = this.biHa
+        },
+        selectedTable(newVal) {
+            console.log(newVal)
         },
     },
     mounted() {
@@ -163,6 +198,29 @@ export default {
                     this.loadingData = false
                 })
         },
+        deleteItem(item) {
+            this.$axios.$delete(ENV.delete + item.id).then((res) => {
+                if (res.success) {
+                    this.$toast.success(res.success)
+                    this.allPosts.splice(this.allPosts.indexOf(item), 1)
+                    this.posts.splice(this.posts.indexOf(item), 1)
+                } else this.$toast.error(res.fail, { duration: 5000 })
+            })
+        },
+        deleteArrayItem(list) {
+            this.$nextTick(() => {
+                this.$nuxt.$loading.start()
+
+                try {
+                    list.forEach(async (item) => {
+                        await this.deleteItem(item)
+                    })
+                } catch (e) {
+                } finally {
+                    this.$nuxt.$loading.finish()
+                }
+            })
+        },
     },
 }
 </script>
@@ -179,5 +237,21 @@ export default {
     display: flex;
     font-weight: bold;
     margin-bottom: 8px;
+}
+</style>
+<style>
+.theme--light.v-data-table
+    > .v-data-table__wrapper
+    > table
+    > tbody
+    > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+    background: #ade8f4 !important;
+}
+</style>
+<style lang="scss">
+@for $i from 1 through 10 {
+    .animate__fadeInUp:nth-child(#{$i}n) {
+        animation-delay: #{$i * 0.2}s;
+    }
 }
 </style>

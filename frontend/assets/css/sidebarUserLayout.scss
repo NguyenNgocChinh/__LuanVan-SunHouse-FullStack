@@ -264,6 +264,7 @@
 .sidebar.active ~ .home_content {
     width: calc(100% - 240px);
     left: 250px;
+    padding-bottom: 30px;
 }
 @for $i from 2 through 10 {
     .nav_list .animate__fadeInLeft:nth-child(#{$i}n) {

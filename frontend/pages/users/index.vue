@@ -258,13 +258,10 @@ export default {
     },
     watch: {
         ParamIndex(index) {
-            console.log('watch', index)
             this.initilizeView(index)
         },
     },
     mounted() {
-        this.initilizeView(this.ParamIndex)
-
         // TAB
         window.$(document).ready(function () {
             // Variables
@@ -354,6 +351,7 @@ export default {
                 })
             })
         })
+        this.initilizeView(this.ParamIndex)
         this.initalizeData()
 
         const imgInp = document.getElementById('inputAvatar')
@@ -381,9 +379,13 @@ export default {
         initilizeView(index) {
             if (parseInt(index) === 1) {
                 window.$('#1').click()
+                document.getElementById('2').classList.remove('active')
+                document.getElementById('1').classList.add('active')
                 this.$store.commit('user/SET_INDEX_NAV', 1)
             } else {
                 window.$('#2').click()
+                document.getElementById('1').classList.remove('active')
+                document.getElementById('2').classList.add('active')
                 this.$store.commit('user/SET_INDEX_NAV', 2)
             }
         },

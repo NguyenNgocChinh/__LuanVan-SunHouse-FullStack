@@ -16,7 +16,7 @@ class CreateSpSeedLocation extends Migration
     {
         DB::unprepared("
             CREATE OR REPLACE VIEW view_location AS
-            SELECT count(*) as sl from location
+            SELECT * from location
             WHERE trangthai = 1
         ");
     }
