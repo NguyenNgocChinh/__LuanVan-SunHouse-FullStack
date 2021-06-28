@@ -773,7 +773,7 @@ export default {
                     })
                     .then((data) => {
                         this.$nuxt.$toast.success('Đăng bài thành công!')
-                        this.$router.push('/BaiDang/' + data.id)
+                        this.$router.push('/baidang/' + data.id)
                         this.$nuxt.$toast.success('Đăng bài thành công!')
                     })
                     .catch((error) => {

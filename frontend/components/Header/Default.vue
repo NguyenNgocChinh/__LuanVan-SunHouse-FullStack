@@ -99,11 +99,10 @@ export default {
             listMenus: [
                 { menu: 'Trang chủ', href: '/', icon: 'mdi-home' },
 
-                { menu: 'Nhà đang HOT', href: '/BaiDang/Hot', icon: 'mdi-fire' },
-                { menu: 'Nhà cho bán', href: '/BaiDang/sell', icon: 'mdi-home-city' },
-                { menu: 'Nhà cho thuê', href: '/BaiDang/rent', icon: 'mdi-home-city' },
-                { menu: 'Bảng giá dịch vụ', href: '/BangGiaDichVu/BangGia', icon: 'mdi-table-cog' },
-                { menu: 'Hỗ trợ', href: '/HoTro/HoTro', icon: 'mdi-charity' },
+                { menu: 'Nhà đang HOT', href: '/baidang/noibat', icon: 'mdi-fire' },
+                { menu: 'Nhà cho bán', href: '/baidang/raoban', icon: 'mdi-home-city' },
+                { menu: 'Nhà cho thuê', href: '/baidang/chothue', icon: 'mdi-home-city' },
+                { menu: 'Hỗ trợ', href: '/hotro', icon: 'mdi-charity' },
                 { menu: 'Tìm kiếm', href: '/timkiem', icon: 'mdi-magnify' },
             ],
         }

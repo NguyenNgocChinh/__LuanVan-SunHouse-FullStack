@@ -32,17 +32,7 @@
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                     </v-row>
 
-                    <v-card
-                        v-for="(baidang, index) in baidangs"
-                        :key="index"
-                        elevation="10"
-                        color="white"
-                        class="ma-6 ml-5"
-                        width="325"
-                        height="500"
-                    >
-                        <lazy-bai-dang-card :baidang="baidang" />
-                    </v-card>
+                    <lazy-bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" />
                 </v-row>
             </v-col>
         </v-row>
@@ -86,7 +76,7 @@ export default {
     methods: {
         getBaiDangHot() {
             this.$axios
-                .$get(ENV.hot + '?page=' + `${this.page}`, {
+                .$get(ENV.raoban + `?page=${this.page}`, {
                     params: {
                         page_size: 6,
                     },

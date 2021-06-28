@@ -4,19 +4,24 @@
             <h3 class="pt-8 white--text text-center">NHÀ NỔI BẬT</h3>
             <h4 class="py-2 white--text text-center">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
-                <v-progress-circular
-                    v-if="baidanghots_loading"
-                    class="loading"
-                    indeterminate
-                    color="white"
-                ></v-progress-circular>
-                <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
-                    <v-slide-item v-for="baidang in baidanghots" :key="baidang.id" v-slot="{}">
-                        <v-card elevation="10" color="white" class="ma-4" width="315" height="500">
-                            <bai-dang-card :baidang="baidang" />
-                        </v-card>
+                <v-slide-group v-if="baidanghots_loading" class="pa-4">
+                    <v-slide-item v-for="index in 5" :key="index">
+                        <v-skeleton-loader
+                            light
+                            class="mx-4"
+                            width="315px"
+                            height="500px"
+                            type="image,list-item-two-line,list-item-three-line,divider,list-item"
+                        ></v-skeleton-loader>
                     </v-slide-item>
                 </v-slide-group>
+
+                <v-slide-group v-else v-model="model" class="pa-4">
+                    <v-slide-item v-for="baidang in baidanghots" :key="baidang.id">
+                        <bai-dang-card :baidang="baidang" />
+                    </v-slide-item>
+                </v-slide-group>
+
                 <div
                     v-if="(baidanghots.length === 0) & !baidanghots_loading"
                     class="white--text mt-4"
@@ -44,14 +49,14 @@ export default {
         this.getBaiDangHot()
     },
     methods: {
-        async getBaiDangHot() {
+        getBaiDangHot() {
             try {
-                const baidangs = await this.$axios.$get(ENV.hot)
-                this.baidanghots = baidangs.baidangs
-            } catch (e) {
-                console.log(e)
-            }
-            this.baidanghots_loading = false
+                this.$axios.$get(ENV.hot).then((res) => {
+                    this.baidanghots = res.baidangs
+                    this.baidanghots_loading = false
+                    console.log('finish loading')
+                })
+            } catch (e) {}
         },
     },
 }
@@ -62,5 +67,8 @@ export default {
 }
 .loading {
     margin: 50px auto;
+}
+.article-card {
+    border-radius: 8px !important;
 }
 </style>

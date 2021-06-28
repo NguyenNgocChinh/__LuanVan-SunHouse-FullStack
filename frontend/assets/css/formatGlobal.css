@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+body{
+    font-family: 'Roboto', sans-serif;
+}
 .vue2leaflet-map{
     z-index: 0 !important;
 }
@@ -23,3 +27,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.size-14{
+    font-size: 14px;
+}
+.font-700{
+    font-weight: 700;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+/*.v-progress-linear__bar, .v-progress-linear__bar__determinate {*/
+/*    transition: none !important;*/
+/*}*/

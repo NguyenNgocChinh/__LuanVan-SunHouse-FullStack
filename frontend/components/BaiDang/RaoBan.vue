@@ -15,9 +15,7 @@
                 </div>
                 <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
                     <v-slide-item v-for="baidang in baidangs" :key="baidang.id" v-slot="{}">
-                        <v-card tile :outlined="false" color="white" class="ma-4" width="315" height="500">
-                            <bai-dang-card :baidang="baidang" />
-                        </v-card>
+                        <bai-dang-card :baidang="baidang" />
                     </v-slide-item>
                 </v-slide-group>
             </v-row>

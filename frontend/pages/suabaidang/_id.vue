@@ -311,7 +311,7 @@ export default {
                 })
                 .then((data) => {
                     this.kq = data.id
-                    this.$router.push('/BaiDang/' + this.kq)
+                    this.$router.push('/baidang/' + this.kq)
                 })
                 .catch((e) => {
                     console.log(e)
