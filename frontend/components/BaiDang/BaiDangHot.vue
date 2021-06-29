@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-container fluid class="red lighten-2 py-10 baidang">
-            <h3 class="pt-8 white--text text-center">NHÀ NỔI BẬT</h3>
+        <v-container fluid class="red lighten-2 pb-10 pt-5 baidang">
+            <h3 class="white--text text-center">NHÀ NỔI BẬT</h3>
             <h4 class="py-2 white--text text-center">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
                 <v-slide-group v-if="baidanghots_loading" class="pa-4">

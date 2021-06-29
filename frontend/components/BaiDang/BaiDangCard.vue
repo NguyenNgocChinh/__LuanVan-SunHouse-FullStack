@@ -1,12 +1,31 @@
 <template>
-    <div class="ma-4 article-card elevation-10" style="width: 315px; height: 500px">
-        <v-card v-if="baidang" :loading="loading" class="mx-auto article-card" :outlined="outlined" flat>
+    <div class="mx-4 pt-5 article-card" style="width: 315px; height: 100%">
+        <v-card
+            v-if="baidang"
+            :loading="loading"
+            class="mx-auto article-card"
+            style="height: unset"
+            :outlined="outlined"
+            flat
+        >
             <div class="header-card">
-                <v-carousel v-if="baidang.hinhanh.length > 0" cycle height="200" show-arrows-on-hover>
-                    <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i" eager>
-                        <v-img :aspect-ratio="16 / 9" height="200" :src="URI_DICRECTORY_UPLOAD + hinh.filename">
+                <v-carousel
+                    v-if="baidang.hinhanh.length > 0"
+                    cycle
+                    height="200"
+                    show-arrows-on-hover
+                    :nav="false"
+                    hide-delimiter-background
+                >
+                    <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i">
+                        <v-img
+                            :aspect-ratio="16 / 9"
+                            height="200"
+                            :src="isImgFail ? wrong_imgSrc : getImg(hinh)"
+                            @error="errorImg"
+                        >
                             <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
-                                <v-icon color="grey lighten-5" size="32">mdi-spin mdi-loading</v-icon>
+                                <v-icon color="grey lighten-1" size="32">mdi-spin mdi-loading</v-icon>
                             </v-layout>
                         </v-img>
                     </v-carousel-item>
@@ -32,38 +51,87 @@
                 </div>
             </v-card-title>
             <v-card-subtitle class="noidung">
-                <p class="font-weight-bold orange--text pt-1">{{ baidang.gia }} $</p>
+                <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia }} Tỷ</p>
                 <v-row>
                     <v-col cols="6" class="pb-1 pt-0 d-flex flex-row align-center">
-                        <span class="mr-2 justify-content-center">
-                            <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span
-                        >
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2 justify-content-center" v-on="on">
+                                    <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span
+                                >
+                            </template>
+                            <span>Diện tích: {{ baidang.dientich }} m²</span>
+                        </v-tooltip>
                     </v-col>
 
                     <v-col cols="6" class="pb-1 pt-0 d-flex flex-row align-center">
-                        <span class="mr-2">
-                            <v-icon class="mr-1" size="16">bx bx-bed</v-icon> {{ baidang.sophongngu }}</span
-                        >
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on">
+                                    <v-icon class="mr-1" size="16">bx bx-bed</v-icon>
+                                    {{ baidang.sophongngu }} phòng</span
+                                >
+                            </template>
+                            <span>Số phòng tắm: {{ baidang.sophongtam }} </span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="6" class="py-0">
-                        <span class="mr-2"
-                            ><v-icon class="mr-1" size="16px">bx bx-bath</v-icon> {{ baidang.sophongtam }}</span
-                        >
+                    <v-col cols="6" class="pb-1">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"
+                                    ><v-icon class="mr-1" size="16px">bx bx-bath</v-icon>
+                                    {{ baidang.sophongtam }} phòng</span
+                                >
+                            </template>
+                            <span>Số phòng tắm: {{ baidang.sophongtam }} </span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="6" class="py-0">
-                        <span class="mr-2"
-                            ><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong }}</span
-                        >
+                    <v-col cols="6" class="pb-1">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"
+                                    ><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong }}</span
+                                >
+                            </template>
+                            <span>Hướng nhà: {{ baidang.huong }} </span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="6" class="pt-0">
-                        <span class="mr-2"
-                            ><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.loai }}</span
-                        >
+                    <v-col cols="6" class="pb-1">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"
+                                    ><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon>
+                                    {{ baidang.loai }}</span
+                                >
+                            </template>
+                            <span>Loại nhà: {{ baidang.loai }} </span>
+                        </v-tooltip>
+                    </v-col>
+                    <v-col cols="6" class="pb-1">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"
+                                    ><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon>
+                                    {{ baidang.namxaydung }}</span
+                                >
+                            </template>
+                            <span>Năm xây dựng: {{ baidang.namxaydung }} </span>
+                        </v-tooltip>
                     </v-col>
                 </v-row>
-
-                <v-sparkline />
-                <p class="diachi mt-2"><v-icon size="16px">mdi-map-marker-outline</v-icon>{{ baidang.diachi }}</p>
+                <v-row class="pt-0 pl-1">
+                    <v-col cols="12">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <p class="d-flex flow-row align-center diachi mr-2" v-on="on">
+                                    <v-icon size="16px" class="mr-2">bx bx-map-pin</v-icon>
+                                    <span>{{ baidang.diachi }}</span>
+                                </p>
+                            </template>
+                            <span>Vị trí</span>
+                        </v-tooltip>
+                    </v-col>
+                </v-row>
             </v-card-subtitle>
             <v-chip-group class="loainha">
                 <v-chip color="teal darken-1" class="white--text" label
@@ -79,7 +147,7 @@
                 </template>
                 <span>Bỏ yêu thích</span>
             </v-tooltip>
-            <v-divider />
+            <v-divider class="mt-2" />
             <div class="pa-4 d-flex size-14 flex-row align-center">
                 <span class="d-flex flex-row align-center">
                     <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }}
@@ -89,7 +157,7 @@
                     <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }}
                 </span>
                 <v-spacer />
-                <span class="font-weight-bold">
+                <span class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
                     <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
                     Chat ngay
                 </span>
@@ -99,8 +167,10 @@
 </template>
 <script>
 import URI_DICRECTORY from '@/api/directory'
+import OwlCarousel from '@/components/UIComponent/owlCarousel'
 export default {
     name: 'BaiDangCard',
+    components: { OwlCarousel },
     props: {
         baidang: {
             default: null,
@@ -112,6 +182,7 @@ export default {
     data: () => ({
         loading: false,
         selection: 1,
+        isImgFail: false,
     }),
     head: {
         link: [{ href: 'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css', rel: 'stylesheet' }],
@@ -145,6 +216,15 @@ export default {
             } else {
                 return str
             }
+        },
+        errorImg(event) {
+            this.isImgFail = true
+        },
+        chatNow() {
+            console.log('ok')
+        },
+        getImg(hinh) {
+            return this.URI_DICRECTORY_UPLOAD + hinh.filename
         },
     },
 }
@@ -213,5 +293,46 @@ export default {
 }
 .v-tooltip__content {
     /*margin-bottom: 100px !important;*/
+}
+.chatnow:hover,
+.chatnow:hover i {
+    color: #ab8843 !important;
+    transition: all ease-in 0.2ms;
+}
+.chatnow,
+.chatnow i {
+    color: #ffab00;
+}
+</style>
+
+<style>
+.owl-carousel .owl-item .owl-carousel-item {
+    border-radius: 8px;
+    width: 100%;
+    object-fit: cover;
+    height: 500px;
+}
+.owl-dots {
+    position: absolute;
+    left: 45%;
+    bottom: 0;
+}
+.owl-dot {
+    outline: none;
+}
+
+.owl-theme .owl-dots .owl-dot.active span,
+.owl-theme .owl-dots .owl-dot:hover span {
+    background: #e7843f;
+    width: 12px;
+    height: 12px;
+}
+.owl-theme .owl-dots .owl-dot span {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.v-carousel__controls__item {
+    color: red !important;
 }
 </style>

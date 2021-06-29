@@ -189,7 +189,7 @@
                     <v-col class="col-md-8">
                         <div>
                             <div v-if="hinhanhArr.length < 1">
-                                <v-img :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                                <v-img :src="wrong_image" />
                             </div>
                             <div v-else>
                                 <viewer
@@ -206,7 +206,8 @@
                                                 v-for="src in hinhanhArr"
                                                 :key="src"
                                                 class="owl-carousel-item"
-                                                :src="src"
+                                                :src="isImgFail ? wrong_image : src"
+                                                @error="wrongImage"
                                             />
                                         </template>
                                     </owl-carousel>
@@ -535,11 +536,15 @@ export default {
                 fullscreen: true,
                 keyboard: true,
             },
+            isImgFail: false,
         }
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
+        },
+        wrong_image() {
+            return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
         },
     },
 
@@ -642,6 +647,9 @@ export default {
         },
         chatWithSeller() {
             this.$router.push({ path: '/chat/', query: { id: this.user.id } })
+        },
+        wrongImage() {
+            this.isImgFail = true
         },
     },
 }
