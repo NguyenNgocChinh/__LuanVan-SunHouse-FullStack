@@ -1,42 +1,18 @@
 <template>
     <div class="mx-4 pt-5 article-card" style="width: 315px; height: 100%">
-        <v-card
-            v-if="baidang"
-            :loading="loading"
-            class="mx-auto article-card"
-            style="height: unset"
-            :outlined="outlined"
-            flat
-        >
+        <v-card v-if="baidang" :loading="loading" class="mx-auto article-card" style="height: unset" :outlined="outlined" flat>
             <div class="header-card">
-                <v-carousel
-                    v-if="baidang.hinhanh.length > 0"
-                    cycle
-                    height="200"
-                    show-arrows-on-hover
-                    :nav="false"
-                    hide-delimiter-background
-                >
-                    <v-carousel-item v-for="(hinh, i) in baidang.hinhanh" :key="i">
-                        <v-img
-                            :aspect-ratio="16 / 9"
-                            height="200"
-                            :src="isImgFail ? wrong_imgSrc : getImg(hinh)"
-                            @error="errorImg"
-                        >
-                            <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
-                                <v-icon color="grey lighten-1" size="32">mdi-spin mdi-loading</v-icon>
-                            </v-layout>
-                        </v-img>
-                    </v-carousel-item>
-                </v-carousel>
-                <div v-else>
-                    <v-img :aspect-ratio="16 / 9" height="200" class="grey lighten-2" :src="wrong_imgSrc">
-                        <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
-                            <v-icon color="grey lighten-5" size="32">mdi-spin mdi-loading</v-icon>
-                        </v-layout>
-                    </v-img>
-                </div>
+                <v-img v-if="baidang.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" :src="isImgFail ? wrong_imgSrc : getImg(baidang.hinhanh[0])" @error="errorImg">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                        <v-icon color="grey lighten-1" size="32">mdi-spin mdi-loading</v-icon>
+                    </v-layout>
+                </v-img>
+
+                <v-img v-else :aspect-ratio="16 / 9" height="200" class="grey lighten-2" :src="wrong_imgSrc">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                        <v-icon color="grey lighten-5" size="32">mdi-spin mdi-loading</v-icon>
+                    </v-layout>
+                </v-img>
             </div>
             <v-card-title class="purple--text text-uppercase">
                 <div class="card-title">
@@ -51,14 +27,12 @@
                 </div>
             </v-card-title>
             <v-card-subtitle class="noidung">
-                <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia }} Tỷ</p>
+                <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia }} Triệu/m²</p>
                 <v-row>
                     <v-col cols="6" class="pb-1 pt-0 d-flex flex-row align-center">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2 justify-content-center" v-on="on">
-                                    <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span
-                                >
+                                <span class="mr-2 justify-content-center" v-on="on"> <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span>
                             </template>
                             <span>Diện tích: {{ baidang.dientich }} m²</span>
                         </v-tooltip>
@@ -72,16 +46,13 @@
                                     {{ baidang.sophongngu }} phòng</span
                                 >
                             </template>
-                            <span>Số phòng tắm: {{ baidang.sophongtam }} </span>
+                            <span>Số phòng ngủ: {{ baidang.sophongngu }} </span>
                         </v-tooltip>
                     </v-col>
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"
-                                    ><v-icon class="mr-1" size="16px">bx bx-bath</v-icon>
-                                    {{ baidang.sophongtam }} phòng</span
-                                >
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-bath</v-icon> {{ baidang.sophongtam }} phòng</span>
                             </template>
                             <span>Số phòng tắm: {{ baidang.sophongtam }} </span>
                         </v-tooltip>
@@ -89,9 +60,7 @@
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"
-                                    ><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong }}</span
-                                >
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong }}</span>
                             </template>
                             <span>Hướng nhà: {{ baidang.huong }} </span>
                         </v-tooltip>
@@ -99,10 +68,7 @@
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"
-                                    ><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon>
-                                    {{ baidang.loai }}</span
-                                >
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon> {{ baidang.loai }}</span>
                             </template>
                             <span>Loại nhà: {{ baidang.loai }} </span>
                         </v-tooltip>
@@ -110,10 +76,7 @@
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"
-                                    ><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon>
-                                    {{ baidang.namxaydung }}</span
-                                >
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon> {{ baidang.namxaydung }}</span>
                             </template>
                             <span>Năm xây dựng: {{ baidang.namxaydung }} </span>
                         </v-tooltip>
@@ -134,9 +97,7 @@
                 </v-row>
             </v-card-subtitle>
             <v-chip-group class="loainha">
-                <v-chip color="teal darken-1" class="white--text" label
-                    >{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }}
-                </v-chip>
+                <v-chip color="teal darken-1" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
                 <v-chip color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
             </v-chip-group>
             <v-tooltip top content-class="tooltipCustom">
@@ -149,13 +110,9 @@
             </v-tooltip>
             <v-divider class="mt-2" />
             <div class="pa-4 d-flex size-14 flex-row align-center">
-                <span class="d-flex flex-row align-center">
-                    <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }}
-                </span>
+                <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }} </span>
                 <v-spacer />
-                <span class="d-flex flex-row align-center">
-                    <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }}
-                </span>
+                <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }} </span>
                 <v-spacer />
                 <span class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
                     <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
@@ -167,10 +124,9 @@
 </template>
 <script>
 import URI_DICRECTORY from '@/api/directory'
-import OwlCarousel from '@/components/UIComponent/owlCarousel'
 export default {
     name: 'BaiDangCard',
-    components: { OwlCarousel },
+    components: {},
     props: {
         baidang: {
             default: null,
