@@ -24,11 +24,11 @@ export default {
         ],
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' },
+            { rel: 'stylesheet', href: '/css/animate.min.css' },
         ],
         script: [
             {
-                src: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
+                src: '/js/lodash.min.js',
                 type: 'text/javascript',
             },
 
@@ -37,10 +37,10 @@ export default {
                 type: 'text/javascript',
             },
             {
-                src: 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
+                src: '/js/OneSignalSDK.js',
                 type: 'text/javascript',
             },
-            { src: '/jquery-3.6.0.min.js' },
+            { src: '/js/jquery-3.6.0.min.js' },
         ],
     },
     router: {

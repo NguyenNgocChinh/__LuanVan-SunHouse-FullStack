@@ -6,13 +6,7 @@
             <v-row>
                 <v-slide-group v-if="baidanghots_loading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index">
-                        <v-skeleton-loader
-                            light
-                            class="mx-4"
-                            width="315px"
-                            height="500px"
-                            type="image,list-item-two-line,list-item-three-line,divider,list-item"
-                        ></v-skeleton-loader>
+                        <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-slide-item>
                 </v-slide-group>
 
@@ -22,13 +16,7 @@
                     </v-slide-item>
                 </v-slide-group>
 
-                <div
-                    v-if="(baidanghots.length === 0) & !baidanghots_loading"
-                    class="white--text mt-4"
-                    style="margin: 0 auto"
-                >
-                    Hiện tại không có bài đăng nào được đánh giá là HOT trên hệ thống!
-                </div>
+                <div v-if="(baidanghots.length === 0) & !baidanghots_loading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào được đánh giá là HOT trên hệ thống!</div>
             </v-row>
         </v-container>
     </div>
@@ -70,5 +58,12 @@ export default {
 }
 .article-card {
     border-radius: 8px !important;
+}
+</style>
+<style lang="scss" scoped>
+@for $i from 2 through 10 {
+    .animate__fadeInRight:nth-child(#{$i}n) {
+        animation-delay: #{$i * 0.1}s;
+    }
 }
 </style>

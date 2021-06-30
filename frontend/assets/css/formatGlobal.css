@@ -40,3 +40,20 @@ body{
 /*.v-progress-linear__bar, .v-progress-linear__bar__determinate {*/
 /*    transition: none !important;*/
 /*}*/
+
+.tooltipCustom {
+    max-width: 315px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #000 !important;
+}
+.tooltipCustom::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}

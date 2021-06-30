@@ -1,15 +1,15 @@
 <template>
-    <div class="mx-4 pt-5 article-card" style="width: 315px; height: 100%">
+    <div class="mx-4 pt-5 article-card animate__animated animate__fadeInRight" style="width: 315px; height: 100%">
         <v-card v-if="baidang" :loading="loading" class="mx-auto article-card" style="height: unset" :outlined="outlined" flat>
             <div class="header-card">
-                <v-img v-if="baidang.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" :src="isImgFail ? wrong_imgSrc : getImg(baidang.hinhanh[0])" @error="errorImg">
-                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                <v-img v-if="baidang.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" :lazy-src="getImg(baidang.hinhanh[0])" :src="isImgFail ? wrong_imgSrc : getImg(baidang.hinhanh[0])" @error="errorImg">
+                    <v-layout slot="placeholder" class="fill-height align-center justify-center ma-0">
                         <v-icon color="grey lighten-1" size="32">mdi-spin mdi-loading</v-icon>
                     </v-layout>
                 </v-img>
 
                 <v-img v-else :aspect-ratio="16 / 9" height="200" class="grey lighten-2" :src="wrong_imgSrc">
-                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                    <v-layout slot="placeholder" class="grey lighten-5 fill-height align-center justify-center ma-0">
                         <v-icon color="grey lighten-5" size="32">mdi-spin mdi-loading</v-icon>
                     </v-layout>
                 </v-img>
@@ -262,32 +262,6 @@ export default {
 </style>
 
 <style>
-.owl-carousel .owl-item .owl-carousel-item {
-    border-radius: 8px;
-    width: 100%;
-    object-fit: cover;
-    height: 500px;
-}
-.owl-dots {
-    position: absolute;
-    left: 45%;
-    bottom: 0;
-}
-.owl-dot {
-    outline: none;
-}
-
-.owl-theme .owl-dots .owl-dot.active span,
-.owl-theme .owl-dots .owl-dot:hover span {
-    background: #e7843f;
-    width: 12px;
-    height: 12px;
-}
-.owl-theme .owl-dots .owl-dot span {
-    width: 8px;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.8);
-}
 .v-carousel__controls__item {
     color: red !important;
 }
