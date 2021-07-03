@@ -1,11 +1,9 @@
 <template>
     <div ref="feed" class="feed" :class="{ overflowYHidden: messages.length < 1 }" style="position: relative">
-        <ul v-if="messages.length > 0">
-            <li
-                v-for="message in messages"
-                :key="message.id"
-                :class="`message${message.to === contact.id ? ' sent' : ' received'}`"
-            >
+        <v-icon v-if="loading" size="42px" class="center-element" color="green">mdi-spin mdi-loading</v-icon>
+
+        <ul v-else-if="messages.length > 0">
+            <li v-for="message in messages" :key="message.id" :class="`message${message.to === contact.id ? ' sent' : ' received'}`">
                 <div class="text">
                     {{ message.noidung }}
                 </div>
@@ -18,7 +16,7 @@
                     Hãy gửi tin nhắn đầu tiên ngay thôi!
                 </i>
             </p>
-            <typing style="width: 25%; height: 400px" class="center-element mt-8" />
+            <typing style="width: 25%; height: 400px; display: block" class="center-element mt-8" />
         </div>
     </div>
 </template>
@@ -34,6 +32,9 @@ export default {
         messages: {
             type: Array,
             required: true,
+        },
+        loading: {
+            type: Boolean,
         },
     },
     watch: {

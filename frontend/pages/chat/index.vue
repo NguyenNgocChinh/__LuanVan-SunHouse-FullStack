@@ -21,18 +21,8 @@
                         />
                     </v-col>
                 </v-row>
-                <v-progress-circular
-                    v-if="contacts.length < 1"
-                    class="center-element"
-                    indeterminate
-                    color="green"
-                ></v-progress-circular>
-                <ContactsList
-                    v-else
-                    :selected-contact="selectedContact"
-                    :contacts="tempContacts || contacts"
-                    @selected="startConversationWith"
-                />
+                <v-progress-circular v-if="contacts.length < 1" class="center-element" indeterminate color="green"></v-progress-circular>
+                <ContactsList v-else :selected-contact="selectedContact" :contacts="tempContacts || contacts" @selected="startConversationWith" />
             </v-col>
             <v-col class="col-md-9">
                 <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage" />
@@ -122,9 +112,7 @@ export default {
         // grant allow notify
         document.addEventListener('DOMContentLoaded', function () {
             if (!Notification) {
-                alert(
-                    'Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.'
-                )
+                alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.')
                 return
             }
 
@@ -201,7 +189,6 @@ export default {
         },
         // cache
         fetchMessageToCache() {
-            localStorage.removeItem('messages')
             this.$nuxt.$axios.$get(ENV.messages, { withCredentials: true }).then((response) => {
                 localStorage.setItem('messages', JSON.stringify(response))
             })

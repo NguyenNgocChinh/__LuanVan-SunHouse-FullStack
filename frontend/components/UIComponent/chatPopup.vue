@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-row flex-row-reverse" style="">
+    <div v-if="$auth.loggedIn" class="d-flex flex-row flex-row-reverse">
         <div class="msg-overplay-container">
             <div v-if="$auth.loggedIn" class="msg-overlay-list-bubble--is-maximum" :class="{ 'msg-overlay-list-bubble--is-minimized': !isExpanded }">
                 <div class="msg-list-bubble elevation-10">
@@ -47,45 +47,18 @@
                 </div>
             </div>
             <!--Cái hộp này -->
-            <div v-for="(selected, index) in selectedList" :key="index" class="msg-overlay-conversation-bubble ml-5" :class="{ 'msg-overlay-chat--is-minimized': !expandList[selectedList.indexOf(selected)] }">
-                <div class="msg-startConversation elevation-4">
-                    <div class="msg-conversation-container" @click="toogleExpanededUser(selectedList.indexOf(selected))">
-                        <div class="chat-name d-flex flex-row align-center justify-space-between pa-2 cursor-pointer pa-4">
-                            <div class="">
-                                <span style="position: relative">
-                                    <v-avatar size="32px">
-                                        <v-img :aspect-ratio="16 / 9" :lazy-src="getAvatar(selected)" :src="getAvatar(selected)" :alt="$auth.user.name">
-                                            <v-layout slot="placeholder" class="fill-height align-center justify-center ma-0">
-                                                <v-icon color="grey" size="32">mdi-spin mdi-loading</v-icon>
-                                            </v-layout>
-                                        </v-img>
-                                    </v-avatar>
-                                    <v-icon class="status-user" size="11px" color="green" style="position: absolute; right: 0; bottom: -5px">mdi-checkbox-blank-circle</v-icon>
-                                </span>
-                                <span style="font-weight: 500" class="ml-1 contact-name">{{ truncateString(selected.name, 23, true) }} </span>
-                            </div>
-                            <span>
-                                <v-btn icon @click.stop="toogleExpanededUser(selectedList.indexOf(selected))">
-                                    <v-icon>{{ expandList[selectedList.indexOf(selected)] ? 'mdi-window-minimize' : 'bx bx-chevron-up' }}</v-icon>
-                                </v-btn>
-                                <v-btn icon @click.stop="removeConversation(selected)">
-                                    <v-icon size="28px">mdi-close </v-icon>
-                                </v-btn>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage" />
         </div>
+        <sweet-modal ref="errorModal" title="Lỗi khi gửi tin nhắn đi" enable-mobile-fullscreen icon="error"> Gặp lỗi trong quá trình gửi tin nhắn, vui lòng liên hệ QTV sớm nhất! </sweet-modal>
     </div>
 </template>
 <script>
 import ENV from '@/api/chat'
 import ContactsList from '@/components/Chat/ContactsList'
-import { truncateSpace } from '~/assets/js/core'
+import ChatPopupContent from '@/components/Chat/ChatPopupContent'
 export default {
     name: 'ChatPopup',
-    components: { ContactsList },
+    components: { ChatPopupContent, ContactsList },
     data: () => {
         return {
             isExpanded: false,
@@ -93,8 +66,8 @@ export default {
             selectedContact: null,
             tempContacts: undefined,
             contacts: [],
+            messages: [],
             selectedList: [],
-            expandList: [],
         }
     },
 
@@ -107,61 +80,98 @@ export default {
         },
     },
     mounted() {
-        this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
-            this.contacts = response
+        this.$nextTick(() => {
+            this.$fogitceUpdate()
+            const self = this
+            if (this.$auth.loggedIn) {
+                console.log('loggedin')
+                this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+                    this.contacts = response
+                })
+                // Listen Channel Private Message
+                window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
+                    self.hanleIncoming(e.message)
+                })
+            } else {
+                console.log('not login')
+            }
+            // Hanlder Error when send message
+            this.$nuxt.$on('error', () => {
+                this.$refs.errorModal.open()
+            })
+            // grant allow notify
+            document.addEventListener('DOMContentLoaded', function () {
+                if (!Notification) {
+                    alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.')
+                    return
+                }
+
+                if (Notification.permission !== 'granted') Notification.requestPermission()
+            })
+
+            // fetch Cache
+            // this.fetchMessageToCache()
         })
-        // fetch Cache
-        this.fetchMessageToCache()
     },
     methods: {
         getAvatar(user) {
             return user.profile_photo_path || user.profile_photo_url
         },
-        toogleExpaneded(user) {
+        toogleExpaneded() {
             this.isExpanded = !this.isExpanded
         },
-        toogleExpanededUser(index) {
-            this.$set(this.expandList, index, !this.expandList[index])
-        },
         newConversation(selected) {
+            // PREPARE TO CODE
             this.selectedList.push(selected)
         },
         startConversationWith(selected) {
             const isContain = this.selectedList.indexOf(selected)
             if (isContain === -1) {
-                this.selectedList.push(selected)
-            }
-            this.$set(this.expandList, this.selectedList.indexOf(selected), true)
-            if (this.selectedList.length > 3) {
-                this.selectedList.splice(0, 1)
+                if (this.selectedList.length >= 3) {
+                    this.selectedList.splice(0, 1)
+                    setTimeout(() => {
+                        this.selectedList.push(selected)
+                    }, 200)
+                } else {
+                    this.selectedList.push(selected)
+                }
+                this.selectedContact = selected
+                this.updateUnreadCount(selected, true)
             }
         },
-        removeConversation(selected) {
-            this.selectedList.splice(this.selectedList.indexOf(selected), 1)
+        removeConversation(contact) {
+            this.selectedList.splice(this.selectedList.indexOf(contact), 1)
         },
+        hanleIncoming(message) {
+            this.selectedList.forEach((contact) => {
+                if (message.from === contact.id) {
+                    this.$nuxt.$emit('newMessage', message)
+                }
+            })
+            this.updateUnreadCount(message.from_contact, false)
+        },
+        sentMessage(contact) {
+            this.updateUnreadCount(contact, true)
+        },
+        updateUnreadCount(contact, reset) {
+            this.contacts = this.contacts.map((single) => {
+                if (single.id !== contact.id) {
+                    return single
+                }
 
+                if (reset) single.unread = 0
+                else single.unread += 1
+
+                return single
+            })
+        },
         // cache
         fetchMessageToCache() {
-            localStorage.removeItem('messages')
-            this.$nuxt.$axios.$get(ENV.messages, { withCredentials: true }).then((response) => {
+            this.$axios.$get(ENV.messages, { withCredentials: true }).then((response) => {
                 localStorage.setItem('messages', JSON.stringify(response))
             })
         },
-        loadCacheMessage(idContact) {
-            const cacheMessage = []
-            const localMessage = JSON.parse(localStorage.getItem('messages'))
-            if (localMessage !== null) {
-                localMessage.forEach((item) => {
-                    if (parseInt(item.from) === parseInt(idContact)) {
-                        cacheMessage.push(item)
-                    }
-                    if (parseInt(item.to) === parseInt(idContact)) {
-                        cacheMessage.push(item)
-                    }
-                })
-            }
-            return cacheMessage
-        },
+
         // filter Contact
         filterContacts(contacts, keyword) {
             const PATTERN = `${keyword}`
@@ -171,13 +181,9 @@ export default {
             })
             return filtered
         },
-        truncateString(fullStr, strLen, separator) {
-            return truncateSpace(fullStr, strLen, separator)
-        },
     },
 }
 </script>
 <style lang="scss">
 @import 'assets/css/chatPopup';
 </style>
-<style></style>

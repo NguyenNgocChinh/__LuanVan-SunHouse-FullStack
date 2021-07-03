@@ -42,7 +42,7 @@
 //new conversation
 .msg-startConversation{
   width: 336px;
-  height: 400px;
+  height: 500px;
   transform: translateX(-15px);
   bottom: 0;
 
@@ -64,7 +64,7 @@
 }
 
 .msg-overlay-chat--is-minimized{
-  transform: translateY(350px);
+  transform: translateY(450px);
   transition: all 0.5s ease-in-out;
 }
 .contact-name{
@@ -72,4 +72,8 @@
 }
 .msg-overlay-conversation-bubble{
   transition: all 0.5s ease-in-out;
+}
+.content-chat{
+  width: 100%;
+  height: 390px !important;
 }

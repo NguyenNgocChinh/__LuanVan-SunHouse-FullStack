@@ -15,10 +15,7 @@
                     <div class="d-flex flex-row">
                         <div class="mr-3">
                             <v-avatar size="48" style="overflow: unset">
-                                <img
-                                    :src="contact.profile_photo_path || contact.profile_photo_url"
-                                    :alt="contact.name"
-                                />
+                                <img :src="contact.profile_photo_path || contact.profile_photo_url" :alt="contact.name" />
                                 <div id="online"></div>
                             </v-avatar>
                         </div>
@@ -28,9 +25,7 @@
                         </div>
                     </div>
                     <div>
-                        <v-btn width="100%" height="45px" dark small color="indigo" @click="openModalSearch">
-                            <v-icon class="mr-1">mdi-plus</v-icon> Tạo mới cuộc hội thoại
-                        </v-btn>
+                        <v-btn width="100%" height="45px" dark small color="indigo" @click="openModalSearch"> <v-icon class="mr-1">mdi-plus</v-icon> Tạo mới cuộc hội thoại </v-btn>
                     </div>
                 </div>
                 <v-row class="mt-2">
