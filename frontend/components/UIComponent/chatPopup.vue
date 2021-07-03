@@ -1,5 +1,5 @@
 <template>
-    <div v-if="$auth.loggedIn" class="d-flex flex-row flex-row-reverse">
+    <div class="d-flex flex-row flex-row-reverse">
         <div class="msg-overplay-container">
             <div v-if="$auth.loggedIn" class="msg-overlay-list-bubble--is-maximum" :class="{ 'msg-overlay-list-bubble--is-minimized': !isExpanded }">
                 <div class="msg-list-bubble elevation-10">
@@ -46,6 +46,7 @@
                     </div>
                 </div>
             </div>
+            <div v-else class="msg-overlay-list-bubble--is-minimized">Chat</div>
             <!--Cái hộp này -->
             <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage" />
         </div>
@@ -78,13 +79,37 @@ export default {
                 this.tempContacts = result
             } else this.tempContacts = null
         },
+        '$auth.loggedIn': {
+            handler(loggedIn) {
+                if (loggedIn) {
+                    this.setContact()
+                }
+            },
+            immediate: true,
+        },
     },
     mounted() {
-        this.$nextTick(() => {
-            this.$fogitceUpdate()
-            const self = this
+        // Hanlder Error when send message
+        this.$nuxt.$on('error', () => {
+            this.$refs.errorModal.open()
+        })
+        // grant allow notify
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!Notification) {
+                alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.')
+                return
+            }
+
+            if (Notification.permission !== 'granted') Notification.requestPermission()
+        })
+
+        // fetch Cache
+        // this.fetchMessageToCache()
+    },
+    methods: {
+        setContact() {
             if (this.$auth.loggedIn) {
-                console.log('loggedin')
+                const self = this
                 this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
                     this.contacts = response
                 })
@@ -92,28 +117,8 @@ export default {
                 window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
                     self.hanleIncoming(e.message)
                 })
-            } else {
-                console.log('not login')
             }
-            // Hanlder Error when send message
-            this.$nuxt.$on('error', () => {
-                this.$refs.errorModal.open()
-            })
-            // grant allow notify
-            document.addEventListener('DOMContentLoaded', function () {
-                if (!Notification) {
-                    alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.')
-                    return
-                }
-
-                if (Notification.permission !== 'granted') Notification.requestPermission()
-            })
-
-            // fetch Cache
-            // this.fetchMessageToCache()
-        })
-    },
-    methods: {
+        },
         getAvatar(user) {
             return user.profile_photo_path || user.profile_photo_url
         },
