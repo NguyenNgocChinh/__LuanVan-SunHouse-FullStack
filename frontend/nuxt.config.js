@@ -25,6 +25,7 @@ export default {
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             { rel: 'stylesheet', href: '/css/animate.min.css' },
+            { rel: 'stylesheet', href: '/css/boxicons.min.css' },
         ],
         script: [
             {

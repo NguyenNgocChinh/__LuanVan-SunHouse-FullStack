@@ -93,6 +93,11 @@ export default {
         this.$nuxt.$on('error', () => {
             this.$refs.errorModal.open()
         })
+        // Hanlder chat ngay on Bai Dang Chat
+        this.$nuxt.$on('chatWithSeller', (user) => {
+            this.startConversationWith(user)
+        })
+
         // grant allow notify
         document.addEventListener('DOMContentLoaded', function () {
             if (!Notification) {
@@ -130,7 +135,7 @@ export default {
             this.selectedList.push(selected)
         },
         startConversationWith(selected) {
-            const isContain = this.selectedList.indexOf(selected)
+            const isContain = this.selectedList.findIndex((x) => x.id === selected.id)
             if (isContain === -1) {
                 if (this.selectedList.length >= 3) {
                     this.selectedList.splice(0, 1)

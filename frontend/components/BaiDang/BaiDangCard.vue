@@ -140,9 +140,7 @@ export default {
         selection: 1,
         isImgFail: false,
     }),
-    head: {
-        link: [{ href: 'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css', rel: 'stylesheet' }],
-    },
+
     computed: {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
@@ -151,12 +149,7 @@ export default {
             return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
         },
     },
-
     methods: {
-        reserve() {
-            this.loading = true
-            setTimeout(() => (this.loading = false), 2000)
-        },
         showChiTietBaiDang() {
             this.$router.push('/baidang/' + this.baidang.id)
         },
@@ -177,7 +170,7 @@ export default {
             this.isImgFail = true
         },
         chatNow() {
-            console.log('ok')
+            this.$nuxt.$emit('chatWithSeller', this.baidang.userObject)
         },
         getImg(hinh) {
             return this.URI_DICRECTORY_UPLOAD + hinh.filename

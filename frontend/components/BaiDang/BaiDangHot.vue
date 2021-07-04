@@ -42,7 +42,6 @@ export default {
                 this.$axios.$get(ENV.hot).then((res) => {
                     this.baidanghots = res.baidangs
                     this.baidanghots_loading = false
-                    console.log('finish loading')
                 })
             } catch (e) {}
         },

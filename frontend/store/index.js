@@ -7,7 +7,6 @@ export const state = () => ({
         SearchResult: null,
         loadingSearchResult: false,
     },
-    contacts: [],
 })
 
 export const mutations = {
@@ -22,9 +21,6 @@ export const mutations = {
     },
     SET_KQ_BAIDANG_TIMKIEM(state, payload) {
         state.SearchResult = payload
-    },
-    SET_CONTACTS(state, payload) {
-        state.contacts = payload
     },
 }
 
