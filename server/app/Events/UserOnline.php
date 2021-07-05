@@ -34,12 +34,13 @@ class UserOnline implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('chat');
+        return new PresenceChannel('user.online');
     }
 
 //    public function broadcastAs()
 //    {
 //        return 'UserOnline';
 //    }
+
 
 }

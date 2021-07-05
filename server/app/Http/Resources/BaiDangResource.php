@@ -18,6 +18,7 @@ class BaiDangResource extends JsonResource
         return [
             "id" => $this->id,
             "user" => $this->user->name,
+            "userObject" => $this->user,
             "tieude" => $this->tieude,
             "hinhanh" => $this->hinhanh,
             "loai" => $this->loai->ten_loai,
@@ -33,6 +34,7 @@ class BaiDangResource extends JsonResource
             "thoigian" => $this->formattedCreatedDate(),
             "choduyet" => $this->choduyet,
             "trangthai" => $this->trangthai,
+            "luotxem" => $this->luotxem,
         ];
     }
 }

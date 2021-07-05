@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
 
@@ -17,21 +18,29 @@ use Illuminate\Support\Facades\Log;
 //Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //    return (int)$user->id === (int)$id;
 //});
-
+Broadcast::channel('chat.{id}', function ($user) {
+    Log::info("CHAT.ID " . $user);
+    //        header("Access-Control-Allow-Origin: http://localhost:3000");
+    //    header("Access-Control-Allow-Credentials: true");
+    return $user;
+});
 //WORK...
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int)$id;
 });
 
 // POST http://localhost:8000/broadcasting/auth net::ERR_FAILED [CORS error]
-Broadcast::channel('user.online', function ($user) {
-    Log::info($user);
+Broadcast::channel('user-online', function ($user) {
     //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,...
-//    return ['id' => $user->id];
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-    ];
+        //    return ['id' => $user->id];
+        if(Auth::check()){
+            Log::info('user-online ' . $user);
+            return [
+                'id' => $user->id,
+            ];
+        }
+        return false;
+
 });
 
 Broadcast::channel('chat', function ($user) {

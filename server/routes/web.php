@@ -23,8 +23,8 @@ use Illuminate\Http\Request;
 /*
  * Broadcast
  */
-//Broadcast::routes(['middleware' => ['auth:sanctum']]);
-Broadcast::routes();
+// Broadcast::routes(['middleware' => ['web','auth:sanctum']]);
+// Broadcast::routes();
 Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middleware(['auth:sanctum']);
 //Route::middleware('auth:sanctum')->put('users/online', 'UserOnlineController');
 
@@ -74,7 +74,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     Route::group(['prefix' => 'baidang'], function () {
         Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
         Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware('auth:sanctum');
-        Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
+        Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id')->middleware('filterView');
         Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
         Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
         Route::post('/edit/{id}', [ApiBaiDangController::class, 'updateBaiDang'])->whereNumber('id');
