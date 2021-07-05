@@ -5,10 +5,7 @@
                 <v-card color class="d-flex">
                     <v-row align="center">
                         <v-col cols="6">
-                            <div class="ml-2">
-                                Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng
-                                {{ detail_page.total }} kết quả
-                            </div>
+                            <div class="ml-2">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
                         </v-col>
 
                         <v-col cols="6" class="d-flex align-center">
@@ -32,17 +29,7 @@
                         <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                     </v-row>
 
-                    <v-card
-                        v-for="(baidang, index) in baidangs"
-                        :key="index"
-                        elevation="10"
-                        color="white"
-                        class="ma-6 ml-5"
-                        width="325"
-                        height="500"
-                    >
-                        <bai-dang-card :baidang="baidang" :hinhanh="baidang.hinhanh" :user="baidang.user" />
-                    </v-card>
+                    <bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" :hinhanh="baidang.hinhanh" :user="baidang.user" />
                 </v-row>
             </v-col>
         </v-row>
@@ -99,6 +86,18 @@ export default {
         //     }, 600),
         //     deep: true,
         // },
+        selected(newVal) {
+            if (newVal === 'Mới nhất') {
+                this.baidangs = this._.sortBy(this.baidangs, (o) => o.created_at, 'asc')
+                console.log('news', this.baidangs)
+            } else if (newVal === 'Cũ nhất') {
+                this.baidangs = this._.sortBy(this.baidangs, (o) => o.created_at).reverse()
+            } else if (newVal === 'Giá tăng dần') {
+                this.baidangs = this._.sortBy(this.baidangs, (o) => o.gia)
+            } else {
+                this.baidangs = this._.sortBy(this.baidangs, (o) => o.gia).reverse()
+            }
+        },
         page() {
             this.baidangs = null
             window.scrollTo({
@@ -119,7 +118,7 @@ export default {
 
     created() {
         this.getbaidangs()
-        $nuxt.$on('search', () => {
+        this.$nuxt.$on('search', () => {
             this.baidangs = null
             this.getbaidangs()
         })

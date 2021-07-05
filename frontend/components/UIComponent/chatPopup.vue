@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex flex-row flex-row-reverse">
         <div class="msg-overplay-container">
-            <div v-if="$auth.loggedIn" class="msg-overlay-list-bubble--is-maximum" :class="{ 'msg-overlay-list-bubble--is-minimized': !isExpanded }">
+            <div class="msg-overlay-list-bubble--is-maximum" :class="{ 'msg-overlay-list-bubble--is-minimized': !isExpanded }">
                 <div class="msg-list-bubble elevation-10">
                     <div class="header-chat d-flex flex-row align-center justify-space-between pa-2 cursor-pointer" @click="toogleExpaneded">
                         <div>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="search-chat pa-2">
                         <v-text-field
-                            v-model.lazy="searchContactID"
+                            v-model="searchContactID"
                             :hide-details="true"
                             class="searchContact"
                             color="green"
@@ -46,9 +46,8 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="msg-overlay-list-bubble--is-minimized">Chat</div>
             <!--Cái hộp này -->
-            <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage" />
+            <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage"></chat-popup-content>
         </div>
         <sweet-modal ref="errorModal" title="Lỗi khi gửi tin nhắn đi" enable-mobile-fullscreen icon="error"> Gặp lỗi trong quá trình gửi tin nhắn, vui lòng liên hệ QTV sớm nhất! </sweet-modal>
     </div>
@@ -60,7 +59,7 @@ import ChatPopupContent from '@/components/Chat/ChatPopupContent'
 export default {
     name: 'ChatPopup',
     components: { ChatPopupContent, ContactsList },
-    data: () => {
+    data() {
         return {
             isExpanded: false,
             searchContactID: undefined,
@@ -72,9 +71,9 @@ export default {
         }
     },
     computed: {
-        channel() {
-            return window.Echo.join('user.online')
-        },
+        // channel() {
+        //     return window.Echo.join('user.online')
+        // },
     },
     watch: {
         searchContactID(newValue) {
@@ -93,20 +92,17 @@ export default {
         },
     },
     created() {
-        this.$Echo
-            .join('chat.0')
-            .here((users) => {
-                alert('In the channel!')
-                console.log(users)
-            })
-            .joining((user) => {
-                console.log('joining', user)
-                this.$axios.$put('http://localhost:8000/users/online')
-            })
+        // window.Echo.join('chat.0')
+        //     .here((users) => {
+        //         alert('In the channel!')
+        //         console.log(users)
+        //     })
+        //     .joining((user) => {
+        //         console.log('joining', user)
+        //         this.$axios.$put('http://localhost:8000/users/online')
+        //     })
     },
     mounted() {
-        console.log(this.$store.state.baidangs)
-
         // Hanlder Error when send message
         this.$nuxt.$on('error', () => {
             this.$refs.errorModal.open()

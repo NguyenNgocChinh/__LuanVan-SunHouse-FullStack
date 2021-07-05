@@ -5,7 +5,9 @@
             <Nuxt />
         </v-main>
         <FooterDefault />
-        <chat-popup />
+        <client-only>
+            <chat-popup v-if="$auth.loggedIn"></chat-popup>
+        </client-only>
     </v-app>
 </template>
 

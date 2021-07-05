@@ -396,11 +396,11 @@ export default {
             }
         },
         showNumberPhone() {
-            this.numberphone = window.document.getElementById('numberphone').dataset.phone.toString().trim()
+            this.numberphone = document.getElementById('numberphone').dataset.phone.toString().trim()
             this.isHideNumberPhone = false
         },
         hideNumberPhone() {
-            const num = window.document.getElementById('numberphone').dataset.phone.toString().trim()
+            const num = document.getElementById('numberphone').dataset.phone.toString().trim()
             this.numberphone = num.slice(0, 5) + '***'
             this.isHideNumberPhone = true
         },
@@ -412,7 +412,7 @@ export default {
             // console.log(viewer)
             // viewer.show()
             let index = 0
-            const carousel = window.document.getElementById('carouselTop')
+            const carousel = document.getElementById('carouselTop')
             const items = carousel.getElementsByClassName('owl-item')
             for (let i = 0; i < items.length; i++) {
                 const classItem = items[i].className.split(' ')

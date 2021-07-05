@@ -1,5 +1,6 @@
 import ENV from '@/api/baidang'
 import axios from 'axios'
+import { sortBy } from '@/assets/js/sortBy'
 export const state = () => ({
     state: {
         Sidebar_drawer: null,
@@ -10,6 +11,7 @@ export const state = () => ({
         loadingSearchResult: false,
     },
     baidangs: [],
+    baidang_hots: [],
 })
 
 export const mutations = {
@@ -28,6 +30,9 @@ export const mutations = {
     SET_BAIDANG(state, payload) {
         state.baidangs = payload
     },
+    SET_BAIDANG_HOT(state, payload) {
+        state.baidang_hots = payload
+    },
 }
 
 export const getters = {
@@ -38,7 +43,8 @@ export const getters = {
         return state.baidangs
     },
     GET_BAIDANG_HOT(state) {
-        return state.baidangs
+        return state.baidang_hots
+        // return baidanghots
     },
     GET_BAIDANG_CHOTHUE(state) {
         return state.baidangs.filter((baidang) => baidang.isChoThue === 1)
@@ -49,21 +55,22 @@ export const getters = {
 }
 
 export const actions = {
-    // nuxtServerInit is called by Nuxt.js before server-rendering every page
     async nuxtServerInit({ dispatch }) {
-        await dispatch('storeDispatchFunc')
-        console.log('ádadadasd')
+        await dispatch('storeBaiDang')
+        dispatch('ORDER_BAIDANG_HOT')
     },
-
-    // async nuxtServerInit({ commit, state }, { app }) {
-    //     const res = await axios.get(ENV.baidangs)
-    //     commit('SET_BAIDANG', res.data.baidangs)
-    // },
-
     // axios...
-    async storeDispatchFunc({ commit }) {
-        const { data } = await this.$axios.$get(ENV.baidangs)
+    async storeBaiDang({ commit }) {
+        const { data } = await axios.get(ENV.baidangs)
         commit('SET_BAIDANG', data.baidangs)
-        console.log(data)
+    },
+    async ORDER_BAIDANG_HOT({ commit, state }) {
+        await commit(
+            'SET_BAIDANG_HOT',
+            sortBy(state.baidangs, {
+                prop: 'luotxem',
+                desc: true,
+            }).slice(0, 10)
+        )
     },
 }

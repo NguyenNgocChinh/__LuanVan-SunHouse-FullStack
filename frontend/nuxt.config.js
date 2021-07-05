@@ -1,10 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 import vi from './locale/vi'
 export default {
-    ssr: false,
+    ssr: true,
     target: 'static',
-    mode: 'spa',
-    // fetchOnServer: false,
+    // mode: 'spa',
+    fetchOnServer: false,
     // generate: {
     //     fallback: true,
     // },
