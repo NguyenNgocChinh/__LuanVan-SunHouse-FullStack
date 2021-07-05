@@ -3,6 +3,8 @@ import vi from './locale/vi'
 export default {
     ssr: false,
     target: 'static',
+    mode: 'spa',
+    // fetchOnServer: false,
     // generate: {
     //     fallback: true,
     // },
@@ -20,7 +22,7 @@ export default {
                 name: 'viewport',
                 content: 'width=device-width, initial-scale=1',
             },
-            { hid: 'description', name: 'description', content: '' },
+            { hid: 'description', name: 'description', content: 'Trang mua bán bất động sản cho người Việt' },
         ],
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -32,13 +34,12 @@ export default {
                 src: '/js/lodash.min.js',
                 type: 'text/javascript',
             },
-
             {
-                src: '/notify.js',
+                src: '/js/OneSignalSDK.js',
                 type: 'text/javascript',
             },
             {
-                src: '/js/OneSignalSDK.js',
+                src: '/notify.js',
                 type: 'text/javascript',
             },
             { src: '/js/jquery-3.6.0.min.js' },
@@ -116,7 +117,7 @@ export default {
         },
     },
 
-    loading: '~/components/Loading.vue',
+    loading: '@/components/Loading.vue',
     toast: {
         position: 'top-right',
         duration: 2000,

@@ -71,7 +71,11 @@ export default {
             selectedList: [],
         }
     },
-
+    computed: {
+        channel() {
+            return window.Echo.join('user.online')
+        },
+    },
     watch: {
         searchContactID(newValue) {
             const result = this.filterContacts(this.contacts, newValue)
@@ -88,7 +92,21 @@ export default {
             immediate: true,
         },
     },
+    created() {
+        this.$Echo
+            .join('chat.0')
+            .here((users) => {
+                alert('In the channel!')
+                console.log(users)
+            })
+            .joining((user) => {
+                console.log('joining', user)
+                this.$axios.$put('http://localhost:8000/users/online')
+            })
+    },
     mounted() {
+        console.log(this.$store.state.baidangs)
+
         // Hanlder Error when send message
         this.$nuxt.$on('error', () => {
             this.$refs.errorModal.open()
@@ -122,6 +140,16 @@ export default {
                 window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
                     self.hanleIncoming(e.message)
                 })
+
+                // window.Echo.join('user-online')
+                //     .here((users) => {
+                //         alert('In the channel!')
+                //         console.log(users)
+                //     })
+                //     .joining((user) => {
+                //         console.log('joining', user)
+                //         this.$axios.$put('http://localhost:8000/users/online')
+                //     })
             }
         },
         getAvatar(user) {

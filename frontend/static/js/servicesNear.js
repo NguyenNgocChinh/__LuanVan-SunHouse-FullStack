@@ -5,52 +5,34 @@ const API_BING_KEY2 = 'Anw00y2mhnc85AKvRbu1T_GyW1MDDN-PVp21Dbqoj0YC7n1bDnSSfWg1k
 
 export function getTruongHoc(address, postLocate) {
     return new Promise(function (resolve) {
-        axios
-            .get(
-                'https://nominatim.openstreetmap.org/?q=' +
-                    address +
-                    '[school]&addressdetails=1&format=json&limit=15&countrycodes=vn'
-            )
-            .then((data) => {
-                processAddNewItem(data.data, postLocate).then(function (list) {
-                    resolve(list)
-                })
+        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[school]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
+            processAddNewItem(data.data, postLocate).then(function (list) {
+                resolve(list)
             })
+        })
     })
 }
 
 export function getBenhVien(address, postLocate) {
     return new Promise(function (resolve) {
-        axios
-            .get(
-                'https://nominatim.openstreetmap.org/?q=' +
-                    address +
-                    '[hospitals]&addressdetails=1&format=json&limit=15&countrycodes=vn'
-            )
-            .then((data) => {
-                processAddNewItem(data.data, postLocate).then(function (list) {
-                    console.log('benhvien', list)
+        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[hospitals]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
+            processAddNewItem(data.data, postLocate).then(function (list) {
+                console.log('benhvien', list)
 
-                    resolve(list)
-                })
+                resolve(list)
             })
+        })
     })
 }
 
 export function getNganHang(address, postLocate) {
     return new Promise(function (resolve) {
-        axios
-            .get(
-                'https://nominatim.openstreetmap.org/?q=' +
-                    address +
-                    '[bank]&addressdetails=1&format=json&limit=15&countrycodes=vn'
-            )
-            .then((data) => {
-                processAddNewItem(data.data, postLocate).then(function (list) {
-                    console.log('nganhang', list)
-                    resolve(list)
-                })
+        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[bank]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
+            processAddNewItem(data.data, postLocate).then(function (list) {
+                console.log('nganhang', list)
+                resolve(list)
             })
+        })
     })
 }
 
@@ -84,8 +66,7 @@ function processAddNewItem(data, postLocate) {
 /// ////
 
 export function getPostLocation(address) {
-    const url =
-        'https://nominatim.openstreetmap.org/?q=' + address + '&addressdetails=1&format=json&limit=1&countrycodes=vn'
+    const url = 'https://nominatim.openstreetmap.org/?q=' + address + '&addressdetails=1&format=json&limit=1&countrycodes=vn'
     return new Promise(function (resolve, reject) {
         try {
             axios.get(url).then(function (data) {
@@ -162,13 +143,7 @@ function secondsToHms(d) {
 function getDistanceBing(p1, p2, API_BING_KEY) {
     p1 = p1.split(',').reverse().join(',')
     p2 = p2.split(',').reverse().join(',')
-    const url =
-        'https://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=' +
-        p1 +
-        '&wp.1=' +
-        p2 +
-        '&avoid=minimizeTolls&key=' +
-        API_BING_KEY
+    const url = 'https://dev.virtualearth.net/REST/V1/Routes/Driving?o=json&wp.0=' + p1 + '&wp.1=' + p2 + '&avoid=minimizeTolls&key=' + API_BING_KEY
     return new Promise(function (resolve, reject) {
         try {
             axios
