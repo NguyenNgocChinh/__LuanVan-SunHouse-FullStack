@@ -1,4 +1,5 @@
 import ENV from '@/api/baidang'
+import ENV_CHAT from '@/api/chat'
 import axios from 'axios'
 import { sortBy } from '@/assets/js/sortBy'
 export const state = () => ({
@@ -12,6 +13,7 @@ export const state = () => ({
     },
     baidangs: [],
     baidang_hots: [],
+    contatcs: [],
 })
 
 export const mutations = {
@@ -33,6 +35,9 @@ export const mutations = {
     SET_BAIDANG_HOT(state, payload) {
         state.baidang_hots = payload
     },
+    SET_CONTACTS(state, payload) {
+        state.contatcs = payload
+    },
 }
 
 export const getters = {
@@ -52,6 +57,9 @@ export const getters = {
     GET_BAIDANG_RAOBAN(state) {
         return state.baidangs.filter((baidang) => baidang.isChoThue === 0)
     },
+    GET_CONTACTS(state) {
+        return state.contatcs
+    },
 }
 
 export const actions = {
@@ -63,6 +71,13 @@ export const actions = {
     async storeBaiDang({ commit }) {
         const { data } = await axios.get(ENV.baidangs)
         commit('SET_BAIDANG', data.baidangs)
+    },
+    // axios...
+    async storeContact({ commit }) {
+        if (this.$auth.loggedIn) {
+            const { data } = await axios.get(ENV_CHAT.contacts, { withCredentials: true })
+            commit('SET_CONTACTS', data)
+        }
     },
     async ORDER_BAIDANG_HOT({ commit, state }) {
         await commit(

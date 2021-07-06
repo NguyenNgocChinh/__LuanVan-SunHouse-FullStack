@@ -1,11 +1,8 @@
 <template>
     <div v-if="loading" class="loading-page">
-        <looping-rhombuses-spinner
-            class="center_loading"
-            :animation-duration="2500"
-            :rhombus-size="15"
-            color="#ff1d5e"
-        />
+        <client-only placeholder="Loading...">
+            <looping-rhombuses-spinner class="center_loading" :animation-duration="2500" :rhombus-size="15" color="#ff1d5e" />
+        </client-only>
     </div>
 </template>
 

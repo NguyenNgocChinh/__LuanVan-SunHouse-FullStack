@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container fluid>
         <!--TOP-->
         <v-container class="mt-5">
             <v-card class="px-6 py-6">
@@ -11,11 +11,27 @@
                             </div>
                             <div v-else>
                                 <viewer ref="viewer" style="position: relative" :options="options" :images="hinhanhArr" class="viewer" @inited="inited">
-                                    <owl-carousel id="carouselTop">
-                                        <template #body>
-                                            <img v-for="src in hinhanhArr" :key="src" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />
-                                        </template>
-                                    </owl-carousel>
+                                    <!--                                    <carousel :items="1" class="img-carousel" :nav="false" style="height: 500px">-->
+                                    <!--                                        <template slot="prev">-->
+                                    <!--                                            <v-btn icon class="prev">-->
+                                    <!--                                                <v-icon>mdi-arrow-left-thick</v-icon>-->
+                                    <!--                                            </v-btn>-->
+                                    <!--                                        </template>-->
+                                    <!--                                        <img v-for="src in hinhanhArr" :key="src" :alt="baidang.tieude" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />-->
+                                    <!--                                        <template slot="next">-->
+                                    <!--                                            <v-btn icon class="next">-->
+                                    <!--                                                <v-icon>mdi-arrow-right-thick</v-icon>-->
+                                    <!--                                            </v-btn>-->
+                                    <!--                                        </template>-->
+                                    <!--                                    </carousel>-->
+                                    <!--------->
+                                    <client-only>
+                                        <owl-carousel v-if="hinhanhArr.length > 0" id="carouselTop">
+                                            <template #body>
+                                                <img v-for="src in hinhanhArr" :key="src" :alt="baidang.tieude" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />
+                                            </template>
+                                        </owl-carousel>
+                                    </client-only>
                                     <v-btn icon class="btn-preview" @click="showImgIndex">
                                         <v-icon style="color: rgba(255, 255, 255, 0.8)" size="18">mdi-arrow-expand-all</v-icon>
                                     </v-btn>
@@ -36,7 +52,6 @@
                 </v-row>
             </v-card>
         </v-container>
-
         <v-container>
             <v-banner sticky>
                 <v-row class="pt-2">
@@ -68,7 +83,7 @@
                                 {{ baidang.diachi }}
                             </div>
                             <div class="introduce-line d-flex mb-2">
-                                <div>Ngày đăng: {{ this.$moment(baidang.created_at).format('DD/MM/YYYY') || '-' }}</div>
+                                <div>Ngày đăng: {{ $moment(baidang.created_at).format('DD/MM/YYYY') || '-' }}</div>
                                 <div>Lượt xem: {{ baidang.luotxem || '-' }}</div>
                             </div>
                             <div class="col-12 d-flex align-items-center pl-0 mb-2 price-sec">
@@ -164,13 +179,19 @@
                                             </v-tabs>
                                             <v-tabs-items v-model="tabs">
                                                 <v-tab-item>
-                                                    <data-table :items="dsTruongHoc" :headers="headers" />
+                                                    <client-only>
+                                                        <v-data-table :items="dsTruongHoc" :headers="headers" />
+                                                    </client-only>
                                                 </v-tab-item>
                                                 <v-tab-item>
-                                                    <data-table :items="dsBenhVien" :headers="headers" />
+                                                    <client-only>
+                                                        <v-data-table :items="dsBenhVien" :headers="headers" />
+                                                    </client-only>
                                                 </v-tab-item>
                                                 <v-tab-item>
-                                                    <data-table :items="dsNganHang" :headers="headers" :loading="servicesLoading" />
+                                                    <client-only>
+                                                        <v-data-table :items="dsNganHang" :headers="headers" :loading="servicesLoading" />
+                                                    </client-only>
                                                 </v-tab-item>
                                             </v-tabs-items>
                                         </v-expansion-panel-content>
@@ -196,7 +217,7 @@
                                 </v-row>
                                 <v-row class="mb-2"><v-divider /></v-row>
                                 <v-row class="pl-3 mb-2">
-                                    <div>Tham gia từ: {{ this.$moment(user.created_at).format('MM/YYYY') || '-' }}</div>
+                                    <div>Tham gia từ: {{ $moment(user.created_at).format('MM/YYYY') || '-' }}</div>
                                 </v-row>
                                 <v-row class="pl-3 mb-2">
                                     <div>Số tin đăng: {{ user.sobaidang || '-' }}</div>
@@ -207,7 +228,7 @@
                             </v-card>
                             <div class="d-flex justify-space-between align-center ml-3 wrapper-phone">
                                 <div id="numberphone" class="phone" :data-phone="user.sdt">
-                                    {{ this.numberphone }}
+                                    {{ numberphone }}
                                 </div>
                                 <a v-if="isHideNumberPhone" class="white--text" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
                                 <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
@@ -217,23 +238,25 @@
                 </v-card>
             </div>
         </v-container>
-    </div>
+    </v-container>
 </template>
 
 <script>
 import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
 import Vue from 'vue'
+import Viewer from 'v-viewer'
 import ENV from '@/api/baidang'
 import ENVAPP from '@/api/app'
 import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
-import OwlCarousel from '@/components/UIComponent/owlCarousel'
-import DataTable from '@/components/UIComponent/dataTable'
+
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
+
 export default {
-    components: { DataTable, OwlCarousel },
+    components: {
+        'owl-carousel': () => import('@/components/UIComponent/owlCarousel'),
+    },
     data() {
         return {
             tabs: null,
@@ -343,27 +366,29 @@ export default {
         truncate(str, n, useWordBound) {
             truncateSpace(str, n, useWordBound)
         },
+        saveHistory(data) {
+            // Save History localStorage
+            const history = JSON.parse(localStorage.getItem('history'))
+            let saveToLocalStorage = history || []
+            if (this._.some(saveToLocalStorage, data)) {
+                saveToLocalStorage.splice(
+                    saveToLocalStorage.findIndex((x) => x.id === data.id),
+                    1
+                )
+            }
+            data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
+            saveToLocalStorage.unshift(data)
+            saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
+            if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
+
+            localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
+            // Save localStorage
+        },
+
         getchitietsp() {
             try {
-                this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
+                this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
                     this.baidang = data
-                    // Save localStorage
-                    const history = JSON.parse(localStorage.getItem('history'))
-                    let saveToLocalStorage = history || []
-                    if (this._.some(saveToLocalStorage, data)) {
-                        saveToLocalStorage.splice(
-                            saveToLocalStorage.findIndex((x) => x.id === data.id),
-                            1
-                        )
-                    }
-                    data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
-                    saveToLocalStorage.unshift(data)
-                    saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
-                    if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
-
-                    localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
-                    // Save localStorage
-
                     this.user = this.baidang.user
                     this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
                     const self = this
@@ -374,56 +399,62 @@ export default {
                         const name = this.URI_DICRECTORY_UPLOAD + item.filename
                         self.hinhanhArr.push(name)
                     })
-                    await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
-                        if (typeof postLocate !== 'undefined') {
-                            this.servicesLoading = true
-                            serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
-                                this.dsTruongHoc = data
-                            })
-                            serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
-                                this.dsBenhVien = data
-                                this.servicesLoading = false
-                            })
-                            serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
-                                this.dsNganHang = data
-                                this.servicesLoading = false
-                            })
-                        }
-                    })
+                    this.saveHistory(data)
+                    // await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
+                    //     if (typeof postLocate !== 'undefined') {
+                    //         this.servicesLoading = true
+                    //         serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
+                    //             this.dsTruongHoc = data
+                    //         })
+                    //         serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
+                    //             this.dsBenhVien = data
+                    //             this.servicesLoading = false
+                    //         })
+                    //         serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
+                    //             this.dsNganHang = data
+                    //             this.servicesLoading = false
+                    //         })
+                    //     }
+                    // })
                 })
             } catch (e) {
                 console.log(e)
             }
         },
         showNumberPhone() {
-            this.numberphone = document.getElementById('numberphone').dataset.phone.toString().trim()
-            this.isHideNumberPhone = false
+            if (process.browser) {
+                this.numberphone = document.getElementById('numberphone').dataset.phone.toString().trim()
+                this.isHideNumberPhone = false
+            }
         },
         hideNumberPhone() {
-            const num = document.getElementById('numberphone').dataset.phone.toString().trim()
-            this.numberphone = num.slice(0, 5) + '***'
-            this.isHideNumberPhone = true
+            if (process.browser) {
+                const num = document.getElementById('numberphone').dataset.phone.toString().trim()
+                this.numberphone = num.slice(0, 5) + '***'
+                this.isHideNumberPhone = true
+            }
         },
         inited(viewer) {
-            this.$viewer = viewer
+            if (process.browser) {
+                this.$viewer = viewer
+            }
         },
         showImgIndex() {
-            // const viewer = this.$el.querySelector('.images')
-            // console.log(viewer)
-            // viewer.show()
-            let index = 0
-            const carousel = document.getElementById('carouselTop')
-            const items = carousel.getElementsByClassName('owl-item')
-            for (let i = 0; i < items.length; i++) {
-                const classItem = items[i].className.split(' ')
-                for (let j = 0; j < classItem.length; j++) {
-                    if (classItem[j] === 'active') {
-                        index = i
-                        break
+            if (process.browser) {
+                let index = 0
+                const carousel = document.getElementById('carouselTop')
+                const items = carousel.getElementsByClassName('owl-item')
+                for (let i = 0; i < items.length; i++) {
+                    const classItem = items[i].className.split(' ')
+                    for (let j = 0; j < classItem.length; j++) {
+                        if (classItem[j] === 'active') {
+                            index = i
+                            break
+                        }
                     }
                 }
+                this.$viewer.view(index)
             }
-            this.$viewer.view(index)
         },
         isValidHttpUrl(string) {
             let url

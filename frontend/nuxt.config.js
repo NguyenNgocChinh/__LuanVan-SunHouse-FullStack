@@ -42,7 +42,7 @@ export default {
                 src: '/notify.js',
                 type: 'text/javascript',
             },
-            { src: '/js/jquery-3.6.0.min.js' },
+            { src: '/js/jquery-3.6.0.min.js', type: 'text/javascript' },
         ],
     },
     router: {
@@ -53,14 +53,14 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        { src: '~/plugins/spinners.js', ssr: false },
+        { src: '~/plugins/spinners.js', ssr: false, mode: 'client' },
         { src: '~/plugins/rules.js', ssr: false },
         { src: '~/plugins/lodash.js', ssr: false },
         { src: '~plugins/leaflet.js', ssr: false },
         { src: '~plugins/sweetAlert.js', ssr: false },
-        { src: '~plugins/moment.js', ssr: false },
+        { src: '~plugins/moment.js', ssr: true },
         { src: '~/plugins/echo.js', ssr: false },
-        { src: '~/plugins/axios.js', ssr: false },
+        { src: '~/plugins/axios.js', ssr: true },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -118,6 +118,11 @@ export default {
     },
 
     loading: '@/components/Loading.vue',
+    // loading: () => {
+    //     if (process.client) {
+    //         return import('@/components/Loading.vue')
+    //     }
+    // },
     toast: {
         position: 'top-right',
         duration: 2000,

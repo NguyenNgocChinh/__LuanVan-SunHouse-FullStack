@@ -1,17 +1,21 @@
 <template>
-    <carousel :items="1" class="img-carousel" :nav="false" style="height: 500px">
-        <template slot="prev">
-            <v-btn icon class="prev">
-                <v-icon>mdi-arrow-left-thick</v-icon>
-            </v-btn>
-        </template>
-        <slot name="body"></slot>
-        <template slot="next">
-            <v-btn icon class="next">
-                <v-icon>mdi-arrow-right-thick</v-icon>
-            </v-btn>
-        </template>
-    </carousel>
+    <div>
+        <client-only>
+            <carousel :items="1" class="img-carousel" :nav="false" style="height: 500px">
+                <template slot="prev">
+                    <v-btn icon class="prev">
+                        <v-icon>mdi-arrow-left-thick</v-icon>
+                    </v-btn>
+                </template>
+                <slot name="body"></slot>
+                <template slot="next">
+                    <v-btn icon class="next">
+                        <v-icon>mdi-arrow-right-thick</v-icon>
+                    </v-btn>
+                </template>
+            </carousel>
+        </client-only>
+    </div>
 </template>
 
 <script>
