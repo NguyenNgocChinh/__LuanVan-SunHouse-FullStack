@@ -4,7 +4,7 @@ export default {
     ssr: true,
     target: 'static',
     // mode: 'spa',
-    fetchOnServer: false,
+    // fetchOnServer: false,
     // generate: {
     //     fallback: true,
     // },

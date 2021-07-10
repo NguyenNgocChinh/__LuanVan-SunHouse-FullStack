@@ -180,17 +180,17 @@
                                             <v-tabs-items v-model="tabs">
                                                 <v-tab-item>
                                                     <client-only>
-                                                        <v-data-table :items="dsTruongHoc" :headers="headers" />
+                                                        <v-data-table :loading="loadingSchool" :items="dsTruongHoc" :headers="headers" />
                                                     </client-only>
                                                 </v-tab-item>
                                                 <v-tab-item>
                                                     <client-only>
-                                                        <v-data-table :items="dsBenhVien" :headers="headers" />
+                                                        <v-data-table :loading="loadingHopital" :items="dsBenhVien" :headers="headers" />
                                                     </client-only>
                                                 </v-tab-item>
                                                 <v-tab-item>
                                                     <client-only>
-                                                        <v-data-table :items="dsNganHang" :headers="headers" :loading="servicesLoading" />
+                                                        <v-data-table :items="dsNganHang" :headers="headers" :loading="loadingBank" />
                                                     </client-only>
                                                 </v-tab-item>
                                             </v-tabs-items>
@@ -259,6 +259,7 @@ export default {
     },
     data() {
         return {
+            baidang: false,
             tabs: null,
             numberphone: 'Chưa đặt số',
             isHideNumberPhone: true,
@@ -267,7 +268,6 @@ export default {
                 { text: 'Khoảng cách', value: 'distance', width: '22.5%' },
                 { text: 'Thời gian', value: 'time', width: '22.5%' },
             ],
-            baidang: false,
             dsTruongHoc: [],
             dsBenhVien: [],
             dsNganHang: [],
@@ -310,16 +310,39 @@ export default {
                 keyboard: true,
             },
             isImgFail: false,
+            // Loading
+            loadingSchool: true,
+            loadingHopital: true,
+            loadingBank: true,
         }
+    },
+    // async asyncData({ params, $axios }) {
+    //     const baidang = await $axios.$get(ENV.info + params.id)
+    //     this.baidang
+    // },
+    async fetch() {
+        const data = await this.$axios.$get(ENV.info + this.$route.params.id)
+        this.baidang = data
+        this.user = this.baidang.user
+        this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
+        const self = this
+        this.baidang.tiennghi.forEach((item) => {
+            self.tiennghiArr.push(item.ten_tiennghi)
+        })
+        this.baidang.hinhanh.forEach((item) => {
+            const name = this.URI_DICRECTORY_UPLOAD + item.filename
+            self.hinhanhArr.push(name)
+        })
+        this.saveHistory(data)
     },
     head() {
         return {
-            title: this.title,
+            title: `${this.title}`,
             meta: [
                 {
                     hid: 'description',
                     name: 'description',
-                    content: this.description,
+                    content: `${this.description}`,
                 },
                 {
                     hid: 'type',
@@ -356,9 +379,12 @@ export default {
             return this.baidang ? this.truncate(this.baidang.noidung, 100, true) : 'SUNHOUSE mua bán bất động sản cho người Việt'
         },
     },
-    mounted() {
-        this.getchitietsp()
+    watch: {
+        baidang() {
+            this.searchNear(this.baidang.diachi)
+        },
     },
+    mounted() {},
     methods: {
         getImg(hinh) {
             return this.URI_DICRECTORY_UPLOAD + hinh.filename
@@ -367,58 +393,23 @@ export default {
             truncateSpace(str, n, useWordBound)
         },
         saveHistory(data) {
-            // Save History localStorage
-            const history = JSON.parse(localStorage.getItem('history'))
-            let saveToLocalStorage = history || []
-            if (this._.some(saveToLocalStorage, data)) {
-                saveToLocalStorage.splice(
-                    saveToLocalStorage.findIndex((x) => x.id === data.id),
-                    1
-                )
-            }
-            data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
-            saveToLocalStorage.unshift(data)
-            saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
-            if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
+            if (process.browser) {
+                // Save History localStorage
+                const history = JSON.parse(localStorage.getItem('history'))
+                let saveToLocalStorage = history || []
+                if (this._.some(saveToLocalStorage, data)) {
+                    saveToLocalStorage.splice(
+                        saveToLocalStorage.findIndex((x) => x.id === data.id),
+                        1
+                    )
+                }
+                data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
+                saveToLocalStorage.unshift(data)
+                saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
+                if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
 
-            localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
-            // Save localStorage
-        },
-
-        getchitietsp() {
-            try {
-                this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
-                    this.baidang = data
-                    this.user = this.baidang.user
-                    this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
-                    const self = this
-                    this.baidang.tiennghi.forEach((item) => {
-                        self.tiennghiArr.push(item.ten_tiennghi)
-                    })
-                    this.baidang.hinhanh.forEach((item) => {
-                        const name = this.URI_DICRECTORY_UPLOAD + item.filename
-                        self.hinhanhArr.push(name)
-                    })
-                    this.saveHistory(data)
-                    // await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
-                    //     if (typeof postLocate !== 'undefined') {
-                    //         this.servicesLoading = true
-                    //         serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
-                    //             this.dsTruongHoc = data
-                    //         })
-                    //         serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
-                    //             this.dsBenhVien = data
-                    //             this.servicesLoading = false
-                    //         })
-                    //         serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
-                    //             this.dsNganHang = data
-                    //             this.servicesLoading = false
-                    //         })
-                    //     }
-                    // })
-                })
-            } catch (e) {
-                console.log(e)
+                localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
+                // Save localStorage
             }
         },
         showNumberPhone() {
@@ -473,6 +464,32 @@ export default {
         },
         wrongImage() {
             this.isImgFail = true
+        },
+        async searchNear(address) {
+            const urlGetAddressFromXY = `https://nominatim.openstreetmap.org/reverse?lat=${this.baidang.toadoY}&lon=${this.baidang.toadoX}&format=json&limit=1`
+            const finalAddress = await this.$axios.$get(urlGetAddressFromXY)
+            const postLocate = `${this.baidang.toadoX},${this.baidang.toadoY}`
+            serviceNear.getTruongHoc(finalAddress.display_name, postLocate).then((data) => {
+                this.dsTruongHoc = data
+                this.loadingSchool = false
+            })
+            serviceNear.getBenhVien(finalAddress.display_name, postLocate).then((data) => {
+                this.dsBenhVien = data
+                this.loadingHopital = false
+            })
+            serviceNear.getNganHang(finalAddress.display_name, postLocate).then((data) => {
+                this.dsNganHang = data
+                this.loadingBank = false
+            })
+
+            // serviceNear.getBenhVien(address, postLocate).then((data) => {
+            //     this.dsBenhVien = data
+            //     this.servicesLoading = false
+            // })
+            // serviceNear.getNganHang(address, postLocate).then((data) => {
+            //     this.dsNganHang = data
+            //     this.servicesLoading = false
+            // })
         },
     },
 }

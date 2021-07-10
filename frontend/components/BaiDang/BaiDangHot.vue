@@ -32,18 +32,11 @@ export default {
         baidanghots: [],
         baidanghots_loading: true,
     }),
-    created() {
+    mounted() {
         this.getBaiDangHot()
     },
     methods: {
         async getBaiDangHot() {
-            // try {
-            //     this.$axios.$get(ENV.hot).then((res) => {
-            //         this.baidanghots = res.baidangs
-            //         this.baidanghots_loading = false
-            //     })
-            // } catch (e) {}
-
             this.baidanghots = await this.$store.getters.GET_BAIDANG_HOT
             this.baidanghots_loading = false
         },

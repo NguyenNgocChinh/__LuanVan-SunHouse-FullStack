@@ -4,13 +4,19 @@
             <h3 class="pt-8 Black--text">NHÀ BÁN MỚI NHẤT</h3>
             <h4 class="py-2 red--text">Sun House trao trọn niềm tin</h4>
             <v-row>
-                <v-progress-circular v-if="baidangs_loading" class="loading" indeterminate color="white"></v-progress-circular>
-                <div v-if="(baidangs.length === 0) & !baidangs_loading" class="ml-3 my-4">Hiện tại không có bài đăng nào là rao bán trên hệ thống!</div>
-                <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
-                    <v-slide-item v-for="baidang in baidangs" :key="baidang.id" v-slot="{}">
+                <v-slide-group v-if="baidangs_loading" class="pa-4">
+                    <v-slide-item v-for="index in 5" :key="index">
+                        <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
+                    </v-slide-item>
+                </v-slide-group>
+
+                <v-slide-group v-else v-model="model" class="pa-4">
+                    <v-slide-item v-for="baidang in baidangs" :key="baidang.id">
                         <bai-dang-card :baidang="baidang" />
                     </v-slide-item>
                 </v-slide-group>
+
+                <div v-if="(baidangs.length === 0) & !baidangs_loading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào là Rao Bán trên hệ thống!</div>
             </v-row>
         </v-container>
     </v-container>
@@ -31,12 +37,6 @@ export default {
     },
     methods: {
         async getRaoBan() {
-            // try {
-            //     const baidangs = await this.$axios.$get(ENV.raoban)
-            //     this.baidangs = baidangs.baidangs
-            // } catch (e) {
-            //     console.log(e)
-            // }
             this.baidangs = await this.$store.getters.GET_BAIDANG_RAOBAN
             this.baidangs_loading = false
         },
@@ -49,5 +49,12 @@ export default {
 }
 .loading {
     margin: 50px auto;
+}
+</style>
+<style lang="scss" scoped>
+@for $i from 2 through 10 {
+    .animate__fadeInRight:nth-child(#{$i}n) {
+        animation-delay: #{$i * 0.1}s;
+    }
 }
 </style>

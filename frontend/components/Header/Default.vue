@@ -3,29 +3,24 @@
         <!--IS DESKTOP-->
         <v-app-bar v-show="!isMobile" dense flat app color="sunhouse_primary">
             <v-toolbar-title class="text-uppercase">
-                <nuxt-link class="text-decoration-none white--text" to="/"
-                    ><span class="font-weight-light">Sun</span><b>House</b></nuxt-link
-                >
+                <nuxt-link class="text-decoration-none white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b></nuxt-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <div class="list-menu">
-                <nuxt-link
-                    v-for="(item, index) in listMenus"
-                    :key="index"
-                    class="text-decoration-none white--text"
-                    :to="item.href"
-                >
+                <nuxt-link v-for="(item, index) in listMenus" :key="index" class="text-decoration-none white--text" :to="item.href">
                     <v-btn class="navlink white--text">
                         <span>{{ item.menu }}</span>
                     </v-btn>
                 </nuxt-link>
             </div>
             <v-spacer></v-spacer>
-            <!--Loggin: flase-->
-            <NotLogin v-if="!$auth.user" />
-            <!--Loggin: true-->
-            <HasLogin v-else />
+            <client-only>
+                <!--Loggin: flase-->
+                <NotLogin v-if="!$auth.user" />
+                <!--Loggin: true-->
+                <HasLogin v-else />
+            </client-only>
             <v-btn elevation="2" rounded color="sunhouse_pinkLinght" to="/GuiTaiSan">
                 <!--<v-icon dark> mdi-plus</v-icon>-->
                 <span class="text-uppercase">Đăng tin</span>
@@ -36,9 +31,7 @@
             <v-app-bar dense flat fixed color="sunhouse_primary">
                 <v-app-bar-nav-icon class="white--text" @click="isMenuResponsive = true"></v-app-bar-nav-icon>
                 <v-toolbar-title class="white--text">
-                    <nuxt-link class="text-decoration-none white--text" to="/"
-                        ><span class="font-weight-light">Sun</span><b>House</b>
-                    </nuxt-link>
+                    <nuxt-link class="text-decoration-none white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b> </nuxt-link>
                 </v-toolbar-title>
                 <v-spacer />
                 <!--LOGIN-->
@@ -91,7 +84,7 @@ import HasLogin from '@/components/User/HasLogin'
 export default {
     name: 'HeaderDefault',
     components: { HasLogin, NotLogin },
-    data: () => {
+    data() {
         return {
             isMenuResponsive: false,
             isMobile: false,

@@ -42,13 +42,17 @@
                             ></v-text-field>
                         </div>
                         <div class="conctat-list">
-                            <v-icon v-if="contacts.length < 1" size="42px" class="center-element" color="green">mdi-spin mdi-loading</v-icon>
-                            <ContactsList v-else :selected-contact="selectedContact" :contacts="tempContacts || contacts" @selected="startConversationWith"></ContactsList>
+                            <client-only>
+                                <v-icon v-if="contacts.length < 1" size="42px" class="center-element" color="green">mdi-spin mdi-loading</v-icon>
+                                <ContactsList v-else :selected-contact="selectedContact" :contacts="tempContacts || contacts" @selected="startConversationWith"></ContactsList>
+                            </client-only>
                         </div>
                     </div>
                 </div>
                 <!--BOX CHAT -->
-                <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage"></chat-popup-content>
+                <client-only>
+                    <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage"></chat-popup-content>
+                </client-only>
             </div>
             <sweet-modal ref="errorModal" title="Lỗi khi gửi tin nhắn đi" enable-mobile-fullscreen icon="error"> Gặp lỗi trong quá trình gửi tin nhắn, vui lòng liên hệ QTV sớm nhất! </sweet-modal>
         </div>
@@ -88,7 +92,8 @@ export default {
             immediate: true,
         },
     },
-    created() {
+    created() {},
+    mounted() {
         // window.Echo.join('chat.0')
         //     .here((users) => {
         //         alert('In the channel!')
@@ -98,8 +103,6 @@ export default {
         //         console.log('joining', user)
         //         this.$axios.$put('http://localhost:8000/users/online')
         //     })
-    },
-    mounted() {
         // Hanlder Error when send message
         this.$nuxt.$on('error', () => {
             this.$refs.errorModal.open()

@@ -2,20 +2,22 @@
 import axios from 'axios'
 const API_BING_KEY = 'AlV_4k55Lq1amnv2OxEkXYYV7Tb2x-herLgYbqKsDvOS96Dp3ajO30XtxVu_ZgaU'
 const API_BING_KEY2 = 'Anw00y2mhnc85AKvRbu1T_GyW1MDDN-PVp21Dbqoj0YC7n1bDnSSfWg1kz5b7T2r'
-
+const API_BING_KEY3 = 'AquqOGbx9Qd8w6L9ZnSAXKJXNd354grC-8gn6cbcSkDysPjbC_1iL7_X1bUX0sXP'
+// https://nominatim.openstreetmap.org/search?q=schools%20in%20180%20Cao%20Lo&format=json
+// https://nominatim.openstreetmap.org/search?q=schools%20near%20180%20Cao%20Lo&format=json/
+// https://nominatim.openstreetmap.org/?q=' + address + '[bank]&addressdetails=1&format=json&limit=15&countrycodes=vn
 export function getTruongHoc(address, postLocate) {
     return new Promise(function (resolve) {
-        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[school]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
-            processAddNewItem(data.data, postLocate).then(function (list) {
-                resolve(list)
-            })
+        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[school]&addressdetails=1&format=json&limit=15').then(async (data) => {
+            const result = await processAddNewItem(data.data, postLocate)
+            resolve(result)
         })
     })
 }
 
 export function getBenhVien(address, postLocate) {
     return new Promise(function (resolve) {
-        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[hospitals]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
+        axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[hospitals]&addressdetails=1&format=json&limit=15').then((data) => {
             processAddNewItem(data.data, postLocate).then(function (list) {
                 console.log('benhvien', list)
 
@@ -36,29 +38,28 @@ export function getNganHang(address, postLocate) {
     })
 }
 
-function processAddNewItem(data, postLocate) {
+async function processAddNewItem(data, postLocate) {
     if (data.length > 0) {
-        return new Promise(function (resolve) {
-            const top10 = data
-                .sort(function (a, b) {
-                    return a.importance > b.importance ? 1 : -1
-                })
-                .slice(0, 10)
-            const list = []
-
-            top10.forEach(function (item) {
-                if (typeof item.address.amenity !== 'undefined') {
-                    const amenity = item.address.amenity
-                    const schoolLocation = item.lon + ',' + item.lat
-                    getDistance(postLocate, schoolLocation).then((distance) => {
-                        if (distance === -1) return
-                        const split = distance.split('-')
-                        list.push({ name: amenity, distance: split[0], time: split[1] })
-                    })
-                }
+        const top10 = data
+            .sort(function (a, b) {
+                return a.importance > b.importance ? 1 : -1
             })
-            resolve(list)
+            .slice(0, 10)
+
+        var list = []
+
+        await top10.forEach(function (item) {
+            if (typeof item.address.amenity !== 'undefined') {
+                const amenity = item.address.amenity
+                const schoolLocation = item.lon + ',' + item.lat
+                getDistance(postLocate, schoolLocation).then((distance) => {
+                    if (distance === -1) return
+                    const split = distance.split('-')
+                    list.push({ name: amenity, distance: split[0], time: split[1] })
+                })
+            }
         })
+        return list
     }
 }
 
@@ -66,7 +67,7 @@ function processAddNewItem(data, postLocate) {
 /// ////
 
 export function getPostLocation(address) {
-    const url = 'https://nominatim.openstreetmap.org/?q=' + address + '&addressdetails=1&format=json&limit=1&countrycodes=vn'
+    const url = 'https://nominatim.openstreetmap.org/?q=' + address + '&addressdetails=1&format=json&limit=1'
     return new Promise(function (resolve, reject) {
         try {
             axios.get(url).then(function (data) {
@@ -90,8 +91,10 @@ function getDistance(p1, p2) {
     return new Promise(function (resolve, reject) {
         try {
             const url = 'https://router.project-osrm.org/route/v1/driving/' + p1 + ';' + p2 + '?exclude=motorway'
-            makeGETRequest(url)
+            axios
+                .get(url)
                 .then((result) => {
+                    result = result.data.routes[0]
                     const distance = (result.distance / 1000).toFixed(2)
                     if (distance > 10) {
                         return -1
@@ -110,23 +113,6 @@ function getDistance(p1, p2) {
 }
 
 // LIB
-function makeGETRequest(url) {
-    return new Promise(function (resolve, reject) {
-        try {
-            axios
-                .get(url)
-                .then((data) => {
-                    resolve(data.routes[0])
-                })
-                .catch((textStatus) => {
-                    reject(textStatus)
-                })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
 function secondsToHms(d) {
     d = Number(d)
     const h = Math.floor(d / 3600)
@@ -150,7 +136,7 @@ function getDistanceBing(p1, p2, API_BING_KEY) {
                 .get(url)
                 .then((data) => {
                     const result = data.data.resourceSets[0].resources[0]
-                    console.log('A-B', data)
+                    console.log('Bing...', data)
                     let distance = 0
                     let duration = 0
 
@@ -170,7 +156,7 @@ function getDistanceBing(p1, p2, API_BING_KEY) {
                 .catch((jqXHR) => {
                     p1 = p1.split(',').reverse().join(',')
                     p2 = p2.split(',').reverse().join(',')
-                    resolve(getDistanceBing(p1, p2, API_BING_KEY2))
+                    resolve(getDistanceBing(p1, p2, API_BING_KEY2 || API_BING_KEY3))
                 })
         } catch (e) {
             reject(e)

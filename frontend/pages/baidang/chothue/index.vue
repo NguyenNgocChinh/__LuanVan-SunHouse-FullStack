@@ -2,55 +2,50 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-card color class="d-flex">
+                <v-card class="d-flex">
                     <v-row align="center">
-                        <v-col cols="6">
-                            <div class="ml-2">
-                                Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng
-                                {{ detail_page.total }} kết quả
-                            </div>
+                        <v-col cols="12" lg="8">
+                            <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
                         </v-col>
 
-                        <v-col cols="6" class="d-flex align-center">
-                            <v-col cols="6">
+                        <v-col cols="12" lg="4" class="d-flex align-center">
+                            <v-col cols="4">
                                 <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
                             </v-col>
-                            <v-col cols="6">
-                                <v-select v-model="selected" :items="items"></v-select>
+                            <v-col cols="8">
+                                <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
                             </v-col>
                         </v-col>
                     </v-row>
                 </v-card>
                 <v-row class="mt-4 ml-1">
-                    <v-row v-show="!baidangs" class="">
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-                        <v-skeleton-loader class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
+                    <v-row v-if="baidangs.length < 1">
+                        <v-skeleton-loader v-for="index in 6" :key="index" light class="ma-6 ml-5" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-row>
-
-                    <lazy-bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" />
+                    <v-row v-else>
+                        <v-col v-for="baidang in baidangs" :key="baidang.id" cols="12" lg="4">
+                            <bai-dang-card outlined :baidang="baidang" />
+                        </v-col>
+                    </v-row>
                 </v-row>
             </v-col>
         </v-row>
         <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangHot"></v-pagination>
+            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangChoThue"></v-pagination>
         </div>
     </v-container>
 </template>
 
 <script>
-import ENV from '@/api/baidang'
+import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 export default {
+    components: { BaiDangCard },
     data() {
         return {
-            baidangs: null,
+            baidangs: [],
             page: 1,
             items: ['Mới nhất', 'Cũ nhất', 'Giá tăng dần', 'Giá giảm dần'],
-            selected: 'Mới nhất',
+            selected: null,
             detail_page: {
                 from: 0,
                 to: 0,
@@ -61,30 +56,51 @@ export default {
     },
     watch: {
         page() {
-            this.baidangs = null
             window.scrollTo({
-                top: 0,
+                top: 120,
                 left: 0,
                 behavior: 'smooth',
             })
-            this.getBaiDangHot()
+            this.getBaiDangChoThue(true)
+        },
+        selected() {
+            this.getBaiDangChoThue(true)
         },
     },
-    created() {
-        this.getBaiDangHot()
+    mounted() {
+        this.getBaiDangChoThue()
     },
     methods: {
-        getBaiDangHot() {
-            this.$axios
-                .$get(ENV.chothue + `?page=${this.page}`, {
-                    params: {
-                        page_size: 6,
-                    },
-                })
-                .then((result) => {
-                    this.baidangs = result.baidangs
-                    this.detail_page = result.pages[0]
-                })
+        getBaiDangChoThue(filter = false) {
+            let result = this._.sortBy(this.$store.getters.GET_BAIDANG_CHOTHUE, (o) => o.luotxem).reverse()
+            if (filter) {
+                result = this.sortBy(result)
+            }
+            const perpage = 6
+            const start = (this.page - 1) * perpage
+
+            const end = this.page * perpage > result.length ? result.length : this.page * perpage
+            this.detail_page = {
+                from: start === 0 ? 1 : start,
+                to: end,
+                total: result.length,
+                last_page: Math.ceil(result.length / perpage),
+            }
+            this.baidangs = result.slice(start, end)
+        },
+        sortBy(arr) {
+            switch (this.selected) {
+                case 'Mới nhất':
+                    return this._.sortBy(arr, (o) => o.created_at, 'asc').reverse()
+                case 'Cũ nhất':
+                    return this._.sortBy(arr, (o) => o.created_at)
+                case 'Giá tăng dần':
+                    return this._.sortBy(arr, (o) => o.gia)
+                case 'Giá giảm dần':
+                    return this._.sortBy(arr, (o) => o.gia).reverse()
+                default:
+                    return arr
+            }
         },
     },
 }
