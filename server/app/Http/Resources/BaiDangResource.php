@@ -33,11 +33,8 @@ class BaiDangResource extends JsonResource
             "thoigian" => $this->formattedCreatedDate(),
             "choduyet" => $this->choduyet,
             "trangthai" => $this->trangthai,
-<<<<<<< HEAD
             "luotxem" => $this->luotxem,
             "created_at" => $this->created_at,
-=======
->>>>>>> parent of 1edb913 (Tinh nang luot xem cua bai dang)
         ];
     }
 }
