@@ -14,14 +14,18 @@
             <!--                </v-slide-group>-->
             <!--            </v-row>-->
             <v-row>
-                <v-slide-group v-if="baidangs_loading" class="pa-4">
-                    <v-slide-item v-for="index in 5" :key="index">
-                        <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
-                    </v-slide-item>
-                </v-slide-group>
+                <v-progress-circular
+                    v-if="baidangs_loading"
+                    class="loading"
+                    indeterminate
+                    color="white"
+                ></v-progress-circular>
 
-                <v-slide-group v-else v-model="model" class="pa-4">
-                    <v-slide-item v-for="baidang in baidangs" :key="baidang.id">
+                <div v-if="(baidangs.length === 0) & !baidangs_loading" class="ml-3 mt-4">
+                    Hiện tại không có bài đăng nào là cho thuê trên hệ thống!
+                </div>
+                <v-slide-group v-else v-model="model" class="pa-4" active-class="success">
+                    <v-slide-item v-for="baidang in baidangs" :key="baidang.id" v-slot="{}">
                         <bai-dang-card :baidang="baidang" />
                     </v-slide-item>
                 </v-slide-group>
@@ -32,6 +36,7 @@
     </v-container>
 </template>
 <script>
+import ENV from '@/api/baidang'
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'ChoThue',
@@ -47,7 +52,12 @@ export default {
     },
     methods: {
         async getChoThue() {
-            this.baidangs = await this.$store.getters.GET_BAIDANG_CHOTHUE
+            try {
+                const baidangs = await this.$axios.$get(ENV.chothue)
+                this.baidangs = baidangs.baidangs
+            } catch (e) {
+                console.log(e)
+            }
             this.baidangs_loading = false
         },
     },

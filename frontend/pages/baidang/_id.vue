@@ -11,27 +11,11 @@
                             </div>
                             <div v-else>
                                 <viewer ref="viewer" style="position: relative" :options="options" :images="hinhanhArr" class="viewer" @inited="inited">
-                                    <!--                                    <carousel :items="1" class="img-carousel" :nav="false" style="height: 500px">-->
-                                    <!--                                        <template slot="prev">-->
-                                    <!--                                            <v-btn icon class="prev">-->
-                                    <!--                                                <v-icon>mdi-arrow-left-thick</v-icon>-->
-                                    <!--                                            </v-btn>-->
-                                    <!--                                        </template>-->
-                                    <!--                                        <img v-for="src in hinhanhArr" :key="src" :alt="baidang.tieude" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />-->
-                                    <!--                                        <template slot="next">-->
-                                    <!--                                            <v-btn icon class="next">-->
-                                    <!--                                                <v-icon>mdi-arrow-right-thick</v-icon>-->
-                                    <!--                                            </v-btn>-->
-                                    <!--                                        </template>-->
-                                    <!--                                    </carousel>-->
-                                    <!--------->
-                                    <client-only>
-                                        <owl-carousel v-if="hinhanhArr.length > 0" id="carouselTop">
-                                            <template #body>
-                                                <img v-for="src in hinhanhArr" :key="src" :alt="baidang.tieude" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />
-                                            </template>
-                                        </owl-carousel>
-                                    </client-only>
+                                    <owl-carousel id="carouselTop">
+                                        <template #body>
+                                            <img v-for="src in hinhanhArr" :key="src" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />
+                                        </template>
+                                    </owl-carousel>
                                     <v-btn icon class="btn-preview" @click="showImgIndex">
                                         <v-icon style="color: rgba(255, 255, 255, 0.8)" size="18">mdi-arrow-expand-all</v-icon>
                                     </v-btn>
@@ -261,7 +245,8 @@ import ENV from '@/api/baidang'
 import ENVAPP from '@/api/app'
 import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
-
+import OwlCarousel from '@/components/UIComponent/owlCarousel'
+import DataTable from '@/components/UIComponent/dataTable'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
@@ -296,9 +281,7 @@ if (process.browser) {
 }
 
 export default {
-    components: {
-        'owl-carousel': () => import('@/components/UIComponent/owlCarousel'),
-    },
+    components: { DataTable, OwlCarousel },
     data() {
         return {
             baidang: false,
@@ -358,33 +341,14 @@ export default {
             loadingBank: true,
         }
     },
-    // async asyncData({ params, $axios }) {
-    //     const baidang = await $axios.$get(ENV.info + params.id)
-    //     this.baidang
-    // },
-    async fetch() {
-        const data = await this.$axios.$get(ENV.info + this.$route.params.id)
-        this.baidang = data
-        this.user = this.baidang.user
-        this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
-        const self = this
-        this.baidang.tiennghi.forEach((item) => {
-            self.tiennghiArr.push(item.ten_tiennghi)
-        })
-        this.baidang.hinhanh.forEach((item) => {
-            const name = this.URI_DICRECTORY_UPLOAD + item.filename
-            self.hinhanhArr.push(name)
-        })
-        this.saveHistory(data)
-    },
     head() {
         return {
-            title: `${this.title}`,
+            title: this.title,
             meta: [
                 {
                     hid: 'description',
                     name: 'description',
-                    content: `${this.description}`,
+                    content: this.description,
                 },
                 {
                     hid: 'type',
@@ -421,10 +385,8 @@ export default {
             return this.baidang ? this.truncate(this.baidang.noidung, 100, true) : 'SUNHOUSE mua bán bất động sản cho người Việt'
         },
     },
-    watch: {
-        baidang() {
-            this.searchNear(this.baidang.diachi)
-        },
+    mounted() {
+        this.getchitietsp()
     },
     mounted() {},
     methods: {
@@ -434,24 +396,56 @@ export default {
         truncate(str, n, useWordBound) {
             truncateSpace(str, n, useWordBound)
         },
-        saveHistory(data) {
-            if (process.browser) {
-                // Save History localStorage
-                const history = JSON.parse(localStorage.getItem('history'))
-                let saveToLocalStorage = history || []
-                if (this._.some(saveToLocalStorage, data)) {
-                    saveToLocalStorage.splice(
-                        saveToLocalStorage.findIndex((x) => x.id === data.id),
-                        1
-                    )
-                }
-                data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
-                saveToLocalStorage.unshift(data)
-                saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
-                if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
+        getchitietsp() {
+            try {
+                this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
+                    this.baidang = data
+                    // Save localStorage
+                    const history = JSON.parse(localStorage.getItem('history'))
+                    let saveToLocalStorage = history || []
+                    if (this._.some(saveToLocalStorage, data)) {
+                        saveToLocalStorage.splice(
+                            saveToLocalStorage.findIndex((x) => x.id === data.id),
+                            1
+                        )
+                    }
+                    data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
+                    saveToLocalStorage.unshift(data)
+                    saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
+                    if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
 
-                localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
-                // Save localStorage
+                    localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
+                    // Save localStorage
+
+                    this.user = this.baidang.user
+                    this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
+                    const self = this
+                    this.baidang.tiennghi.forEach((item) => {
+                        self.tiennghiArr.push(item.ten_tiennghi)
+                    })
+                    this.baidang.hinhanh.forEach((item) => {
+                        const name = this.URI_DICRECTORY_UPLOAD + item.filename
+                        self.hinhanhArr.push(name)
+                    })
+                    await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
+                        if (typeof postLocate !== 'undefined') {
+                            this.servicesLoading = true
+                            serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
+                                this.dsTruongHoc = data
+                            })
+                            serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
+                                this.dsBenhVien = data
+                                this.servicesLoading = false
+                            })
+                            serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
+                                this.dsNganHang = data
+                                this.servicesLoading = false
+                            })
+                        }
+                    })
+                })
+            } catch (e) {
+                console.log(e)
             }
         },
         showNumberPhone() {

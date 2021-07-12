@@ -1,7 +1,6 @@
 import ENV from '@/api/baidang'
 import ENV_CHAT from '@/api/chat'
 import axios from 'axios'
-import { sortBy } from '@/assets/js/sortBy'
 export const state = () => ({
     state: {
         Sidebar_drawer: null,
@@ -63,10 +62,17 @@ export const getters = {
 }
 
 export const actions = {
+    // nuxtServerInit is called by Nuxt.js before server-rendering every page
     async nuxtServerInit({ dispatch }) {
         await dispatch('storeBaiDang')
         dispatch('ORDER_BAIDANG_HOT')
     },
+
+    // async nuxtServerInit({ commit, state }, { app }) {
+    //     const res = await axios.get(ENV.baidangs)
+    //     commit('SET_BAIDANG', res.data.baidangs)
+    // },
+
     // axios...
     async storeBaiDang({ commit }) {
         const { data } = await axios.get(ENV.baidangs)

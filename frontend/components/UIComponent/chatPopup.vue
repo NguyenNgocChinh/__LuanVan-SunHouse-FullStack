@@ -65,7 +65,7 @@ import ChatPopupContent from '@/components/Chat/ChatPopupContent'
 export default {
     name: 'ChatPopup',
     components: { ChatPopupContent, ContactsList },
-    data() {
+    data: () => {
         return {
             isExpanded: false,
             searchContactID: undefined,
@@ -75,6 +75,11 @@ export default {
             messages: [],
             selectedList: [],
         }
+    },
+    computed: {
+        channel() {
+            //return window.Echo.join('user.online')
+        },
     },
     watch: {
         searchContactID(newValue) {
@@ -129,11 +134,8 @@ export default {
         setContact() {
             if (this.$auth.loggedIn) {
                 const self = this
-                // this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
-                //     this.contacts = response
-                // })
-                this.$store.dispatch('storeContact').then(() => {
-                    this.contacts = this.$store.getters.GET_CONTACTS
+                this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+                    this.contacts = response
                 })
                 if (process.browser) {
                     // Listen Channel Private Message

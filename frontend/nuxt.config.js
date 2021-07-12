@@ -1,9 +1,9 @@
 import colors from 'vuetify/es5/util/colors'
 import vi from './locale/vi'
 export default {
-    ssr: true,
+    ssr: false,
     target: 'static',
-    // mode: 'spa',
+    mode: 'spa',
     // fetchOnServer: false,
     // generate: {
     //     fallback: true,
@@ -118,17 +118,7 @@ export default {
         },
     },
 
-    loading: '~/components/Loading.vue',
-    loadingIndicator: {
-        name: 'circle',
-        color: '#3B8070',
-        background: 'white',
-    },
-    // loading: () => {
-    //     if (process.client) {
-    //         return import('@/components/Loading.vue')
-    //     }
-    // },
+    loading: '@/components/Loading.vue',
     toast: {
         position: 'top-right',
         duration: 2000,
@@ -173,7 +163,4 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
-    env: {
-        baseUrl: process.env.BASE_URL || 'http://localhost:3000',
-    },
 }
