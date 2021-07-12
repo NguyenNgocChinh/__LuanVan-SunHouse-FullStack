@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 //});
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Broadcast::channel('chat.{id}', function ($user, $id) {
     Log::info("CHAT.ID " . $user);
         //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,...
@@ -27,6 +28,9 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
         'name' => $user->name,
     ];
 });
+=======
+
+>>>>>>> parent of 1edb913 (Tinh nang luot xem cua bai dang)
 =======
 
 >>>>>>> parent of 1edb913 (Tinh nang luot xem cua bai dang)
