@@ -25,6 +25,7 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
         'name' => $user->name,
     ];
 });
+
 //WORK...
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int)$id;
