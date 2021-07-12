@@ -164,7 +164,6 @@ class ApiBaiDangController extends Controller
 
     public function storeBaiDang(Request $request)
     {
-
         $request->validate(
             [
                 'tieude' => 'required',
@@ -174,7 +173,6 @@ class ApiBaiDangController extends Controller
                 'noidung' => 'required',
                 'sophongngu' => 'required',
                 'sophongtam' => 'required',
-                'namxaydung' => 'required',
                 'huong' => 'required',
                 'dientich' => 'required',
                 'diachi' => 'required',

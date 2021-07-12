@@ -26,15 +26,15 @@ class DatabaseSeeder extends Seeder
                 TienNghiSeeder::class,
                 BaiDangSeeder::class,
                 LocationSeeder::class,
-//                DanhGiaSeeder::class,
-//                BinhLuanSeeder::class,
+               DanhGiaSeeder::class,
+               BinhLuanSeeder::class,
 
-//                TinhThanhPhoSeeder::class,
-//                QuanHuyenSeeder::class,
-//                XaPhuongThiTranSeeder::class,
+               TinhThanhPhoSeeder::class,
+               QuanHuyenSeeder::class,
+               XaPhuongThiTranSeeder::class,
             ]
         );
         Message::factory(100)->create();
-//        BaiDang::factory(3500000)->create();
+    //    BaiDang::factory(3500000)->create();
     }
 }
