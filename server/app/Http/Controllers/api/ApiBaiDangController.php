@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\ViewPostHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
@@ -10,11 +9,11 @@ use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
 use App\Models\BaiDangHinhAnh;
 use App\Models\TienNghiBaiDang;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
@@ -23,6 +22,13 @@ use Intervention\Image\ImageManagerStatic as Image;
 class ApiBaiDangController extends Controller
 {
     public $page_size;
+
+    private function searchEqual($collection, $field, $value)
+    {
+        return $collection->$field == $value;
+    }
+
+
     public function __construct(Request $request)
     {
         $this->page_size = BaiDang::count();
@@ -32,7 +38,7 @@ class ApiBaiDangController extends Controller
 
     public function getAllPosts()
     {
-        $posts = BaiDang::where('trangthai',1)->paginate($this->page_size);
+        $posts = BaiDang::paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($posts),
             'baidangs' => BaiDangResource::collection($posts),
@@ -41,7 +47,7 @@ class ApiBaiDangController extends Controller
 
     public function getHotPosts()
     {
-        $hot_posts = BaiDang::where('trangthai',1)->latest()->paginate($this->page_size);
+        $hot_posts = BaiDang::latest()->paginate($this->page_size);
 
         return response()->json([
             'pages' => new PaginateResource($hot_posts),
@@ -78,12 +84,10 @@ class ApiBaiDangController extends Controller
         return response()->json(BaiDang::where('choduyet', 1)->count());
     }
 
-    public function getDetailPost(Request $request)
+    public function getDetailPost($id)
     {
-        $post = BaiDang::find($request->id);
-        event(new ViewPostHandler($post));
         return response()->json(
-            new BaiDangDetailResource($post)
+            new BaiDangDetailResource(BaiDang::find($id))
         );
     }
 

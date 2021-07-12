@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
 
@@ -32,17 +31,14 @@ Broadcast::channel('messages.{id}', function ($user, $id) {
 });
 
 // POST http://localhost:8000/broadcasting/auth net::ERR_FAILED [CORS error]
-Broadcast::channel('user-online', function ($user) {
+Broadcast::channel('user.online', function ($user) {
+    Log::info($user);
     //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,...
-        //    return ['id' => $user->id];
-        if(Auth::check()){
-            Log::info('user-online ' . $user);
-            return [
-                'id' => $user->id,
-            ];
-        }
-        return false;
-
+//    return ['id' => $user->id];
+    return [
+        'id' => $user->id,
+        'name' => $user->name,
+    ];
 });
 
 Broadcast::channel('chat', function ($user) {

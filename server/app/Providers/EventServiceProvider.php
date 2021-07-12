@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\ViewPostHandler;
-use App\Listeners\ViewPostHanlderListener;
 use App\Models\BaiDang;
 use App\Models\User;
 use App\Observers\BaiDangObserver;
@@ -39,11 +37,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Event::listen(
-            ViewPostHandler::class,
-            [ViewPostHanlderListener::class, 'handle']
-        );
-        Event::listen('posts.view', 'App\Demo\Events\ViewPostHandler');
         User::observe(UserObserver::class);
         BaiDang::observe(BaiDangObserver::class);
     }

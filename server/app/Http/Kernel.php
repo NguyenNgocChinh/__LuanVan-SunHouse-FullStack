@@ -89,6 +89,5 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'admin' => isAdmin::class,
         'social' => SocialMiddleware::class,
-        'filterView' => \App\Http\Middleware\FilterView::class,
     ];
 }
