@@ -61,6 +61,7 @@ export default {
         { src: '~plugins/moment.js', ssr: true },
         { src: '~/plugins/echo.js', ssr: false },
         { src: '~/plugins/axios.js', ssr: true },
+        { src: '~/plugins/fb-sdk.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -117,7 +118,12 @@ export default {
         },
     },
 
-    loading: '@/components/Loading.vue',
+    loading: '~/components/Loading.vue',
+    loadingIndicator: {
+        name: 'circle',
+        color: '#3B8070',
+        background: 'white',
+    },
     // loading: () => {
     //     if (process.client) {
     //         return import('@/components/Loading.vue')
@@ -167,4 +173,7 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
+    env: {
+        baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    },
 }

@@ -62,7 +62,7 @@
                     <div class="col-lg-4 d-flex justify-end d-sticky">
                         <v-btn text plain> <v-icon class="mr-3">mdi-heart-outline</v-icon> Yêu thích</v-btn>
                         <v-divider vertical />
-                        <v-btn text plain> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
+                        <v-btn id="shareBtn" text plain> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
                     </div>
                 </v-row>
             </v-banner>
@@ -233,6 +233,18 @@
                                 <a v-if="isHideNumberPhone" class="white--text" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
                                 <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
                             </div>
+
+                            <div class="pt-3 pl-3">
+                                <iframe
+                                    width="100%"
+                                    height="300"
+                                    style="border: 0; border-radius: 5px"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    :src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyBy5RDhN7N30EjI_lMLV8mgBOeZFpbrioA&zoom=15&q=' + baidang.toadoY + ',' + baidang.toadoX"
+                                >
+                                </iframe>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -252,6 +264,36 @@ import * as serviceNear from '@/static/js/servicesNear'
 
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
+
+if (process.browser) {
+    document.getElementById('shareBtn').onclick = function () {
+        // eslint-disable-next-line no-undef
+        FB.ui(
+            {
+                display: 'popup',
+                method: 'feed',
+                link: 'http://localhost:3000/',
+                href: 'http://localhost:3000/',
+                picture: 'http://localhost:8000/images/upload/no-image.png',
+                name: 'The name who will be displayed on the post',
+                description: 'The description who will be displayed',
+            },
+            function (response) {}
+        )
+        // eslint-disable-next-line no-undef
+        // FB.ui(
+        //     {
+        //         display: 'popup',
+        //         method: 'share_open_graph',
+        //         action_type: 'og.likes',
+        //         action_properties: JSON.stringify({
+        //             object: 'https://developers.facebook.com/docs/',
+        //         }),
+        //     },
+        //     function (response) {}
+        // )
+    }
+}
 
 export default {
     components: {
@@ -469,27 +511,18 @@ export default {
             const urlGetAddressFromXY = `https://nominatim.openstreetmap.org/reverse?lat=${this.baidang.toadoY}&lon=${this.baidang.toadoX}&format=json&limit=1`
             const finalAddress = await this.$axios.$get(urlGetAddressFromXY)
             const postLocate = `${this.baidang.toadoX},${this.baidang.toadoY}`
-            serviceNear.getTruongHoc(finalAddress.display_name, postLocate).then((data) => {
+            await serviceNear.getTruongHoc(finalAddress.display_name, postLocate).then((data) => {
                 this.dsTruongHoc = data
                 this.loadingSchool = false
             })
-            serviceNear.getBenhVien(finalAddress.display_name, postLocate).then((data) => {
+            await serviceNear.getBenhVien(finalAddress.display_name, postLocate).then((data) => {
                 this.dsBenhVien = data
                 this.loadingHopital = false
             })
-            serviceNear.getNganHang(finalAddress.display_name, postLocate).then((data) => {
+            await serviceNear.getNganHang(finalAddress.display_name, postLocate).then((data) => {
                 this.dsNganHang = data
                 this.loadingBank = false
             })
-
-            // serviceNear.getBenhVien(address, postLocate).then((data) => {
-            //     this.dsBenhVien = data
-            //     this.servicesLoading = false
-            // })
-            // serviceNear.getNganHang(address, postLocate).then((data) => {
-            //     this.dsNganHang = data
-            //     this.servicesLoading = false
-            // })
         },
     },
 }

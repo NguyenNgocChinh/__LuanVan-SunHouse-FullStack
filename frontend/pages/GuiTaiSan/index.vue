@@ -308,7 +308,14 @@
         </client-only>
     </v-container>
 </template>
-
+<!--script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js', async: true }, { src: '/js/leaflet-geosearch-bundle.min.js', async: true }],-->
+<script type="text/javascript">
+if (process.client) {
+    document.writeln("<script src='/js/leaflet.js'><" + '/script>')
+    document.writeln("<script src='/js/geosearch.umd.js'><" + '/script>')
+    document.writeln("<script src='/js/leaflet-geosearch-bundle.min.js'><" + '/script>')
+}
+</script>
 <script>
 import ENV from '@/api/baidang'
 import * as ENVL from '@/api/loai'
@@ -402,24 +409,22 @@ export default {
             loadingDiaChiCuThe: false,
         }
     },
-    head() {
-        return {
-            link: [
-                {
-                    rel: 'stylesheet',
-                    href: '/css/leaflet.css',
-                },
-                {
-                    rel: 'stylesheet',
-                    href: 'https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css',
-                },
-                {
-                    rel: 'stylesheet',
-                    href: '/css/geosearch.css',
-                },
-            ],
-            script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js', defer: true }, { src: 'https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js', defer: true }],
-        }
+    head: {
+        link: [
+            {
+                rel: 'stylesheet',
+                href: '/css/leaflet.css',
+            },
+            {
+                rel: 'stylesheet',
+                href: 'https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css',
+            },
+            {
+                rel: 'stylesheet',
+                href: '/css/geosearch.css',
+            },
+        ],
+        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }],
     },
 
     watch: {
@@ -475,8 +480,10 @@ export default {
     mounted() {
         this.$nextTick(() => {
             const map = this.$refs.map.mapObject
+            console.log('before geo search')
             const GeoSearchControl = window.GeoSearch.GeoSearchControl
             const OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider
+            console.log('before new provider')
             const provider = new OpenStreetMapProvider()
             const search = new GeoSearchControl({
                 provider,

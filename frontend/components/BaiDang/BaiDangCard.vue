@@ -16,9 +16,9 @@
             </div>
             <v-card-title class="purple--text text-uppercase">
                 <div class="card-title">
-                    <v-tooltip top :nudge-width="10" offset-overflow content-class="tooltipCustom" color="black">
-                        <template #activator="{ on }">
-                            <h3 class="cursor-pointer" v-on="on" @click="showChiTietBaiDang">
+                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                        <template #activator="{ on, attrs }">
+                            <h3 class="cursor-pointer" v-bind="attrs" v-on="on" @click="showChiTietBaiDang">
                                 {{ baidang.tieude }}
                             </h3>
                         </template>

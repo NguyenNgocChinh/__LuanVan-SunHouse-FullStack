@@ -3,7 +3,9 @@
         <v-app>
             <HeaderDefault />
             <v-main app>
-                <Nuxt />
+                <v-fade-transition hide-on-leave>
+                    <Nuxt />
+                </v-fade-transition>
             </v-main>
             <FooterDefault />
             <chat-popup v-if="$auth.loggedIn" />
