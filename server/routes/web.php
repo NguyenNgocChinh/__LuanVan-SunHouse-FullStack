@@ -46,7 +46,6 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     /*
      * SERVICES (GG-FB)
      */
-// Chỗ này thêm 1 param hả a? / chen them trong controller a'
     Route::get('/auth/{service}', [SocialLoginController::class, 'redirect']);
 
     Route::get('/auth/{service}/callback', [SocialLoginController::class, 'callback']);

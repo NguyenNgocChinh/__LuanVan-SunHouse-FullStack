@@ -59,7 +59,7 @@ class Kernel extends HttpKernel
             StartSession::class,
 //            \Laravel\Jetstream\Http\Middleware\AuthenticateSession::class,
             ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
+            // VerifyCsrfToken::class,
             SubstituteBindings::class,
         ],
 

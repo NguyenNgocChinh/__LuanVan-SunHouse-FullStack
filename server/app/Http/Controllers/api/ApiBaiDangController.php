@@ -9,10 +9,10 @@ use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
 use App\Models\BaiDangHinhAnh;
 use App\Models\TienNghiBaiDang;
-use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
@@ -23,12 +23,6 @@ class ApiBaiDangController extends Controller
 {
     public $page_size;
 
-    private function searchEqual($collection, $field, $value)
-    {
-        return $collection->$field == $value;
-    }
-
-
     public function __construct(Request $request)
     {
         $this->page_size = BaiDang::count();
@@ -38,26 +32,31 @@ class ApiBaiDangController extends Controller
 
     public function getAllPosts()
     {
-        $posts = BaiDang::paginate($this->page_size);
-        return response()->json([
-            'pages' => new PaginateResource($posts),
-            'baidangs' => BaiDangResource::collection($posts),
-        ]);
+        return response()->json(
+            BaiDangResource::collection(
+                Cache::remember('posts', 60*60*24, function () {
+                    return BaiDang::all();
+                })
+            )
+        );
     }
 
     public function getHotPosts()
     {
-        $hot_posts = BaiDang::latest()->paginate($this->page_size);
-
+        $hot_posts = BaiDang::where('trangthai', 1)
+        ->orderBy('luotxem', 'desc')
+        ->limit(10)
+        ->get();
         return response()->json([
-            'pages' => new PaginateResource($hot_posts),
-            'baidangs' => BaiDangResource::collection($hot_posts),
+            'baidangs' => BaiDangResource::collection($hot_posts)
         ]);
     }
 
     public function getRaoBanPosts()
     {
-        $raoban_posts = BaiDang::where('isChoThue', 0)->orderBy('created_at', 'desc')->paginate($this->page_size);
+        $raoban_posts = BaiDang::where(['isChoThue' => 0, 'trangthai' => 1])
+        ->orderBy('created_at', 'desc')
+        ->paginate($this->page_size);
 
         return response()->json([
             'pages' => new PaginateResource($raoban_posts),
@@ -67,7 +66,9 @@ class ApiBaiDangController extends Controller
 
     public function getChoThuePosts()
     {
-        $chothue_posts = BaiDang::where('isChoThue', 1)->orderBy('created_at', 'desc')->paginate($this->page_size);
+        $chothue_posts = BaiDang::where(['isChoThue'=> 1, 'trangthai' => 1])
+        ->orderBy('created_at', 'desc')
+        ->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($chothue_posts),
             'baidangs' => BaiDangResource::collection($chothue_posts),
@@ -81,7 +82,7 @@ class ApiBaiDangController extends Controller
 
     public function countChoDuyetPosts()
     {
-        return response()->json(BaiDang::where('choduyet', 1)->count());
+        return response()->json(BaiDang::where(['choduyet' => 1, 'trangthai' => 1])->count());
     }
 
     public function getDetailPost($id)
@@ -93,7 +94,9 @@ class ApiBaiDangController extends Controller
 
     public function getChoDuyetPosts()
     {
-        $choduyet = BaiDang::where('choduyet', 1)->orderBy('created_at', 'desc')->paginate($this->page_size);
+        $choduyet = BaiDang::where(['choduyet' => 1, 'trangthai' => 1])
+        ->orderBy('created_at', 'desc')
+        ->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($choduyet),
             'baidangs' => BaiDangResource::collection($choduyet),
