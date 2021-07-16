@@ -59,7 +59,7 @@ class Kernel extends HttpKernel
             StartSession::class,
 //            \Laravel\Jetstream\Http\Middleware\AuthenticateSession::class,
             ShareErrorsFromSession::class,
-            // VerifyCsrfToken::class,
+            VerifyCsrfToken::class,
             SubstituteBindings::class,
         ],
 
@@ -89,5 +89,6 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'admin' => isAdmin::class,
         'social' => SocialMiddleware::class,
+        'filterView' => \App\Http\Middleware\FilterView::class,
     ];
 }

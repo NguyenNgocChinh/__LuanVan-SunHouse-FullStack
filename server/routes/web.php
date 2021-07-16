@@ -73,7 +73,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     Route::group(['prefix' => 'baidang'], function () {
         Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
         Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware('auth:sanctum');
-        Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id');
+        Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id')->middleware('filterView');
         Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
         Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
         Route::post('/edit/{id}', [ApiBaiDangController::class, 'updateBaiDang'])->whereNumber('id');
@@ -101,6 +101,8 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
      * TIEN NGHI
      */
     Route::get('/tiennghi', [ApiTienNghiController::class, 'getAllTienNghi']);
+    Route::put('/tiennghi', [ApiTienNghiController::class, 'editTienNghi']);
+    Route::post('/tiennghi', [ApiTienNghiController::class, 'addTienNghi']);
     /*
      * LOCATION
      */
@@ -154,9 +156,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         for ($R; $R <= 10; $R++) {
             $begin = microtime(true);
             $distance = DB::select("
-            select count(*) as distance from view_location
+            select count(*) as distance from location
             WHERE ST_Distance_Sphere((position), (ST_GeomFromText('point($toadoY $toadoX)',4326)))
-            <= $R * 1609.344");
+            <= $R * 1609.344 and trangthai = 1");
             \Illuminate\Support\Facades\Log::info(DB::getQueryLog());
             $end = round(microtime(true) - $begin, 2);
             echo "Trong bán kính <b style='color: blue'>" . $R . "km</b> tìm thấy <b style='color: red'>" . $distance[0]->distance . "</b> tin đăng trong thời gian: <b>" . $end . "</b> s";

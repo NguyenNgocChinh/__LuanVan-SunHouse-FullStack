@@ -42,5 +42,6 @@ class LocationSeeder extends Seeder
 //        }
 
         DB::select('call sp_seed_location');
+        DB::select('call sp_seed_location_0');
     }
 }

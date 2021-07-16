@@ -11,6 +11,8 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use App\Events\ViewPostHandler;
+use App\Listeners\ViewPostHanlderListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,11 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Event::listen(
+            ViewPostHandler::class,
+            [ViewPostHanlderListener::class, 'handle']
+        );
+        Event::listen('posts.view', 'App\Demo\Events\ViewPostHandler');
         User::observe(UserObserver::class);
         BaiDang::observe(BaiDangObserver::class);
     }

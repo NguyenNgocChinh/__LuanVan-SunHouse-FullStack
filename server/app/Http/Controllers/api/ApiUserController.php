@@ -42,6 +42,10 @@ class ApiUserController extends Controller
 //        Auth::user()->tokens()->delete();
         $token = Auth::user()->createToken('auth_token')->plainTextToken;
         return response()->json([
+            'user' => Auth::user(),
+            'token' => $token
+        ]);
+        return response()->json([
             'token' => $token,
         ]);
     }

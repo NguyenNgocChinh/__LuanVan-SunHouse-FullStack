@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSpSeedLocation extends Migration
+class CreateSpSeedLocation0 extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class CreateSpSeedLocation extends Migration
     public function up()
     {
         DB::unprepared("
-            DROP PROCEDURE IF EXISTS sp_seed_location;
-            CREATE PROCEDURE sp_seed_location ()
+            DROP PROCEDURE IF EXISTS sp_seed_location_0;
+            CREATE PROCEDURE sp_seed_location_0 ()
             BEGIN
                 SET @v1 = 0;
                 WHILE @v1 < 1000000
@@ -30,7 +30,7 @@ class CreateSpSeedLocation extends Migration
                     insert into location
                         (baidang_id, position, trangthai)
                         values
-                        (@baidang_id, @position, 1);
+                        (@baidang_id, @position, 0);
                 END WHILE;
             END
 
@@ -44,6 +44,6 @@ class CreateSpSeedLocation extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_seed_location');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_seed_location_0');
     }
 }

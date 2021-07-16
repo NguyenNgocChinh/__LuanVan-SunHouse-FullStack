@@ -26,16 +26,16 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
     ];
 });
 
-//WORK...
+//WORK... (PRIVATE CHANNEL)
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int)$id;
 });
-
+// ERROR HERE (PRESENCE CHANNEL)
 // POST http://localhost:8000/broadcasting/auth net::ERR_FAILED [CORS error]
 Broadcast::channel('user.online', function ($user) {
     Log::info($user);
     //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,...
-//    return ['id' => $user->id];
+    // (PRESENCE CHANNEL)
     return [
         'id' => $user->id,
         'name' => $user->name,

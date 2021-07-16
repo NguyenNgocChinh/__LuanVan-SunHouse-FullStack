@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Events\ViewPostHandler;
+use Illuminate\Support\Facades\Event;
 
 class ApiBaiDangController extends Controller
 {
@@ -32,12 +34,11 @@ class ApiBaiDangController extends Controller
 
     public function getAllPosts()
     {
+        // Cache::remember('posts', 60*60*24, function () {
+        //     return BaiDang::lasted();
+        // })
         return response()->json(
-            BaiDangResource::collection(
-                Cache::remember('posts', 60*60*24, function () {
-                    return BaiDang::all();
-                })
-            )
+               BaiDangResource::collection(BaiDang::latest()->paginate($this->page_size))
         );
     }
 
@@ -85,10 +86,13 @@ class ApiBaiDangController extends Controller
         return response()->json(BaiDang::where(['choduyet' => 1, 'trangthai' => 1])->count());
     }
 
-    public function getDetailPost($id)
+    public function getDetailPost(Request $request)
     {
+
+        $post = BaiDang::find($request->id);
+        event(new ViewPostHandler($post));
         return response()->json(
-            new BaiDangDetailResource(BaiDang::find($id))
+            new BaiDangDetailResource($post)
         );
     }
 
