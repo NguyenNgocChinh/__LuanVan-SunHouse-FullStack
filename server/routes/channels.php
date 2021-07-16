@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 //Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //    return (int)$user->id === (int)$id;
 //});
+
 Broadcast::channel('chat.{id}', function ($user, $id) {
     Log::info("CHAT.ID " . $user);
         //{"id":13,"username":"guest","name":"GUEST","email":"guest@gmail.com","sdt":null,"trangthai":1,"vaitro":"user","diachi":null,...
@@ -25,7 +26,6 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
         'name' => $user->name,
     ];
 });
-
 //WORK... (PRIVATE CHANNEL)
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int)$user->id === (int)$id;
