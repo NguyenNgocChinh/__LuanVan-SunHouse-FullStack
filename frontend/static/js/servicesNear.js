@@ -19,8 +19,6 @@ export function getBenhVien(address, postLocate) {
     return new Promise(function (resolve) {
         axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[hospitals]&addressdetails=1&format=json&limit=15').then((data) => {
             processAddNewItem(data.data, postLocate).then(function (list) {
-                console.log('benhvien', list)
-
                 resolve(list)
             })
         })
@@ -31,7 +29,6 @@ export function getNganHang(address, postLocate) {
     return new Promise(function (resolve) {
         axios.get('https://nominatim.openstreetmap.org/?q=' + address + '[bank]&addressdetails=1&format=json&limit=15&countrycodes=vn').then((data) => {
             processAddNewItem(data.data, postLocate).then(function (list) {
-                console.log('nganhang', list)
                 resolve(list)
             })
         })
@@ -51,8 +48,9 @@ async function processAddNewItem(data, postLocate) {
         await top10.forEach(function (item) {
             if (typeof item.address.amenity !== 'undefined') {
                 const amenity = item.address.amenity
+                // const schoolLocation = item.lon + ',' + item.lat //f
                 const schoolLocation = item.lon + ',' + item.lat
-                getDistance(postLocate, schoolLocation).then((distance) => {
+                getDistanceBing(postLocate, schoolLocation, API_BING_KEY).then((distance) => {
                     if (distance === -1) return
                     const split = distance.split('-')
                     list.push({ name: amenity, distance: split[0], time: split[1] })
@@ -73,7 +71,6 @@ export function getPostLocation(address) {
             axios.get(url).then(function (data) {
                 const result = data.data[0]
                 if (result) {
-                    console.log('res', result)
                     const x = result.lat
                     const y = result.lon
                     const lngLat = y + ',' + x
@@ -90,6 +87,7 @@ export function getPostLocation(address) {
 function getDistance(p1, p2) {
     return new Promise(function (resolve, reject) {
         try {
+            console.log('timeing')
             const url = 'https://router.project-osrm.org/route/v1/driving/' + p1 + ';' + p2 + '?exclude=motorway'
             axios
                 .get(url)
@@ -136,7 +134,7 @@ function getDistanceBing(p1, p2, API_BING_KEY) {
                 .get(url)
                 .then((data) => {
                     const result = data.data.resourceSets[0].resources[0]
-                    console.log('Bing...', data)
+                    console.log('Bing...')
                     let distance = 0
                     let duration = 0
 
@@ -153,10 +151,12 @@ function getDistanceBing(p1, p2, API_BING_KEY) {
                     const kq = distance + ' km ' + '- ' + duration
                     resolve(kq)
                 })
-                .catch((jqXHR) => {
-                    p1 = p1.split(',').reverse().join(',')
-                    p2 = p2.split(',').reverse().join(',')
-                    resolve(getDistanceBing(p1, p2, API_BING_KEY2 || API_BING_KEY3))
+                .catch((err) => {
+                    if (err.response.status !== 404) {
+                        p1 = p1.split(',').reverse().join(',')
+                        p2 = p2.split(',').reverse().join(',')
+                        resolve(getDistanceBing(p1, p2, API_BING_KEY2 || API_BING_KEY3))
+                    }
                 })
         } catch (e) {
             reject(e)

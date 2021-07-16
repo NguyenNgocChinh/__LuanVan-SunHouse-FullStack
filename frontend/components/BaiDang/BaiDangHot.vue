@@ -24,7 +24,6 @@
 
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import ENV from '@/api/baidang'
 export default {
     components: { BaiDangCard },
     data: () => ({
@@ -39,7 +38,7 @@ export default {
     methods: {
         getBaiDangHot() {
             try {
-                this.$axios.$get(ENV.hot).then((res) => {
+                this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat).then((res) => {
                     this.baidanghots = res.baidangs
                     this.baidanghots_loading = false
                 })

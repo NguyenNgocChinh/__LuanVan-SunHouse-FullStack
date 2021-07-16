@@ -47,11 +47,6 @@ window.Echo = new Echo({
     forceTLS: false,
     encrypted: false,
     authEndpoint: '/broadcasting/auth',
-    auth: {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('auth._token.laravelSanctum'),
-        },
-    },
     // enabledTransports: ['ws'],
     authorizer: (channel, options) => {
         return {

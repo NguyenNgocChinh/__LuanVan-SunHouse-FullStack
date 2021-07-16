@@ -1,0 +1,305 @@
+<template>
+    <v-container fluid>
+        <v-card>
+            <v-card-title>
+                Quản lý Tiện Nghi
+                <v-spacer />
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm tiện nghi" single-line hide-details></v-text-field>
+            </v-card-title>
+            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-by="['id']" :sort-desc="[true]" :headers="headers" :items="dsTienNghi" :single-select="singleSelect" item-key="id" show-select class="elevation-1">
+                <template #top>
+                    <div class="d-flex justify-space-between">
+                        <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
+                        <v-spacer />
+                        <div class="pt-4">
+                            <v-dialog v-model="dialog" max-width="500px">
+                                <template #activator="{ on, attrs }">
+                                    <v-btn fab dark small color="indigo" class="mr-2" v-bind="attrs" v-on="on">
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">{{ formTitle }}</span>
+                                    </v-card-title>
+                                    <v-form ref="form" v-model="valid" lazy-validation>
+                                        <v-card-text>
+                                            <v-container>
+                                                <v-row>
+                                                    <v-col cols="12" sm="6">
+                                                        <v-text-field v-model="editedItem.id" label="ID" disabled></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6">
+                                                        <v-text-field
+                                                            v-model.lazy="editedItem.ten_tiennghi"
+                                                            label="Tên Tiện Nghi"
+                                                            clearable
+                                                            :rules="[() => !!editedItem.ten_tiennghi || 'Phải nhập tên tiện nghi']"
+                                                            hint="Hồ Bơi"
+                                                            required
+                                                        ></v-text-field>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-text>
+
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="blue darken-1" text @click="close"> HỦY </v-btn>
+                                            <v-btn color="blue darken-1" :disabled="!valid" text @click="save"> LƯU </v-btn>
+                                        </v-card-actions>
+                                    </v-form>
+                                </v-card>
+                            </v-dialog>
+                            <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItem(selected)">
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
+                </template>
+
+                <template #[`item.hanhdong`]="{ item }">
+                    <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+                </template>
+            </v-data-table>
+
+            <v-dialog v-model="dialogDelete" transition="dialog-top-transition" max-width="600" persistent>
+                <v-card>
+                    <v-toolbar class="red lighten-1" dark>XÁC NHẬN XÓA</v-toolbar>
+                    <v-card-text class="pa-0">
+                        <div v-if="editedMultipleItem.length !== [] > 0" class="font-weight-black pa-5">
+                            Bạn có chắc chắn muốn xóa tiện nghi:
+                            <span v-for="(item, i) in editedMultipleItem" :key="i">
+                                {{ item.ten_tiennghi }}
+                                <span v-if="i < editedMultipleItem.length - 1"> , </span>
+                            </span>
+                        </div>
+                        <div v-else class="font-weight-black pa-5">
+                            Bạn có chắc chắn muốn xóa tiện nghi:
+                            {{ editedItem.ten_tiennghi }}
+                        </div>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <v-btn text @click="closeDelete">Hủy</v-btn>
+                        <v-btn color="red" class="white--text" @click="deleteItemConfirm">XÓA</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="loading" hide-overlay persistent width="300">
+                <v-card color="sunhouse_primary" dark>
+                    <v-card-text>
+                        Loading..
+                        <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+            <v-snackbars :objects.sync="message" bottom right />
+        </v-card>
+    </v-container>
+</template>
+
+<script>
+import ENV from '@/api/goi'
+import VSnackbars from 'v-snackbars'
+
+export default {
+    components: { VSnackbars },
+    layout: 'admin',
+    data() {
+        return {
+            valid: true,
+            search: '',
+            singleSelect: false,
+            selected: [],
+            headers: [
+                { text: 'ID', value: 'id' },
+                { text: 'Tên tiện nghi', value: 'ten_tiennghi' },
+                { text: 'Hành động', value: 'hanhdong', sortable: false },
+            ],
+            dsTienNghi: [],
+            loading: true,
+
+            dialog: false,
+            dialogDelete: false,
+            editedIndex: -1,
+            defaultItem: {
+                id: '',
+                ten_tiennghi: '',
+            },
+            editedItem: {
+                id: '',
+                ten_tiennghi: '',
+            },
+            editedMultipleIndex: [],
+            editedMultipleItem: [],
+            message: [],
+        }
+    },
+    computed: {
+        formTitle() {
+            return this.editedIndex === -1 ? 'Tạo mới tiện nghi' : 'Sửa tiện nghi'
+        },
+    },
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+        dialogDelete(val) {
+            val || this.closeDelete()
+        },
+    },
+    created() {
+        this.fetchDSTienNghi()
+    },
+    methods: {
+        async fetchDSTienNghi() {
+            const data = await this.$axios.$get(this.$config.serverUrl + '/tiennghi')
+            this.dsTienNghi = data
+            this.loading = false
+        },
+
+        save() {
+            const validate = this.$refs.form.validate()
+            if (!validate) return
+            this.loading = true
+            const item = this.editedItem
+            const index = this.editedIndex
+            if (index > -1) {
+                this.$axios
+                    .$put(this.$config.serverUrl + '/tiennghi', item)
+                    .then((res) => {
+                        Object.assign(this.dsTienNghi[index], item)
+                        this.message.push({
+                            message: res.success || res.error,
+                            color: res.success ? 'green' : 'error',
+                            timeout: 5000,
+                        })
+                        this.loading = false
+                    })
+                    .catch(() => {
+                        this.message.push({
+                            message: 'Sửa Thất Bại',
+                            color: 'red',
+                            timeout: -1,
+                        })
+                        this.loading = false
+                    })
+            } else {
+                this.$axios
+                    .$post(ENV.store, item)
+                    .then((res) => {
+                        item.id = res.id
+                        this.dsTienNghi.push(item)
+                        this.message.push({
+                            message: 'Tạo mới Thành Công',
+                            color: 'green',
+                            timeout: 5000,
+                        })
+                        this.loading = false
+                    })
+                    .catch(() => {
+                        this.message.push({
+                            message: 'Tạo mới Thất Bại',
+                            color: 'red',
+                            timeout: -1,
+                        })
+                        this.loading = false
+                    })
+            }
+            this.close()
+        },
+
+        editItem(item) {
+            this.editedIndex = this.dsTienNghi.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
+        },
+        deleteItem(item) {
+            this.editedIndex = this.dsTienNghi.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialogDelete = true
+        },
+        deleteMultipleItem(items) {
+            for (let i = 0; i < items.length; i++) {
+                this.editedMultipleIndex.push(this.dsTienNghi.indexOf(items[i]))
+                this.editedMultipleItem.push(items[i])
+            }
+
+            this.dialogDelete = true
+        },
+
+        deleteItemConfirm() {
+            this.loading = true
+
+            if (this.editedMultipleItem.length > 0) {
+                const editedMultipleItem = this.editedMultipleItem
+                const editedMultipleIndex = this.editedMultipleIndex
+                for (let i = 0; i < editedMultipleItem.length; i++) {
+                    this.$axios
+                        .$delete(ENV.delete + editedMultipleItem[i].id)
+                        .then((res) => {
+                            this.dsTienNghi.splice(editedMultipleIndex[i], 1)
+                            this.message.push({
+                                message: 'Xóa Thành Công ID ' + editedMultipleItem[i].id,
+                                color: 'green',
+                                timeout: 5000,
+                            })
+                            this.closeDelete()
+                            this.loading = false
+                        })
+                        .catch(() => {
+                            this.message.push({
+                                message: 'Xóa Thất Bại ID ' + editedMultipleItem[i].id,
+                                color: 'red',
+                                timeout: -1,
+                            })
+                            this.loading = false
+                        })
+                }
+            } else {
+                const item = this.editedItem
+                const index = this.editedIndex
+                this.$axios
+                    .$delete(ENV.delete + item.id)
+                    .then((res) => {
+                        this.dsTienNghi.splice(index, 1)
+                        this.closeDelete()
+                        this.message.push({
+                            message: 'Xóa Thành Công',
+                            color: 'green',
+                            timeout: 5000,
+                        })
+                        this.loading = false
+                    })
+                    .catch(() => {
+                        this.closeDelete()
+                        this.message.push({
+                            message: 'Xóa Thất Bại',
+                            color: 'red',
+                            timeout: -1,
+                        })
+                        this.loading = false
+                    })
+            }
+        },
+
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+            this.editedMultipleItem = []
+            this.editedMultipleIndex = []
+        },
+    },
+}
+</script>

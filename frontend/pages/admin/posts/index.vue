@@ -4,13 +4,7 @@
             <v-card-title>
                 Danh Sách Bài Đăng
                 <v-spacer />
-                <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                ></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
             </v-card-title>
             <v-data-table
                 v-model="selected"
@@ -46,15 +40,41 @@
                         </div>
                     </div>
                 </template>
-
+                <template #[`item.tieude`]="{ item }">
+                    <v-container>
+                        <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                            <v-col cols="12" lg="4" sm="12">
+                                <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
+                                <v-img v-else width="100%" height="100%" aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                            </v-col>
+                            <v-col cols="12" lg="8" sm="12" class="text-left">
+                                <div class="card-title">
+                                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                                        <template #activator="{ on }">
+                                            <h3 class="title font-700 text--upercase" v-on="on">
+                                                {{ item.tieude }}
+                                            </h3>
+                                        </template>
+                                        <span>{{ item.tieude }}</span>
+                                    </v-tooltip>
+                                </div>
+                                <div class="mb-2 d-flex flex-row align-center">
+                                    <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                    {{ item.diachi }}
+                                </div>
+                                <div class="introduce-line d-flex mb-2">
+                                    <div>
+                                        Ngày đăng:
+                                        {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
+                                    </div>
+                                    <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </template>
                 <template #[`item.choduyet`]="{ item }">
-                    <v-btn
-                        v-if="item.choduyet == 0"
-                        icon
-                        color="teal"
-                        :loading="item.loading"
-                        @click="updateChoDuyet(item, 1)"
-                    >
+                    <v-btn v-if="item.choduyet === 0" icon color="teal" :loading="item.loading" @click="updateChoDuyet(item, 1)">
                         {{ item.loading }}
                         <v-icon>mdi-check</v-icon>
                     </v-btn>
@@ -63,14 +83,15 @@
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </template>
+                <template #[`item.user`]="{ item }">
+                    {{ item.user }}
+                    <div v-if="item.userObject.service.length > 0" style="display: inline-block" class="ml-1">
+                        <v-img v-if="item.userObject.service[0].service === 'google'" :width="15" src="/svg/Google.svg"></v-img>
+                        <v-img v-else :width="15" src="/svg/Facebook.svg"></v-img>
+                    </div>
+                </template>
                 <template #[`item.trangthai`]="{ item }">
-                    <v-btn
-                        v-if="item.trangthai == 1"
-                        icon
-                        color="teal"
-                        :loading="item.loading"
-                        @click="updateTrangThai(item, 0)"
-                    >
+                    <v-btn v-if="item.trangthai === 1" icon color="teal" :loading="item.loading" @click="updateTrangThai(item, 0)">
                         <v-icon>mdi-check</v-icon>
                     </v-btn>
 
@@ -84,26 +105,17 @@
                     <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #activator="{ on, attrs }">
-                            <v-btn icon :loading="loadingDelete" color="red"
-                                ><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn
-                            >
+                            <v-btn icon :loading="loadingDelete" color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
                         </template>
                         <template #default="dialog">
                             <v-card>
                                 <v-toolbar class="red lighten-1" dark @click="deleteItem(item)">XÁC NHẬN XÓA</v-toolbar>
                                 <v-card-text class="pa-0">
-                                    <div class="font-weight-black pa-5">
-                                        Bạn có chắc chắn muốn xóa bài đăng có ID : {{ item.id }} ?
-                                    </div>
+                                    <div class="font-weight-black pa-5">Bạn có chắc chắn muốn xóa bài đăng có ID : {{ item.id }} ?</div>
                                 </v-card-text>
                                 <v-card-actions class="justify-end">
                                     <v-btn text @click="dialog.value = false">Hủy</v-btn>
-                                    <v-btn
-                                        color="red"
-                                        class="white--text"
-                                        @click=";[(dialog.value = false), deleteItem(item)]"
-                                        >XÓA</v-btn
-                                    >
+                                    <v-btn color="red" class="white--text" @click=";[(dialog.value = false), deleteItem(item)]">XÓA</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </template>
@@ -118,6 +130,7 @@
 <script>
 import ENV from '@/api/baidang'
 import VSnackbars from 'v-snackbars'
+import URI_DICRECTORY from '@/api/directory'
 export default {
     components: { VSnackbars },
     layout: 'admin',
@@ -127,13 +140,12 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'ID', value: 'id' },
-                { text: 'Tiêu đề', value: 'tieude' },
-                { text: 'Người đăng', value: 'user' },
-                { text: 'Thời gian', value: 'thoigian' },
-                { text: 'Trạng thái', value: 'trangthai' },
-                { text: 'Đã duyệt', value: 'choduyet' },
-                { text: 'Hành động', value: 'hanhdong', sortable: false },
+                { text: 'Tiêu đề', width: '45%', value: 'tieude' },
+                { text: 'Người đăng', value: 'user', width: '15%' },
+                { text: 'Time', value: 'thoigian', width: '8%' },
+                { text: 'Status', value: 'trangthai', width: '8%' },
+                { text: 'Duyệt', value: 'choduyet', width: '8%' },
+                { text: 'Hành động', value: 'hanhdong', sortable: false, width: '12%' },
             ],
             dsBaiDang: [],
             loading: true,
@@ -144,13 +156,18 @@ export default {
             message: [],
         }
     },
+    computed: {
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
+    },
     created() {
         this.fetchDSBaiDang()
     },
     methods: {
         fetchDSBaiDang() {
             this.$axios.$get(ENV.baidangs).then((data) => {
-                this.dsBaiDang = data.baidangs
+                this.dsBaiDang = data
                 this.loading = false
             })
         },
@@ -278,3 +295,46 @@ export default {
     },
 }
 </script>
+<style>
+.text--upercase {
+    text-transform: uppercase;
+}
+.title {
+    color: #7873f5;
+    display: inline-block;
+}
+.card-title h3 {
+    height: 60px;
+    font-size: 14px;
+    font-weight: 700;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.tooltipCustom {
+    max-width: 315px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #000 !important;
+}
+.tooltipCustom::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+</style>

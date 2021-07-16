@@ -56,6 +56,7 @@ export default {
     },
     watch: {
         page() {
+            this.baidangs = []
             window.scrollTo({
                 top: 120,
                 left: 0,
@@ -71,8 +72,9 @@ export default {
         this.getBaiDangHot()
     },
     methods: {
-        getBaiDangHot(filter = false) {
-            let result = this.$store.getters.GET_BAIDANG_HOT
+        async getBaiDangHot(filter = false) {
+            let result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat)
+            result = result.baidangs
             if (filter) {
                 result = this.sortBy(result)
             }

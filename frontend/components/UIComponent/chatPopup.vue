@@ -76,11 +76,7 @@ export default {
             selectedList: [],
         }
     },
-    computed: {
-        channel() {
-            //return window.Echo.join('user.online')
-        },
-    },
+    computed: {},
     watch: {
         searchContactID(newValue) {
             const result = this.filterContacts(this.contacts, newValue)
@@ -99,15 +95,6 @@ export default {
     },
     created() {},
     mounted() {
-        // window.Echo.join('chat.0')
-        //     .here((users) => {
-        //         alert('In the channel!')
-        //         console.log(users)
-        //     })
-        //     .joining((user) => {
-        //         console.log('joining', user)
-        //         this.$axios.$put('http://localhost:8000/users/online')
-        //     })
         // Hanlder Error when send message
         this.$nuxt.$on('error', () => {
             this.$refs.errorModal.open()
@@ -139,19 +126,20 @@ export default {
                 })
                 if (process.browser) {
                     // Listen Channel Private Message
+                    // WORK
                     window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
                         self.hanleIncoming(e.message)
                     })
+                    // Join to Presence channel
+                    // ERROR
+                    // window.Echo.join('user.online')
+                    //     .here((users) => {
+                    //         alert('In the channel!')
+                    //     })
+                    //     .joining((user) => {
+                    //         console.log('joining', user)
+                    //     })
                 }
-                // window.Echo.join('user-online')
-                //     .here((users) => {
-                //         alert('In the channel!')
-                //         console.log(users)
-                //     })
-                //     .joining((user) => {
-                //         console.log('joining', user)
-                //         this.$axios.$put('http://localhost:8000/users/online')
-                //     })
             }
         },
         getAvatar(user) {

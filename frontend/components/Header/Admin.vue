@@ -3,10 +3,7 @@
         <v-toolbar-title class="align-center d-flex">
             <v-btn text to="/" class="logo-text ml-2"> SUNHOUSE </v-btn>
         </v-toolbar-title>
-        <v-app-bar-nav-icon
-            class="d-block d-md-none"
-            @click="$vuetify.breakpoint.smAndDown ? setSidebarDrawer(!Sidebar_drawer) : $emit('input', !value)"
-        />
+        <v-app-bar-nav-icon class="d-block d-md-none" @click="$vuetify.breakpoint.smAndDown ? setSidebarDrawer(!Sidebar_drawer) : $emit('input', !value)" />
         <v-spacer />
         <!---right part -->
         <v-btn dark color="red lighten-1" class="elevation-0" @click="$auth.logout()">Đăng xuất</v-btn>
@@ -40,24 +37,22 @@ export default {
         },
     },
     data: () => ({
-        userprofile: [
-            { title: 'My Profile' },
-            { title: 'My Balance' },
-            { title: 'Inbox' },
-            { title: 'Account Setting' },
-        ],
+        userprofile: [{ title: 'Hồ sơ' }, { title: 'Tin nhắn' }],
         href() {
             return undefined
         },
     }),
-
+    mounted() {},
     computed: {
-        ...mapState(['Sidebar_drawer']),
+        ...mapState({
+            SidebarBg: 'admin/SidebarBg',
+            Sidebar_drawer: 'admin/Sidebar_drawer',
+        }),
     },
 
     methods: {
         ...mapMutations({
-            setSidebarDrawer: 'SET_SIDEBAR_DRAWER',
+            setSidebarDrawer: 'admin/SET_SIDEBAR_DRAWER',
         }),
     },
 }

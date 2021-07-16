@@ -46,7 +46,7 @@
                     <div class="col-lg-4 d-flex justify-end d-sticky">
                         <v-btn text plain> <v-icon class="mr-3">mdi-heart-outline</v-icon> Yêu thích</v-btn>
                         <v-divider vertical />
-                        <v-btn id="shareBtn" text plain> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
+                        <v-btn id="shareBtn" text plain @click="shareOnFB"> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
                     </div>
                 </v-row>
             </v-banner>
@@ -155,7 +155,7 @@
                                     </v-expansion-panel>
                                     <v-expansion-panel>
                                         <v-expansion-panel-header class="accordion-header"> Các thông tin gần đây </v-expansion-panel-header>
-                                        <v-expansion-panel-content>
+                                        <v-expansion-panel-content v-if="isDinhVi">
                                             <v-tabs v-model="tabs">
                                                 <v-tab>Trường Học</v-tab>
                                                 <v-tab>Bệnh Viện</v-tab>
@@ -178,6 +178,9 @@
                                                     </client-only>
                                                 </v-tab-item>
                                             </v-tabs-items>
+                                        </v-expansion-panel-content>
+                                        <v-expansion-panel-content v-else>
+                                            <p class="red--text font-700 pt-4">Địa điểm này không thể định vị được. Nên các dịch vụ lân cận không được tìm thấy!</p>
                                         </v-expansion-panel-content>
                                     </v-expansion-panel>
                                 </v-expansion-panels>
@@ -214,8 +217,10 @@
                                 <div id="numberphone" class="phone" :data-phone="user.sdt">
                                     {{ numberphone }}
                                 </div>
-                                <a v-if="isHideNumberPhone" class="white--text" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
-                                <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
+                                <div v-if="user.sdt">
+                                    <a v-if="isHideNumberPhone" class="white--text" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
+                                    <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
+                                </div>
                             </div>
 
                             <div class="pt-3 pl-3">
@@ -241,47 +246,15 @@
 import 'viewerjs/dist/viewer.css'
 import Vue from 'vue'
 import Viewer from 'v-viewer'
-import ENV from '@/api/baidang'
 import ENVAPP from '@/api/app'
 import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
-import DataTable from '@/components/UIComponent/dataTable'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
-if (process.browser) {
-    document.getElementById('shareBtn').onclick = function () {
-        // eslint-disable-next-line no-undef
-        FB.ui(
-            {
-                display: 'popup',
-                method: 'feed',
-                link: 'http://localhost:3000/',
-                href: 'http://localhost:3000/',
-                picture: 'http://localhost:8000/images/upload/no-image.png',
-                name: 'The name who will be displayed on the post',
-                description: 'The description who will be displayed',
-            },
-            function (response) {}
-        )
-        // eslint-disable-next-line no-undef
-        // FB.ui(
-        //     {
-        //         display: 'popup',
-        //         method: 'share_open_graph',
-        //         action_type: 'og.likes',
-        //         action_properties: JSON.stringify({
-        //             object: 'https://developers.facebook.com/docs/',
-        //         }),
-        //     },
-        //     function (response) {}
-        // )
-    }
-}
-
 export default {
-    components: { DataTable, OwlCarousel },
+    components: { OwlCarousel },
     data() {
         return {
             baidang: false,
@@ -339,6 +312,7 @@ export default {
             loadingSchool: true,
             loadingHopital: true,
             loadingBank: true,
+            isDinhVi: true,
         }
     },
     head() {
@@ -388,8 +362,27 @@ export default {
     mounted() {
         this.getchitietsp()
     },
-    mounted() {},
     methods: {
+        shareOnFB() {
+            var img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU'
+            var desc = 'your caption here'
+            var title = this.baidang.tieude
+            var link = 'https://sunhouse.chinhstu.xyz'
+
+            // eslint-disable-next-line no-undef
+            FB.ui(
+                {
+                    method: 'share',
+                    name: 'Come Listen to this Song',
+                    href: link,
+                    picture: img,
+                    caption: title,
+                    description: desc,
+                    message: desc,
+                },
+                function (response) {}
+            )
+        },
         getImg(hinh) {
             return this.URI_DICRECTORY_UPLOAD + hinh.filename
         },
@@ -397,8 +390,11 @@ export default {
             truncateSpace(str, n, useWordBound)
         },
         getchitietsp() {
+            this.$nextTick(() => {
+                this.$nuxt.$loading.start()
+            })
             try {
-                this.$axios.$get(ENV.info + this.$route.params.id).then(async (data) => {
+                this.$axios.$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id).then((data) => {
                     this.baidang = data
                     // Save localStorage
                     const history = JSON.parse(localStorage.getItem('history'))
@@ -418,7 +414,7 @@ export default {
                     // Save localStorage
 
                     this.user = this.baidang.user
-                    this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
+                    if (this.user.sdt) this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
                     const self = this
                     this.baidang.tiennghi.forEach((item) => {
                         self.tiennghiArr.push(item.ten_tiennghi)
@@ -427,26 +423,14 @@ export default {
                         const name = this.URI_DICRECTORY_UPLOAD + item.filename
                         self.hinhanhArr.push(name)
                     })
-                    await serviceNear.getPostLocation(data.diachi).then((postLocate) => {
-                        if (typeof postLocate !== 'undefined') {
-                            this.servicesLoading = true
-                            serviceNear.getTruongHoc(data.diachi, postLocate).then((data) => {
-                                this.dsTruongHoc = data
-                            })
-                            serviceNear.getBenhVien(data.diachi, postLocate).then((data) => {
-                                this.dsBenhVien = data
-                                this.servicesLoading = false
-                            })
-                            serviceNear.getNganHang(data.diachi, postLocate).then((data) => {
-                                this.dsNganHang = data
-                                this.servicesLoading = false
-                            })
-                        }
-                    })
+                    this.searchNear(this.baidang.diachi)
                 })
             } catch (e) {
-                console.log(e)
+            } finally {
             }
+            this.$nextTick(() => {
+                this.$nuxt.$loading.finish()
+            })
         },
         showNumberPhone() {
             if (process.browser) {
@@ -504,19 +488,24 @@ export default {
         async searchNear(address) {
             const urlGetAddressFromXY = `https://nominatim.openstreetmap.org/reverse?lat=${this.baidang.toadoY}&lon=${this.baidang.toadoX}&format=json&limit=1`
             const finalAddress = await this.$axios.$get(urlGetAddressFromXY)
-            const postLocate = `${this.baidang.toadoX},${this.baidang.toadoY}`
-            await serviceNear.getTruongHoc(finalAddress.display_name, postLocate).then((data) => {
-                this.dsTruongHoc = data
-                this.loadingSchool = false
-            })
-            await serviceNear.getBenhVien(finalAddress.display_name, postLocate).then((data) => {
-                this.dsBenhVien = data
-                this.loadingHopital = false
-            })
-            await serviceNear.getNganHang(finalAddress.display_name, postLocate).then((data) => {
-                this.dsNganHang = data
-                this.loadingBank = false
-            })
+            if (finalAddress.error) {
+                // this.$toast.error('Địa điểm này không thể định vị được. Nên các địa điểm lân cận khổng thể tìm thấy được.', { duration: 5000 })
+                this.isDinhVi = false
+            } else {
+                const postLocate = `${this.baidang.toadoX},${this.baidang.toadoY}`
+                await serviceNear.getTruongHoc(finalAddress.display_name, postLocate).then((data) => {
+                    this.dsTruongHoc = data
+                    this.loadingSchool = false
+                })
+                await serviceNear.getBenhVien(finalAddress.display_name, postLocate).then((data) => {
+                    this.dsBenhVien = data
+                    this.loadingHopital = false
+                })
+                await serviceNear.getNganHang(finalAddress.display_name, postLocate).then((data) => {
+                    this.dsNganHang = data
+                    this.loadingBank = false
+                })
+            }
         },
     },
 }

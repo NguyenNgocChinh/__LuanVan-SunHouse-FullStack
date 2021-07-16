@@ -90,13 +90,13 @@ export default {
                     login: {
                         url: '/login',
                         method: 'post',
-                        propertyName: false,
+                        propertyName: 'user',
                     },
                     logout: { url: '/logout' },
                     user: {
                         url: '/user',
                         method: 'get',
-                        propertyName: false,
+                        propertyName: '',
                     },
                     csrf: {
                         url: '/sanctum/csrf-cookie',
@@ -110,12 +110,12 @@ export default {
                 },
             },
         },
-        redirect: {
-            login: '/login',
-            logout: '/',
-            callback: '/login',
-            home: '/',
-        },
+        // redirect: {
+        //     login: '/login',
+        //     logout: '/',
+        //     callback: false,
+        //     home: false,
+        // },
     },
 
     loading: '@/components/Loading.vue',
@@ -163,4 +163,22 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
+    publicRuntimeConfig: {
+        baseUrl: process.env.BASE_URL,
+        serverUrl: process.env.SERVER_URL,
+        googleLoginUrl: process.env.GOOGLE_LOGIN_URL,
+        facebookLoginUrl: process.env.FACEBOOK_LOGIN_URL,
+        // baidang
+        baidangInfo: process.env.BAIDANG_INFO,
+        baidangChoThue: process.env.BAIDANG_CHOTHUE,
+        baidangRaoBan: process.env.BAIDANG_RAOBAN,
+        baidangNoiBat: process.env.BAIDANG_HOT,
+        // users
+        users: process.env.USERS,
+        userDisable: process.env.USER_DISABLE,
+        userEnable: process.env.USER_ENABLE,
+    },
+    privateRuntimeConfig: {
+        apiSecret: process.env.API_SECRET,
+    },
 }

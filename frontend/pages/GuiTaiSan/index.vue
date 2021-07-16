@@ -198,7 +198,6 @@
                                     item-text="name"
                                     item-value="matp"
                                     no-data-text="Tải dữ liệu thành phố thất bại"
-                                    :rules="[() => !!thanhpho || 'Vui lòng chọn thành phố!']"
                                     label="Chọn Tỉnh/Thành Phố"
                                     solo
                                 ></v-combobox>
@@ -218,7 +217,6 @@
                                     item-text="name"
                                     item-value="maqh"
                                     no-data-text="Tải dữ liệu quận huyện thất bại"
-                                    :rules="[() => !!quanhuyen || 'Vui lòng chọn quận/huyện!']"
                                     label="Chọn Quận/Huyện"
                                     solo
                                 ></v-combobox>
@@ -291,6 +289,7 @@
                                                 <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
                                             </l-marker>
                                         </l-map>
+                                        <small class="red--text"> {{ toadoX }} , {{ toadoY }} </small>
                                     </client-only>
                                 </div>
                             </v-card>
@@ -308,35 +307,17 @@
         </client-only>
     </v-container>
 </template>
-<!--script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js', async: true }, { src: '/js/leaflet-geosearch-bundle.min.js', async: true }],-->
-<script type="text/javascript">
-if (process.client) {
-    document.writeln("<script src='/js/leaflet.js'><" + '/script>')
-    document.writeln("<script src='/js/geosearch.umd.js'><" + '/script>')
-    document.writeln("<script src='/js/leaflet-geosearch-bundle.min.js'><" + '/script>')
-}
-</script>
 <script>
 import ENV from '@/api/baidang'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
 import * as ENVTK from '@/api/timkiem'
-
+import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
+import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
 import { scrollToInputInvalid } from '~/assets/js/scrollToView'
-let Vue2Leaflet = {}
-
-if (process.client) {
-    Vue2Leaflet = require('vue2-leaflet')
-}
 
 export default {
-    components: {
-        'l-map': Vue2Leaflet.LMap,
-        'l-tile-layer': Vue2Leaflet.LTileLayer,
-        'l-marker': Vue2Leaflet.LMarker,
-        'l-control': Vue2Leaflet.LControl,
-        'l-popup': Vue2Leaflet.LPopup,
-    },
+    components: { LMarker, LMap, LTileLayer, LPopup, LControl },
     middleware: 'auth',
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
@@ -480,13 +461,8 @@ export default {
     mounted() {
         this.$nextTick(() => {
             const map = this.$refs.map.mapObject
-            console.log('before geo search')
-            const GeoSearchControl = window.GeoSearch.GeoSearchControl
-            const OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider
-            console.log('before new provider')
-            const provider = new OpenStreetMapProvider()
             const search = new GeoSearchControl({
-                provider,
+                provider: new OpenStreetMapProvider(),
                 style: 'bar',
                 searchLabel: 'Nhập địa chỉ ...',
                 animateZoom: true,
@@ -649,10 +625,18 @@ export default {
             const form = this.$refs.form
             const validate = await form.validate()
             if (!validate) {
+                this.$toast.show('Vui lòng điền đủ những trường yêu cầu để tiếp tục đăng tin')
                 scrollToInputInvalid(form)
                 return
             }
-
+            if (this.toadoX === '' && this.toadoY === '') {
+                this.$toast.show('Vui lòng sử dụng bản đồ để có thể tìm thấy được tọa độ của căn nhà')
+                return
+            }
+            if (this.diachicuthe === '') {
+                this.$toast.show('Vui lòng điền địa chỉ cụ thể của căn nhà')
+                return
+            }
             const data = new FormData()
             data.append('tieude', this.tieude)
             data.append('loai_id', this.loai)
@@ -668,8 +652,8 @@ export default {
             data.append('dientich', this.dientich)
             data.append('diachi', this.diachicuthe)
             data.append('hinhthuc', this.hinhthuc)
-            data.append('toadoX', this.toadoX)
-            data.append('toadoY', this.toadoY)
+            data.append('toadoX', this.toadoY)
+            data.append('toadoY', this.toadoX)
             this.files.forEach((file, index) => {
                 data.append('file[' + index + ']', file)
             })

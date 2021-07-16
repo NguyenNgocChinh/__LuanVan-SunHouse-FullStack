@@ -22,7 +22,6 @@
     </v-container>
 </template>
 <script>
-import ENV from '@/api/baidang'
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'RaoBan',
@@ -39,11 +38,9 @@ export default {
     methods: {
         async getRaoBan() {
             try {
-                const baidangs = await this.$axios.$get(ENV.raoban)
+                const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
                 this.baidangs = baidangs.baidangs
-            } catch (e) {
-                console.log(e)
-            }
+            } catch (e) {}
             this.baidangs_loading = false
         },
     },

@@ -1,17 +1,8 @@
 <template>
     <v-container>
         <v-row class="mt-4 rounded-lg">
-            <v-col
-                cols="12"
-                lg="3"
-                style="z-index: 222; box-shadow: 3px 0 5px -5px #aaa"
-                class="d-flex flex-column white pa-3"
-            >
-                <v-btn
-                    class="rounded-lg white--text blue darken-3 mb-2 mt-2 animate__animated animate__backInDown"
-                    @click="$router.push({ path: '/GuiTaiSan' })"
-                    ><v-icon size="18" class="bx bx-plus-circle mr-1"></v-icon>Đăng tin</v-btn
-                >
+            <v-col cols="12" lg="3" style="z-index: 222; box-shadow: 3px 0 5px -5px #aaa" class="d-flex flex-column white pa-3">
+                <v-btn class="rounded-lg white--text blue darken-3 mb-2 mt-2 animate__animated animate__backInDown" @click="$router.push({ path: '/GuiTaiSan' })"><v-icon size="18" class="bx bx-plus-circle mr-1"></v-icon>Đăng tin</v-btn>
                 <v-list dense>
                     <v-subheader>QUẢN LÝ TIN ĐĂNG</v-subheader>
                     <v-list-item-group v-model="selectedMenu" color="primary">
@@ -29,15 +20,7 @@
             <v-col cols="12" lg="9" sm="12" class="white">
                 <v-row>
                     <v-col cols="12" lg="12">
-                        <v-text-field
-                            v-model="searchInput"
-                            placeholder="Tiêu đề tin đăng"
-                            class="rounded-lg animate__animated animate__fadeInDown"
-                            prepend-inner-icon="mdi-magnify"
-                            filled
-                            solo
-                            rounded
-                        ></v-text-field>
+                        <v-text-field v-model="searchInput" placeholder="Tiêu đề tin đăng" class="rounded-lg animate__animated animate__fadeInDown" prepend-inner-icon="mdi-magnify" filled solo rounded></v-text-field>
                         <v-data-table
                             v-model="selectedTable"
                             class="animate__animated animate__fadeIn"
@@ -52,40 +35,15 @@
                         >
                             <template #top>
                                 <v-row class="justify-end mr-2">
-                                    <v-btn
-                                        class="red white--text"
-                                        small
-                                        :disabled="selectedTable.length < 1"
-                                        @click="deleteArrayItem(selectedTable)"
-                                    >
-                                        Xóa
-                                    </v-btn>
+                                    <v-btn class="red white--text" small :disabled="selectedTable.length < 1" @click="deleteArrayItem(selectedTable)"> Xóa </v-btn>
                                 </v-row>
                             </template>
                             <template #[`item.tieude`]="{ item }">
                                 <v-container>
-                                    <v-row
-                                        class="my-1"
-                                        style="cursor: pointer"
-                                        @click="$router.push({ path: `/baidang/${item.id}` })"
-                                    >
+                                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `/baidang/${item.id}` })">
                                         <v-col cols="12" lg="3" sm="12">
-                                            <v-img
-                                                v-if="item.hinhanh.length > 0"
-                                                aspect-ratio="1.5"
-                                                width="100%"
-                                                height="100%"
-                                                class="thumb-nail"
-                                                :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename"
-                                            />
-                                            <v-img
-                                                v-else
-                                                width="100%"
-                                                height="100%"
-                                                aspect-ratio="1.5"
-                                                class="thumb-nail"
-                                                :src="URI_DICRECTORY_UPLOAD + 'no-image.png'"
-                                            />
+                                            <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1.5" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
+                                            <v-img v-else width="100%" height="100%" aspect-ratio="1.5" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                                         </v-col>
                                         <v-col cols="12" lg="9" sm="12" class="text-left">
                                             <h1 class="title text--upercase">
@@ -100,9 +58,7 @@
                                                     Ngày đăng:
                                                     {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
                                                 </div>
-                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
-                                                    Lượt xem: {{ item.luotxem || '-' }}
-                                                </div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
                                             </div>
                                         </v-col>
                                     </v-row>
@@ -241,11 +197,7 @@ export default {
 }
 </style>
 <style>
-.theme--light.v-data-table
-    > .v-data-table__wrapper
-    > table
-    > tbody
-    > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+.theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
     background: #ade8f4 !important;
 }
 </style>

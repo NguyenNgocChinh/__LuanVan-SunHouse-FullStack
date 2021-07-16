@@ -1,47 +1,44 @@
 <template>
-    <v-navigation-drawer
-        id="main-sidebar"
-        v-model="Sidebar_drawer"
-        :color="SidebarColor"
-        mobile-breakpoint="960"
-        clipped
-        :right="$vuetify.rtl"
-        mini-variant-width="70"
-        :expand-on-hover="expandOnHover"
-        app
-    >
-        <v-list dense nav>
-            <!---USer Area -->
-            <v-list-item two-line class="px-0">
-                <v-list-item-avatar>
-                    <div v-if="$auth.user.profile_photo_path == null">
-                        <v-img :src="$auth.user.profile_photo_url" style="width: 45px; height: 45px"></v-img>
-                    </div>
-                    <div v-else>
-                        <v-img :src="$auth.user.profile_photo_path" style="width: 45px; height: 45px"></v-img>
-                    </div>
-                </v-list-item-avatar>
+    <v-navigation-drawer id="main-sidebar" v-model="Sidebar_drawer" :color="SidebarColor" mobile-breakpoint="960" clipped :right="$vuetify.rtl" mini-variant-width="70" :expand-on-hover="expandOnHover" app>
+        <!---USer Area -->
+        <div class="d-flex flex-row mt-3 mb-2 mx-2">
+            <v-avatar size="45">
+                <v-img :src="$auth.user.profile_photo_path || $auth.user.profile_photo_url"></v-img>
+            </v-avatar>
 
-                <v-list-item-content>
-                    <v-list-item-title>{{ $auth.user.name }}</v-list-item-title>
-                    <v-list-item-subtitle class="caption">{{ $auth.user.vaitro }}</v-list-item-subtitle>
-                </v-list-item-content>
-            </v-list-item>
-            <!---USer Area -->
-            <!---Sidebar Items -->
-            <v-list-item-group active-class="sunhouse_primary white--text">
-                <v-list-item v-for="(item, index) in items" :key="index" link :to="item.to">
+            <div class="pl-3">
+                <div class="font-700">{{ $auth.user.name }}</div>
+                <div class="caption">{{ $auth.user.vaitro }}</div>
+            </div>
+        </div>
+        <!---USer Area -->
+        <v-list shaped>
+            <v-list-item-group v-model="selectedMenu" active-class="sunhouse_primary white--text">
+                <v-list-item v-for="(item, index) in items" :key="index" :to="item.to">
                     <v-list-item-icon>
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <v-icon v-text="item.icon"></v-icon>
                     </v-list-item-icon>
-
                     <v-list-item-content>
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
-            <!---Sidebar Items -->
         </v-list>
+
+        <!--        <v-list shaped>-->
+        <!--            <v-list-group v-for="item in items" :key="item.title" v-model="item.active" :append-icon="!item.subLinks ? null : '$expand'" :prepend-icon="item.icon" no-action active-class="sunhouse_primary white&#45;&#45;text">-->
+        <!--                <template #activator>-->
+        <!--                    <v-list-item>-->
+        <!--                        <v-list-item-title v-text="item.title"></v-list-item-title>-->
+        <!--                    </v-list-item>-->
+        <!--                </template>-->
+        <!--                <v-list-item v-for="child in item.subLinks" :key="child.title" v-model="child.active" link>-->
+        <!--                    <v-list-item-content>-->
+        <!--                        <v-list-item-title v-text="child.title"></v-list-item-title>-->
+        <!--                    </v-list-item-content>-->
+        <!--                </v-list-item>-->
+        <!--            </v-list-group>-->
+        <!--        </v-list>-->
     </v-navigation-drawer>
 </template>
 
@@ -57,13 +54,13 @@ export default {
         },
     },
     data: () => ({
+        selectedMenu: 1,
         items: [
             {
                 title: 'Dashboard',
                 icon: 'mdi-view-dashboard',
-                to: '/admin',
+                to: '/admin/dashboard',
             },
-
             {
                 title: 'Quản lý bài đăng',
                 icon: 'mdi-post',
@@ -80,20 +77,35 @@ export default {
                 icon: 'mdi-account-circle',
                 to: '/admin/users',
             },
+            {
+                title: 'Quản lý tiện nghi',
+                icon: 'bx bxs-extension',
+                to: '/admin/extension',
+            },
+            {
+                title: 'Quản lý loại',
+                icon: 'bx bxs-landmark',
+                to: '/admin/types',
+            },
         ],
     }),
     computed: {
-        ...mapState(['SidebarColor', 'SidebarBg']),
+        ...mapState({
+            SidebarColor: 'admin/SidebarColor',
+        }),
         Sidebar_drawer: {
             get() {
-                return this.$store.state.Sidebar_drawer
+                return this.$store.state.admin.Sidebar_drawer
             },
             set(val) {
-                this.$store.commit('SET_SIDEBAR_DRAWER', val)
+                this.$store.commit('admin/SET_SIDEBAR_DRAWER', val)
             },
         },
     },
     watch: {
+        selectedMenu(v) {
+            console.log('change', v)
+        },
         '$vuetify.breakpoint.smAndDown'(val) {
             this.$emit('update:expandOnHover', !val)
         },
@@ -102,49 +114,3 @@ export default {
     methods: {},
 }
 </script>
-<!--<style lang="scss">-->
-<!--#main-sidebar {-->
-<!--    box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);-->
-<!--    -webkit-box-shadow: 1px 0 20px rgba(0, 0, 0, 0.08);-->
-<!--    .v-navigation-drawer__border {-->
-<!--        display: none;-->
-<!--    }-->
-<!--    .v-list {-->
-<!--        padding: 8px 15px;-->
-<!--    }-->
-<!--    .v-list-item {-->
-<!--        min-height: 35px;-->
-<!--        &__icon&#45;&#45;text,-->
-<!--        &__icon:first-child {-->
-<!--            justify-content: center;-->
-<!--            text-align: center;-->
-<!--            width: 20px;-->
-<!--        }-->
-<!--    }-->
-<!--    .v-list-item__icon i {-->
-<!--        width: 20px;-->
-<!--    }-->
-<!--    .icon-size .v-list-group__items i {-->
-<!--        width: 16px;-->
-<!--        font-size: 16px;-->
-<!--    }-->
-<!--    .profile-bg {-->
-<!--        &.theme&#45;&#45;dark.v-list-item:not(.v-list-item&#45;&#45;active):not(.v-list-item&#45;&#45;disabled) {-->
-<!--            opacity: 1;-->
-<!--        }-->
-<!--        .v-avatar {-->
-<!--            padding: 15px 0;-->
-<!--        }-->
-<!--    }-->
-<!--    .theme&#45;&#45;dark.v-list-item:not(.v-list-item&#45;&#45;active):not(.v-list-item&#45;&#45;disabled) {-->
-<!--        opacity: 0.5;-->
-<!--        &:hover {-->
-<!--            opacity: 1;-->
-<!--        }-->
-<!--    }-->
-<!--}-->
-
-<!--.theme&#45;&#45;dark.v-navigation-drawer {-->
-<!--    background-color: #242a33 !important;-->
-<!--}-->
-<!--</style>-->

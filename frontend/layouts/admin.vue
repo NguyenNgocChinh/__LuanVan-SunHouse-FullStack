@@ -32,12 +32,14 @@ export default {
         expandOnHover: false,
     }),
     computed: {
-        ...mapState(['Customizer_drawer']),
+        ...mapState(['admin/Customizer_drawer']),
     },
-
+    mounted() {
+        console.log(this.expandOnHover)
+    },
     methods: {
         ...mapMutations({
-            setCustomizerDrawer: 'SET_CUSTOMIZER_DRAWER',
+            setCustomizerDrawer: 'admin/SET_CUSTOMIZER_DRAWER',
         }),
     },
 }

@@ -8,14 +8,7 @@
             <v-spacer></v-spacer>
         </v-toolbar>
         <v-form ref="form" v-model="form" class="pa-4 pt-6" @submit.prevent="login">
-            <v-text-field
-                ref="email"
-                v-model="loginForm.username"
-                :rules="[rules.required]"
-                label="Địa Chỉ Email hoặc Username"
-                placeholder="Nhập địa chỉ email hoặc username của bạn"
-                required
-            ></v-text-field>
+            <v-text-field ref="email" v-model="loginForm.username" :rules="[rules.required]" label="Địa Chỉ Email hoặc Username" placeholder="Nhập địa chỉ email hoặc username của bạn" required></v-text-field>
 
             <v-text-field
                 v-model="loginForm.password"
@@ -33,34 +26,19 @@
 
             <v-divider></v-divider>
             <v-card-actions class="d-flex">
-                <v-btn class="white--text" color="deep-purple accent-4" depressed @click="$router.push('/register')">
-                    Đăng Ký
-                </v-btn>
+                <v-btn class="white--text" color="deep-purple accent-4" depressed @click="$router.push('/register')"> Đăng Ký </v-btn>
 
                 <v-spacer></v-spacer>
 
-                <v-btn
-                    :disabled="!form"
-                    :loading="isLoading"
-                    class="white--text"
-                    color="deep-purple accent-4"
-                    depressed
-                    type="submit"
-                >
-                    Đăng Nhập
-                </v-btn>
+                <v-btn :disabled="!form" :loading="isLoading" class="white--text" color="deep-purple accent-4" depressed type="submit"> Đăng Nhập </v-btn>
             </v-card-actions>
             <div class="text-center">--- OR ---</div>
 
             <v-row class="mt-4 mb-1">
-                <v-btn large width="100%" class="white--text" color="red lighten-1" @click="loginGG"
-                    >Tiếp tục với Google</v-btn
-                >
+                <v-btn large width="100%" class="white--text" color="red lighten-1" @click="loginGG">Tiếp tục với Google</v-btn>
             </v-row>
             <v-row>
-                <v-btn large width="100%" class="white--text" color="blue lighten-1" @click="loginFB"
-                    >Tiếp tục với Facebook</v-btn
-                >
+                <v-btn large width="100%" class="white--text" color="blue lighten-1" @click="loginFB">Tiếp tục với Facebook</v-btn>
             </v-row>
         </v-form>
     </v-card>

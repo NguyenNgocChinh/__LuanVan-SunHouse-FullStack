@@ -59,15 +59,13 @@ export default {
     },
     watch: {},
     mounted() {
-        if (this.$auth.loggedIn) {
-            const self = this
-            this.$nuxt.$on('newMessage', (message) => {
-                if (self.contact.id === message.from) {
-                    self.unread = self.unread + 1
-                    self.messages.push(message)
-                }
-            })
-        }
+        const self = this
+        this.$nuxt.$on('newMessage', (message) => {
+            if (self.contact.id === message.from) {
+                self.unread = self.unread + 1
+                self.messages.push(message)
+            }
+        })
     },
     created() {
         if (this.$auth.loggedIn) {

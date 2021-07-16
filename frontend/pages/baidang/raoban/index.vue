@@ -56,6 +56,7 @@ export default {
     },
     watch: {
         page() {
+            this.baidangs = []
             window.scrollTo({
                 top: 120,
                 left: 0,
@@ -71,8 +72,9 @@ export default {
         this.getBaiDangRaoBan()
     },
     methods: {
-        getBaiDangRaoBan(filter = false) {
-            let result = this._.sortBy(this.$store.getters.GET_BAIDANG_RAOBAN, (o) => o.luotxem).reverse()
+        async getBaiDangRaoBan(filter = false) {
+            let result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
+            result = this._.sortBy(result.baidangs, (o) => o.luotxem).reverse()
             if (filter) {
                 result = this.sortBy(result)
             }
