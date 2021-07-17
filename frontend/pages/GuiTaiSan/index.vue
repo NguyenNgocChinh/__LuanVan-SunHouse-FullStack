@@ -178,22 +178,17 @@
                     </v-container>
                 </v-card-text>
             </v-card>
-            <v-card class="mt-8">
+            <v-card class="mt-8 py-1">
                 <v-card-title>CHỌN VỊ TRÍ</v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" lg="4" sm="12">
                             <div>
                                 <h3 class="d-inline-block">Tỉnh/Thành phố</h3>
-                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                    <sup>(*) </sup>
-                                </span>
                                 <v-combobox
                                     v-model="thanhpho"
                                     class="mt-2"
                                     :items="listThanhPho"
-                                    :loading="listThanhPho.length < 1"
-                                    :disabled="listThanhPho.length < 1"
                                     placeholder="Tìm kiếm"
                                     item-text="name"
                                     item-value="matp"
@@ -202,18 +197,13 @@
                                     solo
                                 ></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="thanhpho">
                                 <h3 class="d-inline-block">Quận/Huyện</h3>
-                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                    <sup>(*) </sup>
-                                </span>
                                 <v-combobox
                                     v-model="quanhuyen"
                                     class="mt-2"
                                     placeholder="Tìm kiếm"
                                     :items="listQuanHuyen"
-                                    :loading="!listQuanHuyen.length > 0"
-                                    :disabled="!listQuanHuyen.length > 0"
                                     item-text="name"
                                     item-value="maqh"
                                     no-data-text="Tải dữ liệu quận huyện thất bại"
@@ -221,52 +211,60 @@
                                     solo
                                 ></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="quanhuyen">
                                 <h3 class="d-inline-block">Xã/Phường</h3>
-                                <v-combobox
-                                    v-model="xaphuong"
-                                    class="mt-2"
-                                    :items="listXaPhuong"
-                                    :loading="!listXaPhuong.length > 0"
-                                    :disabled="!listXaPhuong.length > 0"
-                                    item-text="name"
-                                    item-value="matp"
-                                    no-data-text="Tải dữ liệu xã phường thất bại"
-                                    label="Chọn Xã/Phường"
-                                    solo
-                                ></v-combobox>
+                                <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="xaphuong">
                                 <h3 class="d-inline-block">Đường/Phố</h3>
+                                <!--                                <v-combobox-->
+                                <!--                                    v-model="duong"-->
+                                <!--                                    class="mt-2"-->
+                                <!--                                    :items="listDuong"-->
+                                <!--                                    hide-selected-->
+                                <!--                                    chips-->
+                                <!--                                    clearable-->
+                                <!--                                    :search-input.sync="searchDuong"-->
+                                <!--                                    item-text="name"-->
+                                <!--                                    item-value="maduong"-->
+                                <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
+                                <!--                                    label="Chọn Đường/Phố"-->
+                                <!--                                    solo-->
+                                <!--                                >-->
+                                <!--                                    <template #no-data>-->
+                                <!--                                        <v-list-item>-->
+                                <!--                                            <v-list-item-content>-->
+                                <!--                                                <v-list-item-title>-->
+                                <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
+                                <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
+                                <!--                                                </v-list-item-title>-->
+                                <!--                                            </v-list-item-content>-->
+                                <!--                                        </v-list-item>-->
+                                <!--                                    </template>-->
+                                <!--                                </v-combobox>-->
                                 <v-combobox
                                     v-model="duong"
+                                    chips
                                     class="mt-2"
                                     :items="listDuong"
-                                    hide-selected
-                                    chips
-                                    clearable
                                     :search-input.sync="searchDuong"
-                                    item-text="name"
-                                    item-value="maduong"
-                                    no-data-text="Tải dữ liệu đường thất bại"
+                                    item-text="tenduong"
+                                    item-value="id"
+                                    no-data-text="Đường này chưa có sẵn trong hệ thống.
+                                    Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
                                     solo
                                 >
-                                    <template #no-data>
-                                        <v-list-item>
-                                            <v-list-item-content>
-                                                <v-list-item-title>
-                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong
-                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này
-                                                </v-list-item-title>
-                                            </v-list-item-content>
-                                        </v-list-item>
-                                    </template>
                                 </v-combobox>
+                                <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
                             </div>
-                            <div>
+                            <div class="f-flex flex-row align-center">
                                 <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
-                                <v-text-field v-model="diachicuthe" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo :loading="loadingDiaChiCuThe"></v-text-field>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-icon size="15" :color="toadoX ? 'green' : 'red'">{{ toadoX ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
+                                <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
                             </div>
                         </v-col>
                         <v-col cols="12" lg="8" sm="12">
@@ -289,7 +287,7 @@
                                                 <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
                                             </l-marker>
                                         </l-map>
-                                        <small class="red--text"> {{ toadoX }} , {{ toadoY }} </small>
+                                        <small v-if="toadoX" class="red--text mb-5"> {{ toadoX }} , {{ toadoY }} </small>
                                     </client-only>
                                 </div>
                             </v-card>
@@ -373,10 +371,10 @@ export default {
             listDuong: [],
             arrDiaChi: [],
 
-            thanhpho: '',
-            quanhuyen: '',
-            xaphuong: '',
-            duong: '',
+            thanhpho: null,
+            quanhuyen: null,
+            xaphuong: null,
+            duong: null,
             searchDuong: null,
             diachicuthe: '',
             marker: null,
@@ -412,14 +410,17 @@ export default {
         thanhpho() {
             this.arrDiaChi = []
             this.listQuanHuyen = []
-            this.quanhuyen = ''
+            this.quanhuyen = null
+            if (this.thanhpho === '') this.thanhpho = null
             if (this.thanhpho != null) {
                 this.arrDiaChi.push(this.thanhpho.name)
 
                 this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
                     this.listQuanHuyen = result
                 })
-                this.diachicuthe = this.arrDiaChi.join(',')
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
+            if (this.arrDiaChi.length > 0) {
                 this.setViewFormAddress(this.diachicuthe)
             }
         },
@@ -427,25 +428,41 @@ export default {
             this.listXaPhuong = []
             this.xaphuong = null
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
-
+            if (this.quanhuyen === '') this.quanhuyen = null
             if (this.quanhuyen != null) {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
-                this.diachicuthe = this.arrDiaChi.join(',')
 
                 this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
+            if (this.arrDiaChi.length > 0) {
                 this.setViewFormAddress(this.diachicuthe, 14)
             }
         },
         xaphuong() {
             this.listDuong = []
-            this.duong = null
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
             if (this.xaphuong != null) {
                 this.arrDiaChi.unshift(this.xaphuong.name)
                 this.diachicuthe = this.arrDiaChi.join(',')
 
+                this.$nuxt.$axios.$get(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid).then((result) => {
+                    this.listDuong = result
+                })
+                if (this.arrDiaChi.length > 0) {
+                    this.setViewFormAddress(this.diachicuthe, 15)
+                }
+            }
+        },
+        duong(duong) {
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 3)
+            if (this.duong != null) {
+                this.arrDiaChi.unshift(duong)
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
+            if (this.arrDiaChi.length > 0) {
                 this.setViewFormAddress(this.diachicuthe, 15)
             }
         },
@@ -453,6 +470,8 @@ export default {
             if (this.marker == null) {
                 this.thanhpho = null
                 this.diachicuthe = null
+                this.toadoX = null
+                this.toadoY = null
                 const glass = document.querySelector('.glass ')
                 glass.value = null
             }
@@ -562,9 +581,10 @@ export default {
         },
         async setDisplayNameFromlatLng(lat, lng) {
             this.loadingDiaChiCuThe = true
-            await this.$nuxt.$axios
+            await this.$axios
                 .$get('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&limit=1')
                 .then((result) => {
+                    console.log('xxx', result)
                     if (result.display_name != null) {
                         const diaChi = result.display_name.split(',')
                         for (let i = 0; i < diaChi.length; i++) {
@@ -578,12 +598,12 @@ export default {
                                 diaChi.splice(i, 1)
                             }
                         }
-                        const displayName = diaChi.join(',')
-                        this.diachicuthe = displayName
+                        const displayName = diaChi.join(', ')
                         const glass = document.querySelector('.glass ')
                         glass.value = displayName
+                        this.diachicuthe = displayName
 
-                        this.getSelectOnComboBox(displayName)
+                        // this.getSelectOnComboBox(displayName)
                     }
                 })
                 .finally(() => {
@@ -600,6 +620,7 @@ export default {
                         this.marker = this.center
                         this.$refs.map.mapObject.flyTo([pos.coords.latitude, pos.coords.longitude], 15)
                         this.isFound = true
+
                         await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
                         this.$refs.marker.mapObject.on('dragend', (event) => {
                             const marker = event.target
@@ -718,6 +739,16 @@ export default {
             this.$nextTick(() => {
                 event.target.openPopup()
             })
+        },
+        filter(item, queryText, itemText) {
+            if (item.header) return false
+
+            const hasValue = (val) => (val != null ? val : '')
+
+            const text = hasValue(itemText)
+            const query = hasValue(queryText)
+
+            return text.toString().toLowerCase().includes(query.toString().toLowerCase())
         },
     },
 }

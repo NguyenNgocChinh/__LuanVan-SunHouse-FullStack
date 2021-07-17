@@ -1,37 +1,67 @@
 <template>
     <v-container>
-        <H2 align="center">Sửa Bài Đăng</H2>
-        <H4>SunHouse trao trọn niềm tin</H4>
-        <form enctype="multipart/form-data" @submit.prevent="suaBaiDang">
+        <v-breadcrumbs :link="true" :items="breadcumb">
+            <template #item="{ item }">
+                <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
+                    {{ item.text }}
+                </v-breadcrumbs-item>
+            </template>
+            <template #divider>
+                <v-icon>mdi-chevron-right</v-icon>
+            </template>
+        </v-breadcrumbs>
+        <v-form ref="form" v-model="vaild" class="mb-6">
             <v-card>
-                <v-card-title> Thông tin cơ bản</v-card-title>
+                <v-card-title>THÔNG TIN CƠ BẢN</v-card-title>
                 <v-card-text>
-                    <H2>Tiêu đề</H2>
+                    <h3 class="d-inline-block">Tiêu đề</h3>
+                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                        <sup>(*) </sup>
+                    </span>
                     <v-text-field
                         v-model="tieude"
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!']"
-                        label="Tiêu Đề"
+                        clearable
+                        counter
+                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 40) || 'Tiêu đề ít nhất phải 40 ký tự']"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
+                        dense
                     ></v-text-field>
-                    <H2>Loại tài sản</H2>
-                    <v-select v-model="loai" :items="loais" item-text="ten_loai" item-value="id"></v-select>
-                    <H2>Giá bán</H2>
-                    <v-text-field
-                        v-model="gia"
-                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']"
-                        type="number"
-                        label="ví dụ: 1000"
-                    ></v-text-field>
-                    <v-card-title>Nội dung bài viết</v-card-title>
+                    <div class="spacer-line-form"></div>
+                    <h3 class="d-inline-block">Loại tài sản</h3>
+                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                        <sup>(*) </sup>
+                    </span>
+                    <v-select
+                        v-model="loai"
+                        :items="loais"
+                        :rules="[(v) => !!v || 'Vui lòng chọn loại']"
+                        item-text="ten_loai"
+                        item-value="id"
+                        solo
+                        class="mt-4"
+                        label="Đang tải loại nhà"
+                        :loading="loais.length < 1"
+                        no-data-text="Đang tải..."
+                    ></v-select>
+                    <h3 class="d-inline-block">Giá bán</h3>
+                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                        <sup>(*) </sup>
+                    </span>
+                    <v-text-field v-model="gia" suffix="Triệu/m²" :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']" type="number" min="1" hint="Đơn vị triệu đồng" placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"></v-text-field>
+                    <div class="spacer-line-form"></div>
+                    <h3 class="d-inline-block">Mô tả tài sản</h3>
+                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                        <sup>(*) </sup>
+                    </span>
                     <v-textarea
                         v-model="noidung"
-                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !']"
+                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"
                         counter
-                        label="Nhập nội dung bài viết..."
+                        placeholder="Nhập nội dung bài viết..."
                     ></v-textarea>
-                    <v-card-title>Hình ảnh</v-card-title>
-                    <!--                    <image-upload />-->
+                    <div class="spacer-line-form"></div>
+                    <h3>Hình ảnh</h3>
                     <v-file-input
                         ref="files"
                         v-model="files"
@@ -44,70 +74,64 @@
                         color="pink"
                         @change="addFiles"
                     ></v-file-input>
-
-                    <v-container>
-                        <v-row v-if="baidang != null">
-                            <v-col v-for="(file, f) in baidang.hinhanh" :key="f">
-                                {{ file.filename }}
-                                <img width="250" :src="URI_DICRECTORY_UPLOAD + file.filename" />
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col v-for="(file, f) in files" :key="f">
-                                {{ file.name }} -
-                                <span class="size" v-text="getFileSize(files[f].size)"></span>
-                                <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <v-row>
+                        <v-col v-for="(file, f) in files" :key="f">
+                            {{ file.name }} -
+                            <span class="size" v-text="getFileSize(files[f].size)"></span>
+                            <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <v-divider class="mt-12"></v-divider>
             </v-card>
             <v-card class="mt-6">
-                <v-card-title>Thông tin chi tiết</v-card-title>
-                <v-row>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Hình thức</v-card-title>
-                        <v-form>
+                <v-card-title>THÔNG TIN CHI TIẾT</v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" lg="4" sm="12">
+                            <h3 class="d-inline-block">Hình thức</h3>
+                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                <sup>(*) </sup>
+                            </span>
                             <v-select
                                 v-model="hinhthuc"
+                                class="mt-2"
                                 item-text="v"
                                 item-value="k"
                                 :items="[
-                                    { k: 1, v: 'Thuê' },
-                                    { k: 0, v: 'Rao Bán' },
+                                    { k: '1', v: 'Thuê' },
+                                    { k: '0', v: 'Rao Bán' },
                                 ]"
                                 solo
                             ></v-select>
-                        </v-form>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Số phòng ngủ</v-card-title>
-                        <v-text-field
-                            v-model="phongngu"
-                            :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']"
-                            type="number"
-                            solo
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Số phòng tắm</v-card-title>
-                        <v-form>
-                            <v-text-field
-                                v-model="phongtam"
-                                type="number"
-                                :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']"
-                                solo
-                            ></v-text-field>
-                        </v-form>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Hướng</v-card-title>
-                        <v-form>
+                        </v-col>
+                        <v-col cols="12" lg="4" sm="12">
+                            <h3 class="d-inline-block">Số phòng ngủ</h3>
+                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                <sup>(*) </sup>
+                            </span>
+                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
+                        </v-col>
+                        <v-col cols="12" lg="4" sm="12">
+                            <h3 class="d-inline-block">Số phòng tắm</h3>
+                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                <sup>(*) </sup>
+                            </span>
+                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']" solo></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" sm="4">
+                            <h3 class="d-inline-block">Hướng nhà</h3>
+                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                <sup>(*) </sup>
+                            </span>
+
                             <v-select
                                 v-model="selectedhuong"
+                                class="mt-2"
                                 item-value="k"
                                 item-text="v"
                                 :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
@@ -123,129 +147,470 @@
                                 ]"
                                 solo
                             ></v-select>
-                        </v-form>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Năm xây dựng</v-card-title>
-                        <v-text-field
-                            v-model="namxaydung"
-                            :rules="[() => !!namxaydung || 'Vui lòng chọn nhập năm xây dựng!']"
-                            type="number"
-                            label="ví dụ: 2020"
-                            solo
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-card-title>Diện tích(m2)</v-card-title>
-                        <v-form>
-                            <v-text-field
-                                v-model="dientich"
-                                :rules="[() => !!dientich || 'Vui lòng chọn nhập diện tích!']"
-                                label="ví dụ: 10"
-                                solo
-                            ></v-text-field>
-                        </v-form>
-                    </v-col>
-                </v-row>
+                        </v-col>
+                        <v-col cols="12" sm="4">
+                            <h3 class="d-inline-block">Năm xây dựng</h3>
+                            <v-text-field v-model="namxaydung" class="mt-2" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="4">
+                            <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
+                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                <sup>(*) </sup>
+                            </span>
+                            <v-text-field v-model="dientich" class="mt-2" type="number" :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!']" placeholder="ví dụ: 100" solo></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
             </v-card>
             <v-card class="mt-8">
-                <v-card-title>Nội thất nhà bạn</v-card-title>
+                <v-card-title>NỘI THẤT</v-card-title>
                 <v-card-text>
                     <v-container fluid>
-                        <v-row>
-                            <v-checkbox
-                                v-for="tiennghi in tiennghis"
-                                :key="tiennghi.id"
-                                v-model="noithat"
-                                :label="tiennghi.ten_tiennghi"
-                                color="primary"
-                                :value="tiennghi.id"
-                                class="ml-10"
-                            ></v-checkbox>
+                        <v-row v-if="tiennghis.length < 1" align-content="center" justify="center">
+                            <v-progress-circular class="align-items-center" color="grey" indeterminate rounded height="6"></v-progress-circular>
+                        </v-row>
+
+                        <v-row v-else>
+                            <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="12" lg="2" class="pb-0">
+                                <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="primary" :value="tiennghi.id" class=""></v-checkbox>
+                            </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
             </v-card>
+            <v-card class="mt-8">
+                <v-card-title>CHỌN VỊ TRÍ</v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" lg="4" sm="12">
+                            <div>
+                                <h3 class="d-inline-block">Tỉnh/Thành phố</h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-combobox
+                                    v-model="thanhpho"
+                                    class="mt-2"
+                                    :items="listThanhPho"
+                                    :loading="listThanhPho.length < 1"
+                                    :disabled="listThanhPho.length < 1"
+                                    placeholder="Tìm kiếm"
+                                    item-text="name"
+                                    item-value="matp"
+                                    no-data-text="Tải dữ liệu thành phố thất bại"
+                                    label="Chọn Tỉnh/Thành Phố"
+                                    solo
+                                ></v-combobox>
+                            </div>
+                            <div>
+                                <h3 class="d-inline-block">Quận/Huyện</h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-combobox
+                                    v-model="quanhuyen"
+                                    class="mt-2"
+                                    placeholder="Tìm kiếm"
+                                    :items="listQuanHuyen"
+                                    item-text="name"
+                                    item-value="maqh"
+                                    no-data-text="Tải dữ liệu quận huyện thất bại"
+                                    label="Chọn Quận/Huyện"
+                                    solo
+                                ></v-combobox>
+                            </div>
+                            <div>
+                                <h3 class="d-inline-block">Xã/Phường</h3>
+                                <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
+                            </div>
+                            <div>
+                                <h3 class="d-inline-block">Đường/Phố</h3>
+                                <v-combobox
+                                    v-model="duong"
+                                    class="mt-2"
+                                    :items="listDuong"
+                                    hide-selected
+                                    chips
+                                    clearable
+                                    :search-input.sync="searchDuong"
+                                    item-text="name"
+                                    item-value="maduong"
+                                    no-data-text="Tải dữ liệu đường thất bại"
+                                    label="Chọn Đường/Phố"
+                                    solo
+                                >
+                                    <template #no-data>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong
+                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-combobox>
+                            </div>
+                            <div>
+                                <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
+                                <v-text-field v-model="diachicuthe" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo :loading="loadingDiaChiCuThe"></v-text-field>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" lg="8" sm="12">
+                            <v-card outlined elevation="4">
+                                <div style="height: 500px; width: 100%">
+                                    <client-only>
+                                        <l-map id="map" ref="map" :zoom="zoom" :center="center">
+                                            <l-tile-layer :url="layers.url" :subdomains="layers.subdomains" :attribution="layers.attribution" />
 
-            <v-card-title>Địa chỉ của bạn</v-card-title>
-            <v-text-field
-                v-model="diachi"
-                class="text-center"
-                solo
-                :rules="[() => !!diachi || 'Vui lòng nhập địa chỉ!']"
-                label="ví dụ: 180 Cao Lỗ, Phường 4, Quận 8 TPHCM"
-                required
-            ></v-text-field>
+                                            <l-control position="topleft" style="border-radius: 0.1em">
+                                                <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
+                                                    <v-btn color="white" class="pa-0" style="width: 30px; height: 30px; min-width: 30px" @click="findMyLocationOnMap">
+                                                        <v-icon v-if="!isFound" size="22" color="blue darken-1">mdi-map-marker-outline</v-icon>
 
-            <div class="text-center">
-                <v-btn v-model="btndangbai" text class="mt-6 mx-auto" color="primary" elevation="6" large type="submit"
-                    >Sửa</v-btn
-                >
-            </div>
-        </form>
+                                                        <v-icon v-else size="22" color="blue darken-3">mdi-map-marker</v-icon>
+                                                    </v-btn>
+                                                </div>
+                                            </l-control>
+                                            <l-marker v-if="marker != null" ref="marker" :draggable="true" :lat-lng.sync="marker" @add="openPopup">
+                                                <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
+                                            </l-marker>
+                                        </l-map>
+                                        <small class="red--text"> {{ toadoX }} , {{ toadoY }} </small>
+                                    </client-only>
+                                </div>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </v-form>
+        <p class="font-weight-bold red--text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>
+        <div class="text-center">
+            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
+        </div>
+        <client-only>
+            <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
+        </client-only>
     </v-container>
 </template>
-
 <script>
 import ENV from '@/api/baidang'
 import * as ENVL from '@/api/loai'
 import * as ENVTN from '@/api/tiennghi'
-import URI_DICRECTORY from '@/api/directory'
-// import ImageUpload from '@/components/ImageUploadComponent/imageUpload'
+import * as ENVTK from '@/api/timkiem'
+import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
+import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
+import { scrollToInputInvalid } from '~/assets/js/scrollToView'
+
 export default {
-    components: {},
+    components: { LMarker, LMap, LTileLayer, LPopup, LControl },
+    middleware: 'auth',
+    async asyncData({ $axios }) {
+        const loais = await $axios.$get(ENVL.default.all)
+        const tiennghis = await $axios.$get(ENVTN.default.all)
+        const listThanhPho = await $axios.$get(ENVTK.default.thanhpho)
+        return { loais, tiennghis, listThanhPho }
+    },
+
     data() {
         return {
+            breadcumb: [
+                {
+                    text: 'Trang chủ',
+                    disabled: false,
+                    href: '/',
+                },
+                {
+                    text: 'Đăng tin',
+                    disabled: true,
+                    href: '/GuiTaiSan',
+                },
+            ],
+            rules: [(value) => !value || value.size < 2000000 || 'Hình ảnh phải thấp hơn 2 MB!'],
+            vaild: false,
+
             loais: [],
-            loaiTemp: '',
-            hinhthuc: '',
-            selectedhuong: '',
-            namxaydung: null,
-            loai: null,
+            selected: 'Căn hộ',
+            itemhinhthuc: ['Cho thuê', 'Rao bán'],
+            hinhthuc: '1',
+            huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
+            selectedhuong: 'Đông',
+            namxaydung: '',
+            loai: 1,
             diachi: '',
-            name: 'FormGuiTaiSan',
             tiennghis: [],
             tieude: '',
             phongngu: '1',
             phongtam: '1',
             dientich: '',
             gia: '',
-            hinhanh: [],
-            btndangbai: '',
+            toadoX: '',
+            toadoY: '',
             noidung: '',
             noithat: [],
-            baidang: null,
-            arrayTN: [],
-            url: null,
 
+            hinhanh: [],
             files: [],
             readers: [],
+
+            listThanhPho: [],
+            listQuanHuyen: [],
+            listXaPhuong: [],
+            listDuong: [],
+            arrDiaChi: [],
+
+            thanhpho: '',
+            quanhuyen: '',
+            xaphuong: '',
+            duong: '',
+            searchDuong: null,
+            diachicuthe: '',
+            marker: null,
+            zoom: 14,
+            center: [100, 100],
+            isFound: false,
+            layers: {
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            },
+            loadingDiaChiCuThe: false,
         }
     },
-    computed: {
-        URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+    head: {
+        link: [
+            {
+                rel: 'stylesheet',
+                href: '/css/leaflet.css',
+            },
+            {
+                rel: 'stylesheet',
+                href: 'https://unpkg.com/leaflet-geosearch@latest/assets/css/leaflet.css',
+            },
+            {
+                rel: 'stylesheet',
+                href: '/css/geosearch.css',
+            },
+        ],
+        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }],
+    },
+
+    watch: {
+        thanhpho() {
+            this.arrDiaChi = []
+            this.listQuanHuyen = []
+            this.quanhuyen = ''
+            if (this.thanhpho != null) {
+                this.arrDiaChi.push(this.thanhpho.name)
+
+                this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
+                    this.listQuanHuyen = result
+                })
+                this.diachicuthe = this.arrDiaChi.join(',')
+                this.setViewFormAddress(this.diachicuthe)
+            }
+        },
+        quanhuyen() {
+            this.listXaPhuong = []
+            this.xaphuong = null
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
+
+            if (this.quanhuyen != null) {
+                this.arrDiaChi.unshift(this.quanhuyen.name)
+                this.diachicuthe = this.arrDiaChi.join(',')
+
+                this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
+                    this.listXaPhuong = result
+                })
+                this.setViewFormAddress(this.diachicuthe, 14)
+            }
+        },
+        xaphuong() {
+            this.listDuong = []
+            this.duong = null
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
+            if (this.xaphuong != null) {
+                this.arrDiaChi.unshift(this.xaphuong.name)
+                this.diachicuthe = this.arrDiaChi.join(',')
+
+                this.setViewFormAddress(this.diachicuthe, 15)
+            }
+        },
+        marker() {
+            if (this.marker == null) {
+                this.thanhpho = null
+                this.diachicuthe = null
+                const glass = document.querySelector('.glass ')
+                glass.value = null
+            }
         },
     },
-    created() {
-        this.getAllLoai()
-        this.getDSTienNghi()
-        this.getBaiDangSua()
+    mounted() {
+        this.$nextTick(() => {
+            const map = this.$refs.map.mapObject
+            const search = new GeoSearchControl({
+                provider: new OpenStreetMapProvider(),
+                style: 'bar',
+                searchLabel: 'Nhập địa chỉ ...',
+                animateZoom: true,
+                autoClose: true,
+                keepResult: true,
+                showMarker: false,
+            })
+
+            map.addControl(search)
+
+            map.on('geosearch/showlocation', (result) => {
+                this.marker = [result.location.y, result.location.x]
+                this.toadoX = result.location.y
+                this.toadoY = result.location.x
+                if ('label' in result.location) {
+                    const diaChi = result.location.label.split(',')
+                    for (let i = 0; i < diaChi.length; i++) {
+                        const checkResult2 = /\d{5}/.test(diaChi[i])
+                        if (checkResult2) diaChi.splice(i, 1)
+                    }
+                    this.diachicuthe = diaChi.join(',')
+                    this.getSelectOnComboBox(this.diachicuthe)
+                } else {
+                    this.setDisplayNameFromlatLng(result.location.x, result.location.y)
+                }
+            })
+
+            map.on('click', (event) => {
+                this.toadoX = event.latlng.lat
+                this.toadoY = event.latlng.lng
+                this.marker = [this.toadoX, this.toadoY]
+                this.center = [this.toadoX, this.toadoY]
+
+                this.setDisplayNameFromlatLng(this.toadoX, this.toadoY).then(() => {
+                    this.$refs.marker.mapObject.on('dragend', (event) => {
+                        const marker = event.target
+                        const position = marker.getLatLng()
+                        this.center = [position.lat, position.lng]
+                        this.toadoX = position.lat
+                        this.toadoY = position.lng
+                        this.marker = [this.toadoX, this.toadoY]
+                        this.setDisplayNameFromlatLng(position.lat, position.lng)
+                    })
+                })
+            })
+            map.on('geosearch/marker/dragend', (result) => {
+                this.toadoX = result.location.lat
+                this.toadoY = result.location.lng
+
+                if ('label' in result.location) {
+                    this.diachicuthe = result.location.label
+                } else {
+                    this.loadingDiaChiCuThe = true
+                    this.center = [this.toadoX, this.toadoY]
+                    this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
+                }
+            })
+
+            // do we support geolocation
+            if (!('geolocation' in navigator)) {
+                alert('Dịch vụ định vị của máy tính bạn không hoạt động.')
+                return
+            }
+            // get position
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    this.center = [pos.coords.latitude, pos.coords.longitude]
+                },
+                (err) => {
+                    console.log(err)
+                }
+            )
+        })
     },
     methods: {
-        getFileSize(size) {
-            const fSExt = ['Bytes', 'KB', 'MB', 'GB']
-            let i = 0
+        getSelectOnComboBox(address) {
+            const diaChi = address.split(',')
 
-            while (size > 900) {
-                size /= 1024
-                i++
-            }
-            return `${Math.round(size * 100) / 100} ${fSExt[i]}`
+            const indexTP = this._.findIndex(this.listThanhPho, { name: diaChi[diaChi.length - 2].trim() })
+            this.thanhpho = this.listThanhPho[indexTP]
         },
+        setViewFormAddress(address, zoom = 13) {
+            if (address !== '' || address != null) {
+                this.$nuxt.$axios.$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1').then(async (res) => {
+                    if (res.length === 0) {
+                        this.$refs.modalPleaseMoveToMarker.open()
+                    } else {
+                        const lat = res[0].lat
+                        const lng = res[0].lon
+                        this.toadoX = lat
+                        this.toadoY = lng
+                        await this.$refs.map.mapObject.flyTo([lat, lng], zoom)
+                        this.marker = [lat, lng]
+                    }
+                })
+            }
+        },
+        async setDisplayNameFromlatLng(lat, lng) {
+            this.loadingDiaChiCuThe = true
+            await this.$nuxt.$axios
+                .$get('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&limit=1')
+                .then((result) => {
+                    if (result.display_name != null) {
+                        const diaChi = result.display_name.split(',')
+                        for (let i = 0; i < diaChi.length; i++) {
+                            const checkResult = /\(?([0-9]{2})\)?([ .-]?)([0-9]{3})\2([0-9]{3})?([ .-]?)([0-9]{3})/.test(diaChi[i])
+
+                            const checkResult2 = /\d{5}/.test(diaChi[i])
+                            if (checkResult) {
+                                diaChi.splice(i, 1)
+                            }
+                            if (checkResult2) {
+                                diaChi.splice(i, 1)
+                            }
+                        }
+                        const displayName = diaChi.join(',')
+                        this.diachicuthe = displayName
+                        const glass = document.querySelector('.glass ')
+                        glass.value = displayName
+
+                        this.getSelectOnComboBox(displayName)
+                    }
+                })
+                .finally(() => {
+                    this.loadingDiaChiCuThe = false
+                })
+        },
+        findMyLocationOnMap() {
+            if (!this.isFound) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        this.toadoX = pos.coords.latitude
+                        this.toadoY = pos.coords.longitude
+                        this.center = [this.toadoX, this.toadoY]
+                        this.marker = this.center
+                        this.$refs.map.mapObject.flyTo([pos.coords.latitude, pos.coords.longitude], 15)
+                        this.isFound = true
+                        await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
+                        this.$refs.marker.mapObject.on('dragend', (event) => {
+                            const marker = event.target
+                            const position = marker.getLatLng()
+                            this.toadoX = position.lat
+                            this.toadoY = position.lng
+                            this.center = [position.lat, position.lng]
+                            this.setDisplayNameFromlatLng(position.lat, position.lng)
+                        })
+                    },
+                    (err) => {
+                        this.isFound = false
+                        console.log(err)
+                    }
+                )
+            } else {
+                this.marker = null
+                this.isFound = false
+            }
+        },
+
         async getBaiDangSua() {
             try {
-                await this.$axios.$get(ENV.info + this.$route.params.id).then((data) => {
+                await this.$axios.$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id).then((data) => {
                     this.baidang = data
                     this.tieude = this.baidang.tieude
                     this.gia = this.baidang.gia
@@ -271,20 +636,23 @@ export default {
                 console.log(e)
             }
         },
-        async getAllLoai() {
-            try {
-                const loai = await this.$axios.$get(ENVL.default.all)
-                this.loais = loai
-            } catch (e) {}
-        },
-
-        async getDSTienNghi() {
-            this.tiennghis = await this.$axios.$get(ENVTN.default.all)
-        },
-
-        async suaBaiDang() {
+        async xulydangbai() {
+            const form = this.$refs.form
+            const validate = await form.validate()
+            if (!validate) {
+                this.$toast.show('Vui lòng điền đủ những trường yêu cầu để tiếp tục đăng tin')
+                scrollToInputInvalid(form)
+                return
+            }
+            if (this.toadoX === '' && this.toadoY === '') {
+                this.$toast.show('Vui lòng sử dụng bản đồ để có thể tìm thấy được tọa độ của căn nhà')
+                return
+            }
+            if (this.diachicuthe === '') {
+                this.$toast.show('Vui lòng điền địa chỉ cụ thể của căn nhà')
+                return
+            }
             const data = new FormData()
-            data.append('id', this.baidang.id)
             data.append('tieude', this.tieude)
             data.append('loai_id', this.loai)
             data.append('gia', this.gia)
@@ -297,29 +665,57 @@ export default {
             }
             data.append('namxaydung', this.namxaydung)
             data.append('dientich', this.dientich)
-            data.append('diachi', this.diachi)
+            data.append('diachi', this.diachicuthe)
             data.append('hinhthuc', this.hinhthuc)
-            data.append('toadoX', 110)
-            data.append('toadoY', 100)
+            data.append('toadoX', this.toadoY)
+            data.append('toadoY', this.toadoX)
             this.files.forEach((file, index) => {
                 data.append('file[' + index + ']', file)
             })
 
-            this.kq = await this.$axios
-                .$post(ENV.edit + this.$route.params.id, data, {
-                    headers: { 'content-type': 'multipart/form-data' },
+            try {
+                this.$nextTick(() => {
+                    this.$nuxt.$loading.start()
                 })
-                .then((data) => {
-                    this.kq = data.id
-                    this.$router.push('/baidang/' + this.kq)
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
+                this.kq = this.$axios
+                    .$post(ENV.store, data, {
+                        headers: { 'content-type': 'multipart/form-data' },
+                        withCredentials: true,
+                    })
+                    .then((data) => {
+                        this.$nuxt.$toast.success('Đăng bài thành công!')
+                        this.$router.push('/baidang/' + data.id)
+                        this.$nuxt.$toast.success('Đăng bài thành công!')
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            for (const key of Object.keys(error.response.data.errors)) {
+                                this.$nuxt.$toast.error(error.response.data.errors[key], {
+                                    duration: null,
+                                })
+                            }
+                        }
+                    })
+                    .finally(() => {
+                        this.$nuxt.$loading.finish()
+                    })
+            } catch (e) {
+                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: null })
+            } finally {
+                this.$nuxt.$loading.finish()
+            }
         },
+        getFileSize(size) {
+            const fSExt = ['Bytes', 'KB', 'MB', 'GB']
+            let i = 0
 
+            while (size > 900) {
+                size /= 1024
+                i++
+            }
+            return `${Math.round(size * 100) / 100} ${fSExt[i]}`
+        },
         addFiles() {
-            this.baidang.hinhanh = null
             this.files.forEach((file, f) => {
                 this.readers[f] = new FileReader()
                 this.readers[f].onloadend = (e) => {
@@ -332,6 +728,23 @@ export default {
                 this.readers[f].readAsDataURL(this.files[f])
             })
         },
+
+        openPopup(event) {
+            this.$nextTick(() => {
+                event.target.openPopup()
+            })
+        },
     },
 }
 </script>
+
+<style>
+.spacer-line-form {
+    padding-bottom: 10px;
+}
+.result-geo-search {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+</style>
