@@ -97,12 +97,16 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
      * LOAI
      */
     Route::get('/loai', [ApiLoaiController::class, 'getAllLoai']);
+    Route::put('/loai', [ApiLoaiController::class, 'editLoai']);
+    Route::post('/loai', [ApiLoaiController::class, 'addLoai']);
+    Route::delete('/loai/{id}', [ApiLoaiController::class, 'deleteLoai'])->whereNumber('id');
     /*
      * TIEN NGHI
      */
     Route::get('/tiennghi', [ApiTienNghiController::class, 'getAllTienNghi']);
     Route::put('/tiennghi', [ApiTienNghiController::class, 'editTienNghi']);
     Route::post('/tiennghi', [ApiTienNghiController::class, 'addTienNghi']);
+    Route::delete('/tiennghi/{id}', [ApiTienNghiController::class, 'deleteTienNghi'])->whereNumber('id');
     /*
      * LOCATION
      */
@@ -113,6 +117,10 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
 
     Route::get('XaPhuong/{id_quanhuyen}', [DiaDiemController::class, "xaphuong"])
         ->whereNumber("id_quanhuyen");
+
+    Route::get('Duong/{id_xaphuong}', [DiaDiemController::class, "duong"])
+        ->whereNumber("id_xaphuong");
+
     /*
      * TIM KIEM
      */

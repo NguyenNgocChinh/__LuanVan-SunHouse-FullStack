@@ -18,6 +18,7 @@ class CreateDuongTable extends Migration
             $table->string('xaid', 5);
             $table->foreign('xaid')->references('xaid')->on('xaphuongthitran');
             $table->string('tenduong');
+            $table->boolean('choduyet')->default(true);
         });
     }
 

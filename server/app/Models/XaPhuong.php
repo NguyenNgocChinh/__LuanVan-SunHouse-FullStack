@@ -12,6 +12,9 @@ class XaPhuong extends Model
     protected $table = "xaphuongthitran";
     protected $primaryKey = "xaid";
     public $timestamps = false;
-
+    public function duong()
+    {
+        return $this->hasMany('App\Models\Duong', "xaid", "xaid")->select("id", "tenduong");
+    }
 
 }
