@@ -3,7 +3,6 @@ import vi from './locale/vi'
 export default {
     ssr: false,
     target: 'static',
-    mode: 'spa',
     // fetchOnServer: false,
     // generate: {
     //     fallback: true,
@@ -110,12 +109,12 @@ export default {
                 },
             },
         },
-        // redirect: {
-        //     login: '/login',
-        //     logout: '/',
-        //     callback: false,
-        //     home: false,
-        // },
+        redirect: {
+            login: '/login',
+            logout: '/',
+            callback: false,
+            home: '/',
+        },
     },
 
     loading: '@/components/Loading.vue',

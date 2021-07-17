@@ -2,9 +2,9 @@
     <v-container fluid>
         <v-card>
             <v-card-title>
-                Quản lý Tiện Nghi
+                Quản lý Loại
                 <v-spacer />
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm tiện nghi" single-line hide-details></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm loại" single-line hide-details></v-text-field>
             </v-card-title>
             <v-data-table v-model="selected" :search="search" :loading="loading" :sort-by="['id']" :sort-desc="[true]" :headers="headers" :items="dsTienNghi" :single-select="singleSelect" item-key="id" show-select class="elevation-1">
                 <template #top>
@@ -30,14 +30,7 @@
                                                         <v-text-field v-model="editedItem.id" label="ID" disabled></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" sm="6">
-                                                        <v-text-field
-                                                            v-model.lazy="editedItem.ten_tiennghi"
-                                                            label="Tên Tiện Nghi"
-                                                            clearable
-                                                            :rules="[() => !!editedItem.ten_tiennghi || 'Phải nhập tên tiện nghi']"
-                                                            hint="Hồ Bơi"
-                                                            required
-                                                        ></v-text-field>
+                                                        <v-text-field v-model.lazy="editedItem.ten_loai" label="Tên Loại" clearable :rules="[() => !!editedItem.ten_loai || 'Phải nhập tên loại']" hint="Hồ Bơi" required></v-text-field>
                                                     </v-col>
                                                 </v-row>
                                             </v-container>
@@ -69,15 +62,15 @@
                     <v-toolbar class="red lighten-1" dark>XÁC NHẬN XÓA</v-toolbar>
                     <v-card-text class="pa-0">
                         <div v-if="editedMultipleItem.length > 0" class="font-weight-black pa-5">
-                            Bạn có chắc chắn muốn xóa tiện nghi:
+                            Bạn có chắc chắn muốn xóa loại:
                             <span v-for="(item, i) in editedMultipleItem" :key="i">
-                                {{ item.ten_tiennghi }}
+                                {{ item.ten_loai }}
                                 <span v-if="i < editedMultipleItem.length - 1"> , </span>
                             </span>
                         </div>
                         <div v-else class="font-weight-black pa-5">
-                            Bạn có chắc chắn muốn xóa tiện nghi:
-                            {{ editedItem.ten_tiennghi }}
+                            Bạn có chắc chắn muốn xóa loại:
+                            {{ editedItem.ten_loai }}
                         </div>
                     </v-card-text>
                     <v-card-actions class="justify-end">
@@ -113,7 +106,7 @@ export default {
             selected: [],
             headers: [
                 { text: 'ID', value: 'id' },
-                { text: 'Tên tiện nghi', value: 'ten_tiennghi' },
+                { text: 'Tên loại', value: 'ten_loai' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
             dsTienNghi: [],
@@ -124,11 +117,11 @@ export default {
             editedIndex: -1,
             defaultItem: {
                 id: '',
-                ten_tiennghi: '',
+                ten_loai: '',
             },
             editedItem: {
                 id: '',
-                ten_tiennghi: '',
+                ten_loai: '',
             },
             editedMultipleIndex: [],
             editedMultipleItem: [],
@@ -137,7 +130,7 @@ export default {
     },
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'Tạo mới tiện nghi' : 'Sửa tiện nghi'
+            return this.editedIndex === -1 ? 'Tạo mới loại' : 'Sửa loại'
         },
     },
     watch: {
@@ -153,7 +146,7 @@ export default {
     },
     methods: {
         async fetchDSTienNghi() {
-            const data = await this.$axios.$get(this.$config.serverUrl + '/tiennghi')
+            const data = await this.$axios.$get(this.$config.serverUrl + '/loai')
             this.dsTienNghi = data
             this.loading = false
         },
@@ -166,7 +159,7 @@ export default {
             const index = this.editedIndex
             if (index > -1) {
                 this.$axios
-                    .$put(this.$config.serverUrl + '/tiennghi', item)
+                    .$put(this.$config.serverUrl + '/loai', item)
                     .then((res) => {
                         Object.assign(this.dsTienNghi[index], item)
                         this.message.push({
@@ -191,7 +184,7 @@ export default {
                     })
             } else {
                 this.$axios
-                    .$post(this.$config.serverUrl + '/tiennghi', item)
+                    .$post(this.$config.serverUrl + '/loai', item)
                     .then((res) => {
                         item.id = res.id
                         this.dsTienNghi.unshift(item)
@@ -249,11 +242,11 @@ export default {
                 const editedMultipleIndex = this.editedMultipleIndex
                 for (let i = 0; i < editedMultipleItem.length; i++) {
                     this.$axios
-                        .$delete(this.$config.serverUrl + '/tiennghi/' + editedMultipleItem[i].id)
+                        .$delete(this.$config.serverUrl + '/loai/' + editedMultipleItem[i].id)
                         .then((res) => {
                             this.dsTienNghi.splice(editedMultipleIndex[i], 1)
                             this.message.push({
-                                message: 'Xóa Thành Công Tiện Nghi: ' + editedMultipleItem[i].ten_tiennghi,
+                                message: 'Xóa Thành Công Loại: ' + editedMultipleItem[i].ten_loai,
                                 color: 'green',
                                 timeout: 5000,
                             })
@@ -274,7 +267,7 @@ export default {
                 const item = this.editedItem
                 const index = this.editedIndex
                 this.$axios
-                    .$delete(this.$config.serverUrl + '/tiennghi/' + item.id)
+                    .$delete(this.$config.serverUrl + '/loai/' + item.id)
                     .then((res) => {
                         this.dsTienNghi.splice(index, 1)
                         this.closeDelete()
