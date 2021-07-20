@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="4">
-                <FormBaiDang />
+                <FormBaiDang class="mt-2" />
             </v-col>
             <v-col cols="8">
                 <KQHienThi />

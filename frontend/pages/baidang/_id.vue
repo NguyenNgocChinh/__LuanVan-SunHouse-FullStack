@@ -91,9 +91,7 @@
                             <div class="info-description">
                                 <h2>Thông tin mô tả</h2>
                                 <v-divider />
-                                <p style="letter-spacing: 0.5px" class="my-4">
-                                    {{ baidang.noidung }}
-                                </p>
+                                <p style="letter-spacing: 0.5px" class="my-4" v-html="baidang.noidung"></p>
                                 <v-expansion-panels multiple tile :value="[0, 1, 2]" flat hover accordion>
                                     <v-expansion-panel>
                                         <v-expansion-panel-header class="accordion-header"> Thông tin cơ bản </v-expansion-panel-header>
@@ -416,7 +414,9 @@ export default {
                     this.user = this.baidang.user
                     if (this.user.sdt) this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
                     const self = this
+                    console.log(this.baidang)
                     this.baidang.tiennghi.forEach((item) => {
+                        console.log(item)
                         self.tiennghiArr.push(item.ten_tiennghi)
                     })
                     this.baidang.hinhanh.forEach((item) => {

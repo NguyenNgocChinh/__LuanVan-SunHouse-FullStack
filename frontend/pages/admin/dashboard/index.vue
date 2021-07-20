@@ -4,27 +4,27 @@
         <v-container class="mt-4 text-center">
             <v-row>
                 <v-spacer />
-                <v-card elevation="2" outlined width="200">
+                <v-card elevation="2" outlined width="300">
                     <v-card-title class="justify-center">Số Thành Viên</v-card-title>
                     <v-card-text>{{ thanhvien }} thành viên</v-card-text>
                 </v-card>
                 <v-spacer />
-                <v-card elevation="2" outlined width="200">
+                <v-card elevation="2" outlined width="300">
                     <v-card-title class="justify-center">Tổng Bài Viết</v-card-title>
                     <v-card-text>{{ baiviet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
-                <v-card elevation="2" outlined width="200">
+                <v-card elevation="2" outlined width="300">
                     <v-card-title class="justify-center">Đang Chờ Duyệt</v-card-title>
                     <v-card-text>{{ choduyet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
-                <v-card elevation="2" outlined width="200">
-                    <v-card-title class="justify-center">Số Gói</v-card-title>
-                    <v-card-text>{{ sogoi }} gói</v-card-text>
-                </v-card>
+                <!--                <v-card elevation="2" outlined width="200">-->
+                <!--                    <v-card-title class="justify-center">Số Gói</v-card-title>-->
+                <!--                    <v-card-text>{{ sogoi }} gói</v-card-text>-->
+                <!--                </v-card>-->
                 <v-spacer />
             </v-row>
         </v-container>
@@ -34,8 +34,6 @@
                 v-model="selected"
                 :search="search"
                 :loading="loading"
-                :sort-by="['id']"
-                :sort-desc="[true]"
                 :headers="headers"
                 :items="dsBaiDang"
                 :single-select="singleSelect"
@@ -57,14 +55,33 @@
                     </div>
                 </template>
 
-                <template #[`item.choduyet`]="{ item }">
-                    <v-btn v-if="item === 1" icon color="teal">
-                        <v-icon>mdi-check</v-icon>
-                    </v-btn>
+                <template #[`item.tieude`]="{ item }">
+                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                        <v-col cols="12" lg="4" sm="12">
+                            <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
+                            <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                        </v-col>
+                        <v-col cols="12" lg="8" sm="12" class="text-left">
+                            <div class="baidang-title">
+                                <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                                    <template #activator="{ on }">
+                                        <h3 class="title font-700 text--upercase" style="height: 57px" v-on="on">
+                                            {{ item.tieude }}
+                                        </h3>
+                                    </template>
+                                    <span>{{ item.tieude }}</span>
+                                </v-tooltip>
+                            </div>
+                            <div class="mb-2 d-flex flex-row align-center">
+                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                {{ item.diachi }}
+                            </div>
+                        </v-col>
+                    </v-row>
+                </template>
 
-                    <v-btn v-else icon color="red">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
+                <template #[`item.xem`]="{ item }">
+                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
@@ -82,6 +99,7 @@ import ENV from '@/api/baidang'
 import THONGKE from '@/api/thongke'
 import ModalError from '@/components/Error/modalError'
 import VSnackbars from 'v-snackbars'
+import URI_DICRECTORY from '@/api/directory'
 
 export default {
     components: { ModalError, VSnackbars },
@@ -96,7 +114,7 @@ export default {
                 { text: 'Tiêu đề', value: 'tieude' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },
-                { text: 'Đã duyệt', value: 'choduyet' },
+                { text: 'Xem', value: 'xem', sortable: false },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
             dsBaiDang: [],
@@ -110,6 +128,15 @@ export default {
             message: [],
         }
     },
+    computed: {
+        URI_DICRECTORY_UPLOAD() {
+            return URI_DICRECTORY.upload
+        },
+
+        wrong_imgSrc() {
+            return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
+        },
+    },
     created() {
         this.getSoChoDuyet()
         this.getSoBaiViet()
@@ -118,6 +145,15 @@ export default {
         this.getSoGoi()
     },
     methods: {
+        errorImg(event) {
+            this.isImgFail = true
+        },
+        getImg(hinh) {
+            return this.URI_DICRECTORY_UPLOAD + hinh.filename
+        },
+        showItem(item) {
+            this.$router.push('/baidang/' + item.id)
+        },
         fetchDSBaiDang() {
             this.$axios.$get(ENV.choduyet).then((data) => {
                 this.dsBaiDang = data.baidangs
@@ -245,3 +281,43 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.baidang-title h3 {
+    height: 60px;
+    font-size: 14px;
+    font-weight: 700;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.tooltipCustom {
+    max-width: 315px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #000 !important;
+}
+.tooltipCustom::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:nth-child(1) {
+    width: 1%;
+}
+</style>

@@ -16,7 +16,7 @@
                 <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
             </v-select>
             <!--            Quan huyen-->
-            <v-select v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">
+            <v-select v-if="inputThanhPho" v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on" @change="getXaPhuong(item.maqh)">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
@@ -25,7 +25,7 @@
                 <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
             </v-select>
             <!--            Phuong xa-->
-            <v-select v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">
+            <v-select v-if="inputQuanHuyen" v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
                         <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
@@ -38,12 +38,7 @@
             <v-switch v-model="banKinhOn" inset label="Tìm theo bán kính:"></v-switch>
         </div>
         <div v-show="banKinhOn" class="ml-5 pt-0 mt-0" @toggle="isViTri">
-            <v-slider
-                v-model="bankinh.val"
-                :label="bankinh.label"
-                :thumb-color="ex3.color"
-                thumb-label="always"
-            ></v-slider>
+            <v-slider v-model="bankinh.val" :label="bankinh.label" :thumb-color="ex3.color" thumb-label="always"></v-slider>
             <v-radio-group v-model="radioGroup" class="pt-0 mt-0">
                 <v-radio :label="'Theo địa chỉ'" :value="1" class="pt-0 mt-0"></v-radio>
                 <div v-if="radioGroup == 1" class="pt-0 mt-0"><v-text-field></v-text-field></div>
@@ -73,10 +68,7 @@
             <v-select v-model="loai_id" :items="loaiNha" item-value="id" item-text="ten_loai" label="Loại">
                 <template #item="{ item, attrs, on }">
                     <v-list-item v-bind="attrs" v-on="on">
-                        <v-list-item-title
-                            :id="attrs['aria-labelledby']"
-                            v-text="'Loại: ' + item.ten_loai"
-                        ></v-list-item-title>
+                        <v-list-item-title :id="attrs['aria-labelledby']" v-text="'Loại: ' + item.ten_loai"></v-list-item-title>
                     </v-list-item>
                 </template>
             </v-select>
@@ -155,17 +147,7 @@
                 <v-card-text>
                     <v-row>
                         <v-col class="px-4">
-                            <v-range-slider
-                                v-model="rangeGia"
-                                :min="gia1"
-                                :max="gia2"
-                                hide-details
-                                :label="ex3.label"
-                                :thumb-color="ex3.color"
-                                thumb-label="always"
-                                class="align-center"
-                            >
-                            </v-range-slider>
+                            <v-range-slider v-model="rangeGia" :min="gia1" :max="gia2" hide-details :label="ex3.label" :thumb-color="ex3.color" thumb-label="always" class="align-center"> </v-range-slider>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -176,25 +158,16 @@
                 <v-card-text>
                     <v-row>
                         <v-col class="px-4">
-                            <v-range-slider
-                                v-model="rangeDienTich"
-                                :min="dientich1"
-                                :max="dientich2"
-                                hide-details
-                                :label="ex4.label"
-                                :thumb-color="ex4.color"
-                                thumb-label="always"
-                                class="align-center"
-                            >
-                            </v-range-slider>
+                            <v-range-slider v-model="rangeDienTich" :min="dientich1" :max="dientich2" hide-details :label="ex4.label" :thumb-color="ex4.color" thumb-label="always" class="align-center"> </v-range-slider>
                         </v-col>
                     </v-row>
                 </v-card-text>
             </v-card>
         </div>
         <div class="ml-1">
-            <v-btn block class="deep-orange lighten-1" @click="$nuxt.$emit('search')">Tìm kiếm</v-btn>
+            <v-btn block class="deep-orange lighten-1 white--text" @click="$nuxt.$emit('search')">Tìm kiếm</v-btn>
         </div>
+        <v-checkbox v-model="isViTri" label="Lưu tìm kiếm" color="pink" value="Lưu tìm kiếm" hide-details></v-checkbox>
     </v-card>
 </template>
 <script>
@@ -210,7 +183,7 @@ export default {
             ex2: { label: 'track-color', val: 75, color: 'green lighten-1' },
             ex3: { label: 'Giá từ', val: 50, color: 'blue lighten-1' },
             ex4: { label: 'Diện tích từ', val: 50, color: 'blue lighten-1' },
-
+            isSaveSearch: false,
             isViTri: true,
             radioGroup: 1,
 

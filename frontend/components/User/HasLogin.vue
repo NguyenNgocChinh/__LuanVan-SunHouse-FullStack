@@ -1,6 +1,6 @@
 <template>
     <div class="ma-1">
-        <v-menu offset-y rounded bottom origin="center center" transition="slide-x-transition">
+        <v-menu offset-y rounded bottom origin="center center" transition="slide-x-transition" style="z-index: 9999">
             <template #activator="{ on, attrs }">
                 <v-btn v-click-outside="isClickUserOutSide" depressed dark outlined v-bind="attrs" class="px-1 py-3" v-on="on" @click="isClickUser = !isClickUser">
                     <v-avatar class="mr-1 text-center" size="30">

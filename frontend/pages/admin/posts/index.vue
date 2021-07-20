@@ -41,37 +41,35 @@
                     </div>
                 </template>
                 <template #[`item.tieude`]="{ item }">
-                    <v-container>
-                        <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
-                            <v-col cols="12" lg="4" sm="12">
-                                <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
-                                <v-img v-else width="100%" height="100%" aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
-                            </v-col>
-                            <v-col cols="12" lg="8" sm="12" class="text-left">
-                                <div class="card-title">
-                                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
-                                        <template #activator="{ on }">
-                                            <h3 class="title font-700 text--upercase" v-on="on">
-                                                {{ item.tieude }}
-                                            </h3>
-                                        </template>
-                                        <span>{{ item.tieude }}</span>
-                                    </v-tooltip>
+                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                        <v-col cols="12" lg="4" sm="12">
+                            <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
+                            <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                        </v-col>
+                        <v-col cols="12" lg="8" sm="12" class="text-left">
+                            <div class="baidang-title">
+                                <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                                    <template #activator="{ on }">
+                                        <h3 class="title font-700 text--upercase" v-on="on">
+                                            {{ item.tieude }}
+                                        </h3>
+                                    </template>
+                                    <span>{{ item.tieude }}</span>
+                                </v-tooltip>
+                            </div>
+                            <div class="mb-2 d-flex flex-row align-center">
+                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                {{ item.diachi }}
+                            </div>
+                            <div class="introduce-line d-flex mb-2">
+                                <div>
+                                    Ngày đăng:
+                                    {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
                                 </div>
-                                <div class="mb-2 d-flex flex-row align-center">
-                                    <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
-                                    {{ item.diachi }}
-                                </div>
-                                <div class="introduce-line d-flex mb-2">
-                                    <div>
-                                        Ngày đăng:
-                                        {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
-                                    </div>
-                                    <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
+                            </div>
+                        </v-col>
+                    </v-row>
                 </template>
                 <template #[`item.choduyet`]="{ item }">
                     <v-btn v-if="item.choduyet === 0" icon color="teal" :loading="item.loading" @click="updateChoDuyet(item, 1)">
@@ -140,11 +138,11 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'Tiêu đề', width: '45%', value: 'tieude' },
-                { text: 'Người đăng', value: 'user', width: '15%' },
-                { text: 'Time', value: 'thoigian', width: '8%' },
+                { text: 'Tiêu đề', width: '40%', value: 'tieude' },
+                { text: 'Người đăng', value: 'user', width: '10%' },
+                { text: 'Time', value: 'thoigian', width: '7%' },
                 { text: 'Status', value: 'trangthai', width: '8%' },
-                { text: 'Duyệt', value: 'choduyet', width: '8%' },
+                { text: 'Duyệt', value: 'choduyet', width: '7%' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false, width: '12%' },
             ],
             dsBaiDang: [],
@@ -154,11 +152,16 @@ export default {
             loadingTrangThai: false,
             loadingDelete: false,
             message: [],
+            isImgFail: false,
         }
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
             return URI_DICRECTORY.upload
+        },
+
+        wrong_imgSrc() {
+            return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
         },
     },
     created() {
@@ -170,6 +173,12 @@ export default {
                 this.dsBaiDang = data
                 this.loading = false
             })
+        },
+        errorImg(event) {
+            this.isImgFail = true
+        },
+        getImg(hinh) {
+            return this.URI_DICRECTORY_UPLOAD + hinh.filename
         },
         showItem(item) {
             this.$router.push('/baidang/' + item.id)
@@ -295,7 +304,7 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
 .text--upercase {
     text-transform: uppercase;
 }
@@ -303,7 +312,9 @@ export default {
     color: #7873f5;
     display: inline-block;
 }
-.card-title h3 {
+.baidang-title {
+}
+.baidang-title h3 {
     height: 60px;
     font-size: 14px;
     font-weight: 700;
@@ -336,5 +347,8 @@ export default {
     border-width: 5px;
     border-style: solid;
     border-color: black transparent transparent transparent;
+}
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:nth-child(1) {
+    width: 1%;
 }
 </style>

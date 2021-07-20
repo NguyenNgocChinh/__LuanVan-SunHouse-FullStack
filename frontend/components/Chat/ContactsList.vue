@@ -1,23 +1,12 @@
 <template>
     <div class="contacts-list">
-        <v-virtual-scroll
-            id="scrollContact"
-            class="list-contact"
-            :items="sortedContacts"
-            height="560px"
-            item-height="80"
-        >
+        <v-virtual-scroll id="scrollContact" class="list-contact" :items="sortedContacts" height="560px" item-height="80">
             <template #default="{ item }">
-                <v-list-item
-                    :key="item.id"
-                    class="list-contact-item"
-                    :class="{ selected: item === selected }"
-                    @click="selectContact(item)"
-                >
+                <v-list-item :key="item.id" class="list-contact-item" :class="{ selected: item === selected }" @click="selectContact(item)">
                     <v-list-item-action class="ml-6">
                         <div class="avatar" style="position: relative">
                             <img :src="item.profile_photo_path || item.profile_photo_url" :alt="item.name" />
-                            <div id="online"></div>
+                            <!--                            <div id="online"></div>-->
                         </div>
                     </v-list-item-action>
 

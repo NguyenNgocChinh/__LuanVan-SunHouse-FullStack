@@ -54,12 +54,14 @@
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
-                    <v-textarea
-                        v-model="noidung"
-                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"
-                        counter
-                        placeholder="Nhập nội dung bài viết..."
-                    ></v-textarea>
+                    <!--                    <v-text-field-->
+                    <!--                        v-model="noidung"-->
+                    <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
+                    <!--                        counter-->
+                    <!--                        placeholder="Nhập nội dung bài viết..."-->
+                    <!--                    ></v-text-field>-->
+                    <editor id="sunhouseEditor" :min-length="40" class="mt-2" />
+
                     <div class="spacer-line-form"></div>
                     <h3>Hình ảnh</h3>
                     <v-file-input
@@ -312,10 +314,11 @@ import * as ENVTN from '@/api/tiennghi'
 import * as ENVTK from '@/api/timkiem'
 import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
 import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
+import Editor from '@/components/UIComponent/Editor'
 import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
 export default {
-    components: { LMarker, LMap, LTileLayer, LPopup, LControl },
+    components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
     middleware: 'auth',
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
@@ -459,12 +462,10 @@ export default {
         duong(duong) {
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 3)
             if (this.duong != null) {
-                this.arrDiaChi.unshift(duong)
+                if (typeof duong !== 'object') this.arrDiaChi.unshift(duong)
+                else this.arrDiaChi.unshift(duong.tenduong)
             }
             this.diachicuthe = this.arrDiaChi.join(',')
-            if (this.arrDiaChi.length > 0) {
-                this.setViewFormAddress(this.diachicuthe, 15)
-            }
         },
         marker() {
             if (this.marker == null) {
@@ -555,6 +556,9 @@ export default {
                 }
             )
         })
+        this.$nuxt.$on('blurTieuDe', (noidung) => {
+            this.noidung = noidung
+        })
     },
     methods: {
         getSelectOnComboBox(address) {
@@ -584,7 +588,6 @@ export default {
             await this.$axios
                 .$get('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&limit=1')
                 .then((result) => {
-                    console.log('xxx', result)
                     if (result.display_name != null) {
                         const diaChi = result.display_name.split(',')
                         for (let i = 0; i < diaChi.length; i++) {
@@ -598,7 +601,7 @@ export default {
                                 diaChi.splice(i, 1)
                             }
                         }
-                        const displayName = diaChi.join(', ')
+                        const displayName = diaChi.join(',')
                         const glass = document.querySelector('.glass ')
                         glass.value = displayName
                         this.diachicuthe = displayName
@@ -650,6 +653,11 @@ export default {
                 scrollToInputInvalid(form)
                 return
             }
+            if (this.noidung === '') {
+                const top = document.getElementById('sunhouseEditor').offsetTop
+                window.scroll(0, top)
+                return
+            }
             if (this.toadoX === '' && this.toadoY === '') {
                 this.$toast.show('Vui lòng sử dụng bản đồ để có thể tìm thấy được tọa độ của căn nhà')
                 return
@@ -689,9 +697,17 @@ export default {
                         withCredentials: true,
                     })
                     .then((data) => {
-                        this.$nuxt.$toast.success('Đăng bài thành công!')
-                        this.$router.push('/baidang/' + data.id)
-                        this.$nuxt.$toast.success('Đăng bài thành công!')
+                        this.$toast.success('Đăng bài thành công!')
+                        if (this.duong !== null || this.duong !== '') {
+                            this.$axios
+                                .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
+                                    xaid: this.xaphuong.xaid,
+                                    tenduong: this.duong,
+                                })
+                                .then(() => {
+                                    this.$router.push('/baidang/' + data.id)
+                                })
+                        } else this.$router.push('/baidang/' + data.id)
                     })
                     .catch((error) => {
                         if (error.response) {

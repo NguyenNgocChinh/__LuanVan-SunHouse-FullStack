@@ -28,7 +28,7 @@
                                 </v-layout>
                             </v-img>
                         </v-avatar>
-                        <v-icon class="status-user" size="11px" color="green" style="position: absolute; right: 0; bottom: -5px">mdi-checkbox-blank-circle</v-icon>
+                        <!--                        <v-icon class="status-user" size="11px" color="green" style="position: absolute; right: 0; bottom: -5px">mdi-checkbox-blank-circle</v-icon>-->
                     </span>
                 </template>
 

@@ -2,10 +2,10 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-card color class="d-flex">
+                <v-card class="d-flex">
                     <v-row align="center">
                         <v-col cols="6">
-                            <div class="ml-2">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
+                            <div class="ml-4">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
                         </v-col>
 
                         <v-col cols="6" class="d-flex align-center">

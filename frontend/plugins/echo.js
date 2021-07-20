@@ -4,6 +4,7 @@ import Pusher from 'pusher-js'
 import * as EVNAPP from '@/api/app'
 import axios from 'axios'
 Pusher.logToConsole = true
+// NEW PUSHER
 // window.pusher = new Pusher('7c957645c57e4378d473', {
 //     cluster: 'ap1',
 //     encrypted: true,
@@ -39,7 +40,7 @@ Pusher.logToConsole = true
 //         }
 //     },
 // })
-
+// NEW ECHO
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '7c957645c57e4378d473',
@@ -79,11 +80,20 @@ window.Echo = new Echo({
         }
     },
 })
-// const presenceChannel = window.pusher.subscribe('user.online')
-// presenceChannel.bind('pusher:subscription_succeeded', function () {
-//     const me = presenceChannel
-//     // const userId = me.id
-//     // const userInfo = me.info
-//     console.log(me)
+
+// SHORT CONFIG
+// window.Echo = new Pusher('7c957645c57e4378d473', {
+//     cluster: 'ap1',
+//     forceTLS: true,
+//     encrypted: true,
+//     auth: {
+//         params: {},
+//         headers: {
+//             Authorization: 'Bearer ' + localStorage.getItem('auth._token.laravelSanctum'),
+//             withCredentials: true,
+//         },
+//     },
+//     authEndpoint: 'http://localhost:8000/broadcasting/auth',
 // })
+
 Vue.prototype.$Echo = window.Echo
