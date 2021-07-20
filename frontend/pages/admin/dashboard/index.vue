@@ -43,7 +43,7 @@
                 no-results-text="Không tìm thấy kết quả nào trùng khớp"
                 item-key="id"
                 show-select
-                class="elevation-4"
+                class="elevation-4 my-table"
             >
                 <template #top>
                     <div class="d-flex justify-space-between">
@@ -85,7 +85,7 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-btn small @click="duyetbai(item)">DUYỆT</v-btn>
+                    <v-btn small color="primary" @click="duyetbai(item)">DUYỆT</v-btn>
                 </template>
             </v-data-table>
             <v-snackbars :objects.sync="message" bottom right />
@@ -110,8 +110,8 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'ID', value: 'id' },
-                { text: 'Tiêu đề', value: 'tieude' },
+                { text: 'ID', value: 'id', width: '3%' },
+                { text: 'Tiêu đề', value: 'tieude', width: '50%' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },
                 { text: 'Xem', value: 'xem', sortable: false },
@@ -317,7 +317,12 @@ export default {
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:nth-child(1) {
-    width: 1%;
+</style>
+<style>
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:first-child {
+    width: 1% !important;
+}
+.my-table table {
+    table-layout: fixed !important;
 }
 </style>

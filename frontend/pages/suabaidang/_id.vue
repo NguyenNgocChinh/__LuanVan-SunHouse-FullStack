@@ -1,15 +1,15 @@
 <template>
     <v-container>
-        <v-breadcrumbs :link="true" :items="breadcumb">
-            <template #item="{ item }">
-                <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
-                    {{ item.text }}
-                </v-breadcrumbs-item>
-            </template>
-            <template #divider>
-                <v-icon>mdi-chevron-right</v-icon>
-            </template>
-        </v-breadcrumbs>
+        <!--        <v-breadcrumbs :link="true" :items="breadcumb">-->
+        <!--            <template #item="{ item }">-->
+        <!--                <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">-->
+        <!--                    {{ item.text }}-->
+        <!--                </v-breadcrumbs-item>-->
+        <!--            </template>-->
+        <!--            <template #divider>-->
+        <!--                <v-icon>mdi-chevron-right</v-icon>-->
+        <!--            </template>-->
+        <!--        </v-breadcrumbs>-->
         <v-form ref="form" v-model="vaild" class="mb-6">
             <v-card>
                 <v-card-title>THÔNG TIN CƠ BẢN</v-card-title>
@@ -54,12 +54,14 @@
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
-                    <v-textarea
-                        v-model="noidung"
-                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"
-                        counter
-                        placeholder="Nhập nội dung bài viết..."
-                    ></v-textarea>
+                    <!--                    <v-text-field-->
+                    <!--                        v-model="noidung"-->
+                    <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
+                    <!--                        counter-->
+                    <!--                        placeholder="Nhập nội dung bài viết..."-->
+                    <!--                    ></v-text-field>-->
+                    <editor id="sunhouseEditor" :min-length="40" class="mt-2" :old="noidung" />
+
                     <div class="spacer-line-form"></div>
                     <h3>Hình ảnh</h3>
                     <v-file-input
@@ -99,8 +101,8 @@
                                 item-text="v"
                                 item-value="k"
                                 :items="[
-                                    { k: '1', v: 'Thuê' },
-                                    { k: '0', v: 'Rao Bán' },
+                                    { k: 1, v: 'Thuê' },
+                                    { k: 0, v: 'Rao Bán' },
                                 ]"
                                 solo
                             ></v-select>
@@ -178,22 +180,17 @@
                     </v-container>
                 </v-card-text>
             </v-card>
-            <v-card class="mt-8">
+            <v-card class="mt-8 py-1">
                 <v-card-title>CHỌN VỊ TRÍ</v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" lg="4" sm="12">
                             <div>
                                 <h3 class="d-inline-block">Tỉnh/Thành phố</h3>
-                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                    <sup>(*) </sup>
-                                </span>
                                 <v-combobox
                                     v-model="thanhpho"
                                     class="mt-2"
                                     :items="listThanhPho"
-                                    :loading="listThanhPho.length < 1"
-                                    :disabled="listThanhPho.length < 1"
                                     placeholder="Tìm kiếm"
                                     item-text="name"
                                     item-value="matp"
@@ -202,11 +199,8 @@
                                     solo
                                 ></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="thanhpho">
                                 <h3 class="d-inline-block">Quận/Huyện</h3>
-                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                    <sup>(*) </sup>
-                                </span>
                                 <v-combobox
                                     v-model="quanhuyen"
                                     class="mt-2"
@@ -219,41 +213,60 @@
                                     solo
                                 ></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="quanhuyen">
                                 <h3 class="d-inline-block">Xã/Phường</h3>
                                 <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
                             </div>
-                            <div>
+                            <div v-if="xaphuong">
                                 <h3 class="d-inline-block">Đường/Phố</h3>
+                                <!--                                <v-combobox-->
+                                <!--                                    v-model="duong"-->
+                                <!--                                    class="mt-2"-->
+                                <!--                                    :items="listDuong"-->
+                                <!--                                    hide-selected-->
+                                <!--                                    chips-->
+                                <!--                                    clearable-->
+                                <!--                                    :search-input.sync="searchDuong"-->
+                                <!--                                    item-text="name"-->
+                                <!--                                    item-value="maduong"-->
+                                <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
+                                <!--                                    label="Chọn Đường/Phố"-->
+                                <!--                                    solo-->
+                                <!--                                >-->
+                                <!--                                    <template #no-data>-->
+                                <!--                                        <v-list-item>-->
+                                <!--                                            <v-list-item-content>-->
+                                <!--                                                <v-list-item-title>-->
+                                <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
+                                <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
+                                <!--                                                </v-list-item-title>-->
+                                <!--                                            </v-list-item-content>-->
+                                <!--                                        </v-list-item>-->
+                                <!--                                    </template>-->
+                                <!--                                </v-combobox>-->
                                 <v-combobox
                                     v-model="duong"
+                                    chips
                                     class="mt-2"
                                     :items="listDuong"
-                                    hide-selected
-                                    chips
-                                    clearable
                                     :search-input.sync="searchDuong"
-                                    item-text="name"
-                                    item-value="maduong"
-                                    no-data-text="Tải dữ liệu đường thất bại"
+                                    item-text="tenduong"
+                                    item-value="id"
+                                    no-data-text="Đường này chưa có sẵn trong hệ thống.
+                                    Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
                                     solo
                                 >
-                                    <template #no-data>
-                                        <v-list-item>
-                                            <v-list-item-content>
-                                                <v-list-item-title>
-                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong
-                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này
-                                                </v-list-item-title>
-                                            </v-list-item-content>
-                                        </v-list-item>
-                                    </template>
                                 </v-combobox>
+                                <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
                             </div>
-                            <div>
+                            <div class="f-flex flex-row align-center">
                                 <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
-                                <v-text-field v-model="diachicuthe" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo :loading="loadingDiaChiCuThe"></v-text-field>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-icon size="15" :color="toadoX ? 'green' : 'red'">{{ toadoX ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
+                                <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
                             </div>
                         </v-col>
                         <v-col cols="12" lg="8" sm="12">
@@ -276,7 +289,7 @@
                                                 <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
                                             </l-marker>
                                         </l-map>
-                                        <small class="red--text"> {{ toadoX }} , {{ toadoY }} </small>
+                                        <small v-if="toadoX" class="red--text mb-5"> {{ toadoX }} , {{ toadoY }} </small>
                                     </client-only>
                                 </div>
                             </v-card>
@@ -287,7 +300,7 @@
         </v-form>
         <p class="font-weight-bold red--text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>
         <div class="text-center">
-            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
+            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Sửa bài</v-btn>
         </div>
         <client-only>
             <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
@@ -301,10 +314,11 @@ import * as ENVTN from '@/api/tiennghi'
 import * as ENVTK from '@/api/timkiem'
 import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
 import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
+import Editor from '@/components/UIComponent/Editor'
 import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
 export default {
-    components: { LMarker, LMap, LTileLayer, LPopup, LControl },
+    components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
     middleware: 'auth',
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
@@ -360,10 +374,10 @@ export default {
             listDuong: [],
             arrDiaChi: [],
 
-            thanhpho: '',
-            quanhuyen: '',
-            xaphuong: '',
-            duong: '',
+            thanhpho: null,
+            quanhuyen: null,
+            xaphuong: null,
+            duong: null,
             searchDuong: null,
             diachicuthe: '',
             marker: null,
@@ -399,14 +413,17 @@ export default {
         thanhpho() {
             this.arrDiaChi = []
             this.listQuanHuyen = []
-            this.quanhuyen = ''
+            this.quanhuyen = null
+            if (this.thanhpho === '') this.thanhpho = null
             if (this.thanhpho != null) {
                 this.arrDiaChi.push(this.thanhpho.name)
 
                 this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
                     this.listQuanHuyen = result
                 })
-                this.diachicuthe = this.arrDiaChi.join(',')
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
+            if (this.arrDiaChi.length > 0) {
                 this.setViewFormAddress(this.diachicuthe)
             }
         },
@@ -414,38 +431,55 @@ export default {
             this.listXaPhuong = []
             this.xaphuong = null
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
-
+            if (this.quanhuyen === '') this.quanhuyen = null
             if (this.quanhuyen != null) {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
-                this.diachicuthe = this.arrDiaChi.join(',')
 
                 this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
+            if (this.arrDiaChi.length > 0) {
                 this.setViewFormAddress(this.diachicuthe, 14)
             }
         },
         xaphuong() {
             this.listDuong = []
-            this.duong = null
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
             if (this.xaphuong != null) {
                 this.arrDiaChi.unshift(this.xaphuong.name)
                 this.diachicuthe = this.arrDiaChi.join(',')
 
-                this.setViewFormAddress(this.diachicuthe, 15)
+                this.$nuxt.$axios.$get(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid).then((result) => {
+                    this.listDuong = result
+                })
+                if (this.arrDiaChi.length > 0) {
+                    this.setViewFormAddress(this.diachicuthe, 15)
+                }
             }
+        },
+        duong(duong) {
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 3)
+            if (this.duong != null) {
+                if (typeof duong !== 'object') this.arrDiaChi.unshift(duong)
+                else this.arrDiaChi.unshift(duong.tenduong)
+            }
+            this.diachicuthe = this.arrDiaChi.join(',')
         },
         marker() {
             if (this.marker == null) {
                 this.thanhpho = null
                 this.diachicuthe = null
+                this.toadoX = null
+                this.toadoY = null
                 const glass = document.querySelector('.glass ')
                 glass.value = null
             }
         },
     },
     mounted() {
+        this.getBaiDangSua()
         this.$nextTick(() => {
             const map = this.$refs.map.mapObject
             const search = new GeoSearchControl({
@@ -523,6 +557,9 @@ export default {
                 }
             )
         })
+        this.$nuxt.$on('blurTieuDe', (noidung) => {
+            this.noidung = noidung
+        })
     },
     methods: {
         getSelectOnComboBox(address) {
@@ -549,7 +586,7 @@ export default {
         },
         async setDisplayNameFromlatLng(lat, lng) {
             this.loadingDiaChiCuThe = true
-            await this.$nuxt.$axios
+            await this.$axios
                 .$get('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&limit=1')
                 .then((result) => {
                     if (result.display_name != null) {
@@ -566,11 +603,11 @@ export default {
                             }
                         }
                         const displayName = diaChi.join(',')
-                        this.diachicuthe = displayName
                         const glass = document.querySelector('.glass ')
                         glass.value = displayName
+                        this.diachicuthe = displayName
 
-                        this.getSelectOnComboBox(displayName)
+                        // this.getSelectOnComboBox(displayName)
                     }
                 })
                 .finally(() => {
@@ -587,6 +624,7 @@ export default {
                         this.marker = this.center
                         this.$refs.map.mapObject.flyTo([pos.coords.latitude, pos.coords.longitude], 15)
                         this.isFound = true
+
                         await this.setDisplayNameFromlatLng(this.toadoX, this.toadoY)
                         this.$refs.marker.mapObject.on('dragend', (event) => {
                             const marker = event.target
@@ -607,7 +645,6 @@ export default {
                 this.isFound = false
             }
         },
-
         async getBaiDangSua() {
             try {
                 await this.$axios.$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id).then((data) => {
@@ -620,7 +657,10 @@ export default {
                     this.selectedhuong = this.baidang.huong
                     this.namxaydung = this.baidang.namxaydung
                     this.dientich = this.baidang.dientich
-                    this.diachi = this.baidang.diachi
+                    this.diachicuthe = this.baidang.diachi
+                    this.setViewFormAddress(this.diachicuthe)
+                    const glass = document.querySelector('input.glass ')
+                    glass.value = this.diachicuthe
                     this.hinhthuc = parseInt(this.baidang.isChoThue)
                     this.loais.forEach((l) => {
                         if (l.ten_loai === this.baidang.loai) {
@@ -642,6 +682,11 @@ export default {
             if (!validate) {
                 this.$toast.show('Vui lòng điền đủ những trường yêu cầu để tiếp tục đăng tin')
                 scrollToInputInvalid(form)
+                return
+            }
+            if (this.noidung === '') {
+                const top = document.getElementById('sunhouseEditor').offsetTop
+                window.scroll(0, top)
                 return
             }
             if (this.toadoX === '' && this.toadoY === '') {
@@ -678,29 +723,43 @@ export default {
                     this.$nuxt.$loading.start()
                 })
                 this.kq = this.$axios
-                    .$post(ENV.store, data, {
+                    .$post(ENV.edit + this.$route.params.id, data, {
                         headers: { 'content-type': 'multipart/form-data' },
                         withCredentials: true,
                     })
                     .then((data) => {
-                        this.$nuxt.$toast.success('Đăng bài thành công!')
-                        this.$router.push('/baidang/' + data.id)
-                        this.$nuxt.$toast.success('Đăng bài thành công!')
+                        this.$toast.success('Sửa bài thành công!')
+                        if (this.duong != null && this.duong !== '') {
+                            this.$axios
+                                .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
+                                    xaid: this.xaphuong.xaid,
+                                    tenduong: this.duong,
+                                })
+                                .then(() => {
+                                    this.$router.push('/baidang/' + data.id)
+                                })
+                                .catch((e) => {
+                                    console.error(e)
+                                })
+                        } else {
+                            this.$router.push('/baidang/' + data.id)
+                        }
                     })
                     .catch((error) => {
                         if (error.response) {
-                            for (const key of Object.keys(error.response.data.errors)) {
-                                this.$nuxt.$toast.error(error.response.data.errors[key], {
-                                    duration: null,
-                                })
-                            }
+                            this.$toast.error('Có lỗi xảy ra!!', { duration: 5000 })
+                            // for (const key of Object.keys(error.response.data.errors)) {
+                            //     this.$nuxt.$toast.error(error.response.data.errors[key], {
+                            //         duration: null,
+                            //     })
+                            // }
                         }
                     })
                     .finally(() => {
                         this.$nuxt.$loading.finish()
                     })
             } catch (e) {
-                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: null })
+                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: 5000 })
             } finally {
                 this.$nuxt.$loading.finish()
             }
@@ -733,6 +792,16 @@ export default {
             this.$nextTick(() => {
                 event.target.openPopup()
             })
+        },
+        filter(item, queryText, itemText) {
+            if (item.header) return false
+
+            const hasValue = (val) => (val != null ? val : '')
+
+            const text = hasValue(itemText)
+            const query = hasValue(queryText)
+
+            return text.toString().toLowerCase().includes(query.toString().toLowerCase())
         },
     },
 }

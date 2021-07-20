@@ -254,7 +254,36 @@ class ApiBaiDangController extends Controller
 
     public function updateBaiDang(Request $request)
     {
-
+        $request->validate(
+            [
+                'tieude' => 'required',
+                'loai_id' => 'required',
+                'gia' => 'required',
+                'hinhthuc' => 'required',
+                'noidung' => 'required',
+                'sophongngu' => 'required',
+                'sophongtam' => 'required',
+                'huong' => 'required',
+                'dientich' => 'required',
+                'diachi' => 'required',
+                'toadoX' => 'required',
+                'toadoY' => 'required',
+            ], [
+                'tieude.required' => 'Tiêu đề không được để trống!',
+                'loai_id.required' => 'Chưa chọn loại của căn nhà!',
+                'gia.required' => 'Giá không được để trống!',
+                'hinhthuc.required' => 'Chưa chọn hình thức đăng tải!',
+                'noidung.required' => 'Nội dung mô tả không được trống!',
+                'sophongngu.required' => 'Số phòng ngủ không được để trống!',
+                'sophongtam.required' => 'Số phòng tắm không được để trống!',
+                'namxaydung.required' => 'Năm xây dựng không được để trống!',
+                'huong.required' => 'Chưa chọn hướng nhà!',
+                'dientich.required' => 'Diện tích không được để trống!',
+                'diachi.required' => 'Địa chỉ nhà không được để trống!',
+                'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+            ]
+        );
         $baidang = BaiDang::find($request->id);
         $data = $this->saveImage($request);
         $baidang->tieude = $request->tieude;
@@ -264,31 +293,27 @@ class ApiBaiDangController extends Controller
         $baidang->noidung = $request->noidung;
         $baidang->sophongngu = $request->sophongngu;
         $baidang->sophongtam = $request->sophongtam;
-        $baidang->namxaydung = $request->namxaydung;
+        if($request->namxaydung !== 'null')
+            $baidang->namxaydung = $request->namxaydung;
         $baidang->huong = $request->huong;
         $baidang->dientich = $request->dientich;
         $baidang->diachi = $request->diachi;
-        /**********************************************/
-        $baidang->id_goi = 1;
-        /**********************************************/
-
         $baidang->toadoX = $request->toadoX;
         $baidang->toadoY = $request->toadoY;
         /**********************************************/
-        $baidang->user_id = Auth::user()->id;
+        // $baidang->user_id = Auth::user()->id;
         /**********************************************/
 
         $baidang->choduyet = 1;
-        $kq = $baidang->save();
+        $kq = $baidang->update();
 
         if ($kq) {
-            if (count($request->dstiennghi) > 0) {
-                if (count($baidang->tiennghi_baidang) > 0) {
-                    foreach ($baidang->tiennghi_baidang as $tiennghi) {
-                        $tiennghi->delete();
-                    }
+            if (count($baidang->tiennghiBaiDang) > 0) {
+                foreach ($baidang->tiennghiBaiDang as $tiennghi) {
+                    $tiennghi->delete();
                 }
-
+            }
+            if (count($request->dstiennghi) > 0) {
                 foreach ($request->dstiennghi as $tiennghi) {
                     $tiennghi_bd = new TienNghiBaiDang();
                     $tiennghi_bd->baidang_id = $baidang->id;

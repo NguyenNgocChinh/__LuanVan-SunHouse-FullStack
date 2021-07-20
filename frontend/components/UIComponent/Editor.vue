@@ -49,11 +49,14 @@ export default {
             type: Number,
             default: 5000,
         },
+        old: {
+            default: undefined,
+        },
     },
     data: () => {
         return {
             error: '',
-            content: '',
+            content: undefined,
             editorOption: {
                 theme: 'snow',
                 placeholder: 'Nhập nội dung...',
@@ -75,10 +78,17 @@ export default {
         editor() {
             return this.$refs.myQuillEditor.quill
         },
+        oldValue() {
+            return this.old
+        },
+    },
+    watch: {
+        old(data) {
+            this.content = data
+        },
     },
     mounted() {
         this.$nuxt.$on('focus', () => {
-            console.log('on focus')
             this.editor.focus()
         })
     },

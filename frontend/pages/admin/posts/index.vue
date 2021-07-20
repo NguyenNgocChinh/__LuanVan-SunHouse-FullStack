@@ -21,7 +21,7 @@
                 no-results-text="Không tìm thấy kết quả nào phù hợp"
                 item-key="id"
                 show-select
-                class="elevation-1"
+                class="elevation-1 my-table"
             >
                 <template #top>
                     <div class="d-flex justify-space-between">
@@ -138,7 +138,7 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'Tiêu đề', width: '40%', value: 'tieude' },
+                { text: 'Tiêu đề', width: '40%', value: 'tieude', align: 'left' },
                 { text: 'Người đăng', value: 'user', width: '10%' },
                 { text: 'Time', value: 'thoigian', width: '7%' },
                 { text: 'Status', value: 'trangthai', width: '8%' },
@@ -315,7 +315,7 @@ export default {
 .baidang-title {
 }
 .baidang-title h3 {
-    height: 60px;
+    height: 55px;
     font-size: 14px;
     font-weight: 700;
     font-stretch: normal;
@@ -348,7 +348,12 @@ export default {
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:nth-child(1) {
+</style>
+<style>
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td:first-child {
     width: 1%;
+}
+.my-table table {
+    table-layout: fixed !important;
 }
 </style>

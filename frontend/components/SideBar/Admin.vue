@@ -66,12 +66,6 @@ export default {
                 icon: 'mdi-post',
                 to: '/admin/posts',
             },
-
-            // {
-            //     title: 'Quản lý gói',
-            //     icon: 'mdi-package',
-            //     to: '/admin/packages',
-            // },
             {
                 title: 'Quản lý User',
                 icon: 'mdi-account-circle',
