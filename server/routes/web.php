@@ -23,8 +23,8 @@ use Illuminate\Http\Request;
 /*
  * Broadcast
  */
-//Broadcast::routes(['middleware' => ['auth:sanctum']]);
-Broadcast::routes();
+// Broadcast::routes(['middleware' => ['auth:sanctum']]);
+// Broadcast::routes();
 Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middleware(['auth:sanctum']);
 //Route::middleware('auth:sanctum')->put('users/online', 'UserOnlineController');
 
@@ -118,8 +118,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     Route::get('XaPhuong/{id_quanhuyen}', [DiaDiemController::class, "xaphuong"])
         ->whereNumber("id_quanhuyen");
 
-    Route::get('Duong/{id_xaphuong}', [DiaDiemController::class, "duong"])
+        Route::get('Duong/{id_xaphuong}', [DiaDiemController::class, "duong"])
         ->whereNumber("id_xaphuong");
+        Route::post('Duong/{id_xaphuong}', [DiaDiemController::class, "addDuong"])->whereNumber("id_xaphuong");
 
     /*
      * TIM KIEM

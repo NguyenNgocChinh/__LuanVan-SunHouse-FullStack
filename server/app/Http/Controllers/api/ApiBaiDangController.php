@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Events\ViewPostHandler;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class ApiBaiDangController extends Controller
 {
@@ -88,7 +89,6 @@ class ApiBaiDangController extends Controller
 
     public function getDetailPost(Request $request)
     {
-
         $post = BaiDang::find($request->id);
         event(new ViewPostHandler($post));
         return response()->json(

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPUnit\Framework\fileExists;
+
 class BaiDangHinhAnh extends Model
 {
     use HasFactory;
@@ -21,7 +23,8 @@ class BaiDangHinhAnh extends Model
     {
         parent::boot();
         static::deleting(function ($hinhanh) {
-            unlink(public_path('images/upload/' . $hinhanh->filename));
+            if(file_exists(public_path('images/upload/' . $hinhanh->filename)))
+                unlink(public_path('images/upload/' . $hinhanh->filename));
         });
     }
 

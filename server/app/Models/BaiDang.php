@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class BaiDang extends Model
 {
@@ -58,12 +59,14 @@ class BaiDang extends Model
 
     public function tiennghi()
     {
-        return $this->hasManyThrough(TienNghi::class, TienNghiBaiDang::class, 'baidang_id', 'id', 'id', 'id');
+        return $this->belongsToMany(TienNghi::class, 'tiennghi-baidang', 'baidang_id', 'tiennghi_id');
     }
-
+    public function tiennghiBaiDang(){
+        return $this->hasMany(TienNghiBaiDang::class, 'baidang_id', 'id');
+    }
     public function hinhanh()
     {
-        return $this->hasMany('App\Models\BaiDangHinhAnh', 'baidang_id', 'id')->select('filename');
+        return $this->hasMany('App\Models\BaiDangHinhAnh', 'baidang_id', 'id')->select('filename','id');
     }
 
     public function getPrice()
@@ -106,14 +109,17 @@ class BaiDang extends Model
     {
         parent::boot();
         static::deleting(function ($baidang) {
-            foreach ($baidang->tiennghi as $tiennghi) {
+            foreach ($baidang->tiennghiBaiDang as $tiennghi) {
                 $tiennghi->delete();
             }
 //            foreach ($baidang->binhluan as $binhluan) {
 //                $binhluan->delete();
 //            }
+Log::info('Bai Dang Hinh Anh '.$baidang->hinhanh);
             foreach ($baidang->hinhanh as $hinhanh) {
-                $hinhanh->delete();
+                Log::info($hinhanh);
+               $kq = $hinhanh->delete();
+               Log::info("kq " . $kq);
             }
         });
     }

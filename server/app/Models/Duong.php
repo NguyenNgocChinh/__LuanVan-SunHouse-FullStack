@@ -11,4 +11,9 @@ class Duong extends Model
     protected $table = "duong";
     protected $primaryKey = "id";
     public $timestamps = false;
+
+    protected $fillable = [
+        'tenduong',
+        'xaid',
+    ];
 }

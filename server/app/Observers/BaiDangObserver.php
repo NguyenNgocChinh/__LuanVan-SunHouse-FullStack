@@ -116,7 +116,7 @@ class BaiDangObserver
      */
     public function deleted(BaiDang $baiDang)
     {
-        //
+
     }
 
     /**

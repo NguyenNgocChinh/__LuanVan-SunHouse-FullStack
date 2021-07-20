@@ -10,6 +10,7 @@ use App\Models\XaPhuong;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DiaDiemController extends Controller
 {
@@ -43,11 +44,23 @@ class DiaDiemController extends Controller
     public function addDuong(Request $request)
     {
         $xa = XaPhuong::findOrFail((int)$request->id_xaphuong);
+        $td = $request->tenduong;
+        Log::info($td);
+        if($td['id'] != null){
+            return true;
+        }
         if($xa != null){
-            DB::table('duong')->insert([
+            $xaid = $xa->xaid;
+            if(strlen($xaid) < 5){
+                for($i = 1; $i <= 5 - strlen($xaid); $i++)
+                    $xaid = substr_replace($xaid, '0', 0, 0);
+            }
+            $duong = new Duong();
+            $duong->fill([
                 'tenduong' => $request->tenduong,
-                'xaid' => $xa->id,
+                'xaid' => $xaid
             ]);
+            $duong->save();
             return response()->json(
                 ['success' => 'Thêm đường thành công']
             );
