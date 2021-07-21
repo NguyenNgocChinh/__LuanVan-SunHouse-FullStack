@@ -172,6 +172,7 @@ export default {
         baidangChoThue: process.env.BAIDANG_CHOTHUE,
         baidangRaoBan: process.env.BAIDANG_RAOBAN,
         baidangNoiBat: process.env.BAIDANG_HOT,
+        baidangTimKiem: process.env.BAIDANG_TIMKIEM,
         // users
         users: process.env.USERS,
         userDisable: process.env.USER_DISABLE,
