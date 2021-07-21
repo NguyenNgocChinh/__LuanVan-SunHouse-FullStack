@@ -18,14 +18,16 @@ class ApiTimkiemController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->page_size = 6;
+
         if ($request->page_size)
             $this->page_size = $request->page_size;
+        else
+            $this->page_size = BaiDang::count();
     }
 
-    public function timkiem(Request $request){
+    public function timkiem(Request $request)
+    {
         $baidangs = new BaiDang();
-        $baidangs_new = $baidangs->show_new_post();
         $queries = [];
 
         //BANKINH
@@ -46,7 +48,6 @@ class ApiTimkiemController extends Controller
             $queries['bankinh'] = request('bankinh');
             $queries['banKinhOn'] = request('banKinhOn');
             $queries['banKinhWith'] = request('banKinhWith');
-
         }
 
         //QUERY WHERE column
@@ -120,7 +121,6 @@ class ApiTimkiemController extends Controller
                 $baidangs = $baidangs->where($column_in_table, 'like', $column);
                 $queries[$column] = request($column);
             }
-
         }
 
         // QUERY BETWEEN
@@ -170,11 +170,10 @@ class ApiTimkiemController extends Controller
         $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
 
 
-        return response()->json( (object) [
+        return response()->json((object) [
             'page' => new PaginateResource($baidangs),
             'baidangs' => BaiDangResource::collection($baidangs)
         ]);
-
     }
 
 
@@ -200,5 +199,4 @@ class ApiTimkiemController extends Controller
         }
         return $dist;
     }
-
 }

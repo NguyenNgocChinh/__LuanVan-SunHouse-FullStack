@@ -11,6 +11,14 @@ use Illuminate\Http\Request;
 
 class TimKiemController extends Controller
 {
+    public $page_size;
+
+    public function __construct(Request $request)
+    {
+        $this->page_size = BaiDang::count();
+        if ($request->page_size)
+            $this->page_size = $request->page_size;
+    }
     ///BAN KINH
     function distance($lat1, $lon1, $lat2, $lon2, $unit)
     {
@@ -213,7 +221,7 @@ class TimKiemController extends Controller
             'baidang.updated_at'
         )
             ->leftJoin('users', 'users.id', '=', 'user_id')
-            ->paginate(6)->appends($queries);
+            ->paginate($this->page_size)->appends($queries);
 
 
         return view('nguoidung.danhsachSP', [
