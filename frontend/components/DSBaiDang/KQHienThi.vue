@@ -64,6 +64,7 @@ export default {
             gia2: 'searchParams.gia2',
             dientich1: 'searchParams.dientich1',
             dientich2: 'searchParams.dientich2',
+            banKinhOn: 'searchParams.banKinhOn',
             searchParams: 'searchParams',
         }),
     },
@@ -100,12 +101,18 @@ export default {
     mounted() {
         this.getbaidangs(true)
         this.$nuxt.$on('search', () => {
-            this.baidangs = null
+            this.baidangs = []
+
             this.getbaidangs()
         })
     },
     methods: {
         async getbaidangs(filter = false) {
+            this.detail_page = {
+                to: '?',
+                from: '?',
+                total: '?',
+            }
             const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
             const result = await this.$axios.$get(url, {
                 params: {
@@ -121,10 +128,10 @@ export default {
                     keyword: this.keyword,
                     dientich1: this.dientich1,
                     dientich2: this.dientich2,
+                    banKinhOn: this.banKinhOn,
+                    bankinh: this.bankinh,
                     X: this.X,
                     Y: this.Y,
-                    // inputAdressR: this.inputAdressR,
-                    // bankinh: this.ex5.val,
                 },
             })
             this.baidangs = result.baidangs
@@ -133,13 +140,13 @@ export default {
         sortBy() {
             switch (this.selected) {
                 case 'Mới nhất':
-                    return '?sort=desc'
+                    return 'sort=desc'
                 case 'Cũ nhất':
-                    return '?sort=asc'
+                    return 'sort=asc'
                 case 'Giá tăng dần':
-                    return '?sortByGia=asc'
+                    return 'sortByGia=asc'
                 case 'Giá giảm dần':
-                    return '?sortByGia=desc'
+                    return 'sortByGia=desc'
                 default:
                     return ''
             }

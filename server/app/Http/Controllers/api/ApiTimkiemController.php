@@ -11,6 +11,8 @@ use App\Models\QuanHuyen;
 use App\Models\ThanhPho;
 use App\Models\XaPhuong;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiTimkiemController extends Controller
 {
@@ -27,29 +29,23 @@ class ApiTimkiemController extends Controller
 
     public function timkiem(Request $request)
     {
+        // Log::info($request);
+        // DB::enableQueryLog();
         $baidangs = new BaiDang();
         $queries = [];
-
         //BANKINH
-        $list_baidang_bankinh = array();
-        if (\request()->has('banKinhOn')) {
-            if (\request()->has('X') && \request()->has('Y')) {
-                $poslat = $request->X;
-                $poslng = $request->Y;
+        $list_baidang_bankinh = [];
+        if ($request->banKinhOn) {
+            if ($request->has(['X','Y'])) {
+                $list_baidang_bankinh = $this->getBaiDangsRound($request->Y, $request->X, $request->bankinh);
             }
-            $R = $request->bankinh;
-            foreach ($baidangs->all() as $baidang) {
-                if ($this->distance($poslat, $poslng, $baidang['toadoX'], $baidang['toadoY'], "K") <= $R) {
-                    $list_baidang_bankinh[] = $baidang['id'];
-                }
-            }
-
-            $baidangs = $baidangs->whereIn('baidang.id', $list_baidang_bankinh);
+            // Log::info(DB::getQueryLog());
+            // Log::info($list_baidang_bankinh);
+            $baidangs = BaiDang::whereIn('baidang.id', $list_baidang_bankinh);
             $queries['bankinh'] = request('bankinh');
             $queries['banKinhOn'] = request('banKinhOn');
             $queries['banKinhWith'] = request('banKinhWith');
         }
-
         //QUERY WHERE column
         $columns = [
             'type', 'loai_id', 'huong'
@@ -176,6 +172,22 @@ class ApiTimkiemController extends Controller
         ]);
     }
 
+    // Search Ban Kinh
+    function getBaiDangsRound($x, $y, $radius){
+        $radius = $radius * 1609.344;
+        $kq = DB::table('location')
+                ->select('baidang_id')
+                ->whereRaw("ST_Distance_Sphere((position),(ST_GeomFromText('point($x $y)',4326))) <= $radius")
+                ->where('trangthai', 1)
+                ->get();
+            $temp = $kq->implode('baidang_id', ',');
+            $kq = explode(',',trim($temp));
+        return $kq;
+    //    return DB::select("
+    //    select baidang_id from location
+    //    WHERE ST_Distance_Sphere((position),
+    //    (ST_GeomFromText('point($x $y)',4326))) <= $radius and trangthai = 1");
+    }
 
     ///BAN KINH
     function distance($lat1, $lon1, $lat2, $lon2, $unit)

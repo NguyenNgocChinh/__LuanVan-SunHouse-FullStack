@@ -39,7 +39,7 @@ class BaiDangSeeder extends Seeder
         for ($index = 1; $index <= $maxLoop; $index++) {
             $toadoX = $this->mt_random_float($minX, $maxX);
             $toadoY = $this->mt_random_float($minY, $maxY);
-            $data[] = [
+            BaiDang::create([
                 'user_id' => $user->random(),
                 'tieude' => 'Tiêu đề random số ' . $faker->numberBetween(1, $maxLoop),
                 'noidung' => $faker->text(1000),
@@ -58,24 +58,25 @@ class BaiDangSeeder extends Seeder
                 'dientich' => rand(50, 3000),
                 'luotxem' => rand(1, 500),
                 'created_at' => $faker->dateTime(),
-            ];
+            ]);
         }
 //        $chunks = array_chunk($data, 10);
 //        foreach ($chunks as $chunk) {
 //            DB::table('baidang')->insert($chunk);
 //        }
-        DB::table('baidang')->insert($data);
+        // DB::table('baidang')->created($data);
+        BaiDang::insert($data);
 
-//        DB::table('baidang-hinhanh')->insert([
-//            ['baidang_id' => 10,
-//                'filename' => '10a.jpg'],
-//            ['baidang_id' => 10,
-//                'filename' => '10b.png'],
-//            ['baidang_id' => 10,
-//                'filename' => '10c.jpg'],
-//            ['baidang_id' => 10,
-//                'filename' => '10d.jpg'],
-//
-//        ]);
+       DB::table('baidang-hinhanh')->insert([
+           ['baidang_id' => 10,
+               'filename' => '10a.jpg'],
+           ['baidang_id' => 10,
+               'filename' => '10b.png'],
+           ['baidang_id' => 10,
+               'filename' => '10c.jpg'],
+           ['baidang_id' => 10,
+               'filename' => '10d.jpg'],
+
+       ]);
     }
 }

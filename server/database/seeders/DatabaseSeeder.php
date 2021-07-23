@@ -25,10 +25,10 @@ class DatabaseSeeder extends Seeder
                 LoaiSeeder::class,
                 TienNghiSeeder::class,
                 BaiDangSeeder::class,
-                LocationSeeder::class, //1
-                LocationSeeder::class, //2
-                LocationSeeder::class, //3
-                LocationSeeder::class, //4
+                // LocationSeeder::class, //1
+                // LocationSeeder::class, //2
+                // LocationSeeder::class, //3
+                // LocationSeeder::class, //4
             //    DanhGiaSeeder::class,
             //    BinhLuanSeeder::class,
 

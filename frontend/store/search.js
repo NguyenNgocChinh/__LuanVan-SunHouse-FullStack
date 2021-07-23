@@ -7,18 +7,17 @@ const state = () => ({
         huong: 'tatca',
         sophongngu: 'tatca',
         sophongtam: 'tatca',
-
         gia1: 0,
-        gia2: 9999999999999,
+        gia2: 9999,
 
         dientich1: 0,
-        dientich2: 9999999999999,
+        dientich2: 9999,
 
         X: null,
         Y: null,
         inputAdressR: null,
         banKinhOn: false,
-        bankinh: { label: '', val: 50, color: 'red' },
+        bankinh: 50,
     },
 })
 

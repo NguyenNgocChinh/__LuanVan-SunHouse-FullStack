@@ -27,14 +27,14 @@
                 </div>
             </v-card-title>
             <v-card-subtitle class="noidung">
-                <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia }} Triệu/m²</p>
+                <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia || '-' }} Triệu/m²</p>
                 <v-row>
                     <v-col cols="6" class="pb-1 pt-0 d-flex flex-row align-center">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
                                 <span class="mr-2 justify-content-center" v-on="on"> <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span>
                             </template>
-                            <span>Diện tích: {{ baidang.dientich }} m²</span>
+                            <span>Diện tích: {{ baidang.dientich || '-' }} m²</span>
                         </v-tooltip>
                     </v-col>
 
@@ -43,10 +43,10 @@
                             <template #activator="{ on }">
                                 <span class="mr-2" v-on="on">
                                     <v-icon class="mr-1" size="16">bx bx-bed</v-icon>
-                                    {{ baidang.sophongngu }} phòng</span
+                                    {{ baidang.sophongngu || '-' }} phòng</span
                                 >
                             </template>
-                            <span>Số phòng ngủ: {{ baidang.sophongngu }} </span>
+                            <span>Số phòng ngủ: {{ baidang.sophongngu || '-' }} </span>
                         </v-tooltip>
                     </v-col>
                     <v-col cols="6" class="pb-1">
@@ -54,31 +54,31 @@
                             <template #activator="{ on }">
                                 <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-bath</v-icon> {{ baidang.sophongtam }} phòng</span>
                             </template>
-                            <span>Số phòng tắm: {{ baidang.sophongtam }} </span>
+                            <span>Số phòng tắm: {{ baidang.sophongtam || '-' }} </span>
                         </v-tooltip>
                     </v-col>
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong }}</span>
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong || '-' }}</span>
                             </template>
-                            <span>Hướng nhà: {{ baidang.huong }} </span>
+                            <span>Hướng nhà: {{ baidang.huong || '-' }} </span>
                         </v-tooltip>
                     </v-col>
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon> {{ baidang.loai }}</span>
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon> {{ baidang.loai || '-' }}</span>
                             </template>
-                            <span>Loại nhà: {{ baidang.loai }} </span>
+                            <span>Loại nhà: {{ baidang.loai || '-' }} </span>
                         </v-tooltip>
                     </v-col>
                     <v-col cols="6" class="pb-1">
                         <v-tooltip top content-class="tooltipCustom">
                             <template #activator="{ on }">
-                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon> {{ baidang.namxaydung }}</span>
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon> {{ baidang.namxaydung || '-' }}</span>
                             </template>
-                            <span>Năm xây dựng: {{ baidang.namxaydung }} </span>
+                            <span>Năm xây dựng: {{ baidang.namxaydung || '-' }} </span>
                         </v-tooltip>
                     </v-col>
                 </v-row>

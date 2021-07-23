@@ -39,16 +39,16 @@ class ApiBaiDangController extends Controller
         //     return BaiDang::lasted();
         // })
         return response()->json(
-               BaiDangResource::collection(BaiDang::latest()->paginate($this->page_size))
+            BaiDangResource::collection(BaiDang::latest()->paginate($this->page_size))
         );
     }
 
     public function getHotPosts()
     {
         $hot_posts = BaiDang::where('trangthai', 1)
-        ->orderBy('luotxem', 'desc')
-        ->limit(10)
-        ->get();
+            ->orderBy('luotxem', 'desc')
+            ->limit(10)
+            ->get();
         return response()->json([
             'baidangs' => BaiDangResource::collection($hot_posts)
         ]);
@@ -57,8 +57,8 @@ class ApiBaiDangController extends Controller
     public function getRaoBanPosts()
     {
         $raoban_posts = BaiDang::where(['isChoThue' => 0, 'trangthai' => 1])
-        ->orderBy('created_at', 'desc')
-        ->paginate($this->page_size);
+            ->orderBy('created_at', 'desc')
+            ->paginate($this->page_size);
 
         return response()->json([
             'pages' => new PaginateResource($raoban_posts),
@@ -68,9 +68,9 @@ class ApiBaiDangController extends Controller
 
     public function getChoThuePosts()
     {
-        $chothue_posts = BaiDang::where(['isChoThue'=> 1, 'trangthai' => 1])
-        ->orderBy('created_at', 'desc')
-        ->paginate($this->page_size);
+        $chothue_posts = BaiDang::where(['isChoThue' => 1, 'trangthai' => 1])
+            ->orderBy('created_at', 'desc')
+            ->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($chothue_posts),
             'baidangs' => BaiDangResource::collection($chothue_posts),
@@ -99,8 +99,8 @@ class ApiBaiDangController extends Controller
     public function getChoDuyetPosts()
     {
         $choduyet = BaiDang::where(['choduyet' => 1, 'trangthai' => 1])
-        ->orderBy('created_at', 'desc')
-        ->paginate($this->page_size);
+            ->orderBy('created_at', 'desc')
+            ->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($choduyet),
             'baidangs' => BaiDangResource::collection($choduyet),
@@ -128,14 +128,14 @@ class ApiBaiDangController extends Controller
         if (Gate::forUser($user)->allows('duyet-bai')) {
             $post = BaiDang::find($request->id);
             $post->choduyet = $request->choduyet;
-            $ok = $post->save();
-            if ($ok)
-                return response()->json([
-                    'success' => 'Cập nhật thành công'
-                ]);
+            $post->save();
+            $this->toggleStatusLocationTable($post);
+            return response()->json([
+                'success' => 'Cập nhật thành công'
+            ]);
         }
         return response()->json([
-            'fail' => 'Cập nhật thất bại'
+            'fail' => 'Bạn không có quyền duyệt bài'
         ]);
     }
 
@@ -146,6 +146,7 @@ class ApiBaiDangController extends Controller
             $post = BaiDang::find($request->id);
             $post->trangthai = $request->trangthai;
             $ok = $post->save();
+            $this->toggleStatusLocationTable($post);
             if ($ok)
                 return response()->json([
                     'success' => 'Cập nhật thành công'
@@ -189,7 +190,8 @@ class ApiBaiDangController extends Controller
                 'diachi' => 'required',
                 'toadoX' => 'required',
                 'toadoY' => 'required',
-            ], [
+            ],
+            [
                 'tieude.required' => 'Tiêu đề không được để trống!',
                 'loai_id.required' => 'Chưa chọn loại của căn nhà!',
                 'gia.required' => 'Giá không được để trống!',
@@ -222,7 +224,6 @@ class ApiBaiDangController extends Controller
         $baidang->toadoY = $request->toadoY;
         /**********************************************/
         $baidang->user_id = Auth::user()->id;
-//        $baidang->id_goi = 1;
         /**********************************************/
 
         $baidang->choduyet = 1;
@@ -268,7 +269,8 @@ class ApiBaiDangController extends Controller
                 'diachi' => 'required',
                 'toadoX' => 'required',
                 'toadoY' => 'required',
-            ], [
+            ],
+            [
                 'tieude.required' => 'Tiêu đề không được để trống!',
                 'loai_id.required' => 'Chưa chọn loại của căn nhà!',
                 'gia.required' => 'Giá không được để trống!',
@@ -293,7 +295,7 @@ class ApiBaiDangController extends Controller
         $baidang->noidung = $request->noidung;
         $baidang->sophongngu = $request->sophongngu;
         $baidang->sophongtam = $request->sophongtam;
-        if($request->namxaydung !== 'null')
+        if ($request->namxaydung !== 'null')
             $baidang->namxaydung = $request->namxaydung;
         $baidang->huong = $request->huong;
         $baidang->dientich = $request->dientich;
@@ -334,7 +336,6 @@ class ApiBaiDangController extends Controller
                             if ($h->baidang_id == $baidang->id)
                                 $h->delete();
                         }
-
                     }
                 }
                 foreach ($data as $hinhanh) {
@@ -381,15 +382,31 @@ class ApiBaiDangController extends Controller
     public function getWaitingBaiDangOfUser()
     {
         if (Auth::check()) {
-           return  json_encode(BaiDangDetailResource::collection(
+            return  json_encode(BaiDangDetailResource::collection(
                 BaiDang::where('user_id', '=', Auth::id())
-                ->where('choduyet', '=' , 1)
-                ->get()));
+                    ->where('choduyet', '=', 1)
+                    ->get()
+            ));
         } else {
             return response()->json([
                 'status' => 'faild',
                 'message' => 'Lấy dữ liệu thất bại!'
             ]);
+        }
+    }
+    private function toggleStatusLocationTable($post)
+    {
+        if ($post->trangthai) {
+            Log::info("ss " . $post->trangthai);
+                Log::info("message");
+                DB::table('location')
+                    ->where('baidang_id', $post->id)
+                    ->update(['trangthai' => !$post->choduyet]); // bởi vì chưa duyệt  = 1 , đã duyệt = 0
+        }
+        else{
+            DB::table('location')
+                    ->where('baidang_id', $post->id)
+                    ->update(['trangthai' => 0]);
         }
     }
 }

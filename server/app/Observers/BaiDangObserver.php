@@ -6,35 +6,49 @@ use App\Mail\MailMatchTinDang;
 use App\Models\BaiDang;
 use App\Models\ThongTinDangKy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class BaiDangObserver
 {
     public $afterCommit = true;
 
-    //Search Function
-    private function searchLikeCollection($collection, $field, $keyword)
+    public function created(BaiDang $baiDang)
     {
-        return false !== stristr($collection->$field, $keyword);
+        $this->addLocationTable($baiDang);
+        // $this->notifyPostRelate($baiDang);
+    }
+    public function updated(BaiDang $baiDang)
+    {
+    }
+    public function deleted(BaiDang $baiDang)
+    {
+        $this->removeLocationTable($baiDang);
     }
 
-    private function searchBetweenCollection($collection, $field, $value1, $value2)
+    public function restored(BaiDang $baiDang)
     {
-        return $collection->$field >= $value1 && $collection->$field <= $value2;
+        //
+    }
+    public function forceDeleted(BaiDang $baiDang)
+    {
+        //
     }
 
-    private function searchRank($collection, $field, $value, $higher = true)
-    {
-        if ($higher)
-            return $collection->$field >= $value;
-        return $collection->$field <= $value;
-    }
 
-    private function searchEqual($collection, $field, $value)
-    {
-        return $collection->$field == $value;
-    }
 
+    // FUNCTION
+    private function addLocationTable(BaiDang $baiDang)
+    {
+        $trangthai = 0;
+        if($baiDang->trangthai && $baiDang->choduyet)
+            $trangthai = 1;
+        DB::statement("INSERT INTO location(baidang_id,position,trangthai)
+        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326)), $trangthai");
+    }
+    private function removeLocationTable(BaiDang $baiDang){
+        DB::table('location')->where('baidang_id', $baiDang->id)->delete();
+    }
     //Handler Function
     private function notifyPostRelate(BaiDang $baiDang)
     {
@@ -81,64 +95,28 @@ class BaiDangObserver
                 }
             }
         }
-
-
+    }
+    //Search Function
+    private function searchLikeCollection($collection, $field, $keyword)
+    {
+        return false !== stristr($collection->$field, $keyword);
     }
 
-    private function addLocationTable(BaiDang $baiDang)
+    private function searchBetweenCollection($collection, $field, $value1, $value2)
     {
-        DB::statement("INSERT INTO location(baidang_id,position)
-        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326))");
+        return $collection->$field >= $value1 && $collection->$field <= $value2;
     }
 
-    public function created(BaiDang $baiDang)
+    private function searchRank($collection, $field, $value, $higher = true)
     {
-        $this->addLocationTable($baiDang);
-        $this->notifyPostRelate($baiDang);
+        if ($higher)
+            return $collection->$field >= $value;
+        return $collection->$field <= $value;
     }
 
-    /**
-     * Handle the BaiDang "updated" event.
-     *
-     * @param BaiDang $baiDang
-     * @return void
-     */
-    public function updated(BaiDang $baiDang)
+    private function searchEqual($collection, $field, $value)
     {
-        //
-    }
-
-    /**
-     * Handle the BaiDang "deleted" event.
-     *
-     * @param BaiDang $baiDang
-     * @return void
-     */
-    public function deleted(BaiDang $baiDang)
-    {
-
-    }
-
-    /**
-     * Handle the BaiDang "restored" event.
-     *
-     * @param BaiDang $baiDang
-     * @return void
-     */
-    public function restored(BaiDang $baiDang)
-    {
-        //
-    }
-
-    /**
-     * Handle the BaiDang "force deleted" event.
-     *
-     * @param BaiDang $baiDang
-     * @return void
-     */
-    public function forceDeleted(BaiDang $baiDang)
-    {
-        //
+        return $collection->$field == $value;
     }
 
 }
