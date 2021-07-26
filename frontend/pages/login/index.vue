@@ -83,7 +83,7 @@ export default {
                     window.OneSignal.push(function () {
                         window.OneSignal.sendTag('user_id', self.$auth.user.id)
                     })
-                    self.connectBroadcast()
+                    // self.connectBroadcast()
                     this.$nuxt.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {

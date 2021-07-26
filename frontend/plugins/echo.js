@@ -47,7 +47,7 @@ window.Echo = new Echo({
     cluster: 'ap1',
     forceTLS: false,
     encrypted: false,
-    authEndpoint: '/broadcasting/auth',
+    // authEndpoint: '/broadcasting/auth',
     // enabledTransports: ['ws'],
     authorizer: (channel, options) => {
         return {

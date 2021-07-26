@@ -40,11 +40,21 @@ class BaiDangObserver
     // FUNCTION
     private function addLocationTable(BaiDang $baiDang)
     {
+        Log::info($baiDang);
         $trangthai = 0;
         if($baiDang->trangthai && $baiDang->choduyet)
             $trangthai = 1;
-        DB::statement("INSERT INTO location(baidang_id,position,trangthai)
-        value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326)), $trangthai");
+        DB::table('location')
+            ->insert(
+                [
+                    'baidang_id' => $baiDang->id,
+                    // 'position' => "ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326)",
+                    'position' => DB::raw("ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326)"),
+                    'trangthai' => $trangthai
+                ]
+                );
+        // DB::statement("INSERT INTO location(baidang_id,position,trangthai)
+        // value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326),$trangthai");
     }
     private function removeLocationTable(BaiDang $baiDang){
         DB::table('location')->where('baidang_id', $baiDang->id)->delete();

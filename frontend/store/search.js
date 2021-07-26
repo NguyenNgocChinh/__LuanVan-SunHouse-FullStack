@@ -13,6 +13,7 @@ const state = () => ({
         dientich1: 0,
         dientich2: 9999,
 
+        diachi: '',
         X: null,
         Y: null,
         inputAdressR: null,

@@ -29,18 +29,19 @@ class ApiTimkiemController extends Controller
 
     public function timkiem(Request $request)
     {
-        // Log::info($request);
-        // DB::enableQueryLog();
+        Log::info($request);
+        DB::enableQueryLog();
         $baidangs = new BaiDang();
         $queries = [];
         //BANKINH
         $list_baidang_bankinh = [];
-        if ($request->banKinhOn) {
-            if ($request->has(['X','Y'])) {
+        if ($request->banKinhOn == 'true') {
+            Log::info("ban kinh on " . $request->banKinhOn);
+            if ($request->has(['X', 'Y'])) {
                 $list_baidang_bankinh = $this->getBaiDangsRound($request->Y, $request->X, $request->bankinh);
             }
-            // Log::info(DB::getQueryLog());
-            // Log::info($list_baidang_bankinh);
+            Log::info(DB::getQueryLog());
+            Log::info($list_baidang_bankinh);
             $baidangs = BaiDang::whereIn('baidang.id', $list_baidang_bankinh);
             $queries['bankinh'] = request('bankinh');
             $queries['banKinhOn'] = request('banKinhOn');
@@ -94,28 +95,34 @@ class ApiTimkiemController extends Controller
                     continue;
                 }
 
+                DB::enableQueryLog();
                 if ($column == 'keyword') $column_in_table = 'tieude';
                 if ($column == 'vitri') {
+                    Log::info("in vi tri");
                     $column_in_table = 'baidang.diachi';
+                    if ($request->vitri != null) {
 
-                    $thanhpho = count($request->vitri) >= 1 ? ThanhPho::find((int)$request->vitri[0])['name'] : "";
-                    $quanhuyen = count($request->vitri) >= 2 ? QuanHuyen::find((int)$request->vitri[1])['name'] : "";
-                    $xa = count($request->vitri) == 3 ? XaPhuong::find((int)$request->vitri[2])['name'] : "";
-
-                    if ($thanhpho != '' || $quanhuyen != '' || $xa != '') {
-                        $vitri = "$xa $quanhuyen $thanhpho";
-                    } else {
-                        $vitri = $request->vitri[0];
+                        $thanhpho = count($request->vitri) >= 1 ? $request->vitri[count($request->vitri) - 1] : "";
+                        $quanhuyen = count($request->vitri) >= 2 ? $request->vitri[count($request->vitri) - 2] : "";
+                        $xa = count($request->vitri) == 3 ? $request->vitri[count($request->vitri) - 3] : "";
+                        Log::info("detail dia chi");
+                        $vitri = "$xa, $quanhuyen, $thanhpho";
+                        Log::info($vitri);
+                        // if ($thanhpho != '' || $quanhuyen != '' || $xa != '') {
+                        // } else {
+                        //     $vitri = $request->vitri[0];
+                        // }
+                        $request->merge([
+                            'vitri' => $vitri,
+                        ]);
                     }
-                    $request->merge([
-                        'vitri' => $vitri,
-                    ]);
                 }
 
                 $column = request($column);
                 $column = "%" . $column . "%";
                 $baidangs = $baidangs->where($column_in_table, 'like', $column);
                 $queries[$column] = request($column);
+                Log::info(DB::getQueryLog());
             }
         }
 
@@ -173,20 +180,21 @@ class ApiTimkiemController extends Controller
     }
 
     // Search Ban Kinh
-    function getBaiDangsRound($x, $y, $radius){
+    function getBaiDangsRound($x, $y, $radius)
+    {
         $radius = $radius * 1609.344;
         $kq = DB::table('location')
-                ->select('baidang_id')
-                ->whereRaw("ST_Distance_Sphere((position),(ST_GeomFromText('point($x $y)',4326))) <= $radius")
-                ->where('trangthai', 1)
-                ->get();
-            $temp = $kq->implode('baidang_id', ',');
-            $kq = explode(',',trim($temp));
+            ->select('baidang_id')
+            ->whereRaw("ST_Distance_Sphere((position),(ST_GeomFromText('point($x $y)',4326))) <= $radius")
+            ->where('trangthai', 1)
+            ->get();
+        $temp = $kq->implode('baidang_id', ',');
+        $kq = explode(',', trim($temp));
         return $kq;
-    //    return DB::select("
-    //    select baidang_id from location
-    //    WHERE ST_Distance_Sphere((position),
-    //    (ST_GeomFromText('point($x $y)',4326))) <= $radius and trangthai = 1");
+        //    return DB::select("
+        //    select baidang_id from location
+        //    WHERE ST_Distance_Sphere((position),
+        //    (ST_GeomFromText('point($x $y)',4326))) <= $radius and trangthai = 1");
     }
 
     ///BAN KINH

@@ -1,43 +1,52 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col>
-                <v-card class="d-flex">
-                    <v-row align="center">
-                        <v-col cols="12" lg="8">
-                            <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
-                        </v-col>
+    <div>
+        <v-container v-if="!isEmpty">
+            <v-row>
+                <v-col>
+                    <v-card class="d-flex">
+                        <v-row align="center">
+                            <v-col cols="12" lg="8">
+                                <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
+                            </v-col>
 
-                        <v-col cols="12" lg="4" class="d-flex align-center">
-                            <v-col cols="5">
-                                <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
+                            <v-col cols="12" lg="4" class="d-flex align-center">
+                                <v-col cols="5">
+                                    <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
+                                </v-col>
+                                <v-col cols="7">
+                                    <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
+                                </v-col>
                             </v-col>
-                            <v-col cols="7">
-                                <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
-                            </v-col>
-                        </v-col>
+                        </v-row>
+                    </v-card>
+                    <v-row class="mt-4 ml-1">
+                        <v-row v-show="baidangs.length < 1" class="">
+                            <v-skeleton-loader v-for="index in 6" :key="index" class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
+                        </v-row>
+                        <bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" />
                     </v-row>
-                </v-card>
-                <v-row class="mt-4 ml-1">
-                    <v-row v-show="baidangs.length < 1" class="">
-                        <v-skeleton-loader v-for="index in 6" :key="index" class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
-                    </v-row>
-                    <bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" />
-                </v-row>
-            </v-col>
-        </v-row>
-        <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
-        </div>
-    </v-container>
+                </v-col>
+            </v-row>
+            <div class="text-center mt-10">
+                <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
+            </div>
+        </v-container>
+        <v-container v-else>
+            <v-row>
+                <p class="red--text pa-5 font-700 text-center" style="font-size: 24px">Hệ thống không tìm thấy bài đăng phù hợp. Bạn có thể để lại yêu cầu bằng cách đăng ký nhận tin</p>
+            </v-row>
+        </v-container>
+    </div>
 </template>
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import { mapFields } from 'vuex-map-fields'
+const qs = require('qs')
 export default {
     components: { BaiDangCard },
     data: () => ({
         items: ['Mới nhất', 'Cũ nhất', 'Giá tăng dần', 'Giá giảm dần'],
+        isEmpty: false,
         selected: 'Mới nhất',
         page: 1,
         baidangs: [],
@@ -50,7 +59,7 @@ export default {
     computed: {
         ...mapFields('search', {
             keyword: 'searchParams.keyword',
-
+            diachi: 'searchParams.diachi',
             type: 'searchParams.type',
             loai_id: 'searchParams.loai_id',
             huong: 'searchParams.huong',
@@ -113,11 +122,14 @@ export default {
                 from: '?',
                 total: '?',
             }
+            const arrAddress = this.diachi.length > 0 ? this.diachi.split(',') : ''
+            console.log(arrAddress)
             const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
             const result = await this.$axios.$get(url, {
                 params: {
                     page: this.page,
                     page_size: 6,
+                    vitri: arrAddress,
                     gia1: this.gia1,
                     gia2: this.gia2,
                     type: this.type,
@@ -133,9 +145,15 @@ export default {
                     X: this.X,
                     Y: this.Y,
                 },
+                paramsSerializer: (params) => {
+                    return qs.stringify(params)
+                },
             })
             this.baidangs = result.baidangs
             this.detail_page = result.page[0]
+            if (result.baidangs.length < 1) {
+                this.isEmpty = true
+            }
         },
         sortBy() {
             switch (this.selected) {

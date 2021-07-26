@@ -164,6 +164,7 @@ class ApiBaiDangController extends Controller
             $post = BaiDang::find($request->id);
             $post->choduyet = 0;
             $ok = $post->save();
+            $this->toggleStatusLocationTable($post);
             if ($ok)
                 return response()->json([
                     'success' => 'Duyệt thành công'
@@ -308,7 +309,6 @@ class ApiBaiDangController extends Controller
 
         $baidang->choduyet = 1;
         $kq = $baidang->update();
-
         if ($kq) {
             if (count($baidang->tiennghiBaiDang) > 0) {
                 foreach ($baidang->tiennghiBaiDang as $tiennghi) {
@@ -326,7 +326,6 @@ class ApiBaiDangController extends Controller
             //Kiem tra neu co send img tu request thi thuc hien xoa hinh cu di va import hinh moi
             if (count($data) > 0) {
                 if (count($baidang->hinhanh) > 0) {
-
                     foreach ($baidang->hinhanh as $hinhanh) {
                         $file_path = '/images/upload/' . $hinhanh->filename;
                         if (File::exists($file_path))
@@ -346,6 +345,7 @@ class ApiBaiDangController extends Controller
                 }
             }
         }
+        $this->toggleStatusLocationTable($baidang);
         return response()->json(new BaiDangDetailResource($baidang->fresh()));
     }
 

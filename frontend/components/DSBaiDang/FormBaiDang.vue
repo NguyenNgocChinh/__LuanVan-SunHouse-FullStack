@@ -3,7 +3,7 @@
         <v-form ref="form" v-model="valid" lazy-validation>
             <div class="ml-5"><h3>Tìm kiếm tài sản</h3></div>
             <div class="ml-5">
-                <v-text-field v-model="keyword" label="Tìm kiếm từ khóa">
+                <v-text-field v-model="keyword" label="Tìm kiếm từ khóa là tiêu đề bài viết">
                     <v-icon slot="append" color="black"> mdi-magnify </v-icon>
                 </v-text-field>
             </div>
@@ -48,7 +48,7 @@
                             id="txtAddress"
                             v-model="inputAddress"
                             clearable
-                            :rules="[() => !!inputAddress || 'Phải nhập địa chỉ để tìm kiếm']"
+                            :rules="banKinhOn === 1 ? [() => !!inputAddress || 'Phải nhập địa chỉ để tìm kiếm'] : []"
                             placeholder="Nhập địa điểm để tìm kiếm vị trí"
                             :append-icon="iconSearchAddress"
                             @click:append="searchAddress"
@@ -191,6 +191,7 @@ import { mapGetters } from 'vuex'
 import { mapFields } from 'vuex-map-fields'
 import { OpenStreetMapProvider } from 'leaflet-geosearch'
 import ENV from '@/api/timkiem'
+import * as ENVTK from '@/api/timkiem'
 export default {
     data() {
         return {
@@ -210,6 +211,7 @@ export default {
             inputAddress: undefined,
             chooseAddress: undefined,
 
+            arrDiaChi: [],
             loaiNha: [],
             thanhpho: [],
             quanhuyen: [],
@@ -265,6 +267,34 @@ export default {
                 this.Y = val.location.x
             }
         },
+
+        inputThanhPho(val) {
+            this.arrDiaChi = []
+            this.quanhuyen = []
+            this.inputQuanHuyen = null
+
+            if (this.inputThanhPho != null) {
+                this.arrDiaChi.push(val)
+                this.diachi = this.arrDiaChi.join(',')
+            }
+        },
+        inputQuanHuyen(val) {
+            this.xaphuong = []
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
+            if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
+            if (this.inputQuanHuyen != null) {
+                this.arrDiaChi.unshift(val)
+                this.diachi = this.arrDiaChi.join(',')
+            }
+        },
+        inputXaPhuong(val) {
+            this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
+            if (this.inputXaPhuong === '') this.inputXaPhuong = null
+            if (this.inputXaPhuong != null) {
+                this.arrDiaChi.unshift(val)
+                this.diachi = this.arrDiaChi.join(',')
+            }
+        },
     },
     created() {
         this.getAllLoai()
@@ -279,6 +309,7 @@ export default {
         ...mapGetters('search', ['test']),
         ...mapFields('search', {
             keyword: 'searchParams.keyword',
+            diachi: 'searchParams.diachi',
             minGia: 'searchParams.gia1',
             maxGia: 'searchParams.gia2',
             type: 'searchParams.type',

@@ -118,10 +118,10 @@ export default {
         // this.fetchMessageToCache()
     },
     methods: {
-        setContact() {
+        async setContact() {
             if (this.$auth.loggedIn) {
                 const self = this
-                this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+                await this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
                     this.contacts = response
                 })
                 if (process.browser) {

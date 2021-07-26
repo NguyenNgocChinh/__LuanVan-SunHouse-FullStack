@@ -40,8 +40,13 @@
             <v-banner sticky>
                 <v-row class="pt-2">
                     <div class="col-lg-8">
-                        <v-btn text plain>Giới thiệu</v-btn>
-                        <v-btn text plain>Mô tả</v-btn>
+                        <div v-if="$auth.loggedIn && baidang !== false">
+                            <div v-if="$auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin'">
+                                <v-btn class="white--text primary" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
+                                <v-btn class="white--text red" @click="removeBaiDang">Xóa bài đăng</v-btn>
+                            </div>
+                        </div>
+                        <!--                        <v-btn text plain>Mô tả</v-btn>-->
                     </div>
                     <div class="col-lg-4 d-flex justify-end d-sticky">
                         <v-btn text plain> <v-icon class="mr-3">mdi-heart-outline</v-icon> Yêu thích</v-btn>
@@ -414,9 +419,7 @@ export default {
                     this.user = this.baidang.user
                     if (this.user.sdt) this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
                     const self = this
-                    console.log(this.baidang)
                     this.baidang.tiennghi.forEach((item) => {
-                        console.log(item)
                         self.tiennghiArr.push(item.ten_tiennghi)
                     })
                     this.baidang.hinhanh.forEach((item) => {
@@ -425,9 +428,7 @@ export default {
                     })
                     this.searchNear(this.baidang.diachi)
                 })
-            } catch (e) {
-            } finally {
-            }
+            } catch (e) {}
             this.$nextTick(() => {
                 this.$nuxt.$loading.finish()
             })
@@ -506,6 +507,9 @@ export default {
                     this.loadingBank = false
                 })
             }
+        },
+        removeBaiDang() {
+            console.log('remove...')
         },
     },
 }

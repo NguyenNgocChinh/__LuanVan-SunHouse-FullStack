@@ -110,7 +110,7 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'ID', value: 'id', width: '3%' },
+                // { text: 'ID', value: 'id', width: '3%' },
                 { text: 'Tiêu đề', value: 'tieude', width: '50%' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },

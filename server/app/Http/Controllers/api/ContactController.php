@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\NewMessage;
+use Illuminate\Support\Facades\Log;
 use OneSignal;
 
 class ContactController extends Controller
@@ -67,10 +68,10 @@ class ContactController extends Controller
         $message->to = $request->contact_id;
         $message->noidung = $request->text;
         $message->save();
-
+        $name = Auth::user()->name;
 
         OneSignal::sendNotificationUsingTags(
-            $message->noidung,
+            "Bạn có tin nhắn mới từ " .  $name,
             array(
                 ["field" => "tag", "key" => "user_id", "relation" => "=", "value" => $message->to],
             ),

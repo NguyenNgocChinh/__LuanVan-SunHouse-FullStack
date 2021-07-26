@@ -698,16 +698,17 @@ export default {
                     })
                     .then((data) => {
                         this.$toast.success('Đăng bài thành công!')
-                        if (this.duong !== null || this.duong !== '') {
+                        if (this.duong !== null && this.duong !== '') {
                             this.$axios
                                 .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
                                     xaid: this.xaphuong.xaid,
                                     tenduong: this.duong,
                                 })
-                                .then(() => {
+                                .finally(() => {
                                     this.$router.push('/baidang/' + data.id)
                                 })
-                        } else this.$router.push('/baidang/' + data.id)
+                        }
+                        this.$router.push('/baidang/' + data.id)
                     })
                     .catch((error) => {
                         if (error.response) {

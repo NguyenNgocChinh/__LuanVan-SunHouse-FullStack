@@ -103,7 +103,7 @@
                     <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #activator="{ on, attrs }">
-                            <v-btn icon :loading="loadingDelete" color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
+                            <v-btn icon color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
                         </template>
                         <template #default="dialog">
                             <v-card>
