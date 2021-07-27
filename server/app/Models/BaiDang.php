@@ -7,9 +7,11 @@ use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Nicolaslopezj\Searchable\SearchableTrait;
 class BaiDang extends Model
 {
-    use HasFactory, FullTextSearch;
+    use HasFactory ; //FullTextSearch
+    use SearchableTrait;
 
     protected $table = "baidang";
     protected $primaryKey = "id";
@@ -34,9 +36,20 @@ class BaiDang extends Model
     /**
      * The columns of the full text index
      */
+    // protected $searchable = [
+    //     'diachi',
+    //     'tieude'
+    // ];
     protected $searchable = [
-        'diachi',
-        'tieude'
+        'columns' => [
+            'baidang.tieude' => 5,
+            'baidang.diachi' => 10,
+            'baidang.huong' => 3,
+            'loai.ten_loai' => 4,
+        ],
+        'joins' => [
+            'loai' => ['loai_id','loai.id'],
+        ],
     ];
 
     public function user()

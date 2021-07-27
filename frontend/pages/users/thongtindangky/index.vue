@@ -1,17 +1,7 @@
 <template>
     <v-container>
         <v-row class="my-4 rounded-lg animate__animated animate__bounceIn">
-            <v-data-table
-                :loading="isLoading"
-                calculate-widths
-                :headers="listHeaders"
-                :items="items"
-                :expanded.sync="expanded"
-                item-key="created_at"
-                show-expand
-                class="elevation-1"
-                style="width: 100%"
-            >
+            <v-data-table :loading="isLoading" calculate-widths :headers="listHeaders" :items="items" :expanded.sync="expanded" item-key="created_at" show-expand class="elevation-1" style="width: 100%">
                 <template #top>
                     <v-toolbar flat>
                         <v-toolbar-title>Danh sách thông tin đăng ký nhận tin</v-toolbar-title>
@@ -21,11 +11,7 @@
                     {{ $moment(item.created_at).format('H:mm:ss &mdash; DD/MM/YYYY') || '-' }}
                 </template>
                 <template #[`item.updated_at`]="{ item }">
-                    {{
-                        item.updated_at === item.created_at
-                            ? '&mdash;'
-                            : $moment(item.updated_at).format('H:mm:ss &mdash; DD/MM/YYYY') || '&mdash;'
-                    }}
+                    {{ item.updated_at === item.created_at ? '&mdash;' : $moment(item.updated_at).format('H:mm:ss &mdash; DD/MM/YYYY') || '&mdash;' }}
                 </template>
                 <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length" style="border-left: 3px solid red" class="colspanDetail">
@@ -34,32 +20,22 @@
                             {{ $moment(item.created_at).format('H:mm:ss &mdash; DD/MM/YYYY') || '-' }}
                         </p>
                         <ul class="pl-3">
-                            <li v-if="item.giamin || item.giamax">
-                                Giá: {{ item.giamin || 0 }} &mdash; {{ item.giamax || '&infin;' }}
-                            </li>
-                            <li v-if="item.dientichmin || item.dientichmax">
-                                Diện tích: {{ item.dientichmin || 0 }} &mdash; {{ item.dientichmax || '&infin;' }}
-                            </li>
+                            <li v-if="item.giamin || item.giamax">Giá: {{ item.giamin || 0 }} &mdash; {{ item.giamax || '&infin;' }}</li>
+                            <li v-if="item.dientichmin || item.dientichmax">Diện tích: {{ item.dientichmin || 0 }} &mdash; {{ item.dientichmax || '&infin;' }}</li>
                             <li v-if="item.huong">Hướng: {{ item.huong || '-' }}</li>
                             <li v-if="item.loai">Loại: {{ item.loai || '-' }}</li>
                             <li v-if="item.sophongngu">Số phòng ngủ: {{ item.sophongngu + '+' || '-' }}</li>
                             <li v-if="item.sophongtam">Số phòng ngủ: {{ item.sophongtam + '+' || '-' }}</li>
-                            <li v-if="item.isChoThue !== null">
-                                Hình thức: {{ item.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' || '-' }}
-                            </li>
+                            <li v-if="item.isChoThue !== null">Hình thức: {{ item.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' || '-' }}</li>
                             <li v-if="item.diachi">Địa chỉ: {{ item.diachi || '-' }}</li>
                         </ul>
                     </td>
                 </template>
                 <template #[`item.action`]="{ item }">
-                    <v-btn icon color="warning"
-                        ><v-icon color="warning" @click="editItem(item)"> mdi-pencil </v-icon></v-btn
-                    >
+                    <v-btn icon color="warning"><v-icon color="warning" @click="editItem(item)"> mdi-pencil </v-icon></v-btn>
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #activator="{ on, attrs }">
-                            <v-btn icon color="red"
-                                ><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn
-                            >
+                            <v-btn icon color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
                         </template>
                         <template #default="dialog">
                             <v-card>
@@ -72,12 +48,7 @@
                                 </v-card-text>
                                 <v-card-actions class="justify-end">
                                     <v-btn text @click="dialog.value = false">Hủy</v-btn>
-                                    <v-btn
-                                        color="red"
-                                        class="white--text"
-                                        @click=";[(dialog.value = false), deleteItem(item)]"
-                                        >XÓA</v-btn
-                                    >
+                                    <v-btn color="red" class="white--text" @click=";[(dialog.value = false), deleteItem(item)]">XÓA</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </template>
@@ -89,136 +60,96 @@
             <v-row>
                 <v-col cols="12" lg="8" md="12">
                     <div>
-                        <p class="red--text">
-                            Đảm bảo email của bạn chính xác, để có thể nhận thông báo từ hệ thống!
-                            <NuxtLink to="/users/#1">Chỉnh sửa tại đây</NuxtLink>
-                        </p>
-                        <v-text-field :value="$auth.user.email" label="Địa chỉ Email" outlined disabled> </v-text-field>
-                        <p class="blue--text" style="margin-top: -12px">Các tiêu chí tìm kiếm:</p>
-                        <v-row style="margin-bottom: -30px">
-                            <v-col cols="12" sm="4">
-                                <h3 class="d-inline-block">Hướng nhà</h3>
-                                <v-select
-                                    v-model="selectedhuong"
-                                    class="mt-2"
-                                    item-value="k"
-                                    item-text="v"
-                                    label="Chọn hướng nhà"
-                                    :items="[
-                                        { k: 'Đông', v: 'Hướng nhà: Đông' },
-                                        { k: 'Tây', v: 'Hướng nhà: Tây' },
-                                        { k: 'Nam', v: 'Hướng nhà: Nam' },
-                                        { k: 'Bắc', v: 'Hướng nhà: Bắc' },
-                                        { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
-                                        { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
-                                        { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
-                                        { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
-                                    ]"
-                                    solo
-                                ></v-select>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <h3 class="d-inline-block">Loại tài sản</h3>
-                                <v-select
-                                    v-model="loai"
-                                    :items="listLoai"
-                                    item-text="ten_loai"
-                                    item-value="id"
-                                    solo
-                                    class="mt-2"
-                                    label="Chọn loại nhà"
-                                    :loading="!listLoai"
-                                    no-data-text="Đang tải..."
-                                ></v-select>
-                            </v-col>
-                            <v-col cols="12" sm="4">
-                                <h3 class="d-inline-block">Hình thức</h3>
-                                <v-select
-                                    v-model="hinhthuc"
-                                    class="mt-2"
-                                    item-text="v"
-                                    item-value="k"
-                                    label="Chọn hình thức"
-                                    :items="[
-                                        { k: 1, v: 'Thuê' },
-                                        { k: 0, v: 'Rao Bán' },
-                                    ]"
-                                    solo
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row style="margin-top: -30px">
-                            <v-col cols="12" lg="4" sm="12">
-                                <h3 class="d-inline-block">Số phòng ngủ</h3>
-                                <v-text-field
-                                    v-model.number="sophongngu"
-                                    label="Số phòng ngủ"
-                                    class="mt-2"
-                                    type="number"
-                                    solo
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="12" lg="4" sm="12">
-                                <h3 class="d-inline-block">Số phòng tắm</h3>
-                                <v-text-field
-                                    v-model.number="sophongtam"
-                                    label="Số phòng ngủ"
-                                    type="number"
-                                    class="pr-3 mt-2"
-                                    solo
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row style="margin-top: -30px">
-                            <v-col cols="12" sm="6">
-                                <h3 class="d-inline-block">Giá</h3>
-                                <v-row class="align-center">
-                                    <v-col cols="12" sm="1"> Từ </v-col>
-                                    <v-col cols="12" sm="5">
-                                        <v-text-field
-                                            v-model="giamin"
-                                            class="mt-2"
-                                            type="number"
-                                            placeholder="100"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="1">đến</v-col>
-                                    <v-col cols="12" sm="5">
-                                        <v-text-field
-                                            v-model="giamax"
-                                            class="mt-2"
-                                            type="number"
-                                            placeholder="200"
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
-                        <v-row style="margin-top: -30px">
-                            <v-col cols="12" sm="6">
-                                <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
-                                <v-row class="align-center">
-                                    <v-col cols="12" sm="1"> Từ </v-col>
-                                    <v-col cols="12" sm="5">
-                                        <v-text-field
-                                            v-model="dientichmin"
-                                            class="mt-2"
-                                            type="number"
-                                            placeholder="100"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="1">đến</v-col>
-                                    <v-col cols="12" sm="5">
-                                        <v-text-field
-                                            v-model="dientichmax"
-                                            class="mt-2"
-                                            type="number"
-                                            placeholder="200"
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
+                        <v-form ref="form" v-model="vaild">
+                            <p class="red--text">
+                                Đảm bảo email của bạn chính xác, để có thể nhận thông báo từ hệ thống!
+                                <NuxtLink to="/users/#1">Chỉnh sửa tại đây</NuxtLink>
+                            </p>
+                            <v-text-field :value="$auth.user.email" label="Địa chỉ Email" outlined disabled> </v-text-field>
+                            <p class="blue--text" style="margin-top: -12px">Các tiêu chí tìm kiếm:</p>
+                            <v-row style="margin-bottom: -30px">
+                                <v-col cols="12" sm="4">
+                                    <h3 class="d-inline-block">Hướng nhà</h3>
+                                    <v-select
+                                        v-model="selectedhuong"
+                                        class="mt-2"
+                                        item-value="k"
+                                        item-text="v"
+                                        label="Chọn hướng nhà"
+                                        :items="[
+                                            { k: 'Đông', v: 'Hướng nhà: Đông' },
+                                            { k: 'Tây', v: 'Hướng nhà: Tây' },
+                                            { k: 'Nam', v: 'Hướng nhà: Nam' },
+                                            { k: 'Bắc', v: 'Hướng nhà: Bắc' },
+                                            { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
+                                            { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
+                                            { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
+                                            { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
+                                        ]"
+                                        solo
+                                    ></v-select>
+                                </v-col>
+                                <v-col cols="12" sm="4">
+                                    <h3 class="d-inline-block">Loại tài sản</h3>
+                                    <v-select v-model="loai" :items="listLoai" item-text="ten_loai" item-value="id" solo class="mt-2" label="Chọn loại nhà" :loading="!listLoai" no-data-text="Đang tải..."></v-select>
+                                </v-col>
+                                <v-col cols="12" sm="4">
+                                    <h3 class="d-inline-block">Hình thức</h3>
+                                    <v-select
+                                        v-model="hinhthuc"
+                                        class="mt-2"
+                                        item-text="v"
+                                        item-value="k"
+                                        label="Chọn hình thức"
+                                        :items="[
+                                            { k: '1', v: 'Cho thuê' },
+                                            { k: '0', v: 'Rao bán' },
+                                        ]"
+                                        solo
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                            <v-row style="margin-top: -30px">
+                                <v-col cols="12" lg="4" sm="12">
+                                    <h3 class="d-inline-block">Số phòng ngủ</h3>
+                                    <v-text-field v-model.number="sophongngu" :rules="[$rules.validNumber(sophongngu, 1, 1000), $rules.isInt(sophongngu)]" label="Số phòng ngủ" class="mt-2" type="number" solo min="1"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" lg="4" sm="12">
+                                    <h3 class="d-inline-block">Số phòng tắm</h3>
+                                    <v-text-field v-model.number="sophongtam" :rules="[$rules.validNumber(sophongtam, 1, 1000), $rules.isInt(sophongtam)]" label="Số phòng tắm" type="number" class="pr-3 mt-2" solo min="1"></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row style="margin-top: -30px">
+                                <v-col cols="12" sm="6">
+                                    <h3 class="d-inline-block">Giá</h3>
+                                    <v-row class="align-center">
+                                        <v-col cols="12" sm="1"> Từ </v-col>
+                                        <v-col cols="12" sm="5">
+                                            <v-text-field v-model.number="giamin" :rules="[$rules.minNumber(giamin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="1">đến</v-col>
+                                        <v-col cols="12" sm="5">
+                                            <v-text-field v-model.number="giamax" :rules="[$rules.minNumber(giamax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row style="margin-top: -30px">
+                                <v-col cols="12" sm="6">
+                                    <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
+                                    <v-row class="align-center">
+                                        <v-col cols="12" sm="1"> Từ </v-col>
+                                        <v-col cols="12" sm="5">
+                                            <v-text-field v-model.number="dientichmin" :rules="[$rules.minNumber(dientichmin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="1">đến</v-col>
+                                        <v-col cols="12" sm="5">
+                                            <v-text-field v-model.number="dientichmax" :rules="[$rules.minNumber(dientichmax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                        </v-form>
                     </div>
                 </v-col>
                 <v-col cols="12" lg="4" md="12" class="border-left-grey pt-0">
@@ -303,12 +234,7 @@
                                     </div>
                                     <div>
                                         <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
-                                        <v-text-field
-                                            v-model="diachicuthe"
-                                            class="mt-2"
-                                            placeholder="Số nhà, tên tòa nhà, tên đường, ..."
-                                            solo
-                                        ></v-text-field>
+                                        <v-text-field v-model="diachicuthe" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo></v-text-field>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -472,39 +398,51 @@ export default {
                 this.listLoai = await this.$axios.$get(ENVL.default.all)
             } catch (e) {}
         },
-        thayDoiDangKyNhanTin(item) {
-            try {
-                this.$nextTick(() => {
-                    this.$nuxt.$loading.start()
-                })
-                this.$axios
-                    .$put(
-                        ENV.dangKyNhanTin + '/' + this.indexEdit,
-                        {
-                            giamin: this.giamin,
-                            giamax: this.giamax,
-                            dientichmin: this.dientichmin,
-                            dientichmax: this.dientichmax,
-                            huong: this.selectedhuong,
-                            loai_id: this.loai,
-                            sophongngu: this.sophongngu,
-                            sophongtam: this.sophongtam,
-                            isChoThue: this.hinhthuc,
-                            diachi: this.diachicuthe,
-                        },
-                        { withCredentials: true }
-                    )
-                    .then((data) => {
-                        if (data.success) {
-                            this.$nuxt.$toast.success(data.success)
-                            this.items = []
-                            this.getListThongTinDangKy()
-                        } else this.$nuxt.$toast.error(data.fail, { duration: 5000 })
-                    })
-                    .finally(() => this.$nuxt.$loading.finish())
-            } catch (e) {
-                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: 5000 })
+        async thayDoiDangKyNhanTin(item) {
+            const form = this.$refs.form
+            const validate = await form.validate()
+            if (!validate) {
+                this.$toast.show('Nhập các tiêu chí nhận tin hợp lệ!')
+                return
             }
+            if (this.giamin !== '' && this.giamax !== '') {
+                if (this.giamin > this.giamax) {
+                    this.$toast.error('Giá trị nhập vào không hợp lệ!')
+                    return
+                }
+            }
+            if (this.dientichmin !== '' && this.dientichmax !== '') {
+                if (this.dientichmin > this.dientichmax) {
+                    this.$toast.error('Giá trị nhập vào không hợp lệ!')
+                    return
+                }
+            }
+            this.$nuxt.$loading.start()
+            this.$axios
+                .$put(
+                    ENV.dangKyNhanTin + '/' + this.indexEdit,
+                    {
+                        giamin: this.giamin,
+                        giamax: this.giamax,
+                        dientichmin: this.dientichmin,
+                        dientichmax: this.dientichmax,
+                        huong: this.selectedhuong,
+                        loai_id: this.loai,
+                        sophongngu: this.sophongngu,
+                        sophongtam: this.sophongtam,
+                        isChoThue: this.hinhthuc,
+                        diachi: this.diachicuthe,
+                    },
+                    { withCredentials: true }
+                )
+                .then((data) => {
+                    if (data.success) {
+                        this.$nuxt.$toast.success(data.success)
+                        this.items = []
+                        this.getListThongTinDangKy()
+                    } else this.$nuxt.$toast.error(data.fail, { duration: 5000 })
+                })
+                .finally(() => this.$nuxt.$loading.finish())
         },
         async getThanhPho() {
             try {

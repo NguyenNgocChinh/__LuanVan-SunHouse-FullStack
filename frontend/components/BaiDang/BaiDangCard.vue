@@ -98,7 +98,7 @@
             </v-card-subtitle>
             <v-chip-group class="loainha">
                 <v-chip color="teal darken-1" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
-                <v-chip color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
+                <!--                <v-chip color="deep-orange accent-3 " class="white&#45;&#45;text" label>Nổi bật</v-chip>-->
             </v-chip-group>
             <v-tooltip top content-class="tooltipCustom">
                 <template #activator="{ on }">

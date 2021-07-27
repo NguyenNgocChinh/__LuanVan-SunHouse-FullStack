@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangResource;
 use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -29,7 +30,8 @@ class ApiTimkiemController extends Controller
         $baidangs = new BaiDang();
         //QUERY LIKE
         $columns_like = [
-            'keyword', 'vitri'
+            'keyword',
+            // 'vitri'
         ];
         foreach ($columns_like as $column) {
             if (request()->has($column)) {
@@ -43,18 +45,23 @@ class ApiTimkiemController extends Controller
                     $column_in_table = 'tieude,diachi';
                 }
                 if ($column == 'vitri') {
-                    if ( $request->banKinhOn == 'true' || $request->vitri == null) continue;
+                    if ($request->banKinhOn == 'true' || $request->vitri == null) continue;
                     $column_in_table = 'diachi';
                 }
 
                 $column = request($column);
-                $resultFullTextSearch = $baidangs->FullTextSearch($column_in_table, $column, 'id' )->get();
+                // $resultFullTextSearch = BaiDang::FullTextSearch($column_in_table, $column, 'id' )->get();
+                $resultFullTextSearch = BaiDang::select('id')
+                    ->where('trangthai', 1)
+                    ->where('choduyet', 0)
+                    ->search($column, null, true,true)->with('loai')->get();
+                Log::info("loop i");
+                Log::info($resultFullTextSearch);
                 $temp = $resultFullTextSearch->implode('id', ',');
                 $resultFullTextSearch = explode(',', trim($temp));
-                $baidangs = $baidangs
-                ->whereIn('id', $resultFullTextSearch)
-                ->where(['trangthai'=> 1, 'choduyet' => 0]);
-                Log::info("loop i");
+                $baidangs = $baidangs->whereIn('id', $resultFullTextSearch);
+                // ->where(['trangthai'=> 1, 'choduyet' => 0]);
+                // Log::info("loop i");
                 // Log::info($baidangs);
                 Log::info(DB::getQueryLog());
             }
@@ -68,9 +75,8 @@ class ApiTimkiemController extends Controller
                 $list_baidang_bankinh = $this->getBaiDangsRound($request->Y, $request->X, $request->bankinh);
             }
             Log::info(DB::getQueryLog());
-            Log::info($list_baidang_bankinh);
-            $baidangs = $baidangs->whereIn('id', $list_baidang_bankinh)
-            ->where(['trangthai'=> 1, 'choduyet' => 0]);
+            // Log::info($list_baidang_bankinh);
+            $baidangs = $baidangs->whereIn('id', $list_baidang_bankinh);
         }
 
         //QUERY WHERE column
@@ -130,15 +136,13 @@ class ApiTimkiemController extends Controller
             //     $baidangs = $baidangs->sortByDesc('created_at');
             // else
             //     $baidangs = $baidangs->sortByDesc('created_at')->reverse();
-            }
+        }
         //sort gia
         if (request()->has('sortByGia')) {
             $baidangs = $baidangs->orderBy('gia', request('sortByGia'));
         }
 
-
         $baidangs = $baidangs->paginate($this->page_size);
-
 
         return response()->json((object) [
             'page' => new PaginateResource($baidangs),
@@ -172,15 +176,15 @@ class ApiTimkiemController extends Controller
         }
         return false;
     }
-    function sortByField($array, $field, $desc =  true){
+    function sortByField($array, $field, $desc =  true)
+    {
         // $newArray = array_column($array, $field);
         Log::info("array");
         Log::info($array);
         $newArray = array();
-        foreach ($array as $key => $row)
-        {
+        foreach ($array as $key => $row) {
             $newArray[$key] = $row[$field];
         }
-         array_multisort($newArray, $desc ? SORT_DESC : SORT_ASC , $array);
+        array_multisort($newArray, $desc ? SORT_DESC : SORT_ASC, $array);
     }
 }

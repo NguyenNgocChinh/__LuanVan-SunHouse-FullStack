@@ -19,7 +19,7 @@
                                 <span style="font-weight: 500" class="ml-1">Tin nhắn nhanh</span>
                             </div>
                             <span>
-                                <v-btn icon @click.stop="newConversation"> <v-icon>mdi-plus</v-icon> </v-btn>
+                                <!--                                <v-btn icon @click.stop="newConversation"> <v-icon>mdi-plus</v-icon> </v-btn>-->
                                 <v-btn icon @click.stop="toogleExpaneded">
                                     <v-icon size="28px">{{ isExpanded ? 'bx bx-chevron-down' : 'bx bx-chevron-up' }}</v-icon>
                                 </v-btn>
@@ -153,6 +153,7 @@ export default {
             this.selectedList.push(selected)
         },
         startConversationWith(selected) {
+            if (selected.id === this.$auth.user.id) return
             const isContain = this.selectedList.findIndex((x) => x.id === selected.id)
             if (isContain === -1) {
                 if (this.selectedList.length >= 3) {

@@ -26,7 +26,7 @@
                     <v-col class="col-md-4 pl-3">
                         <div class="special-highlight mb-3">Đặc điểm nổi trội</div>
                         <ul class="special-wrapper list-unstyled">
-                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">{{ baidang.gia || '--' }} $</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">{{ baidang.gia || '--' }} Triệu / m²</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.dientich }">Diện tích: {{ baidang.dientich || '--' }} m²</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.sophongngu }">Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.huong }">Hướng nhà: {{ baidang.huong || '--' }}</li>
@@ -73,12 +73,12 @@
                             </div>
                             <div class="introduce-line d-flex mb-2">
                                 <div>Ngày đăng: {{ $moment(baidang.created_at).format('DD/MM/YYYY') || '-' }}</div>
-                                <div>Lượt xem: {{ baidang.luotxem || '-' }}</div>
+                                <div>Lượt xem: {{ baidang.luotxem }}</div>
                             </div>
                             <div class="col-12 d-flex align-items-center pl-0 mb-2 price-sec">
                                 <div class="item">
                                     Mức giá:
-                                    <div class="price">{{ baidang.gia }}$</div>
+                                    <div class="price">{{ baidang.gia }} Triệu / m<sup>2</sup></div>
                                 </div>
                                 <div class="item">
                                     Diện tích:

@@ -93,7 +93,7 @@ export default {
                 { menu: 'Trang chủ', href: '/', icon: 'mdi-home' },
 
                 { menu: 'Nhà đang HOT', href: '/baidang/noibat', icon: 'mdi-fire' },
-                { menu: 'Nhà cho bán', href: '/baidang/raoban', icon: 'mdi-home-city' },
+                { menu: 'Nhà rao bán', href: '/baidang/raoban', icon: 'mdi-home-city' },
                 { menu: 'Nhà cho thuê', href: '/baidang/chothue', icon: 'mdi-home-city' },
                 { menu: 'Hỗ trợ', href: '/hotro', icon: 'mdi-charity' },
                 { menu: 'Tìm kiếm', href: '/timkiem', icon: 'mdi-magnify' },

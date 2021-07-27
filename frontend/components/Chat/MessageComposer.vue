@@ -3,7 +3,7 @@
         <v-row>
             <v-col class="col-lg-12 d-flex flex-row align-center">
                 <textarea id="composerTextArea" v-model="message" placeholder="Tin nhắn..." @keydown.enter="send"></textarea>
-                <v-btn icon :disabled="message === ''"><v-icon color="blue darken-1">mdi-send</v-icon></v-btn>
+                <v-btn icon :disabled="message === ''" @click="send"><v-icon color="blue darken-1">mdi-send</v-icon></v-btn>
             </v-col>
         </v-row>
     </div>

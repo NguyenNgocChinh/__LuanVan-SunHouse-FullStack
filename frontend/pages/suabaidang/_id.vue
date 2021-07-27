@@ -48,7 +48,15 @@
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
-                    <v-text-field v-model="gia" suffix="Triệu/m²" :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!']" type="number" min="1" hint="Đơn vị triệu đồng" placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"></v-text-field>
+                    <v-text-field
+                        v-model="gia"
+                        suffix="Triệu/m²"
+                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => v > 0 || 'Giá bán không hợp lệ!!!']"
+                        type="number"
+                        min="1"
+                        hint="Đơn vị triệu đồng"
+                        placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"
+                    ></v-text-field>
                     <div class="spacer-line-form"></div>
                     <h3 class="d-inline-block">Mô tả tài sản</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
@@ -101,7 +109,7 @@
                                 item-text="v"
                                 item-value="k"
                                 :items="[
-                                    { k: 1, v: 'Thuê' },
+                                    { k: 1, v: 'Cho thuê' },
                                     { k: 0, v: 'Rao Bán' },
                                 ]"
                                 solo
@@ -112,14 +120,14 @@
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !']" type="number" solo></v-text-field>
+                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v <= 1000) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
                         </v-col>
                         <v-col cols="12" lg="4" sm="12">
                             <h3 class="d-inline-block">Số phòng tắm</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !']" solo></v-text-field>
+                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v <= 1000) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -152,14 +160,23 @@
                         </v-col>
                         <v-col cols="12" sm="4">
                             <h3 class="d-inline-block">Năm xây dựng</h3>
-                            <v-text-field v-model="namxaydung" class="mt-2" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                            {{ typeof namxaydung }}
+                            {{ namxaydung }}
+                            <v-text-field v-model.number="namxaydung" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4">
                             <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="dientich" class="mt-2" type="number" :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!']" placeholder="ví dụ: 100" solo></v-text-field>
+                            <v-text-field
+                                v-model="dientich"
+                                class="mt-2"
+                                type="number"
+                                :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
+                                placeholder="ví dụ: 100"
+                                solo
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -265,7 +282,7 @@
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-icon size="15" :color="toadoX ? 'green' : 'red'">{{ toadoX ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
+                                <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
                                 <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
                             </div>
                         </v-col>
@@ -655,7 +672,7 @@ export default {
                     this.phongngu = this.baidang.sophongngu
                     this.phongtam = this.baidang.sophongtam
                     this.selectedhuong = this.baidang.huong
-                    this.namxaydung = this.baidang.namxaydung
+                    this.namxaydung = this.baidang.namxaydung || ''
                     this.dientich = this.baidang.dientich
                     this.diachicuthe = this.baidang.diachi
                     this.setViewFormAddress(this.diachicuthe)

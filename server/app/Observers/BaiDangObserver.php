@@ -16,7 +16,7 @@ class BaiDangObserver
     public function created(BaiDang $baiDang)
     {
         $this->addLocationTable($baiDang);
-        // $this->notifyPostRelate($baiDang);
+        $this->notifyPostRelate($baiDang);
     }
     public function updated(BaiDang $baiDang)
     {
@@ -100,8 +100,8 @@ class BaiDangObserver
                     $huong = $this->searchEqual($baiDang, 'huong', $thongtin->huong);
                 }
                 if ($gia && $loai && $sophongngu && $dientich && $sophongtam && $diachi && $isChoThue && $huong) {
-
                     Mail::to($user->email)->send(new MailMatchTinDang($user, $baiDang));
+                    Log::info("Mail sent");
                 }
             }
         }

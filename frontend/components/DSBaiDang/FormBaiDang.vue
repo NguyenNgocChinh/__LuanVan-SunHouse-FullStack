@@ -3,61 +3,53 @@
         <v-form ref="form" v-model="valid" lazy-validation>
             <div class="ml-5"><h3>Tìm kiếm tài sản</h3></div>
             <div class="ml-5">
-                <v-text-field v-model="keyword" label="Tìm kiếm từ khóa là tiêu đề bài viết">
-                    <v-icon slot="append" color="black"> mdi-magnify </v-icon>
+                <v-text-field v-model="keyword" label="Từ khóa tìm kiếm" hint="Cho phép tìm tiêu đề, địa chỉ, loại nhà, hướng." @keydown.native.enter="searchBaiDangs">
+                    <v-icon slot="append" color="black" @click="searchBaiDangs"> mdi-magnify </v-icon>
                 </v-text-field>
             </div>
-            <div v-show="!banKinhOn" class="ml-5">
-                <v-select v-model="inputThanhPho" :items="thanhpho" item-text="name" label="Địa điểm">
-                    <template #item="{ item, attrs, on }">
-                        <v-list-item v-bind="attrs" v-on="on" @change="getQuanHuyen(item.matp)">
-                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
-                        </v-list-item>
-                    </template>
-                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
-                </v-select>
-                <!--            Quan huyen-->
-                <v-select v-if="inputThanhPho" v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">
-                    <template #item="{ item, attrs, on }">
-                        <v-list-item v-bind="attrs" v-on="on" @change="getXaPhuong(item.maqh)">
-                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
-                        </v-list-item>
-                    </template>
-                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
-                </v-select>
-                <!--            Phuong xa-->
-                <v-select v-if="inputQuanHuyen" v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">
-                    <template #item="{ item, attrs, on }">
-                        <v-list-item v-bind="attrs" v-on="on">
-                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>
-                        </v-list-item>
-                    </template>
-                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>
-                </v-select>
-            </div>
+            <!--            <div v-show="!banKinhOn" class="ml-5">-->
+            <!--                <v-select v-model="inputThanhPho" :items="thanhpho" item-text="name" label="Địa điểm">-->
+            <!--                    <template #item="{ item, attrs, on }">-->
+            <!--                        <v-list-item v-bind="attrs" v-on="on" @change="getQuanHuyen(item.matp)">-->
+            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
+            <!--                        </v-list-item>-->
+            <!--                    </template>-->
+            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
+            <!--                </v-select>-->
+            <!--                &lt;!&ndash;            Quan huyen&ndash;&gt;-->
+            <!--                <v-select v-if="inputThanhPho" v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">-->
+            <!--                    <template #item="{ item, attrs, on }">-->
+            <!--                        <v-list-item v-bind="attrs" v-on="on" @change="getXaPhuong(item.maqh)">-->
+            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
+            <!--                        </v-list-item>-->
+            <!--                    </template>-->
+            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
+            <!--                </v-select>-->
+            <!--                &lt;!&ndash;            Phuong xa&ndash;&gt;-->
+            <!--                <v-select v-if="inputQuanHuyen" v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">-->
+            <!--                    <template #item="{ item, attrs, on }">-->
+            <!--                        <v-list-item v-bind="attrs" v-on="on">-->
+            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
+            <!--                        </v-list-item>-->
+            <!--                    </template>-->
+            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
+            <!--                </v-select>-->
+            <!--            </div>-->
             <div class="ml-5">
                 <v-switch v-model="banKinhOn" inset label="Tìm theo bán kính:"></v-switch>
             </div>
             <div v-show="banKinhOn" class="ml-5 pt-0 mt-0 searchBanKinh" @toggle="isViTri">
                 <!--            <v-slider v-model="bankinh" thumb-color="blue" thumb-label="always"></v-slider>-->
-                <v-text-field v-model="bankinh" placeholder="Nhập bán kính" label="Bán kính" value="50" outlined />
+                <v-text-field v-model="bankinh" placeholder="Nhập bán kính" label="Bán kính" value="50" outlined @keydown.enter="searchBaiDangs" />
                 <v-radio-group v-model="radioGroup" mandatory class="pt-0 mt-0">
                     <v-radio :label="'Theo địa chỉ'" :value="1" class="pt-0 mt-0"></v-radio>
                     <div v-if="radioGroup === 1" class="pb-4">
-                        <v-text-field
-                            id="txtAddress"
-                            v-model="inputAddress"
-                            clearable
-                            :rules="radioGroup === 1 ? [() => !!inputAddress || 'Phải nhập địa chỉ để tìm kiếm'] : []"
-                            placeholder="Nhập địa điểm để tìm kiếm vị trí"
-                            :append-icon="iconSearchAddress"
-                            @click:append="searchAddress"
-                        ></v-text-field>
+                        <v-text-field id="txtAddress" ref="inputAddress" v-model="inputAddress" clearable placeholder="Nhập địa điểm để tìm kiếm vị trí" :append-icon="iconSearchAddress" @click:append="searchAddress"></v-text-field>
                         <v-combobox v-if="address.length > 0" v-model="chooseAddress" hide-details placeholder="Chọn địa điểm được gợi ý" return-object item-text="lable" autofocus :items="address"></v-combobox>
-                        <small v-if="chooseAddress" class="red--text caption" style="font-size: 8px"> {{ chooseAddress.location.x }}, {{ chooseAddress.location.y }} </small>
+                        <small v-if="chooseAddress" class="blue--text caption" style="font-size: 8px"> {{ chooseAddress.location.y }}, {{ chooseAddress.location.x }} </small>
                     </div>
                     <v-radio label="Theo vị trí của bạn" :value="2" class="pt-0 mt-0" @click="radioGroup = 2"></v-radio>
-                    <small v-if="radioGroup === 2" class="red--text caption" style="font-size: 8px"> {{ X }}, {{ Y }} </small>
+                    <small v-if="radioGroup === 2" class="blue--text caption" style="font-size: 8px"> {{ X }}, {{ Y }} </small>
                 </v-radio-group>
             </div>
             <div class="ml-5">
@@ -180,7 +172,7 @@
                 </v-card>
             </div>
             <div class="ml-1">
-                <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs" @keydown.enter="searchBaiDangs">Tìm kiếm</v-btn>
+                <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
             <v-checkbox v-model="isViTri" label="Lưu tìm kiếm" color="pink" value="Lưu tìm kiếm" hide-details></v-checkbox>
         </v-form>
@@ -241,6 +233,8 @@ export default {
             }, 600)
         },
         radioGroup(val) {
+            this.X = ''
+            this.Y = ''
             if (val === 2) {
                 // do we support geolocation
                 if (!('geolocation' in navigator)) {
@@ -257,6 +251,9 @@ export default {
                         alert('Dịch vụ định vị của máy tính bạn không hoạt động.')
                     }
                 )
+            } else if (this.chooseAddress) {
+                this.X = this.chooseAddress.location.y
+                this.Y = this.chooseAddress.location.x
             }
         },
 
@@ -281,11 +278,12 @@ export default {
         },
         inputQuanHuyen(val) {
             this.xaphuong = []
+            this.inputXaPhuong = ''
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
             if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
             if (this.inputQuanHuyen != null) {
                 var ret = val.replace('Huyện', '')
-                // ret = ret.replace('Quận', '')
+                ret = ret.replace('Quận', '')
                 this.arrDiaChi.unshift(ret)
                 this.diachi = this.arrDiaChi.join(',')
             }
@@ -309,6 +307,7 @@ export default {
     },
     mounted() {
         window.provider = new OpenStreetMapProvider()
+        this.radioGroup = 2
     },
     computed: {
         ...mapGetters('search', ['test']),
@@ -333,10 +332,17 @@ export default {
     },
     methods: {
         searchBaiDangs() {
-            const form = this.$refs.form
-            if (!form.validate()) {
-                this.$toast.show('Bạn cần điền những thông tin yêu cầu.')
-                return
+            if (this.radioGroup === 1) {
+                if (this.inputAddress === '' || typeof this.inputAddress === 'undefined') {
+                    this.$toast.show('Bạn cần nhập vào ô tìm kiếm địa chỉ cần tìm lân cận.')
+                    this.$refs.inputAddress.focus()
+                    return
+                }
+                if (typeof this.chooseAddress === 'undefined') {
+                    this.searchAddress()
+                    this.$toast.show('Bạn chọn địa chỉ cần tìm lân cận.')
+                    return
+                }
             }
             this.$nuxt.$emit('search')
         },
