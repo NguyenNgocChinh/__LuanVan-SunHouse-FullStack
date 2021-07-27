@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BaiDangDetailResource;
 use App\Http\Resources\BaiDangResource;
 use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
-use App\Models\QuanHuyen;
-use App\Models\ThanhPho;
-use App\Models\XaPhuong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +16,6 @@ class ApiTimkiemController extends Controller
 
     public function __construct(Request $request)
     {
-
         if ($request->page_size)
             $this->page_size = $request->page_size;
         else
@@ -32,7 +27,39 @@ class ApiTimkiemController extends Controller
         Log::info($request);
         DB::enableQueryLog();
         $baidangs = new BaiDang();
-        $queries = [];
+        //QUERY LIKE
+        $columns_like = [
+            'keyword', 'vitri'
+        ];
+        foreach ($columns_like as $column) {
+            if (request()->has($column)) {
+                $column_in_table = $column;
+                if ($this->checkTatCa($request, $column)) {
+                    continue;
+                }
+                DB::enableQueryLog();
+                if ($column == 'keyword') {
+                    if ($request->keyword == null) continue;
+                    $column_in_table = 'tieude,diachi';
+                }
+                if ($column == 'vitri') {
+                    if ( $request->banKinhOn == 'true' || $request->vitri == null) continue;
+                    $column_in_table = 'diachi';
+                }
+
+                $column = request($column);
+                $resultFullTextSearch = $baidangs->FullTextSearch($column_in_table, $column, 'id' )->get();
+                $temp = $resultFullTextSearch->implode('id', ',');
+                $resultFullTextSearch = explode(',', trim($temp));
+                $baidangs = $baidangs
+                ->whereIn('id', $resultFullTextSearch)
+                ->where(['trangthai'=> 1, 'choduyet' => 0]);
+                Log::info("loop i");
+                // Log::info($baidangs);
+                Log::info(DB::getQueryLog());
+            }
+        }
+
         //BANKINH
         $list_baidang_bankinh = [];
         if ($request->banKinhOn == 'true') {
@@ -42,11 +69,10 @@ class ApiTimkiemController extends Controller
             }
             Log::info(DB::getQueryLog());
             Log::info($list_baidang_bankinh);
-            $baidangs = BaiDang::whereIn('baidang.id', $list_baidang_bankinh);
-            $queries['bankinh'] = request('bankinh');
-            $queries['banKinhOn'] = request('banKinhOn');
-            $queries['banKinhWith'] = request('banKinhWith');
+            $baidangs = $baidangs->whereIn('id', $list_baidang_bankinh)
+            ->where(['trangthai'=> 1, 'choduyet' => 0]);
         }
+
         //QUERY WHERE column
         $columns = [
             'type', 'loai_id', 'huong'
@@ -66,66 +92,8 @@ class ApiTimkiemController extends Controller
                 } else {
                     $baidangs = $baidangs->where($column, request($column));
                 }
-                $queries[$column] = request($column);
             }
         }
-
-        function checkTatCa(Request $request, $column)
-        {
-            $flagTatCa = false;
-            if (is_array(request($column))) {
-                foreach (request($column) as $item) {
-                    if ($item == 'tatca') {
-                        return $flagTatCa = true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        //QUERY LIKE
-        $vitri = '';
-        $columns_like = [
-            'keyword', 'vitri'
-        ];
-        foreach ($columns_like as $column) {
-            if (request()->has($column)) {
-                $column_in_table = $column;
-                if (checkTatCa($request, $column)) {
-                    continue;
-                }
-
-                DB::enableQueryLog();
-                if ($column == 'keyword') $column_in_table = 'tieude';
-                if ($column == 'vitri') {
-                    Log::info("in vi tri");
-                    $column_in_table = 'baidang.diachi';
-                    if ($request->vitri != null) {
-
-                        $thanhpho = count($request->vitri) >= 1 ? $request->vitri[count($request->vitri) - 1] : "";
-                        $quanhuyen = count($request->vitri) >= 2 ? $request->vitri[count($request->vitri) - 2] : "";
-                        $xa = count($request->vitri) == 3 ? $request->vitri[count($request->vitri) - 3] : "";
-                        Log::info("detail dia chi");
-                        $vitri = "$xa, $quanhuyen, $thanhpho";
-                        Log::info($vitri);
-                        // if ($thanhpho != '' || $quanhuyen != '' || $xa != '') {
-                        // } else {
-                        //     $vitri = $request->vitri[0];
-                        // }
-                        $request->merge([
-                            'vitri' => $vitri,
-                        ]);
-                    }
-                }
-
-                $column = request($column);
-                $column = "%" . $column . "%";
-                $baidangs = $baidangs->where($column_in_table, 'like', $column);
-                $queries[$column] = request($column);
-                Log::info(DB::getQueryLog());
-            }
-        }
-
         // QUERY BETWEEN
         $columns_between = [
             'gia', 'dientich'
@@ -141,8 +109,6 @@ class ApiTimkiemController extends Controller
                     if ($column == 'dientich') $column2 = BaiDang::max('dientich');
                 }
                 $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
-                $queries[$column1] = request($column1);
-                $queries[$column2] = request($column2);
             }
         }
 
@@ -154,23 +120,24 @@ class ApiTimkiemController extends Controller
             if (request()->has($column)) {
                 if (request($column) == 'tatca') continue;
                 $baidangs = $baidangs->where($column, '>=', $column);
-                $queries[$column] = request($column);
             }
         }
 
         //sort
         if (request()->has('sort')) {
-            $baidangs = $baidangs->orderBy('created_at', request('sort'));
-            $queries['sort'] = request('sort');
-        }
+            $baidangs = $baidangs->orderBy('created_at', $request->sort);
+            // if($request->sort == 'desc')
+            //     $baidangs = $baidangs->sortByDesc('created_at');
+            // else
+            //     $baidangs = $baidangs->sortByDesc('created_at')->reverse();
+            }
         //sort gia
         if (request()->has('sortByGia')) {
             $baidangs = $baidangs->orderBy('gia', request('sortByGia'));
-            $queries['sortByGia'] = request('sortByGia');
         }
 
 
-        $baidangs = $baidangs->paginate($this->page_size)->appends($queries);
+        $baidangs = $baidangs->paginate($this->page_size);
 
 
         return response()->json((object) [
@@ -191,32 +158,29 @@ class ApiTimkiemController extends Controller
         $temp = $kq->implode('baidang_id', ',');
         $kq = explode(',', trim($temp));
         return $kq;
-        //    return DB::select("
-        //    select baidang_id from location
-        //    WHERE ST_Distance_Sphere((position),
-        //    (ST_GeomFromText('point($x $y)',4326))) <= $radius and trangthai = 1");
     }
 
-    ///BAN KINH
-    function distance($lat1, $lon1, $lat2, $lon2, $unit)
+    function checkTatCa(Request $request, $column)
     {
-        $radlat1 = M_PI * $lat1 / 180;
-        $radlat2 = M_PI * $lat2 / 180;
-        $theta = $lon1 - $lon2;
-        $radtheta = M_PI * $theta / 180;
-        $dist = sin($radlat1) * sin($radlat2) + cos($radlat1) * cos($radlat2) * cos($radtheta);
-        if ($dist > 1) {
-            $dist = 1;
+        $flagTatCa = false;
+        if (is_array(request($column))) {
+            foreach (request($column) as $item) {
+                if ($item == 'tatca') {
+                    return $flagTatCa = true;
+                }
+            }
         }
-        $dist = acos($dist);
-        $dist = $dist * 180 / M_PI;
-        $dist = $dist * 60 * 1.1515;
-        if ($unit == "K") {
-            $dist = $dist * 1.609344;
+        return false;
+    }
+    function sortByField($array, $field, $desc =  true){
+        // $newArray = array_column($array, $field);
+        Log::info("array");
+        Log::info($array);
+        $newArray = array();
+        foreach ($array as $key => $row)
+        {
+            $newArray[$key] = $row[$field];
         }
-        if ($unit == "N") {
-            $dist = $dist * 0.8684;
-        }
-        return $dist;
+         array_multisort($newArray, $desc ? SORT_DESC : SORT_ASC , $array);
     }
 }

@@ -122,14 +122,16 @@ export default {
                 from: '?',
                 total: '?',
             }
-            const arrAddress = this.diachi.length > 0 ? this.diachi.split(',') : ''
+            this.baidangs = []
+            if (this.isEmpty) this.isEmpty = false
+            const arrAddress = this.diachi
             console.log(arrAddress)
             const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
             const result = await this.$axios.$get(url, {
                 params: {
                     page: this.page,
                     page_size: 6,
-                    vitri: arrAddress,
+                    vitri: this.banKinhOn ? null : arrAddress,
                     gia1: this.gia1,
                     gia2: this.gia2,
                     type: this.type,
@@ -151,9 +153,9 @@ export default {
             })
             this.baidangs = result.baidangs
             this.detail_page = result.page[0]
-            if (result.baidangs.length < 1) {
+            if (this.baidangs.length < 1) {
                 this.isEmpty = true
-            }
+            } else this.isEmpty = false
         },
         sortBy() {
             switch (this.selected) {

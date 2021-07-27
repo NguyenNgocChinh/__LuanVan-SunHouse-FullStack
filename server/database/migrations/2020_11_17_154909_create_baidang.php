@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateBaidang extends Migration
@@ -34,7 +35,8 @@ class CreateBaidang extends Migration
             $table->boolean('choduyet');
             $table->double('dientich');
             $table->integer('luotxem')->default(0);
-
+            DB::statement('ALTER TABLE baidang ADD FULLTEXT `diachi` (`diachi`)');
+            DB::statement('ALTER TABLE baidang ADD FULLTEXT `tieude` (`tieude`,`diachi`)');
             $table->nullableTimestamps();
         });
     }
@@ -46,6 +48,10 @@ class CreateBaidang extends Migration
      */
     public function down()
     {
+        Schema::table('baidang', function (Blueprint $table) {
+            DB::statement('ALTER TABLE baidang DROP INDEX diachi');
+            DB::statement('ALTER TABLE baidang DROP INDEX tieude');
+        });
         Schema::dropIfExists('baidang');
     }
 }

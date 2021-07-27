@@ -155,6 +155,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     Route::get('/test-mail', function () {
         return view('mails.matchTinDang', ['name' => 'Chinh', 'baidang' => BaiDang::find(10)]);
     });
+    Route::get('/test-search', function () {
+        return BaiDang::FullTextSearch('diachi','Tỉnh Đồng Tháp ')->get();;
+    });
 
     Route::get('/test', function () {
         DB::enableQueryLog();

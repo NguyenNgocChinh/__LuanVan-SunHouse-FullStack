@@ -48,7 +48,7 @@
                             id="txtAddress"
                             v-model="inputAddress"
                             clearable
-                            :rules="banKinhOn === 1 ? [() => !!inputAddress || 'Phải nhập địa chỉ để tìm kiếm'] : []"
+                            :rules="radioGroup === 1 ? [() => !!inputAddress || 'Phải nhập địa chỉ để tìm kiếm'] : []"
                             placeholder="Nhập địa điểm để tìm kiếm vị trí"
                             :append-icon="iconSearchAddress"
                             @click:append="searchAddress"
@@ -180,7 +180,7 @@
                 </v-card>
             </div>
             <div class="ml-1">
-                <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
+                <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs" @keydown.enter="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
             <v-checkbox v-model="isViTri" label="Lưu tìm kiếm" color="pink" value="Lưu tìm kiếm" hide-details></v-checkbox>
         </v-form>
@@ -191,7 +191,6 @@ import { mapGetters } from 'vuex'
 import { mapFields } from 'vuex-map-fields'
 import { OpenStreetMapProvider } from 'leaflet-geosearch'
 import ENV from '@/api/timkiem'
-import * as ENVTK from '@/api/timkiem'
 export default {
     data() {
         return {
@@ -274,7 +273,9 @@ export default {
             this.inputQuanHuyen = null
 
             if (this.inputThanhPho != null) {
-                this.arrDiaChi.push(val)
+                var ret = val.replace('Tỉnh', '')
+                ret = ret.replace('Thành phố', '')
+                this.arrDiaChi.push(ret)
                 this.diachi = this.arrDiaChi.join(',')
             }
         },
@@ -283,7 +284,9 @@ export default {
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
             if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
             if (this.inputQuanHuyen != null) {
-                this.arrDiaChi.unshift(val)
+                var ret = val.replace('Huyện', '')
+                // ret = ret.replace('Quận', '')
+                this.arrDiaChi.unshift(ret)
                 this.diachi = this.arrDiaChi.join(',')
             }
         },
@@ -291,7 +294,9 @@ export default {
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
             if (this.inputXaPhuong === '') this.inputXaPhuong = null
             if (this.inputXaPhuong != null) {
-                this.arrDiaChi.unshift(val)
+                var ret = val.replace('Xã', '')
+                ret = ret.replace('Phường', '')
+                this.arrDiaChi.unshift(ret)
                 this.diachi = this.arrDiaChi.join(',')
             }
         },

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\FullTextSearch;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-
 class BaiDang extends Model
 {
-    use HasFactory;
+    use HasFactory, FullTextSearch;
 
     protected $table = "baidang";
     protected $primaryKey = "id";
@@ -30,6 +30,13 @@ class BaiDang extends Model
         'toadoY',
         'choduyet',
         'dientich',
+    ];
+    /**
+     * The columns of the full text index
+     */
+    protected $searchable = [
+        'diachi',
+        'tieude'
     ];
 
     public function user()
