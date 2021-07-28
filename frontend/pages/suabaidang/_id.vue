@@ -314,8 +314,13 @@
                     </v-row>
                 </v-card-text>
             </v-card>
+            <v-row class="text-center my-5" style="position: relative; height: 100px">
+                <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                    <div class="g-recaptcha" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                </div>
+            </v-row>
         </v-form>
-        <p class="font-weight-bold red--text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>
+        <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
         <div class="text-center">
             <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Sửa bài</v-btn>
         </div>
@@ -423,7 +428,7 @@ export default {
                 href: '/css/geosearch.css',
             },
         ],
-        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }],
+        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js' }],
     },
 
     watch: {
@@ -694,6 +699,13 @@ export default {
             }
         },
         async xulydangbai() {
+            // window.document.getElementsByName('g-recaptcha-response')[0].value
+            const validateCaptcha = window.document.getElementsByName('g-recaptcha-response')[0].value || ''
+            if (validateCaptcha === '') {
+                this.$toast.error('Bạn phải xác nhận captcha sau đó có thể tiếp tục')
+                return
+            }
+
             const form = this.$refs.form
             const validate = await form.validate()
             if (!validate) {
@@ -731,6 +743,7 @@ export default {
             data.append('hinhthuc', this.hinhthuc)
             data.append('toadoX', this.toadoY)
             data.append('toadoY', this.toadoX)
+            data.append('g-recaptcha-response', validateCaptcha || '')
             this.files.forEach((file, index) => {
                 data.append('file[' + index + ']', file)
             })
@@ -745,6 +758,11 @@ export default {
                         withCredentials: true,
                     })
                     .then((data) => {
+                        if (data.errors) {
+                            this.$toast.error(data.errors)
+                            return
+                        }
+
                         this.$toast.success('Sửa bài thành công!')
                         if (this.duong != null && this.duong !== '') {
                             this.$axios

@@ -58,8 +58,8 @@
                     item-text="v"
                     item-value="k"
                     :items="[
-                        { k: 'thue', v: 'Thuê' },
-                        { k: 'ban', v: 'Rao Bán' },
+                        { k: 'thue', v: 'Cho thuê' },
+                        { k: 'ban', v: 'Rao bán' },
                         { k: 'tatca', v: 'Tất Cả' },
                     ]"
                     label="Hình thức"

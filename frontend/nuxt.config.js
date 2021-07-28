@@ -180,5 +180,9 @@ export default {
     },
     privateRuntimeConfig: {
         apiSecret: process.env.API_SECRET,
+        recaptcha: {
+            siteKey: process.env.RECAPTCHA_SITEKEY,
+            secret: process.env.RECAPTCHA_SECRET,
+        },
     },
 }

@@ -235,8 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         /*OneSignal*/
-        'OneSignal' => Berkayk\OneSignal\OneSignalFacade::class
-
+        'OneSignal' => Berkayk\OneSignal\OneSignalFacade::class,
     ],
 
 ];

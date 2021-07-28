@@ -177,6 +177,8 @@ class ApiBaiDangController extends Controller
 
     public function storeBaiDang(Request $request)
     {
+        if(!$this->verifyCaptcha($request))
+            return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
             [
                 'tieude' => 'required',
@@ -191,6 +193,7 @@ class ApiBaiDangController extends Controller
                 'diachi' => 'required',
                 'toadoX' => 'required',
                 'toadoY' => 'required',
+                'g-recaptcha-response' => 'required'
             ],
             [
                 'tieude.required' => 'Tiêu đề không được để trống!',
@@ -256,6 +259,8 @@ class ApiBaiDangController extends Controller
 
     public function updateBaiDang(Request $request)
     {
+        if(!$this->verifyCaptcha($request))
+            return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
             [
                 'tieude' => 'required',
@@ -287,6 +292,7 @@ class ApiBaiDangController extends Controller
                 'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
             ]
         );
+
         $baidang = BaiDang::find($request->id);
         $data = $this->saveImage($request);
         $baidang->tieude = $request->tieude;
@@ -310,17 +316,19 @@ class ApiBaiDangController extends Controller
         $baidang->choduyet = 1;
         $kq = $baidang->update();
         if ($kq) {
-            if (count($baidang->tiennghiBaiDang) > 0) {
-                foreach ($baidang->tiennghiBaiDang as $tiennghi) {
-                    $tiennghi->delete();
+            if ($request->dstiennghi) {
+                if (count($baidang->tiennghiBaiDang) > 0) {
+                    foreach ($baidang->tiennghiBaiDang as $tiennghi) {
+                        $tiennghi->delete();
+                    }
                 }
-            }
-            if (count($request->dstiennghi) > 0) {
-                foreach ($request->dstiennghi as $tiennghi) {
-                    $tiennghi_bd = new TienNghiBaiDang();
-                    $tiennghi_bd->baidang_id = $baidang->id;
-                    $tiennghi_bd->tiennghi_id = $tiennghi;
-                    $tiennghi_bd->save();
+                if (count($request->dstiennghi) > 0) {
+                    foreach ($request->dstiennghi as $tiennghi) {
+                        $tiennghi_bd = new TienNghiBaiDang();
+                        $tiennghi_bd->baidang_id = $baidang->id;
+                        $tiennghi_bd->tiennghi_id = $tiennghi;
+                        $tiennghi_bd->save();
+                    }
                 }
             }
             //Kiem tra neu co send img tu request thi thuc hien xoa hinh cu di va import hinh moi
@@ -398,15 +406,33 @@ class ApiBaiDangController extends Controller
     {
         if ($post->trangthai) {
             Log::info("ss " . $post->trangthai);
-                Log::info("message");
-                DB::table('location')
-                    ->where('baidang_id', $post->id)
-                    ->update(['trangthai' => !$post->choduyet]); // bởi vì chưa duyệt  = 1 , đã duyệt = 0
-        }
-        else{
+            Log::info("message");
             DB::table('location')
-                    ->where('baidang_id', $post->id)
-                    ->update(['trangthai' => 0]);
+                ->where('baidang_id', $post->id)
+                ->update(['trangthai' => !$post->choduyet]); // bởi vì chưa duyệt  = 1 , đã duyệt = 0
+        } else {
+            DB::table('location')
+                ->where('baidang_id', $post->id)
+                ->update(['trangthai' => 0]);
+        }
+    }
+
+    public function verifyCaptcha(Request $request)
+    {
+        $token = $request->get('g-recaptcha-response');
+        Log::info($request);
+        Log::info("token");
+        Log::info($token);
+        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY'));
+        $resp = $recaptcha->setExpectedHostname($request->getHost())
+            // ->setExpectedAction('updateBaiDang')
+            ->verify($token, $request->ip());
+        if ($resp->isSuccess()) {
+            // Verified!
+            return true;
+        } else {
+            $errors = $resp->getErrorCodes();
+            return false;
         }
     }
 }
