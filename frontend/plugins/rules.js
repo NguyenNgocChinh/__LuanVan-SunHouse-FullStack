@@ -25,9 +25,9 @@ Vue.prototype.$rules = {
         if (value === '') return true
         return (value >= min && value <= max) || 'Thấp nhất ' + min + ' và cao nhất ' + max
     },
-    isNumber(value) {
-        if (value === '') return true
-        return Number.isInteger(Number(value))
+    isNumber(str) {
+        if (str === '') return true
+        return !isNaN(parseFloat(str)) && !isNaN(str - 0)
     },
     isInt: (n) => {
         if (n === '') return true
@@ -39,7 +39,15 @@ Vue.prototype.$rules = {
     },
     minNumber(v, min) {
         if (v === '') return true
-        console.log(v)
         return v >= min || 'Thấp nhất phải ' + min
+    },
+    maxNumber(v, max) {
+        if (v === '') return true
+        return v <= max || 'Thấp nhất phải ' + max
+    },
+    numberPhone: (sdt) => {
+        if (sdt === '') return true
+        const regex = /^(0[3|5|7|8|9])+([0-9]{8}$)/
+        return regex.test(sdt)
     },
 }
