@@ -65,6 +65,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::post('/dangkynhantin', [ThongTinDangKyController::class, "store"])->middleware('auth:sanctum');
         Route::put('/dangkynhantin/{id}', [ThongTinDangKyController::class, "update"])->middleware('auth:sanctum')->whereNumber('id');
         Route::delete('/dangkynhantin/{id}', [ThongTinDangKyController::class, "delete"])->middleware('auth:sanctum')->whereNumber('id');
+
+        Route::get('/checkIsValidNumberPhone/{numberphone}', [ApiUserController::class,"checkIsValidNumberPhone"]);
+        Route::get('/checkIsValidEmail/{email}', [ApiUserController::class,"checkIsValidEmail"]);
     });
 
     /*

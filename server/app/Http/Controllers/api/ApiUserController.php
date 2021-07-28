@@ -174,9 +174,6 @@ class ApiUserController extends Controller
             $user->forceFill([
                 'password' => Hash::make($request->new_password),
             ])->save();
-//            $user->password = Hash::make($request->password);
-//            $user->update();
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cập nhật thành công!'
@@ -184,5 +181,12 @@ class ApiUserController extends Controller
         }
 
     }
-
+    public function checkIsValidNumberPhone($numberphone){
+        $kq = User::where('sdt',$numberphone)->count();
+        return response()->json($kq);
+    }
+    public function checkIsValidEmail($email){
+        $kq = User::where('email',$email)->count();
+        return response()->json($kq);
+    }
 }
