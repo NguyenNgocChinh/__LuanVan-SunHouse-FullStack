@@ -1,5 +1,5 @@
 const ENV = {
-    register: 'http://localhost:8000/auth/register',
+    register: 'http://localhost:8000/register',
     info: 'http://localhost:8000/users/',
     users: 'http://localhost:8000/users',
     disable: 'http://localhost:8000/users/disable/',

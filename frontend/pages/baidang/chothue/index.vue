@@ -38,6 +38,7 @@
 
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import { mapState } from 'vuex'
 export default {
     components: { BaiDangCard },
     data() {
@@ -65,16 +66,26 @@ export default {
             this.getBaiDangChoThue(true)
         },
         selected() {
+            this.page = 1
             this.getBaiDangChoThue(true)
         },
     },
     mounted() {
         this.getBaiDangChoThue()
     },
+    computed: {
+        ...mapState(['baidang_chothue']),
+    },
     methods: {
         async getBaiDangChoThue(filter = false) {
-            let result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
-            result = this._.sortBy(result.baidangs, (o) => o.luotxem).reverse()
+            let result
+            if (this.baidang_chothue.length < 1) {
+                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
+                result = result.baidangs
+                this.$store.commit('SET_BAIDANG_CHOTHUE', result)
+            } else result = this.baidang_chothue
+            // result = this._.sortBy(result, (o) => o.luotxem).reverse()
+            result = this._.sortBy(result, (o) => o.created_at, 'asc').reverse()
             if (filter) {
                 result = this.sortBy(result)
             }

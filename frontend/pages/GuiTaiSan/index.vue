@@ -426,7 +426,7 @@ export default {
                 href: '/css/geosearch.css',
             },
         ],
-        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js' }],
+        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js?hl=vi' }],
     },
 
     watch: {

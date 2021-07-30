@@ -22,6 +22,7 @@
     </v-container>
 </template>
 <script>
+import { mapState } from 'vuex'
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'RaoBan',
@@ -38,11 +39,19 @@ export default {
     methods: {
         async getRaoBan() {
             try {
-                const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
-                this.baidangs = baidangs.baidangs
+                if (this.baidang_raoban.length > 0) {
+                    this.baidangs = this.baidang_raoban
+                } else {
+                    const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
+                    this.baidangs = baidangs.baidangs
+                    this.$store.commit('SET_BAIDANG_RAOBAN', this.baidangs)
+                }
             } catch (e) {}
             this.baidangs_loading = false
         },
+    },
+    computed: {
+        ...mapState(['baidang_raoban']),
     },
 }
 </script>

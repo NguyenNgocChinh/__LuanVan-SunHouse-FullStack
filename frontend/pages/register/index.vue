@@ -30,44 +30,45 @@
                                 v-model="sdt"
                                 class="mt-1"
                                 outlined
-                                label="Số điện thoại"
+                                label="Số điện thoại: 036xxxxxx"
                                 :rules="[$rules.required, ($rules.isNumber(sdt) && $rules.numberPhone(sdt)) || 'Số điện thoại không hợp lệ', isValidNumerPhone || 'Số điện thoại đã được đăng ký']"
                                 clearable
                                 @change="isValidNumerPhone = true"
-                                @keydown.enter="showStep2"
                             ></v-text-field>
                             <div id="recaptcha-container"></div>
                             <div class="text-right">
-                                <v-btn color="primary" :loading="loadingToStep" @click="showStep2"> Tiếp tục </v-btn>
+                                <v-btn color="primary" :loading="loadingToStep" :disabled="loadingToStep" @click="showStep2"> Tiếp tục </v-btn>
                             </div>
                         </v-form>
                     </v-stepper-content>
                     <!-- TAB 2-->
                     <v-stepper-content step="2" class="my-5">
-                        <div class="" style="display: flex; flex-direction: row; justify-content: center">
-                            <v-otp-input ref="otpInput" input-classes="otp-input" separator="-" :num-inputs="6" :should-auto-focus="true" :is-input-num="true" @on-change="handleOnChange" @on-complete="handleOnComplete" />
+                        <v-form @submit.prevent="">
+                            <div class="" style="display: flex; flex-direction: row; justify-content: center">
+                                <v-otp-input ref="otpInput" input-classes="otp-input" separator="-" :num-inputs="6" :should-auto-focus="true" :is-input-num="true" @on-change="handleOnChange" @on-complete="handleOnComplete" />
 
-                            <v-btn class="ml-2" fab small color="primary" @click="handleClearInput()">
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                        </div>
+                                <v-btn class="ml-2" fab small color="primary" @click="handleClearInput()">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </div>
 
-                        <div class="text-center">
-                            <p class="red--text py-5">{{ error }}</p>
-                            <div class="mt-5 mb-4">
-                                Hệ thống đã gửi mã xác nhận cho bạn.
-                                <span v-if="countDown > 0">Nếu chưa nhận được mã có thể gửi lại sau:</span>
-                                <span v-else> Nếu bạn chưa nhận được tin nhắn,vui lòng chọn gửi lại. </span>
-                                <span v-if="countDown > 1" class="font-weight-bold">{{ countDown }} giây</span>
-                                <div v-else>
-                                    <v-btn class="mt-3" color="primary" @click="sendOTP">Gửi lại</v-btn>
+                            <div class="text-center">
+                                <p class="red--text py-5">{{ error }}</p>
+                                <div v-if="error === ''" class="mt-5 mb-4">
+                                    Hệ thống đã gửi mã xác nhận cho bạn.
+                                    <span v-if="countDown > 0">Nếu chưa nhận được mã có thể gửi lại sau:</span>
+                                    <span v-else> Nếu bạn chưa nhận được tin nhắn,vui lòng chọn gửi lại. </span>
+                                    <span v-if="countDown > 1" class="font-weight-bold">{{ countDown }} giây</span>
+                                    <div v-else>
+                                        <v-btn class="mt-3" color="primary" @click="sendOTP">Gửi lại</v-btn>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </v-form>
                     </v-stepper-content>
                     <!-- TAB 3-->
                     <v-stepper-content step="3">
-                        <v-form ref="form3" v-model="valid3">
+                        <v-form ref="form3" v-model="valid3" @submit.prevent="xulydangky">
                             <v-card class="mb-5">
                                 <v-card-text>
                                     <v-text-field v-model="name" outlined :rules="[$rules.required, $rules.checkWord(name, 2)]" :error-messages="errorMessages" label="Họ và Tên " placeholder="Nhập tên..." required></v-text-field>
@@ -78,8 +79,18 @@
                                         label="Địa Chỉ Email"
                                         placeholder="Nhập địa chỉ email của bạn"
                                         required
+                                        @change="isValidEmail = true"
                                     ></v-text-field>
-                                    <v-text-field v-model="username" outlined label="Tên đăng nhập" counter :rules="[$rules.required, $rules.min(username, 5)]" placeholder="Hãy nhập tên đăng nhập..." required></v-text-field>
+                                    <v-text-field
+                                        v-model="username"
+                                        outlined
+                                        label="Tên đăng nhập"
+                                        counter
+                                        :rules="[$rules.required, $rules.min(username, 5), isValidUsername || 'Tên đăng nhập đã tồn tại trong hệ thống']"
+                                        placeholder="Hãy nhập tên đăng nhập..."
+                                        required
+                                        @change="isValidUsername = true"
+                                    ></v-text-field>
                                     <v-text-field
                                         v-model="password"
                                         outlined
@@ -109,12 +120,11 @@
                                     </datepicker>
                                 </v-card-text>
                             </v-card>
+                            <div class="text-right">
+                                <v-btn text @click="step = 1"> Trở về </v-btn>
+                                <v-btn color="primary" :loading="loadingToStep" type="submit"> Đăng ký </v-btn>
+                            </div>
                         </v-form>
-
-                        <div class="text-right">
-                            <v-btn text @click="step = 1"> Trở về </v-btn>
-                            <v-btn color="primary" :loading="loadingToStep" @click="xulydangky"> Đăng ký </v-btn>
-                        </div>
                     </v-stepper-content>
                 </v-stepper-items>
             </v-stepper>
@@ -156,6 +166,7 @@ export default {
             loadingToStep: false,
             isValidNumerPhone: true,
             isValidEmail: true,
+            isValidUsername: true,
             countDown: 10,
             error: '',
             disabledDates: {
@@ -196,7 +207,10 @@ export default {
                 measurementId: 'G-VT1MYJP2GC',
             }
             // Initialize Firebase
-            firebase.initializeApp(firebaseConfig)
+            // firebase.initializeApp(firebaseConfig)
+            if (firebase.apps.length === 0) {
+                firebase.initializeApp(firebaseConfig)
+            }
             firebase.auth().languageCode = 'vi'
             // firebase.auth().useDeviceLanguage();
             this.renderReCaptcha()
@@ -209,7 +223,7 @@ export default {
                 this.$toast.error('Vui lòng điền những thông tin cần thiết')
                 return
             }
-            this.isLoading = true
+            this.loadingToStep = true
             this.$axios
                 .$get(this.$config.serverUrl + '/users/checkIsValidEmail/' + this.email)
                 .then((res) => {
@@ -218,10 +232,21 @@ export default {
                         this.isValidEmail = false
                     }
                 })
-                .catch(() => {})
-                .finally(() => {
+                .catch(() => {
                     this.loadingToStep = false
                 })
+            if (!this.isValidEmail) return
+            this.$axios
+                .$get(this.$config.serverUrl + '/users/checkIsValidUsername/' + this.username)
+                .then((res) => {
+                    if (res) {
+                        this.isValidUsername = false
+                    }
+                })
+                .catch(() => {
+                    this.loadingToStep = false
+                })
+            if (!this.isValidUsername) return
             this.$axios
                 .$post(ENV.register, {
                     name: this.name.trim(),
@@ -237,13 +262,20 @@ export default {
                     this.$toast.success('Đăng ký thành công, vui lòng đăng nhập!')
                 })
                 .catch((error) => {
-                    if (error.response) {
-                        for (const key of Object.keys(error.response.data.errors)) {
-                            this.$nuxt.$toast.error(error.response.data.errors[key], {
-                                duration: 5000,
-                            })
+                    try {
+                        if (error.response) {
+                            for (const key of Object.keys(error.response.data.errors)) {
+                                this.$toast.error(error.response.data.errors[key], {
+                                    duration: 5000,
+                                })
+                            }
                         }
+                    } catch (e) {
+                        this.$toast.error('Xảy ra sự cố đáng tiếc. Vui lòng thử lại sau')
                     }
+                })
+                .finally(() => {
+                    this.loadingToStep = false
                 })
         },
         showStep2() {

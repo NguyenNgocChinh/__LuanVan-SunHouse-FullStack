@@ -38,6 +38,7 @@
 
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import { mapState } from 'vuex'
 export default {
     components: { BaiDangCard },
     data() {
@@ -65,16 +66,25 @@ export default {
             this.getBaiDangHot(true)
         },
         selected() {
+            this.page = 1
             this.getBaiDangHot(true)
         },
     },
     mounted() {
         this.getBaiDangHot()
     },
+    computed: {
+        ...mapState(['baidang_hots']),
+    },
     methods: {
         async getBaiDangHot(filter = false) {
-            let result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat)
-            result = result.baidangs
+            let result
+            if (this.baidang_hots.length < 1) {
+                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat)
+                result = result.baidangs
+                this.$store.commit('SET_BAIDANG_HOT', result)
+            } else result = this.baidang_hots
+
             if (filter) {
                 result = this.sortBy(result)
             }

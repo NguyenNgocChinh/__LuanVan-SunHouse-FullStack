@@ -109,14 +109,18 @@
                 <span>Bỏ yêu thích</span>
             </v-tooltip>
             <v-divider class="mt-2" />
-            <div class="pa-4 d-flex size-14 flex-row align-center">
+            <div class="pa-4 d-flex size-14 flex-row align-center justify-space-between">
                 <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }} </span>
-                <v-spacer />
+                <!--                <v-spacer />-->
                 <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }} </span>
-                <v-spacer />
-                <span class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
+                <!--                <v-spacer v-if="baidang.userObject.id === userId" />-->
+                <span v-if="baidang.userObject.id !== userId && userId" class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
                     <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
                     Chat ngay
+                </span>
+                <span v-if="!$auth.loggedIn" class="font-weight-bold cursor-pointer chatnow" @click="$router.push('/login')">
+                    <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
+                    Đăng nhập
                 </span>
             </div>
         </v-card>
@@ -147,6 +151,10 @@ export default {
         },
         wrong_imgSrc() {
             return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
+        },
+        userId() {
+            if (this.$auth.loggedIn) return this.$auth.user.id
+            return false
         },
     },
     methods: {

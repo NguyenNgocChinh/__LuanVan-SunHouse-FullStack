@@ -23,6 +23,7 @@
     </v-container>
 </template>
 <script>
+import { mapState } from 'vuex'
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'ChoThue',
@@ -38,13 +39,19 @@ export default {
     methods: {
         async getChoThue() {
             try {
-                const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
-                this.baidangs = baidangs.baidangs
-            } catch (e) {
-                console.log(e)
-            }
+                if (this.baidang_chothue.length > 0) {
+                    this.baidangs = this.baidang_chothue
+                } else {
+                    const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
+                    this.baidangs = baidangs.baidangs
+                    this.$store.commit('SET_BAIDANG_CHOTHUE', this.baidangs)
+                }
+            } catch (e) {}
             this.baidangs_loading = false
         },
+    },
+    computed: {
+        ...mapState(['baidang_chothue']),
     },
 }
 </script>

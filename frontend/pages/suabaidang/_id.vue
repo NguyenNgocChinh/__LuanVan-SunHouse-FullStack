@@ -316,7 +316,7 @@
             </v-card>
             <v-row class="text-center my-5" style="position: relative; height: 100px">
                 <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-                    <div class="g-recaptcha" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                    <div id="html_element_captcha" class="g-recaptcha" onload="onloadCallback();" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
                 </div>
             </v-row>
         </v-form>
@@ -341,7 +341,7 @@ import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
 export default {
     components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
-    middleware: 'auth',
+    middleware: ['auth'],
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
         const tiennghis = await $axios.$get(ENVTN.default.all)
@@ -428,7 +428,7 @@ export default {
                 href: '/css/geosearch.css',
             },
         ],
-        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js' }],
+        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js?hl=vi' }],
     },
 
     watch: {
@@ -700,7 +700,8 @@ export default {
         },
         async xulydangbai() {
             // window.document.getElementsByName('g-recaptcha-response')[0].value
-            const validateCaptcha = window.document.getElementsByName('g-recaptcha-response')[0].value || ''
+            const captcha = window.document.getElementsByName('g-recaptcha-response')
+            const validateCaptcha = captcha[0].value || ''
             if (validateCaptcha === '') {
                 this.$toast.error('Bạn phải xác nhận captcha sau đó có thể tiếp tục')
                 return
@@ -781,13 +782,13 @@ export default {
                         }
                     })
                     .catch((error) => {
-                        if (error.response) {
-                            this.$toast.error('Có lỗi xảy ra!!', { duration: 5000 })
-                            // for (const key of Object.keys(error.response.data.errors)) {
-                            //     this.$nuxt.$toast.error(error.response.data.errors[key], {
-                            //         duration: null,
-                            //     })
-                            // }
+                        if (error) {
+                            // this.$toast.error(error.message, { duration: 5000 })
+                            for (const key of Object.keys(error.response.data.errors)) {
+                                this.$nuxt.$toast.error(error.response.data.errors[key], {
+                                    duration: 5000,
+                                })
+                            }
                         }
                     })
                     .finally(() => {

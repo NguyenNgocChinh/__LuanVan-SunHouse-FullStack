@@ -57,8 +57,8 @@
                                                 item-value="k"
                                                 label="Chọn hình thức"
                                                 :items="[
-                                                    { k: '1', v: 'Cho thuê' },
-                                                    { k: '0', v: 'Rao bán' },
+                                                    { k: 1, v: 'Cho thuê' },
+                                                    { k: 0, v: 'Rao bán' },
                                                 ]"
                                                 solo
                                             ></v-select>

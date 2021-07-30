@@ -38,6 +38,7 @@
 
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import { mapState } from 'vuex'
 export default {
     components: { BaiDangCard },
     data() {
@@ -57,6 +58,7 @@ export default {
     watch: {
         page() {
             this.baidangs = []
+
             window.scrollTo({
                 top: 120,
                 left: 0,
@@ -65,16 +67,26 @@ export default {
             this.getBaiDangRaoBan(true)
         },
         selected() {
+            this.page = 1
             this.getBaiDangRaoBan(true)
         },
     },
     mounted() {
         this.getBaiDangRaoBan()
     },
+    computed: {
+        ...mapState(['baidang_raoban']),
+    },
     methods: {
         async getBaiDangRaoBan(filter = false) {
-            let result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
-            result = this._.sortBy(result.baidangs, (o) => o.luotxem).reverse()
+            let result
+            if (this.baidang_raoban.length < 1) {
+                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
+                result = result.baidangs
+                this.$store.commit('SET_BAIDANG_RAOBAN', result)
+            } else result = this.baidang_raoban
+
+            result = this._.sortBy(result, (o) => o.luotxem).reverse()
             if (filter) {
                 result = this.sortBy(result)
             }

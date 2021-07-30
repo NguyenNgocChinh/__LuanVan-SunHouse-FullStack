@@ -43,7 +43,7 @@
                         <div v-if="$auth.loggedIn && baidang !== false">
                             <div v-if="$auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin'">
                                 <v-btn class="white--text primary" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
-                                <v-btn class="white--text red" @click="removeBaiDang">Xóa bài đăng</v-btn>
+                                <v-btn class="white--text" :class="baidang.trangthai ? 'warning' : 'green'" @click="removeBaiDang">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
                             </div>
                         </div>
                         <!--                        <v-btn text plain>Mô tả</v-btn>-->
@@ -209,10 +209,13 @@
                                 <v-row class="pl-3 mb-2">
                                     <div>Tham gia từ: {{ $moment(user.created_at).format('MM/YYYY') || '-' }}</div>
                                 </v-row>
-                                <v-row class="pl-3 mb-2">
+                                <v-row class="pl-3">
                                     <div>Số tin đăng: {{ user.sobaidang || '-' }}</div>
                                 </v-row>
-                                <v-row class="px-3">
+                                <v-row v-if="!$auth.loggedIn" class="px-3 pt-5">
+                                    <button class="btn-chat" @click="$router.push('/login')">Đăng nhập để chat</button>
+                                </v-row>
+                                <v-row v-if="user.id !== userIdLoggedIn && userIdLoggedIn" class="px-3 pt-5">
                                     <button class="btn-chat" @click="chatWithSeller">Chat với người đăng tin</button>
                                 </v-row>
                             </v-card>
@@ -361,6 +364,10 @@ export default {
         description() {
             return this.baidang ? this.truncate(this.baidang.noidung, 100, true) : 'SUNHOUSE mua bán bất động sản cho người Việt'
         },
+        userIdLoggedIn() {
+            if (this.$auth.loggedIn) return this.$auth.user.id
+            return false
+        },
     },
     mounted() {
         this.getchitietsp()
@@ -393,45 +400,48 @@ export default {
             truncateSpace(str, n, useWordBound)
         },
         getchitietsp() {
-            this.$nextTick(() => {
-                this.$nuxt.$loading.start()
-            })
             try {
-                this.$axios.$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id).then((data) => {
-                    this.baidang = data
-                    // Save localStorage
-                    const history = JSON.parse(localStorage.getItem('history'))
-                    let saveToLocalStorage = history || []
-                    if (this._.some(saveToLocalStorage, data)) {
-                        saveToLocalStorage.splice(
-                            saveToLocalStorage.findIndex((x) => x.id === data.id),
-                            1
-                        )
-                    }
-                    data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
-                    saveToLocalStorage.unshift(data)
-                    saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
-                    if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
+                this.$nextTick(() => {
+                    this.$nuxt.$loading.start()
 
-                    localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
-                    // Save localStorage
+                    this.$axios
+                        .$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id)
+                        .then((data) => {
+                            this.baidang = data
+                            // Save localStorage
+                            const history = JSON.parse(localStorage.getItem('history'))
+                            let saveToLocalStorage = history || []
+                            if (this._.some(saveToLocalStorage, data)) {
+                                saveToLocalStorage.splice(
+                                    saveToLocalStorage.findIndex((x) => x.id === data.id),
+                                    1
+                                )
+                            }
+                            data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
+                            saveToLocalStorage.unshift(data)
+                            saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
+                            if (saveToLocalStorage.length > 20) saveToLocalStorage.shift()
 
-                    this.user = this.baidang.user
-                    if (this.user.sdt) this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
-                    const self = this
-                    this.baidang.tiennghi.forEach((item) => {
-                        self.tiennghiArr.push(item.ten_tiennghi)
-                    })
-                    this.baidang.hinhanh.forEach((item) => {
-                        const name = this.URI_DICRECTORY_UPLOAD + item.filename
-                        self.hinhanhArr.push(name)
-                    })
-                    this.searchNear(this.baidang.diachi)
+                            localStorage.setItem('history', JSON.stringify(saveToLocalStorage.reverse()))
+                            // Save localStorage
+
+                            this.user = this.baidang.user
+                            if (this.user.sdt) this.numberphone = this.user.sdt.toString().trim().slice(0, 5) + '***'
+                            const self = this
+                            this.baidang.tiennghi.forEach((item) => {
+                                self.tiennghiArr.push(item.ten_tiennghi)
+                            })
+                            this.baidang.hinhanh.forEach((item) => {
+                                const name = this.URI_DICRECTORY_UPLOAD + item.filename
+                                self.hinhanhArr.push(name)
+                            })
+                            this.searchNear(this.baidang.diachi)
+                        })
+                        .finally(() => {
+                            this.$nuxt.$loading.finish()
+                        })
                 })
             } catch (e) {}
-            this.$nextTick(() => {
-                this.$nuxt.$loading.finish()
-            })
         },
         showNumberPhone() {
             if (process.browser) {

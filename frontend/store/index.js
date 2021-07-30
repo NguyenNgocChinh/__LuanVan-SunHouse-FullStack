@@ -8,6 +8,8 @@ export const state = () => ({
     },
     baidangs: [],
     baidang_hots: [],
+    baidang_chothue: [],
+    baidang_raoban: [],
     contatcs: [],
 })
 
@@ -20,6 +22,13 @@ export const mutations = {
     },
     SET_BAIDANG_HOT(state, payload) {
         state.baidang_hots = payload
+    },
+    SET_BAIDANG_CHOTHUE(state, payload) {
+        state.baidang_chothue = payload
+    },
+
+    SET_BAIDANG_RAOBAN(state, payload) {
+        state.baidang_raoban = payload
     },
     SET_CONTACTS(state, payload) {
         state.contatcs = payload
@@ -73,12 +82,12 @@ export const actions = {
         }
     },
     async ORDER_BAIDANG_HOT({ commit, state }) {
-        await commit(
-            'SET_BAIDANG_HOT',
-            sortBy(state.baidangs, {
-                prop: 'luotxem',
-                desc: true,
-            }).slice(0, 10)
-        )
+        // await commit(
+        //     'SET_BAIDANG_HOT',
+        //     sortBy(state.baidangs, {
+        //         prop: 'luotxem',
+        //         desc: true,
+        //     }).slice(0, 10)
+        // )
     },
 }

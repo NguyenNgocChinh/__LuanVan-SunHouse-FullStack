@@ -149,32 +149,34 @@
                     </template>
                 </v-select>
             </div>
-            <div class="ml-1">
-                <v-card flat color="transparent">
-                    <v-card-text>
-                        <v-row>
-                            <v-col class="px-4">
-                                <v-range-slider v-model="rangeGia" :min="gia1" :max="gia2" hide-details :label="ex3.label" :thumb-color="ex3.color" thumb-label="always" class="align-center"> </v-range-slider>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-card>
+            <div class="ml-5">
+                <p class="d-inline-block">Giá: Triệu / m<sup>2</sup></p>
+                <v-row class="align-center">
+                    <v-col cols="12" sm="5">
+                        <v-text-field v-model.number="gia1" :rules="[$rules.minNumber(gia1, 0)]" class="pt-0 mt-0" type="number" placeholder="100" min="1"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">đến</v-col>
+                    <v-col cols="12" sm="5">
+                        <v-text-field v-model.number="gia2" :rules="[$rules.minNumber(gia2, 0)]" class="pt-0 mt-0" type="number" placeholder="200" min="1"></v-text-field>
+                    </v-col>
+                </v-row>
             </div>
-            <div class="ml-1">
-                <v-card flat color="transparent">
-                    <v-card-text>
-                        <v-row>
-                            <v-col class="px-4">
-                                <v-range-slider v-model="rangeDienTich" :min="dientich1" :max="dientich2" hide-details :label="ex4.label" :thumb-color="ex4.color" thumb-label="always" class="align-center"> </v-range-slider>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-card>
+            <div class="ml-5">
+                <p class="d-inline-block">Diện tích: m<sup>2</sup></p>
+                <v-row class="align-center">
+                    <v-col cols="12" sm="5">
+                        <v-text-field v-model.number="dientich1" :rules="[$rules.minNumber(dientich1, 0)]" class="pt-0 mt-0" type="number" placeholder="100" min="1"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">đến</v-col>
+                    <v-col cols="12" sm="5">
+                        <v-text-field v-model.number="dientich2" :rules="[$rules.minNumber(dientich2, 0)]" class="pt-0 mt-0" type="number" placeholder="200" min="1"></v-text-field>
+                    </v-col>
+                </v-row>
             </div>
             <div class="ml-1">
                 <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
-            <v-checkbox v-model="isViTri" label="Lưu tìm kiếm" color="pink" value="Lưu tìm kiếm" hide-details></v-checkbox>
+            <v-checkbox v-model="isSaveSearch" label="Lưu tìm kiếm" color="pink" hide-details @click="toggleSaveSearch"></v-checkbox>
         </v-form>
     </v-card>
 </template>
@@ -188,19 +190,12 @@ export default {
         return {
             valid: true,
 
-            ex1: { label: 'color', val: 50, color: 'purple darken-1' },
-            ex2: { label: 'track-color', val: 75, color: 'green lighten-1' },
-            ex3: { label: 'Giá từ', val: 50, color: 'blue lighten-1' },
-            ex4: { label: 'Diện tích từ', val: 50, color: 'blue lighten-1' },
             isSaveSearch: false,
             isViTri: true,
-            radioGroup: 1,
 
             inputThanhPho: '',
             inputQuanHuyen: '',
             inputXaPhuong: '',
-            inputAddress: undefined,
-            chooseAddress: undefined,
 
             arrDiaChi: [],
             loaiNha: [],
@@ -209,29 +204,13 @@ export default {
             xaphuong: [],
             address: [],
 
-            gia1: 0,
-            gia2: 9999,
-            rangeGia: [0, 9999],
-            dientich1: 0,
-            dientich2: 9999,
-            rangeDienTich: [0, 9999],
-
             iconSearchAddress: 'bx bx-search-alt-2',
+            oldSearch: {},
+
+            loaded: false,
         }
     },
     watch: {
-        rangeGia() {
-            setTimeout(() => {
-                this.$store.commit('search/updateGia1Field', this.rangeGia[0])
-                this.$store.commit('search/updateGia2Field', this.rangeGia[1])
-            }, 600)
-        },
-        rangeDienTich() {
-            setTimeout(() => {
-                this.$store.commit('search/updateDienTich1Field', this.rangeDienTich[0])
-                this.$store.commit('search/updateDienTich2Field', this.rangeDienTich[1])
-            }, 600)
-        },
         radioGroup(val) {
             this.X = ''
             this.Y = ''
@@ -264,58 +243,74 @@ export default {
             }
         },
 
-        inputThanhPho(val) {
-            this.arrDiaChi = []
-            this.quanhuyen = []
-            this.inputQuanHuyen = null
+        // inputThanhPho(val) {
+        //     this.arrDiaChi = []
+        //     this.quanhuyen = []
+        //     this.inputQuanHuyen = null
+        //
+        //     if (this.inputThanhPho != null) {
+        //         var ret = val.replace('Tỉnh', '')
+        //         ret = ret.replace('Thành phố', '')
+        //         this.arrDiaChi.push(ret)
+        //         this.diachi = this.arrDiaChi.join(',')
+        //     }
+        // },
+        // inputQuanHuyen(val) {
+        //     this.xaphuong = []
+        //     this.inputXaPhuong = ''
+        //     this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
+        //     if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
+        //     if (this.inputQuanHuyen != null) {
+        //         var ret = val.replace('Huyện', '')
+        //         ret = ret.replace('Quận', '')
+        //         this.arrDiaChi.unshift(ret)
+        //         this.diachi = this.arrDiaChi.join(',')
+        //     }
+        // },
+        // inputXaPhuong(val) {
+        //     this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
+        //     if (this.inputXaPhuong === '') this.inputXaPhuong = null
+        //     if (this.inputXaPhuong != null) {
+        //         var ret = val.replace('Xã', '')
+        //         ret = ret.replace('Phường', '')
+        //         this.arrDiaChi.unshift(ret)
+        //         this.diachi = this.arrDiaChi.join(',')
+        //     }
+        // },
 
-            if (this.inputThanhPho != null) {
-                var ret = val.replace('Tỉnh', '')
-                ret = ret.replace('Thành phố', '')
-                this.arrDiaChi.push(ret)
-                this.diachi = this.arrDiaChi.join(',')
-            }
-        },
-        inputQuanHuyen(val) {
-            this.xaphuong = []
-            this.inputXaPhuong = ''
-            this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
-            if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
-            if (this.inputQuanHuyen != null) {
-                var ret = val.replace('Huyện', '')
-                ret = ret.replace('Quận', '')
-                this.arrDiaChi.unshift(ret)
-                this.diachi = this.arrDiaChi.join(',')
-            }
-        },
-        inputXaPhuong(val) {
-            this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
-            if (this.inputXaPhuong === '') this.inputXaPhuong = null
-            if (this.inputXaPhuong != null) {
-                var ret = val.replace('Xã', '')
-                ret = ret.replace('Phường', '')
-                this.arrDiaChi.unshift(ret)
-                this.diachi = this.arrDiaChi.join(',')
-            }
+        searchParams: {
+            handler(newValue) {
+                if (this.loaded) {
+                    console.log('change')
+                    console.log(newValue)
+                    window.params = newValue
+                    const vm = this
+                    vm.isSaveSearch = false
+                }
+            },
+            deep: true,
         },
     },
     created() {
-        this.getAllLoai()
-        this.getGiaMinMax()
-        this.getDienTich()
-        this.getThanhPho()
+        // this.getGiaMinMax()
+        // this.getDienTich()
+        // this.getThanhPho()
     },
     mounted() {
+        this.getAllLoai()
         window.provider = new OpenStreetMapProvider()
-        this.radioGroup = 2
+        window.params = {}
+        this.loadSavedSearch()
     },
     computed: {
         ...mapGetters('search', ['test']),
         ...mapFields('search', {
             keyword: 'searchParams.keyword',
             diachi: 'searchParams.diachi',
-            minGia: 'searchParams.gia1',
-            maxGia: 'searchParams.gia2',
+            gia1: 'searchParams.gia1',
+            gia2: 'searchParams.gia2',
+            dientich1: 'searchParams.dientich1',
+            dientich2: 'searchParams.dientich2',
             type: 'searchParams.type',
             loai_id: 'searchParams.loai_id',
             huong: 'searchParams.huong',
@@ -325,12 +320,36 @@ export default {
             Y: 'searchParams.Y',
             inputAdressR: 'searchParams.inputAdressR',
             bankinh: 'searchParams.bankinh',
-            maxDienTich: 'searchParams.dientich2',
-            minDienTich: 'searchParams.dientich1',
             banKinhOn: 'searchParams.banKinhOn',
+            radioGroup: 'searchParams.radioGroup',
+            chooseAddress: 'searchParams.chooseAddress',
+            inputAddress: 'searchParams.inputAddress',
+            searchParams: 'searchParams',
         }),
     },
     methods: {
+        loadSavedSearch() {
+            const saveSearch = JSON.parse(localStorage.getItem('saveSearch'))
+            console.log(saveSearch)
+            if (saveSearch !== null) {
+                this.isSaveSearch = true
+                console.log('issavesaearch', this.isSaveSearch)
+                this.$store.commit('search/updateSearchParams')
+                this.$toast.success('Đã load các tiêu chí tìm kiếm cũ')
+            } else this.isSaveSearch = false
+        },
+        toggleSaveSearch() {
+            console.log('change to ' + this.isSaveSearch)
+
+            if (this.isSaveSearch) {
+                this.saveSearch()
+                this.$toast.success('Đã lưu tìm kiếm')
+            } else {
+                console.log('off')
+                this.$toast.info('Đã xóa lưu tìm kiếm')
+                localStorage.removeItem('saveSearch')
+            }
+        },
         searchBaiDangs() {
             if (this.radioGroup === 1) {
                 if (this.inputAddress === '' || typeof this.inputAddress === 'undefined') {
@@ -341,6 +360,18 @@ export default {
                 if (typeof this.chooseAddress === 'undefined') {
                     this.searchAddress()
                     this.$toast.show('Bạn chọn địa chỉ cần tìm lân cận.')
+                    return
+                }
+            }
+            if (this.gia1 !== '' && this.gia2 !== '') {
+                if (this.gia1 > this.gia2) {
+                    this.$toast.error('Giá nhập vào không hợp lệ!')
+                    return
+                }
+            }
+            if (this.dientich1 !== '' && this.dientich2 !== '') {
+                if (this.dientich1 > this.dientich2) {
+                    this.$toast.error('Diện tích nhập vào không hợp lệ!')
                     return
                 }
             }
@@ -371,30 +402,9 @@ export default {
             try {
                 const loai = await this.$axios.$get(ENV.loai)
                 loai.forEach((item) => this.loaiNha.push(item))
-                this.loaiNha.push({ id: 'tatca', ten_loai: 'Tất cả' })
-            } catch (e) {
-                console.log(e)
-            }
-        },
-        getGiaMinMax() {
-            try {
-                this.$axios.$get(ENV.gia).then((data) => {
-                    this.rangeGia = [0, data.max]
-                    this.gia1 = 0
-                    this.gia2 = data.max
-                })
-            } catch (e) {
-                console.log(e)
-            }
-        },
-        getDienTich() {
-            try {
-                this.$axios.$get(ENV.dientich).then((data) => {
-                    this.rangeDienTich = [0, data.max]
-
-                    this.dientich1 = 0
-                    this.dientich2 = data.max
-                })
+                await this.loaiNha.push({ id: 'tatca', ten_loai: 'Tất cả' })
+                this.loaded = true
+                console.log('loaded')
             } catch (e) {
                 console.log(e)
             }
@@ -416,6 +426,27 @@ export default {
         async getXaPhuong(id) {
             const xaphuong = await this.$axios.$get(ENV.xaphuong + id)
             this.xaphuong = xaphuong
+        },
+        saveSearch() {
+            // const params = {
+            //     vitri: this.banKinhOn ? null : this.diachi,
+            //     gia1: this.gia1,
+            //     gia2: this.gia2,
+            //     dientich1: this.dientich1,
+            //     dientich2: this.dientich2,
+            //     type: this.type,
+            //     loai_id: this.loai_id,
+            //     huong: this.huong,
+            //     sophongngu: this.sophongngu,
+            //     sophongtam: this.sophongtam,
+            //     keyword: this.keyword,
+            //     banKinhOn: this.banKinhOn,
+            //     bankinh: this.bankinh,
+            //     X: this.X,
+            //     Y: this.Y,
+            // }
+            localStorage.setItem('saveSearch', JSON.stringify(window.params))
+            console.log('set')
         },
     },
 }
