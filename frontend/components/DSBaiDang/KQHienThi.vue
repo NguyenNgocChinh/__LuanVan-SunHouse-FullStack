@@ -116,7 +116,7 @@ export default {
         })
     },
     methods: {
-        async getbaidangs(filter = false) {
+        getbaidangs(filter = false) {
             this.detail_page = {
                 to: '?',
                 from: '?',
@@ -125,38 +125,40 @@ export default {
             this.baidangs = []
             if (this.isEmpty) this.isEmpty = false
             const arrAddress = this.diachi
-            console.log(arrAddress)
             const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
-            const params = {
-                page: this.page,
-                page_size: 6,
-                vitri: this.banKinhOn ? null : arrAddress,
-                gia1: this.gia1,
-                gia2: this.gia2,
-                type: this.type,
-                loai_id: this.loai_id,
-                huong: this.huong,
-                sophongngu: this.sophongngu,
-                sophongtam: this.sophongtam,
-                keyword: this.keyword,
-                dientich1: this.dientich1,
-                dientich2: this.dientich2,
-                banKinhOn: this.banKinhOn,
-                bankinh: this.bankinh,
-                X: this.X,
-                Y: this.Y,
-            }
-            const result = await this.$axios.$get(url, {
-                params,
-                paramsSerializer: (params) => {
-                    return qs.stringify(params)
-                },
-            })
-            this.baidangs = result.baidangs
-            this.detail_page = result.page[0]
-            if (this.baidangs.length < 1) {
-                this.isEmpty = true
-            } else this.isEmpty = false
+
+            this.$axios
+                .$get(url, {
+                    params: {
+                        page: this.page,
+                        page_size: 6,
+                        vitri: this.banKinhOn ? null : arrAddress,
+                        gia1: this.gia1,
+                        gia2: this.gia2,
+                        type: this.type,
+                        loai_id: this.loai_id,
+                        huong: this.huong,
+                        sophongngu: this.sophongngu,
+                        sophongtam: this.sophongtam,
+                        keyword: this.keyword,
+                        dientich1: this.dientich1,
+                        dientich2: this.dientich2,
+                        banKinhOn: this.banKinhOn,
+                        bankinh: this.bankinh,
+                        X: this.X,
+                        Y: this.Y,
+                    },
+                })
+                .then((res) => {
+                    this.baidangs = res.baidangs
+                    this.detail_page = res.page[0]
+                })
+                .catch((e) => this.$toast.error(e))
+                .finally(() => {
+                    if (this.baidangs.length < 1) {
+                        this.isEmpty = true
+                    } else this.isEmpty = false
+                })
         },
         sortBy() {
             switch (this.selected) {

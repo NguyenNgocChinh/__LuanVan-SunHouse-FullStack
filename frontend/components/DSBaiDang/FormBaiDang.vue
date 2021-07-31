@@ -281,8 +281,6 @@ export default {
         searchParams: {
             handler(newValue) {
                 if (this.loaded) {
-                    console.log('change')
-                    console.log(newValue)
                     window.params = newValue
                     const vm = this
                     vm.isSaveSearch = false

@@ -6,7 +6,7 @@
                 <v-spacer />
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="dsUser" :single-select="singleSelect" item-key="name" show-select class="elevation-1">
+            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="name" show-select class="elevation-1">
                 <template #top>
                     <div class="d-flex justify-space-between">
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
@@ -40,6 +40,21 @@
                     <v-btn v-else icon color="red" :loading="loadingDisable" @click="enable(item)">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
+                </template>
+                <template #[`item.baidang`]="{ item }"> {{ item.baidangDaDuyet }} / {{ item.baidang }} </template>
+                <template #[`item.vaitro`]="{ item }">
+                    <v-select
+                        :value="item.vaitro"
+                        item-text="v"
+                        item-value="k"
+                        :items="[
+                            { k: 'user', v: 'user' },
+                            { k: 'admin', v: 'admin' },
+                        ]"
+                        hide-details
+                        hide-selected
+                        @change="changeVaitro(item)"
+                    />
                 </template>
 
                 <template #[`item.name`]="{ item }">
@@ -76,7 +91,7 @@
 
 <script>
 import ModalError from '@/components/Error/modalError'
-
+import { mapState } from 'vuex'
 export default {
     components: { ModalError },
     layout: 'admin',
@@ -90,30 +105,59 @@ export default {
                 { text: 'Tên', value: 'name' },
                 { text: 'Bài đăng', value: 'baidang' },
                 { text: 'Email', value: 'email' },
-                { text: 'Vai Trò', value: 'vaitro' },
+                { text: 'SĐT', value: 'sdt' },
+                { text: 'Vai Trò', value: 'vaitro', width: '9%' },
                 { text: 'Trạng Thái', value: 'trangthai' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
             ],
-            dsUser: [],
+
             loading: true,
             fab: false,
             loadingDisable: false,
+            userList: [],
         }
     },
+    computed: {},
+
     created() {
         this.fetchDSUser()
     },
     methods: {
-        async fetchDSUser() {
-            const data = await this.$axios.$get(this.$config.serverUrl + this.$config.users)
-            this.dsUser = data
+        fetchDSUser() {
+            this.$axios.$get(this.$config.serverUrl + this.$config.users).then((res) => {
+                this.userList = res
+            })
+
             this.loading = false
         },
+
         getAvatar(user) {
             return user.profile_photo_path || user.profile_photo_url
         },
         showItem(item) {
             this.$router.push('/admin/users/' + item.id)
+        },
+        changeVaitro(user) {
+            this.$axios
+                .$put(this.$config.serverUrl + '/users/toggleVaiTro', {
+                    id: user.id,
+                    vaitro: user.vaitro,
+                })
+                .then((res) => {
+                    if (res.success) {
+                        this.$toast.success(res.success)
+                    }
+                    if (res.errors) {
+                        this.$toast.error(res.errors)
+                    }
+                })
+                .catch((error) => {
+                    if (error?.response?.data?.message) {
+                        this.$toast.error(error.response.data.message, {
+                            duration: 5000,
+                        })
+                    }
+                })
         },
         disableUser(item) {
             this.$toast.show('Đang gửi yêu cầu vô hiệu hóa tài khoản')

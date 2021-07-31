@@ -667,36 +667,38 @@ export default {
                 this.isFound = false
             }
         },
-        async getBaiDangSua() {
-            try {
-                await this.$axios.$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id).then((data) => {
-                    this.baidang = data
-                    this.tieude = this.baidang.tieude
-                    this.gia = this.baidang.gia
-                    this.noidung = this.baidang.noidung
-                    this.phongngu = this.baidang.sophongngu
-                    this.phongtam = this.baidang.sophongtam
-                    this.selectedhuong = this.baidang.huong
-                    this.namxaydung = this.baidang.namxaydung || ''
-                    this.dientich = this.baidang.dientich
-                    this.diachicuthe = this.baidang.diachi
-                    this.setViewFormAddress(this.diachicuthe)
-                    const glass = document.querySelector('input.glass ')
-                    glass.value = this.diachicuthe
-                    this.hinhthuc = parseInt(this.baidang.isChoThue)
-                    this.loais.forEach((l) => {
-                        if (l.ten_loai === this.baidang.loai) {
-                            this.loai = l.id
-                        }
-                    })
+        getBaiDangSua() {
+            this.$nextTick(() => {
+                this.$nuxt.$loading.start()
+                this.$axios
+                    .$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id)
+                    .then((data) => {
+                        this.baidang = data
+                        this.tieude = this.baidang.tieude
+                        this.gia = this.baidang.gia
+                        this.noidung = this.baidang.noidung
+                        this.phongngu = this.baidang.sophongngu
+                        this.phongtam = this.baidang.sophongtam
+                        this.selectedhuong = this.baidang.huong
+                        this.namxaydung = this.baidang.namxaydung || ''
+                        this.dientich = this.baidang.dientich
+                        this.diachicuthe = this.baidang.diachi
+                        this.setViewFormAddress(this.diachicuthe)
+                        const glass = document.querySelector('input.glass ')
+                        glass.value = this.diachicuthe
+                        this.hinhthuc = parseInt(this.baidang.isChoThue)
+                        this.loais.forEach((l) => {
+                            if (l.ten_loai === this.baidang.loai) {
+                                this.loai = l.id
+                            }
+                        })
 
-                    this.baidang.tiennghi.forEach((item) => {
-                        this.noithat.push(item.id)
+                        this.baidang.tiennghi.forEach((item) => {
+                            this.noithat.push(item.id)
+                        })
                     })
-                })
-            } catch (e) {
-                console.log(e)
-            }
+                    .finally(() => this.$nuxt.$loading.finish())
+            })
         },
         async xulydangbai() {
             // window.document.getElementsByName('g-recaptcha-response')[0].value
@@ -784,10 +786,16 @@ export default {
                     .catch((error) => {
                         if (error) {
                             // this.$toast.error(error.message, { duration: 5000 })
-                            for (const key of Object.keys(error.response.data.errors)) {
-                                this.$nuxt.$toast.error(error.response.data.errors[key], {
+                            if (error?.response?.data?.message) {
+                                this.$toast.error(error.response.data.message, {
                                     duration: 5000,
                                 })
+                            } else {
+                                for (const key of Object.keys(error.response.data.errors)) {
+                                    this.$toast.error(error.response.data.errors[key], {
+                                        duration: 5000,
+                                    })
+                                }
                             }
                         }
                     })
