@@ -15,26 +15,28 @@ class CreateBaidang extends Migration
     public function up()
     {
         Schema::create('baidang', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('tieude');
-            $table->longText('noidung');
-            $table->unsignedBigInteger('loai_id');
-            $table->foreign('loai_id')->references('id')->on('loai');
-            $table->double('gia');
-            $table->string('huong');/**/
+            $table->integer('id', true);
+            $table->mediumInteger('user_id');
+            $table->string('tieude',100);
+            $table->text('noidung');
+            $table->smallInteger('loai_id');
+            $table->double('gia', 8, 2);
+            $table->string('huong',20);/**/
             $table->boolean('trangthai')->default(1);
             $table->boolean('isChoThue');
-            $table->integer('sophongngu')->default(0);
-            $table->integer('sophongtam')->default(0);
-            $table->integer('namxaydung')->nullable();
-            $table->text('diachi');
+            $table->char('sophongngu',2)->default(0);
+            $table->char('sophongtam',2)->default(0);
+            $table->char('namxaydung',4)->nullable();
+            $table->string('diachi',150);
             $table->double('toadoX');
             $table->double('toadoY');
             $table->boolean('choduyet');
-            $table->double('dientich');
-            $table->integer('luotxem')->default(0);
+            $table->double('dientich',8,2);
+            $table->float('douutien')->default(0);
+            $table->smallInteger('luotxem')->default(0);
+
+            $table->foreign('loai_id')->references('id')->on('loai');
+            $table->foreign('user_id')->references('id')->on('users');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `diachi` (`diachi`)');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `tieude` (`tieude`,`diachi`)');
             $table->nullableTimestamps();

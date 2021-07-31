@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Rules\match_old_password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,6 +19,8 @@ class ApiUserController extends Controller
     public function register(ApiRegisterRequest $request)
     {
         $user = new User();
+        // $namsinh = str_replace('/', '-', $request->namsinh);
+        // $user->namsinh = date('Y-m-d', strtotime($namsinh));
         $user->fill($request->all());
         $user->password = Hash::make($request->password);
         $user->save();
@@ -33,13 +36,13 @@ class ApiUserController extends Controller
 
         $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
 
-        if (!$user = Auth::guard('web')->attempt([ $isEmail ? "email" : "username" => $request->username, 'password' => $request->password], $request->remember))
+        if (!$user = Auth::guard('web')->attempt([$isEmail ? "email" : "username" => $request->username, 'password' => $request->password], $request->remember))
 
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
-//        return  true;
-//        Auth::user()->tokens()->delete();
+        //        return  true;
+        //        Auth::user()->tokens()->delete();
         $token = Auth::user()->createToken('auth_token')->plainTextToken;
         return response()->json([
             'user' => Auth::user(),
@@ -75,14 +78,15 @@ class ApiUserController extends Controller
         return response()->json(UserResource::collection(User::get()->sortBy('created_at', SORT_REGULAR, true)));
     }
 
-    public function countUser(){
+    public function countUser()
+    {
         return response()->json(User::count());
     }
 
-    public function disableUser($id){
+    public function disableUser($id)
+    {
         $user = User::find($id);
-        if ($user)
-        {
+        if ($user) {
             $user->trangthai = 0;
             $user->save();
             return response()->json(
@@ -97,10 +101,10 @@ class ApiUserController extends Controller
             ]
         );
     }
-    public function enableUser($id){
+    public function enableUser($id)
+    {
         $user = User::find($id);
-        if ($user)
-        {
+        if ($user) {
             $user->trangthai = 1;
             $user->save();
             return response()->json(
@@ -116,12 +120,13 @@ class ApiUserController extends Controller
         );
     }
 
-    public function userOnline(){
-
+    public function userOnline()
+    {
     }
-    public function updateInfomationUser(Request $request){
+    public function updateInfomationUser(Request $request)
+    {
         $user = Auth::user();
-        if ($user){
+        if ($user) {
             $user->email = $request->email;
             $user->sdt = $request->sdt;
             $namsinh = str_replace('/', '-', $request->namsinh);
@@ -131,13 +136,13 @@ class ApiUserController extends Controller
             if ($request->hasfile('file')) {
                 $arrPath = explode('/', $user->profile_photo_path);
                 unset($arrPath[0]);
-                $oldFile = 'public/'.implode('/',$arrPath);
+                $oldFile = 'public/' . implode('/', $arrPath);
                 Storage::delete($oldFile);
 
                 //save file
                 $date = new \DateTime("now");
                 $path = 'public/profile-photos';
-                $fileName = $user->id .'_'. $date->format('U') .'.'. $request->file->getClientOriginalExtension();
+                $fileName = $user->id . '_' . $date->format('U') . '.' . $request->file->getClientOriginalExtension();
                 $diskType = 'local';
                 $request->file('file')->storeAs($path, $fileName, $diskType);
                 $user->profile_photo_path =  'storage/profile-photos/' .  $fileName;
@@ -148,14 +153,14 @@ class ApiUserController extends Controller
                 'status' => 'success',
                 'message' => 'Cập nhật thành công!'
             ]);
-        }
-        else
+        } else
             return response()->json([
                 'status' => 'fail',
                 'message' => 'Cập nhật thất bại!'
             ]);
     }
-    public function updatePassword(Request $request){
+    public function updatePassword(Request $request)
+    {
         $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|string|min:8|required_with:password_confirmation|same:password_confirmation',
@@ -170,7 +175,7 @@ class ApiUserController extends Controller
                 'status' => 'fail',
                 'message' => 'Mật khẩu cũ nhập vào không đúng!'
             ]);
-        }else{
+        } else {
             $user->forceFill([
                 'password' => Hash::make($request->new_password),
             ])->save();
@@ -179,14 +184,43 @@ class ApiUserController extends Controller
                 'message' => 'Cập nhật thành công!'
             ]);
         }
-
     }
-    public function checkIsValidNumberPhone($numberphone){
-        $kq = User::where('sdt',$numberphone)->count();
+    public function checkIsValidNumberPhone($numberphone)
+    {
+        $kq = User::where('sdt', $numberphone)->count();
         return response()->json($kq);
     }
-    public function checkIsValidEmail($email){
-        $kq = User::where('email',$email)->count();
+    public function checkIsValidEmail($email)
+    {
+        $kq = User::where('email', $email)->count();
         return response()->json($kq);
+    }
+    public function checkIsValidUsername($username)
+    {
+        $kq = User::where('username', $username)->count();
+        return response()->json($kq);
+    }
+    public function toggleVaiTro(Request $request)
+    {
+        $user = User::find($request->id);
+        if ($user == null)
+            return response()->json([
+                'errors' => 'Không tìm thấy bài đăng'
+            ]);
+        if (Gate::forUser(Auth::user())->allows('duyet-bai')) {
+            if($request->vaitro === 'user'){
+                $user->vaitro = 'admin';
+            }
+            if($request->vaitro === 'admin'){
+                $user->vaitro = 'user';
+            }
+            $user->save();
+            return response()->json([
+                'success' => 'Thay đổi thành công'
+            ]);
+        } else
+            return response()->json([
+                'errors' => 'Không có quyền để thay đổi'
+            ]);
     }
 }

@@ -14,11 +14,11 @@ class CreatBaidangHinhanhTable extends Migration
     public function up()
     {
         Schema::create('baidang-hinhanh', function (Blueprint $table) {
-            $table->id();
-            //$table->unsignedBigInteger('baidang_id');
-            $table->foreignId('baidang_id')->references('id')->on('baidang');
-
+            $table->integer('id',true);
+            $table->integer('baidang_id');
             $table->string('filename');
+
+            $table->foreign('baidang_id')->references('id')->on('baidang');
         });
     }
 

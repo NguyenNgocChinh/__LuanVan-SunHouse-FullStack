@@ -16,7 +16,7 @@ class ThongTinDangKyResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "user" => $this->user->name,
+            "user" => $this->users->name,
             "loai" => $this->loai->ten_loai ?? null,
             "giamin" => $this->giamin,
             "giamax" => $this->giamax,

@@ -15,7 +15,7 @@ class CreateTableQuanhuyen extends Migration
     {
         Schema::create('quanhuyen', function (Blueprint $table) {
             $table->string('maqh', 5)->primary();
-            $table->string('name', 100);
+            $table->string('name', 50);
             $table->string('type', 30);
             $table->string('matp', 5);
 

@@ -14,11 +14,12 @@ class CreateDanhGiaTable extends Migration
     public function up()
     {
         Schema::create('danhgia', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->longText('noidung');
+            $table->smallInteger('id',true);
+            $table->mediumInteger('user_id');
+            $table->string('noidung',255);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

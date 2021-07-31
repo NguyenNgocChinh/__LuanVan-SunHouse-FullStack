@@ -36,8 +36,9 @@ class BaiDangFactory extends Factory
     {
         return [
             'user_id' => rand(5, 10),
-            'tieude' => $this->faker->word(100),
-            'noidung' => $this->faker->text(1000),
+            'diachi' => vnfaker()->city(),
+            'tieude' => vnfaker()->words(10, false, " "),
+            'noidung' => vnfaker()->sentences(5,false,'<br>'),
             'loai_id' => rand(1, 5),
             'gia' => rand(3000, 8000),
             'trangthai' => rand(0, 1),
@@ -46,7 +47,6 @@ class BaiDangFactory extends Factory
             'sophongngu' => rand(1, 5),
             'sophongtam' => rand(1, 3),
             'namxaydung' => rand(1980, 2020),
-            'diachi' => $this->faker->address(),
             'toadoX' => $this->mt_random_float($this->minX, $this->maxX),
             'toadoY' => $this->mt_random_float($this->minY, $this->maxY),
             'choduyet' => 0,

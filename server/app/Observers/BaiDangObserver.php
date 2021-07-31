@@ -17,6 +17,7 @@ class BaiDangObserver
     {
         $this->addLocationTable($baiDang);
         $this->notifyPostRelate($baiDang);
+        $this->resetDoUuTien($baiDang);
     }
     public function updated(BaiDang $baiDang)
     {
@@ -35,7 +36,17 @@ class BaiDangObserver
         //
     }
 
-
+    //reset douutien
+    private function resetDoUuTien(BaiDang $baiDang){
+        $baiDang->douutien = BaiDang::max('douutien') + 1;
+        $baiDang->save();
+        if($baiDang->douutien > 10){
+            foreach (BaiDang::cursor() as $baidang) {
+                $baidang->douutien = $baidang->douutien / 9;
+                $baidang->save();
+            }
+        }
+    }
 
     // FUNCTION
     private function addLocationTable(BaiDang $baiDang)

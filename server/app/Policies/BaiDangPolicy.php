@@ -31,7 +31,9 @@ class BaiDangPolicy
      */
     public function view(User $user, BaiDang $baiDang)
     {
-        //
+        if ($baiDang->user->id === $user->id || $user->vaitro === 'admin')
+            return Response::allow();
+        return Response::deny('Bạn không có quyền chỉnh sửa bài viết này.');
     }
 
     /**
@@ -97,8 +99,9 @@ class BaiDangPolicy
         //
     }
 
-    public function duyetBai(User $user){
-        if ( $user->vaitro === 'admin')
+    public function duyetBai(User $user)
+    {
+        if ($user->vaitro === 'admin')
             return Response::allow();
         return Response::deny('Bạn không có quyền duyệt bài.');
     }

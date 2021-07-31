@@ -68,6 +68,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
 
         Route::get('/checkIsValidNumberPhone/{numberphone}', [ApiUserController::class,"checkIsValidNumberPhone"]);
         Route::get('/checkIsValidEmail/{email}', [ApiUserController::class,"checkIsValidEmail"]);
+        Route::get('/checkIsValidUsername/{username}', [ApiUserController::class,"checkIsValidUsername"]);
+
+        Route::put('/toggleVaiTro', [ApiUserController::class,"toggleVaiTro"]);
     });
 
     /*

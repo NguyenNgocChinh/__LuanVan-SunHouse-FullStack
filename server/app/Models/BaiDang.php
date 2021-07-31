@@ -42,19 +42,21 @@ class BaiDang extends Model
     // ];
     protected $searchable = [
         'columns' => [
-            'baidang.tieude' => 5,
+            'users.sdt' => 20,
             'baidang.diachi' => 10,
+            'baidang.tieude' => 5,
             'baidang.huong' => 3,
             'loai.ten_loai' => 4,
         ],
         'joins' => [
             'loai' => ['loai_id','loai.id'],
+            'users' => ['user_id','users.id'],
         ],
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function loai()

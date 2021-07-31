@@ -19,14 +19,14 @@ class BaiDangDetailResource extends JsonResource
         return [
             "id" => $this->id,
             "user" => (object) [
-                "id" => $this->user->id,
-                "name" => $this->user->name,
-                "sdt" =>$this->user->sdt,
-                "email" => $this->user->email,
-                "sobaidang" => count($this->user->baidang),
-                "profile_photo_url"=> $this->user->profile_photo_url,
-                "profile_photo_path" => $this->user->profile_photo_path,
-                "created_at" => $this->user->created_at
+                "id" => $this->users->id,
+                "name" => $this->users->name,
+                "sdt" =>$this->users->sdt,
+                "email" => $this->users->email,
+                "sobaidang" => count($this->users->baidang),
+                "profile_photo_url"=> $this->users->profile_photo_url,
+                "profile_photo_path" => $this->users->profile_photo_path,
+                "created_at" => $this->users->created_at
             ],
             "luotxem" => $this->luotxem,
             "noidung" => $this->noidung,

@@ -15,12 +15,13 @@ class CreateBaoCaoTable extends Migration
     {
         Schema::create('baocao', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('baidang_id');
-            $table->foreign('baidang_id')->references('id')->on('baidang');
-            $table->longText('noidung');
+            $table->mediumInteger('user_id');
+            $table->integer('baidang_id');
+            $table->string('noidung',255);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('baidang_id')->references('id')->on('baidang');
         });
     }
 

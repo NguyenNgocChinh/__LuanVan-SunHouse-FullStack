@@ -34,7 +34,8 @@ class ApiTimkiemController extends Controller
             // 'vitri'
         ];
         foreach ($columns_like as $column) {
-            if (request()->has($column)) {
+            if (request()->has($column) && request($column) != null) {
+                Log::info("Tìm kiếm keyword");
                 $column_in_table = $column;
                 if ($this->checkTatCa($request, $column)) {
                     continue;
@@ -52,9 +53,10 @@ class ApiTimkiemController extends Controller
                 $column = request($column);
                 // $resultFullTextSearch = BaiDang::FullTextSearch($column_in_table, $column, 'id' )->get();
                 $resultFullTextSearch = BaiDang::select('id')
-                    ->where('trangthai', 1)
-                    ->where('choduyet', 0)
-                    ->search($column, null, true,true)->with('loai')->get();
+                    ->where('baidang.trangthai', 1)
+                    ->where('baidang.choduyet', 0)
+                    ->search($column, null, true, true)->with('users')
+                    ->with('loai')->get();
                 Log::info("loop i");
                 Log::info($resultFullTextSearch);
                 $temp = $resultFullTextSearch->implode('id', ',');
@@ -70,6 +72,7 @@ class ApiTimkiemController extends Controller
         //BANKINH
         $list_baidang_bankinh = [];
         if ($request->banKinhOn == 'true') {
+            Log::info("Tìm kiếm lân cận");
             Log::info("ban kinh on " . $request->banKinhOn);
             if ($request->has(['X', 'Y'])) {
                 $list_baidang_bankinh = $this->getBaiDangsRound($request->Y, $request->X, $request->bankinh);
@@ -85,9 +88,12 @@ class ApiTimkiemController extends Controller
         ];
         foreach ($columns as $column) {
             if (request()->has($column)) {
+
                 if (request($column) == 'tatca' || request($column) == '') {
+                    Log::info("search passed " . $column);
                     continue;
                 }
+                Log::info("search in " . $column);
                 if ($column == 'type') {
                     if (request($column) == 'thue')
                         $result_request = 1;
@@ -104,45 +110,53 @@ class ApiTimkiemController extends Controller
         $columns_between = [
             'gia', 'dientich'
         ];
-
+        Log::info("count befoore " . $baidangs->count());
         foreach ($columns_between as $column) {
             if (request()->has($column . "1") && request()->has($column . "2")) {
+                $max = BaiDang::max($column);
                 $column1 = request($column . "1");
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
-                if (is_null($column2)) {
-                    if ($column == 'gia') $column2 = BaiDang::max('gia');
-                    if ($column == 'dientich') $column2 = BaiDang::max('dientich');
+                if (is_null($column2) || $column2 >= $max) {
+                        $baidangs = $baidangs->where($column, '>', $column1);
+                }else{
+                    $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 }
-                $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
+                Log::info("count after " . $baidangs->count());
+                Log::info(DB::getQueryLog());
             }
         }
-
         //QUERY Operator
         $columns_operator = [
             'sophongngu', 'sophongtam'
         ];
         foreach ($columns_operator as $column) {
             if (request()->has($column)) {
-                if (request($column) == 'tatca') continue;
+
+                if (request($column) == 'tatca') {
+                    Log::info("search passed " . $column);
+                    continue;
+                }
+                Log::info("search " . $column);
                 $baidangs = $baidangs->where($column, '>=', $column);
             }
         }
 
         //sort
         if (request()->has('sort')) {
+            Log::info("sort ngày đăng");
             $baidangs = $baidangs->orderBy('created_at', $request->sort);
-            // if($request->sort == 'desc')
-            //     $baidangs = $baidangs->sortByDesc('created_at');
-            // else
-            //     $baidangs = $baidangs->sortByDesc('created_at')->reverse();
         }
         //sort gia
         if (request()->has('sortByGia')) {
+            Log::info("sort giá");
             $baidangs = $baidangs->orderBy('gia', request('sortByGia'));
         }
-
-        $baidangs = $baidangs->paginate($this->page_size);
+        $baidangs = $baidangs->where('baidang.trangthai', 1)
+            ->where('baidang.choduyet', 0);
+        Log::info($baidangs->count());
+        $baidangs = $baidangs
+            ->paginate($this->page_size);
 
         return response()->json((object) [
             'page' => new PaginateResource($baidangs),

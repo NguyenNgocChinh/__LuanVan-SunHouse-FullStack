@@ -20,9 +20,11 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'name' => $this->name,
             'baidang' => $this->baidang->count(),
+            'baidangDaDuyet' => $this->baidang->where('trangthai', 1)->where('choduyet', 0)->count(),
             'trangthai' => $this->trangthai,
             'vaitro' => $this->vaitro,
             'email' => $this->email,
+            'sdt' => $this->sdt,
             'profile_photo_path' => $this->profile_photo_path,
             'profile_photo_url' => $this->profile_photo_url,
             'service' => $this->social

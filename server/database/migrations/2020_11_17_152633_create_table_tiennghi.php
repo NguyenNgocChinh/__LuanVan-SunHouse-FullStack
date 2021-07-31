@@ -14,8 +14,8 @@ class CreateTableTiennghi extends Migration
     public function up()
     {
         Schema::create('tiennghi', function (Blueprint $table) {
-            $table->id();
-            $table->string('ten_tiennghi')->unique();
+            $table->smallInteger('id', true);
+            $table->string('ten_tiennghi', 30)->unique();
         });
     }
 

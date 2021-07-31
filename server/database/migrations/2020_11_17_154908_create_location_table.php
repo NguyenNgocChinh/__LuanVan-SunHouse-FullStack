@@ -18,7 +18,7 @@ class CreateLocationTable extends Migration
         DB::statement("
             CREATE TABLE IF NOT EXISTS location (
               id int(11) NOT NULL AUTO_INCREMENT,
-              baidang_id bigint(20) NOT NULL,
+              baidang_id int(11) NOT NULL,
               position point NOT NULL,
               trangthai tinyint(1) DEFAULT 1,
               PRIMARY KEY (id),

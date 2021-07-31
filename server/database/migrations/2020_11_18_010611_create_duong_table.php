@@ -14,11 +14,14 @@ class CreateDuongTable extends Migration
     public function up()
     {
         Schema::create('duong', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id', true);
             $table->string('xaid', 5);
-            $table->foreign('xaid')->references('xaid')->on('xaphuongthitran');
+            $table->integer('baidang_id');
             $table->string('tenduong');
             $table->boolean('choduyet')->default(true);
+
+            $table->foreign('xaid')->references('xaid')->on('xaphuongthitran');
+            $table->foreign('baidang_id')->references('id')->on('baidang');
         });
     }
 

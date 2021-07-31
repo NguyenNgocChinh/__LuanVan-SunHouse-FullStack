@@ -14,10 +14,10 @@ class UserSocialTable extends Migration
     public function up()
     {
         Schema::create('user-social', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('social_id')->nullable();
-            $table->string('service');
+            $table->smallInteger('id',true);
+            $table->mediumInteger('user_id');
+            $table->string('social_id',50)->nullable();
+            $table->string('service',10);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

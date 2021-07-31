@@ -18,26 +18,25 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::factory(10)->create();
-
         $this->call(
             [
                 UserSeeder::class,
                 LoaiSeeder::class,
                 TienNghiSeeder::class,
-                BaiDangSeeder::class,
+                // BaiDangSeeder::class,
                 // LocationSeeder::class, //1
                 // LocationSeeder::class, //2
                 // LocationSeeder::class, //3
                 // LocationSeeder::class, //4
-            //    DanhGiaSeeder::class,
-            //    BinhLuanSeeder::class,
+                //    DanhGiaSeeder::class,
+                //    BinhLuanSeeder::class,
 
-               TinhThanhPhoSeeder::class,
-               QuanHuyenSeeder::class,
-               XaPhuongThiTranSeeder::class,
+                TinhThanhPhoSeeder::class,
+                QuanHuyenSeeder::class,
+                XaPhuongThiTranSeeder::class,
             ]
         );
+        BaiDang::factory(20)->create();
         Message::factory(100)->create();
-    //    BaiDang::factory(3500000)->create();
     }
 }

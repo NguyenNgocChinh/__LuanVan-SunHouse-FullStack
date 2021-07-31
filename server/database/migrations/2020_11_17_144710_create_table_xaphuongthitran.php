@@ -15,7 +15,7 @@ class CreateTableXaphuongthitran extends Migration
     {
         Schema::create('xaphuongthitran', function (Blueprint $table) {
             $table->string('xaid', 5)->primary();
-            $table->string('name', 100);
+            $table->string('name', 50);
             $table->string('type', 30);
             $table->string('maqh', 5);
 

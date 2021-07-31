@@ -17,8 +17,8 @@ class BaiDangResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "user" => $this->user->name,
-            "userObject" => (object) new UserResource($this->user),
+            "user" => $this->users->name,
+            "userObject" => (object) new UserResource($this->users),
             "tieude" => $this->tieude,
             "hinhanh" => $this->hinhanh,
             "loai" => $this->loai->ten_loai,

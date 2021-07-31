@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\BaiDang;
 use App\Models\ThongTinDangKy;
+use App\Models\User;
 use App\Policies\BaiDangPolicy;
 use App\Policies\ThongTinDangKyPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -33,5 +34,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('duyet-bai', [BaiDangPolicy::class, 'duyetBai']);
+        Gate::define('cap-quyen', function (User $user) {
+            return $user->vaitro === 'admin';
+        });
     }
 }

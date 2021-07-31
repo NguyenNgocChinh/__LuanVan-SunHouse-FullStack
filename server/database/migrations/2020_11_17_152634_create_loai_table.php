@@ -14,8 +14,8 @@ class CreateLoaiTable extends Migration
     public function up()
     {
         Schema::create('loai', function (Blueprint $table) {
-            $table->id();
-            $table->string('ten_loai');
+            $table->smallInteger('id',true);
+            $table->string('ten_loai',30);
         });
     }
 

@@ -14,11 +14,12 @@ class CreateYeuthichTable extends Migration
     public function up()
     {
         Schema::create('yeuthich', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('baidang_id');
-            $table->foreign('baidang_id')->references('id')->on('baidang');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('id',true);
+            $table->integer('baidang_id');
+            $table->mediumInteger('user_id');
+
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('baidang_id')->references('id')->on('baidang');
         });
     }
 

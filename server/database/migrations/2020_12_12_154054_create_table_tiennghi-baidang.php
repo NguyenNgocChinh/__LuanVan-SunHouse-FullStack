@@ -14,11 +14,12 @@ class CreateTableTiennghiBaidang extends Migration
     public function up()
     {
         Schema::create('tiennghi-baidang', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('tiennghi_id');/**/
-            $table->foreign('tiennghi_id')->references('id')->on('tiennghi');/**/
-            $table->unsignedBigInteger('baidang_id');
+            $table->integer('id', true);
+            $table->smallInteger('tiennghi_id');/**/
+            $table->integer('baidang_id');
+
             $table->foreign('baidang_id')->references('id')->on('baidang');
+            $table->foreign('tiennghi_id')->references('id')->on('tiennghi');/**/
         });
     }
 

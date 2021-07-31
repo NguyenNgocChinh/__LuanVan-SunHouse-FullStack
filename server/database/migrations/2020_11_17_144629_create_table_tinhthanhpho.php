@@ -15,7 +15,7 @@ class CreateTableTinhthanhpho extends Migration
     {
         Schema::create('tinhthanhpho', function (Blueprint $table) {
             $table->string('matp', 5)->primary();
-            $table->string('name', 100);
+            $table->string('name', 50);
             $table->string('type', 30);
         });
     }

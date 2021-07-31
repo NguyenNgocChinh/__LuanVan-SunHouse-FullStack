@@ -14,21 +14,22 @@ class CreateThongtindangkyTable extends Migration
     public function up()
     {
         Schema::create('thongtindangky', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->mediumInteger('id',true);
+            $table->mediumInteger('user_id');
             $table->double('giamin')->nullable();
             $table->double('giamax')->nullable();
             $table->double('dientichmin')->nullable();
             $table->double('dientichmax')->nullable();
-            $table->unsignedBigInteger('loai_id')->nullable();
-            $table->foreign('loai_id')->references('id')->on('loai');
-            $table->integer('sophongngu')->nullable();
-            $table->integer('sophongtam')->nullable();
+            $table->smallInteger('loai_id')->nullable();
+            $table->char('sophongngu',2)->nullable();
+            $table->char('sophongtam',2)->nullable();
             $table->boolean('isChoThue')->nullable();
-            $table->string('huong')->nullable();
-            $table->text('diachi')->nullable();
+            $table->string('huong',20)->nullable();
+            $table->string('diachi',100)->nullable();
             $table->timestamps();
+
+            $table->foreign('loai_id')->references('id')->on('loai');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

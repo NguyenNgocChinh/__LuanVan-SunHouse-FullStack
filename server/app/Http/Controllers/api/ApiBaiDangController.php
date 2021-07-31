@@ -46,6 +46,7 @@ class ApiBaiDangController extends Controller
     public function getHotPosts()
     {
         $hot_posts = BaiDang::where('trangthai', 1)
+            ->where('choduyet', 0)
             ->orderBy('luotxem', 'desc')
             ->limit(10)
             ->get();
@@ -56,7 +57,9 @@ class ApiBaiDangController extends Controller
 
     public function getRaoBanPosts()
     {
-        $raoban_posts = BaiDang::where(['isChoThue' => 0, 'trangthai' => 1])
+        $raoban_posts = BaiDang::where('isChoThue', 0)
+            ->where('trangthai',1)
+            ->where('choduyet', 0)
             ->orderBy('created_at', 'desc')
             ->paginate($this->page_size);
 
@@ -68,7 +71,9 @@ class ApiBaiDangController extends Controller
 
     public function getChoThuePosts()
     {
-        $chothue_posts = BaiDang::where(['isChoThue' => 1, 'trangthai' => 1])
+        $chothue_posts = BaiDang::where('isChoThue', 1)
+            ->where('trangthai',1)
+            ->where('choduyet', 0)
             ->orderBy('created_at', 'desc')
             ->paginate($this->page_size);
         return response()->json([
@@ -98,7 +103,8 @@ class ApiBaiDangController extends Controller
 
     public function getChoDuyetPosts()
     {
-        $choduyet = BaiDang::where(['choduyet' => 1, 'trangthai' => 1])
+        $choduyet = BaiDang::where('choduyet', 1)
+            ->where('trangthai',1)
             ->orderBy('created_at', 'desc')
             ->paginate($this->page_size);
         return response()->json([
@@ -231,6 +237,9 @@ class ApiBaiDangController extends Controller
         /**********************************************/
 
         $baidang->choduyet = 1;
+        /**********************************************/
+
+        /**********************************************/
         $kq = $baidang->save();
 
         if ($kq) {
@@ -259,6 +268,8 @@ class ApiBaiDangController extends Controller
 
     public function updateBaiDang(Request $request)
     {
+        $baidang = BaiDang::find($request->id);
+        $this->authorize('update', $baidang);
         if(!$this->verifyCaptcha($request))
             return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
@@ -293,7 +304,6 @@ class ApiBaiDangController extends Controller
             ]
         );
 
-        $baidang = BaiDang::find($request->id);
         $data = $this->saveImage($request);
         $baidang->tieude = $request->tieude;
         $baidang->loai_id = $request->loai_id;
