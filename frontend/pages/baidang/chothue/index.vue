@@ -85,7 +85,7 @@ export default {
                 this.$store.commit('SET_BAIDANG_CHOTHUE', result)
             } else result = this.baidang_chothue
             // result = this._.sortBy(result, (o) => o.luotxem).reverse()
-            result = this._.sortBy(result, (o) => o.created_at, 'asc').reverse()
+            result = this._.sortBy(result, (o) => o.douutien, 'asc').reverse()
             if (filter) {
                 result = this.sortBy(result)
             }

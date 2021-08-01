@@ -33,6 +33,23 @@ export const mutations = {
     SET_CONTACTS(state, payload) {
         state.contatcs = payload
     },
+    UPDATE_DOUUTIEN_BAIDANG(state, baidang) {
+        console.table(baidang)
+        if (baidang.isChoThue) {
+            // const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
+            // state.baidang_chothue[index].douutien = state.baidang_chothue[index].douutien + 1
+            state.baidang_chothue = []
+        } else {
+            // const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
+            // state.baidang_raoban[index].douutien = state.baidang_raoban[index].douutien + 1
+            state.baidang_raoban = []
+        }
+        const index = state.baidang_hots.findIndex((item) => item.id === baidang.id)
+        if (index > -1) {
+            // state.baidang_hots[index].douutien = state.baidang_hots[index].douutien + 1
+            state.baidang_hots = []
+        }
+    },
 }
 
 export const getters = {

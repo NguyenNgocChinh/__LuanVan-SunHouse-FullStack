@@ -66,7 +66,7 @@
 
             <v-divider />
         </v-container>
-        <!--RIGHT-->
+        <!--LEFT-->
         <v-container class="pt-0">
             <div class="mota px-3">
                 <v-card elevation="1" class="px-6 py-7">
@@ -197,6 +197,7 @@
                                 </v-expansion-panels>
                             </div>
                         </v-col>
+                        <!--RIGHT-->
                         <v-col class="col-lg-4">
                             <v-card class="ml-3 pa-4 pb-10">
                                 <v-row>
@@ -207,7 +208,7 @@
                                         </v-avatar>
                                     </v-col>
                                     <v-col class="col-md-9 pl-0">
-                                        <div class="font-weight-bold" style="color: #1a4bb7; word-break: break-word">
+                                        <div class="font-weight-bold" style="color: #1a4bb7; word-break: break-word; cursor: pointer" @click="showPostUser">
                                             {{ user.name || '-' }}
                                         </div>
                                         <div style="word-break: break-word">{{ user.email || '-' }}</div>
@@ -253,6 +254,14 @@
                 </v-card>
             </div>
         </v-container>
+        <sweet-modal v-if="baidang" ref="modelPostUser" :title="`Bài đăng của ${baidang.user.name}`" width="90%">
+            <v-row>
+                <v-icon v-if="dsBaiDangUser.length < 1" size="42px" class="center-element my-7 pt-7" color="green">mdi-spin mdi-loading</v-icon>
+                <v-col v-for="item in dsBaiDangUser" :key="item.id" cols="12" lg="4">
+                    <bai-dang-card outlined :baidang="item" />
+                </v-col>
+            </v-row>
+        </sweet-modal>
     </v-container>
 </template>
 <script>
@@ -264,11 +273,13 @@ import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
+import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import error from '@/layouts/error'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
 export default {
-    components: { Timer, OwlCarousel },
+    components: { BaiDangCard, Timer, OwlCarousel },
     data() {
         return {
             baidang: false,
@@ -283,6 +294,7 @@ export default {
             dsTruongHoc: [],
             dsBenhVien: [],
             dsNganHang: [],
+            dsBaiDangUser: [],
             servicesLoading: false,
 
             user: {
@@ -576,13 +588,22 @@ export default {
                         millisecond: 0,
                     }
                     this.isCanPush = false
+
+                    this.$store.commit('UPDATE_DOUUTIEN_BAIDANG', this.baidang)
                 })
                 .catch((e) => {
+                    console.error(e)
                     this.$toast.error(e)
                 })
                 .finally(() => {
                     this.$nuxt.$loading.finish()
                 })
+        },
+        async showPostUser() {
+            this.$refs.modelPostUser.open()
+            const data = await this.$axios.$get(this.$config.serverUrl + '/baidang/getAllBaiDangOfOtherUser/' + this.baidang.user.id)
+            this.dsBaiDangUser = data
+            console.log(data)
         },
     },
 }
