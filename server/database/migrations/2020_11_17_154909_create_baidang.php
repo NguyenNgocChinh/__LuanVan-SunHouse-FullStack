@@ -33,6 +33,7 @@ class CreateBaidang extends Migration
             $table->boolean('choduyet');
             $table->double('dientich',8,2);
             $table->float('douutien')->default(0);
+            $table->timestamp('next_push')->nullable();
             $table->smallInteger('luotxem')->default(0);
 
             $table->foreign('loai_id')->references('id')->on('loai');

@@ -412,6 +412,15 @@ class ApiBaiDangController extends Controller
             ]);
         }
     }
+    public function pushDoUuTien($id){
+        $post = BaiDang::find($id);
+        if($post != null){
+            $post->douutien = BaiDang::max('douutien') + 1;
+            $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
+            $post->save();
+            return $post;
+        }
+    }
     private function toggleStatusLocationTable($post)
     {
         if ($post->trangthai) {

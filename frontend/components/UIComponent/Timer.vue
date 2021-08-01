@@ -1,38 +1,73 @@
 <template>
-    <div>
-        Hệ thống đã gửi mã xác nhận cho bạn. Nếu chưa nhận được mã có thể gửi lại
-        <span> sau: </span>
-        <span class="font-weight-bold">{{ time }}</span>
-        <div v-if="time === '00:00'">
-            <v-btn color="primary">Gửi lại</v-btn>
-        </div>
+    <div v-if="loaded" class="d-flex flex-row">
+        <span v-if="displayDays > 0">{{ displayDays }} :</span>
+        <span v-if="dispatchHours > 0">{{ dispatchHours }} :</span>
+        <span>{{ displayMinutes }} :</span>
+        <span>{{ displaySeconds }}</span>
     </div>
 </template>
 
 <script>
-import moment from 'moment'
 export default {
     name: 'Timer',
-    props: {
-        inputTime: {
-            type: Number,
-            default: 3,
-        },
-    },
-    data() {
-        return {
-            date: moment(60 * this.inputTime * 1000),
-        }
-    },
+    props: ['year', 'month', 'date', 'hour', 'minute', 'second', 'millisecond'],
+    data: () => ({
+        displayDays: 0,
+        dispatchHours: 0,
+        displayMinutes: 0,
+        displaySeconds: 0,
+        loaded: false,
+        expired: false,
+    }),
     computed: {
-        time() {
-            return this.date.format('mm:ss')
+        _seconds: () => 1000,
+        _minutes() {
+            return this._seconds * 60
+        },
+        _hours() {
+            return this._minutes * 60
+        },
+        _days() {
+            return this._hours * 24
+        },
+        end() {
+            return new Date(this.year, this.month - 1, this.date, this.hour, this.minute, this.second, this.millisecond)
+        },
+        toDay() {
+            return new Date()
         },
     },
     mounted() {
-        setInterval(() => {
-            this.date = moment(this.date.subtract(1, 'seconds'))
-        }, 1000)
+        this.startTimer()
+    },
+    methods: {
+        formatNum: (num) => (num < 10 ? '0' + num : num),
+
+        startTimer() {
+            const timer = setInterval(() => {
+                const now = new Date()
+                const distance = this.end.getTime() - now.getTime()
+
+                if (distance < 0) {
+                    clearTimeout(timer)
+                    this.expired = true
+                    this.$nuxt.$emit('endCountDown')
+                    return
+                }
+
+                const days = Math.floor(distance / this._days)
+                const hours = Math.floor((distance % this._days) / this._hours)
+                const minutes = Math.floor((distance % this._hours) / this._minutes)
+                const seconds = Math.floor((distance % this._minutes) / this._seconds)
+
+                this.displayDays = this.formatNum(days)
+                this.dispatchHours = this.formatNum(hours)
+                this.displayMinutes = this.formatNum(minutes)
+                console.log(this.displayMinutes)
+                this.displaySeconds = this.formatNum(seconds)
+                this.loaded = true
+            }, 1000)
+        },
     },
 }
 </script>

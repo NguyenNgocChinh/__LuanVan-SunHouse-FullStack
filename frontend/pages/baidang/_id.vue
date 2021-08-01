@@ -43,7 +43,15 @@
                         <div v-if="$auth.loggedIn && baidang !== false">
                             <div v-if="$auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin'">
                                 <v-btn class="white--text primary" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
-                                <v-btn class="white--text" :class="baidang.trangthai ? 'warning' : 'green'" @click="removeBaiDang">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
+                                <v-btn class="white--text" :class="baidang.trangthai ? 'warning' : 'green'" @click="updateTrangThai">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
+                                <v-btn v-if="($auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin') && isCanPush" class="white--text primary" @click="pushToTop"><v-icon>bx bx-chevrons-up bx-burst</v-icon>Đẩy lên TOP</v-btn>
+                                <v-btn v-else class="white--text primary" disabled>
+                                    <span class="d-flex flex-row align-center">
+                                        <span class="mr-1">Chờ </span>
+                                        <Timer :year="nextPush.year" :month="nextPush.month" :date="nextPush.date" :hour="nextPush.hour" :minute="nextPush.minute" :second="nextPush.minute" millisecond="0" />
+                                        <span class="ml-1"> để đẩy lên TOP</span>
+                                    </span>
+                                </v-btn>
                             </div>
                         </div>
                         <!--                        <v-btn text plain>Mô tả</v-btn>-->
@@ -247,7 +255,6 @@
         </v-container>
     </v-container>
 </template>
-
 <script>
 import 'viewerjs/dist/viewer.css'
 import Vue from 'vue'
@@ -256,11 +263,12 @@ import ENVAPP from '@/api/app'
 import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
+import Timer from '@/components/UIComponent/Timer'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
 export default {
-    components: { OwlCarousel },
+    components: { Timer, OwlCarousel },
     data() {
         return {
             baidang: false,
@@ -319,6 +327,8 @@ export default {
             loadingHopital: true,
             loadingBank: true,
             isDinhVi: true,
+            isCanPush: false,
+            nextPush: null,
         }
     },
     head() {
@@ -371,6 +381,9 @@ export default {
     },
     mounted() {
         this.getchitietsp()
+        this.$nuxt.$on('endCountDown', () => {
+            this.isCanPush = true
+        })
     },
     methods: {
         shareOnFB() {
@@ -408,6 +421,20 @@ export default {
                         .$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id)
                         .then((data) => {
                             this.baidang = data
+                            if (data.next_push === null) {
+                                this.nextPush = null
+                                this.isCanPush = true
+                            } else {
+                                this.nextPush = {
+                                    year: this.$moment(data.next_push).format('YYYY'),
+                                    month: this.$moment(data.next_push).format('MM'),
+                                    date: this.$moment(data.next_push).format('DD'),
+                                    hour: this.$moment(data.next_push).format('H'),
+                                    minute: this.$moment(data.next_push).format('mm'),
+                                    second: this.$moment(data.next_push).format('ss'),
+                                    millisecond: 0,
+                                }
+                            }
                             // Save localStorage
                             const history = JSON.parse(localStorage.getItem('history'))
                             let saveToLocalStorage = history || []
@@ -518,8 +545,44 @@ export default {
                 })
             }
         },
-        removeBaiDang() {
-            console.log('remove...')
+        updateTrangThai() {
+            this.$axios
+                .$put(this.$config.serverUrl + '/baidang/updateTrangThai', {
+                    id: this.baidang.id,
+                    trangthai: !this.baidang.trangthai,
+                })
+                .then((res) => {
+                    if (res.success) {
+                        this.$toast.success(res.success)
+                        this.baidang.trangthai = !this.baidang.trangthai
+                    }
+                    if (res.fail) this.$toast.error(res.fail)
+                })
+        },
+
+        pushToTop() {
+            this.$nuxt.$loading.start()
+            this.$axios
+                .$put(this.$config.serverUrl + '/baidang/pushDoUuTien/' + this.baidang.id)
+                .then((data) => {
+                    this.$toast.success('Đẩy bài đăng lên TOP thành công')
+                    this.nextPush = {
+                        year: this.$moment(data.next_push).format('YYYY'),
+                        month: this.$moment(data.next_push).format('MM'),
+                        date: this.$moment(data.next_push).format('DD'),
+                        hour: this.$moment(data.next_push).format('H'),
+                        minute: this.$moment(data.next_push).format('mm'),
+                        second: this.$moment(data.next_push).format('ss'),
+                        millisecond: 0,
+                    }
+                    this.isCanPush = false
+                })
+                .catch((e) => {
+                    this.$toast.error(e)
+                })
+                .finally(() => {
+                    this.$nuxt.$loading.finish()
+                })
         },
     },
 }

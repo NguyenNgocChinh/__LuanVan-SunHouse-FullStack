@@ -47,8 +47,8 @@ class BaiDangDetailResource extends JsonResource
             "thoigian" => $this->formattedCreatedDate(),
             "toadoX"=>$this->toadoX,
             "toadoY"=>$this->toadoY,
-            "created_at" => $this->created_at
-
+            "created_at" => $this->created_at,
+            "next_push" => $this->next_push
         ];
     }
 }
