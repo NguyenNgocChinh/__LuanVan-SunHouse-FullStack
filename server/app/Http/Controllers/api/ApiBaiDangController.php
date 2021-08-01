@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Events\ViewPostHandler;
+use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
@@ -47,7 +48,7 @@ class ApiBaiDangController extends Controller
     {
         $hot_posts = BaiDang::where('trangthai', 1)
             ->where('choduyet', 0)
-            ->orderBy('luotxem', 'desc')
+            ->orderBy('douutien', 'desc')
             ->limit(10)
             ->get();
         return response()->json([
@@ -60,7 +61,7 @@ class ApiBaiDangController extends Controller
         $raoban_posts = BaiDang::where('isChoThue', 0)
             ->where('trangthai',1)
             ->where('choduyet', 0)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('douutien', 'desc')
             ->paginate($this->page_size);
 
         return response()->json([
@@ -74,7 +75,7 @@ class ApiBaiDangController extends Controller
         $chothue_posts = BaiDang::where('isChoThue', 1)
             ->where('trangthai',1)
             ->where('choduyet', 0)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('douutien', 'desc')
             ->paginate($this->page_size);
         return response()->json([
             'pages' => new PaginateResource($chothue_posts),
@@ -397,6 +398,12 @@ class ApiBaiDangController extends Controller
             ]);
         }
     }
+
+    public function getAllBaiDangOfOtherUser($idUser){
+        $posts = BaiDang::where(['trangthai' => 1, 'choduyet' => 0,'user_id' => $idUser])->get();
+            return response()->json(BaiDangResource::collection($posts));
+    }
+
     public function getWaitingBaiDangOfUser()
     {
         if (Auth::check()) {
@@ -416,7 +423,8 @@ class ApiBaiDangController extends Controller
         $post = BaiDang::find($id);
         if($post != null){
             $post->douutien = BaiDang::max('douutien') + 1;
-            $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
+            // $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
+            $post->next_push = date('Y-m-d H:i:s', strtotime('1 minute'));
             $post->save();
             return $post;
         }

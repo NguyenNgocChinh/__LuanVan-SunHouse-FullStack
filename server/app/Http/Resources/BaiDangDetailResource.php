@@ -23,7 +23,7 @@ class BaiDangDetailResource extends JsonResource
                 "name" => $this->users->name,
                 "sdt" =>$this->users->sdt,
                 "email" => $this->users->email,
-                "sobaidang" => count($this->users->baidang),
+                "sobaidang" => $this->users->baidang->where('trangthai', 1)->where('choduyet', 0)->count(),
                 "profile_photo_url"=> $this->users->profile_photo_url,
                 "profile_photo_path" => $this->users->profile_photo_path,
                 "created_at" => $this->users->created_at

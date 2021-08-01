@@ -95,6 +95,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::put('/updateTrangThai', [ApiBaiDangController::class, 'updateTrangThai']);
 
         Route::get('/getUserPost', [ApiBaiDangController::class, 'getAllBaiDangOfUser'])->middleware('auth:sanctum');
+        Route::get('/getAllBaiDangOfOtherUser/{idUser}', [ApiBaiDangController::class, 'getAllBaiDangOfOtherUser'])->whereNumber('idUser');
         Route::get('/getUserWaitingPost', [ApiBaiDangController::class, 'getWaitingBaiDangOfUser'])->middleware('auth:sanctum');
         Route::put('/pushDoUuTien/{idBaiDang}', [ApiBaiDangController::class, 'pushDoUuTien'])->whereNumber('idBaiDang');
     });
