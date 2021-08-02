@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\BaiDang;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
@@ -104,5 +105,13 @@ class BaiDangPolicy
         if ($user->vaitro === 'admin')
             return Response::allow();
         return Response::deny('Bạn không có quyền duyệt bài.');
+    }
+    // Gioi han bai dang
+    public function checkScopePosts(User $user){
+        $posts = BaiDang::whereDate('created_at', Carbon::today())
+                ->where('user_id', $user->id)->count();
+        if($posts >= 50)
+            return false;
+        return true;
     }
 }

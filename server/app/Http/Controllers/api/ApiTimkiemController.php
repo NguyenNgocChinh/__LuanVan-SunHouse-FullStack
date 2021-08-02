@@ -106,20 +106,38 @@ class ApiTimkiemController extends Controller
                 }
             }
         }
+        // QUERY DATE
+        $column_date = [
+            'created_at'
+        ];
+        foreach ($column_date as $column) {
+            if (request()->has($column . "1") || request()->has($column . "2")) {
+                Log::info("in created_at search");
+                $column1 = request($column . "1");
+                $column2 = request($column . "2");
+                if (is_null($column1) && !is_null($column2)) {
+                    $baidangs = $baidangs->where($column, '<', $column2);
+                } else if (!is_null($column1) && is_null($column2)) {
+                    $baidangs = $baidangs->where($column, '>', $column1);
+                } else {
+                    $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
+                }
+            }
+            Log::info(DB::getQueryLog());
+        }
         // QUERY BETWEEN
         $columns_between = [
             'gia', 'dientich'
         ];
-        Log::info("count befoore " . $baidangs->count());
         foreach ($columns_between as $column) {
-            if (request()->has($column . "1") && request()->has($column . "2")) {
+            if (request()->has($column . "1") || request()->has($column . "2")) {
                 $max = BaiDang::max($column);
                 $column1 = request($column . "1");
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
                 if (is_null($column2) || $column2 >= $max) {
-                        $baidangs = $baidangs->where($column, '>', $column1);
-                }else{
+                    $baidangs = $baidangs->where($column, '>', $column1);
+                } else {
                     $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 }
                 Log::info("count after " . $baidangs->count());

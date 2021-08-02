@@ -34,6 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('duyet-bai', [BaiDangPolicy::class, 'duyetBai']);
+        Gate::define('dang-bai', [BaiDangPolicy::class, 'checkScopePosts']);
         Gate::define('cap-quyen', function (User $user) {
             return $user->vaitro === 'admin';
         });

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Events\ViewPostHandler;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
@@ -184,7 +185,9 @@ class ApiBaiDangController extends Controller
 
     public function storeBaiDang(Request $request)
     {
-        if(!$this->verifyCaptcha($request))
+        $user = Auth::user();
+        if (Gate::forUser($user)->allows('dang-bai')) {
+            if(!$this->verifyCaptcha($request))
             return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
             [
@@ -265,6 +268,10 @@ class ApiBaiDangController extends Controller
             }
         }
         return response()->json(new BaiDangDetailResource($baidang));
+        }
+        return response()->json([
+            'errors' => 'Bạn đã đạt số lượng bài đăng cho phép trong 1 ngày!'
+        ]);
     }
 
     public function updateBaiDang(Request $request)
@@ -461,5 +468,12 @@ class ApiBaiDangController extends Controller
             $errors = $resp->getErrorCodes();
             return false;
         }
+    }
+
+    public function checkScopePosts(){
+        $user = Auth::user();
+        $posts = BaiDang::whereDate('created_at', Carbon::today())
+                ->where('user_id', $user->id)->count();
+        return response()->json($posts);
     }
 }

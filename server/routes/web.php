@@ -78,7 +78,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
      */
     Route::group(['prefix' => 'baidang'], function () {
         Route::get('/', [ApiBaiDangController::class, 'getAllPosts']);
-        Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware('auth:sanctum');
+        Route::post('/', [ApiBaiDangController::class, 'storeBaiDang'])->middleware(['auth:sanctum','throttle:dangbai']);
         Route::get('/{id}', [ApiBaiDangController::class, 'getDetailPost'])->whereNumber('id')->middleware('filterView');
         Route::get('/count', [ApiBaiDangController::class, 'countPosts']);
         Route::delete('/{id}', [ApiBaiDangController::class, 'deletePost'])->whereNumber('id');
@@ -98,6 +98,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::get('/getAllBaiDangOfOtherUser/{idUser}', [ApiBaiDangController::class, 'getAllBaiDangOfOtherUser'])->whereNumber('idUser');
         Route::get('/getUserWaitingPost', [ApiBaiDangController::class, 'getWaitingBaiDangOfUser'])->middleware('auth:sanctum');
         Route::put('/pushDoUuTien/{idBaiDang}', [ApiBaiDangController::class, 'pushDoUuTien'])->whereNumber('idBaiDang');
+        Route::get('/checkScopePosts', [ApiBaiDangController::class, 'checkScopePosts'])->middleware('auth:sanctum');
     });
 
     /*
