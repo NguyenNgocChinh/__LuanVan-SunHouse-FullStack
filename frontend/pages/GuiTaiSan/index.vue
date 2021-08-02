@@ -339,7 +339,7 @@ import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
 export default {
     components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
-    middleware: 'auth',
+    middleware: ['auth', 'checkScopePosts'],
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
         const tiennghis = await $axios.$get(ENVTN.default.all)
@@ -735,6 +735,7 @@ export default {
                             this.$axios
                                 .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
                                     xaid: this.xaphuong.xaid,
+                                    baidang_id: data.id,
                                     tenduong: this.duong,
                                 })
                                 .finally(() => {
@@ -744,6 +745,10 @@ export default {
                         this.$router.push('/baidang/' + data.id)
                     })
                     .catch((error) => {
+                        if (error.response.status === 429) {
+                            this.$toast.error('Thao tác quá nhanh! Vui lòng quay lại sau')
+                            return
+                        }
                         if (error.response) {
                             for (const key of Object.keys(error.response.data.errors)) {
                                 this.$nuxt.$toast.error(error.response.data.errors[key], {

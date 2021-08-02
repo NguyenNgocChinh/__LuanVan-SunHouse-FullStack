@@ -41,7 +41,7 @@
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import { mapFields } from 'vuex-map-fields'
-const qs = require('qs')
+// const qs = require('qs')
 export default {
     components: { BaiDangCard },
     data: () => ({
@@ -74,6 +74,8 @@ export default {
             dientich1: 'searchParams.dientich1',
             dientich2: 'searchParams.dientich2',
             banKinhOn: 'searchParams.banKinhOn',
+            dateStart: 'searchParams.dateStart',
+            dateEnd: 'searchParams.dateEnd',
             searchParams: 'searchParams',
         }),
     },
@@ -111,7 +113,6 @@ export default {
         this.getbaidangs(true)
         this.$nuxt.$on('search', () => {
             this.baidangs = []
-
             this.getbaidangs()
         })
     },
@@ -126,7 +127,13 @@ export default {
             if (this.isEmpty) this.isEmpty = false
             const arrAddress = this.diachi
             const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
-
+            const toDay = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10).replace(/-/g, '/')
+            const date1 = this.dateStart !== null ? this.dateStart.replace(/-/g, '/') : null
+            const date2 = this.dateEnd !== null ? this.dateEnd.replace(/-/g, '/') : null
+            if (date1 > date2) {
+                this.$toast.error('Ngày nhập vào không hợp lệ')
+                return
+            }
             this.$axios
                 .$get(url, {
                     params: {
@@ -145,6 +152,8 @@ export default {
                         dientich2: this.dientich2,
                         banKinhOn: this.banKinhOn,
                         bankinh: this.bankinh,
+                        created_at1: date1 === toDay ? null : this.dateStart,
+                        created_at2: date2 === toDay ? null : this.dateEnd,
                         X: this.X,
                         Y: this.Y,
                     },

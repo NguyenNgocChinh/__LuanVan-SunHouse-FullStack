@@ -52,6 +52,30 @@
                     <small v-if="radioGroup === 2" class="blue--text caption" style="font-size: 8px"> {{ X }}, {{ Y }} </small>
                 </v-radio-group>
             </div>
+            <div class="ml-5 my-2">
+                <v-menu ref="menuCalendarStart" v-model="menuCalendarStart" color="green lighten-1" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+                    <template #activator="{ on, attrs }">
+                        <v-text-field v-model="dateStart" clearable label="Chọn ngày bắt đầu" readonly v-bind="attrs" v-on="on"></v-text-field>
+                    </template>
+                    <v-date-picker v-model="dateStart" color="green lighten-1" no-title scrollable min="1900-01-01" :max="$moment().format('YYYY-MM-DD')" @input="menuCalendarStart = false">
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menuCalendarStart = false"> HỦY </v-btn>
+                        <v-btn text color="primary" @click="$refs.menuCalendarStart.save(dateStart)"> XÁC NHẬN </v-btn>
+                    </v-date-picker>
+                </v-menu>
+            </div>
+            <div class="ml-5 my-2">
+                <v-menu ref="menuCalendarEnd" v-model="menuCalendarEnd" color="green lighten-1" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+                    <template #activator="{ on, attrs }">
+                        <v-text-field v-model="dateEnd" clearable label="Chọn ngày kết thúc" readonly v-bind="attrs" v-on="on"></v-text-field>
+                    </template>
+                    <v-date-picker v-model="dateEnd" color="green lighten-1" no-title scrollable min="1900-01-01" :max="$moment().format('YYYY-MM-DD')">
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menuCalendarEnd = false"> HỦY </v-btn>
+                        <v-btn text color="primary" @click="$refs.menuCalendarEnd.save(dateEnd)"> XÁC NHẬN </v-btn>
+                    </v-date-picker>
+                </v-menu>
+            </div>
             <div class="ml-5">
                 <v-select
                     v-model="type"
@@ -208,6 +232,9 @@ export default {
             oldSearch: {},
 
             loaded: false,
+
+            menuCalendarStart: false,
+            menuCalendarEnd: false,
         }
     },
     watch: {
@@ -288,6 +315,9 @@ export default {
             },
             deep: true,
         },
+        dateStart(val) {
+            console.log('watch ', val)
+        },
     },
     created() {
         // this.getGiaMinMax()
@@ -322,6 +352,9 @@ export default {
             radioGroup: 'searchParams.radioGroup',
             chooseAddress: 'searchParams.chooseAddress',
             inputAddress: 'searchParams.inputAddress',
+            dateStart: 'searchParams.dateStart',
+            dateEnd: 'searchParams.dateEnd',
+
             searchParams: 'searchParams',
         }),
     },
@@ -426,25 +459,11 @@ export default {
             this.xaphuong = xaphuong
         },
         saveSearch() {
-            // const params = {
-            //     vitri: this.banKinhOn ? null : this.diachi,
-            //     gia1: this.gia1,
-            //     gia2: this.gia2,
-            //     dientich1: this.dientich1,
-            //     dientich2: this.dientich2,
-            //     type: this.type,
-            //     loai_id: this.loai_id,
-            //     huong: this.huong,
-            //     sophongngu: this.sophongngu,
-            //     sophongtam: this.sophongtam,
-            //     keyword: this.keyword,
-            //     banKinhOn: this.banKinhOn,
-            //     bankinh: this.bankinh,
-            //     X: this.X,
-            //     Y: this.Y,
-            // }
             localStorage.setItem('saveSearch', JSON.stringify(window.params))
             console.log('set')
+        },
+        formatDate(date) {
+            return this.$moment(date).format('DD/MM/YYYY')
         },
     },
 }
