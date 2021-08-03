@@ -59,6 +59,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::put('/disable/{id}', [ApiUserController::class, "disableUser"])->whereNumber('id');
         Route::put('/enable/{id}', [ApiUserController::class, "enableUser"])->whereNumber('id');
         Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
+        Route::post('/sendMailResetPassword', [ApiUserController::class, "sendMailResetPassword"]);
+        Route::get('/checkTokenExpired', [ApiUserController::class, "checkTokenExpired"]);
+        Route::post('/resetPassword', [ApiUserController::class, "resetPassword"]);
         Route::put('/updatepass', [ApiUserController::class, "updatePassword"])->middleware('auth:sanctum');
 
         Route::get('/dangkynhantin', [ThongTinDangKyController::class, "show"])->middleware('auth:sanctum');

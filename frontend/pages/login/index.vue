@@ -6,6 +6,7 @@
             </v-btn>
             <v-card-title class="title font-weight-regular"> Đăng nhập</v-card-title>
             <v-spacer></v-spacer>
+            <v-btn text @click="$router.push('/resetpassword/sendmail')">Quên mật khẩu?</v-btn>
         </v-toolbar>
         <v-form ref="form" v-model="form" class="pa-4 pt-6" @submit.prevent="login">
             <v-text-field ref="email" v-model="loginForm.username" :rules="[rules.required]" label="Địa Chỉ Email hoặc Username" placeholder="Nhập địa chỉ email hoặc username của bạn" required></v-text-field>

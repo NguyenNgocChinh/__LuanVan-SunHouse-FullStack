@@ -8,11 +8,20 @@ use App\Http\Requests\ApiRegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Rules\match_old_password;
+use Carbon\Carbon;
+use DateTime;
+use DateTimeZone;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Notification;
 
 class ApiUserController extends Controller
 {
@@ -208,10 +217,10 @@ class ApiUserController extends Controller
                 'errors' => 'Không tìm thấy bài đăng'
             ]);
         if (Gate::forUser(Auth::user())->allows('duyet-bai')) {
-            if($request->vaitro === 'user'){
+            if ($request->vaitro === 'user') {
                 $user->vaitro = 'admin';
             }
-            if($request->vaitro === 'admin'){
+            if ($request->vaitro === 'admin') {
                 $user->vaitro = 'user';
             }
             $user->save();
@@ -222,5 +231,66 @@ class ApiUserController extends Controller
             return response()->json([
                 'errors' => 'Không có quyền để thay đổi'
             ]);
+    }
+    public function sendMailResetPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json([
+                'success' => 'Đã gửi mail đặt lại mật khẩu'
+            ])
+            : response()->json([
+                'errors' => 'Địa chỉ email này chưa được đăng ký'
+            ]);;
+    }
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? response()->json([
+                'success' => 'Đặt lại mật khẩu thành công!'
+            ])
+            : response()->json([
+                'errors' => 'Đặt lại mật khẩu thất bại'
+            ]);
+    }
+    public function checkTokenExpired(Request $request)
+    {
+Log::info($request);
+        $token = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->first();
+
+        if ($token != null) {
+            $from_time = strtotime($token->created_at);
+            $to_time = strtotime(Carbon::now());
+            $kq =  round(($to_time - $from_time) / 60);
+            Log::info($kq);
+            if($kq < 60)
+                return 1;
+            return 0;
+        }
+        return 0;
     }
 }

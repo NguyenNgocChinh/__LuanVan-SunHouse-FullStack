@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -84,15 +85,30 @@ class User extends Authenticatable
     }
 
     /*SOCIAL*/
-    public function social(){
-        return $this->hasMany(UserSocial::class,'user_id','id');
+    public function social()
+    {
+        return $this->hasMany(UserSocial::class, 'user_id', 'id');
     }
-    public function hasSocialLinked($service){
-        return (bool) $this->social->where('service',$service)->count();
+    public function hasSocialLinked($service)
+    {
+        return (bool) $this->social->where('service', $service)->count();
     }
 
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
+
+    /**
+     * Send a password reset notification to the user.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    // public function sendPasswordResetNotification($token)
+    // {
+    //     $url = 'https://'.env('CLIENT_BASE_URL').'/resetpassword?token=' . $token;
+
+    //     $this->notify(new ResetPasswordNotification($url));
+    // }
 }
