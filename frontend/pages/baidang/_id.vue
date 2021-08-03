@@ -238,6 +238,11 @@
                                     <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
                                 </div>
                             </div>
+                            <div v-if="!isBaoCao" style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone yellow darken-3 white--text" @click="baoCaoBaiDang">
+                                Báo cáo bài đăng
+                                <v-icon color="white">bx bxs-error-alt</v-icon>
+                            </div>
+                            <div v-else style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone grey darken-3 white--text">Bạn đã báo cáo bài đăng này</div>
 
                             <div class="pt-3 pl-3">
                                 <iframe
@@ -263,6 +268,18 @@
                 </v-col>
             </v-row>
         </sweet-modal>
+        <sweet-modal v-if="user" ref="modalBaoCao" :title="`Báo cáo bài đăng của ${user.name}`" width="90%" blocking>
+            <v-row>
+                <h3 class="d-inline-block">Nhập nội dung báo cáo</h3>
+                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                    <sup>(*) </sup>
+                </span>
+            </v-row>
+            <editor id="sunhouseEditor" :min-length="40" class="mt-2 py-5" />
+            <div class="text-right">
+                <v-btn color="primary" :loading="loadingBaoCao" @click="xulybaocao">Báo cáo</v-btn>
+            </div>
+        </sweet-modal>
     </v-container>
 </template>
 <script>
@@ -275,11 +292,12 @@ import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
+import Editor from '@/components/UIComponent/Editor'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
 export default {
-    components: { BaiDangCard, Timer, OwlCarousel },
+    components: { Editor, BaiDangCard, Timer, OwlCarousel },
     data() {
         return {
             baidang: false,
@@ -341,6 +359,9 @@ export default {
             isDinhVi: true,
             isCanPush: false,
             nextPush: null,
+
+            noidungbaocao: null,
+            loadingBaoCao: false,
         }
     },
     head() {
@@ -401,11 +422,25 @@ export default {
             } else flag = false
             return flag
         },
+        isBaoCao() {
+            let flag = false
+            if (this.$auth.loggedIn) {
+                this.$auth.user.baocao.forEach((item) => {
+                    if (item.baidang_id === this.baidang.id) {
+                        flag = true
+                    }
+                })
+            } else flag = false
+            return flag
+        },
     },
     mounted() {
         this.getchitietsp()
         this.$nuxt.$on('endCountDown', () => {
             this.isCanPush = true
+        })
+        this.$nuxt.$on('blurTieuDe', (noidung) => {
+            this.noidungbaocao = noidung
         })
     },
     methods: {
@@ -631,6 +666,40 @@ export default {
                 })
                 this.$store.commit('REMOVE_YEUTHICH', this.baidang.id)
             }
+        },
+        baoCaoBaiDang() {
+            this.$refs.modalBaoCao.open()
+        },
+        xulybaocao() {
+            if (this.noidungbaocao === null || this.noidungbaocao === '') {
+                this.$toast.error('Phải nhập nội dung báo cáo')
+                return
+            }
+            if (this.noidungbaocao.length < 40) {
+                this.$toast.error('Nội dung báo cáo phải ít nhất 40 ký tự')
+            }
+            this.loadingBaoCao = true
+            this.$axios
+                .$post(this.$config.serverUrl + '/baocao', {
+                    noidung: this.noidungbaocao,
+                    baidang_id: this.baidang.id,
+                })
+                .then((res) => {
+                    if (res.success) {
+                        this.$toast.success(res.success)
+                        this.$store.commit('PUSH_BAOCAO', this.baidang.id)
+                        this.$refs.modalBaoCao.close()
+                    }
+                    if (res.errors) {
+                        this.$toast.error(res.errors)
+                    }
+                })
+                .catch((e) => {
+                    this.$toast.error(e)
+                })
+                .finally(() => {
+                    this.loadingBaoCao = false
+                })
         },
     },
 }

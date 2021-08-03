@@ -9,6 +9,7 @@ use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\DiaDiemController;
 use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ContactController;
+use App\Http\Controllers\BaoCaoController;
 use App\Http\Controllers\UserOnlineController;
 use \App\Http\Controllers\ThongTinDangKyController;
 use App\Http\Controllers\YeuThichController;
@@ -148,6 +149,13 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
      * GIA
      */
     Route::get('gia', [HomeController::class, "getGia"]);
+    /*
+     * BAO CAO
+     */
+    Route::get('/getBaoCaoForUser', [BaoCaoController::class, "getBaiDangBaoCaoForUser"])->middleware('auth:sanctum');
+    Route::post('/baocao', [BaoCaoController::class, "storeBaoCao"])->middleware(['auth:sanctum','throttle:1:60']);
+    Route::delete('/baocao', [BaoCaoController::class, "deleteBaoCao"])->middleware('auth:sanctum');
+    Route::put('/baocao', [BaoCaoController::class, "editBaoCao"])->middleware('auth:sanctum');
     /*
      * DIEN TICH
      */

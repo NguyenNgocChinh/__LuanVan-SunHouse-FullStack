@@ -102,6 +102,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(YeuThich::class)->select('baidang_id');
     }
+    public function baocao(){
+        return $this->hasMany(BaoCao::class);
+    }
 
     /**
      * Send a password reset notification to the user.

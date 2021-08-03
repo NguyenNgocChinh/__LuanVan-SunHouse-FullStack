@@ -25,7 +25,7 @@
                                 </v-list-item-content>
                             </v-list-item>
                             <v-divider />
-                            <v-list-item to="/users">
+                            <v-list-item @click="$router.push('/users')">
                                 <v-list-item-content>
                                     <span>Hồ sơ</span>
                                 </v-list-item-content>

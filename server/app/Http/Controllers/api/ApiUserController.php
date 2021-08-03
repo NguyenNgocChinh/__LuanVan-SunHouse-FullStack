@@ -66,6 +66,7 @@ class ApiUserController extends Controller
     {
         $user = $request->user();
         $user->yeuthich = $user->yeuthich;
+        $user->baocao = $user->baocao;
         return response()->json($user);
     }
 

@@ -66,6 +66,32 @@ export const mutations = {
             }
         }
     },
+    PUSH_BAOCAO(state, baidangId) {
+        if (state.auth.loggedIn) {
+            const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baidangId)
+            console.log('index push bao cao in store', index)
+            if (index < 0) state.auth.user.baocao.push({ baidang_id: baidangId })
+        }
+    },
+    REMOVE_BAOCAO(state, baidangId) {
+        if (state.auth.loggedIn) {
+            const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baidangId)
+            console.log('index removed bao cao in store', index)
+            if (index > -1) {
+                state.auth.user.baocao.splice(index, 1)
+            }
+        }
+    },
+    // UPDATE_BAOCAO(state, baocao) {
+    //     if (state.auth.loggedIn) {
+    //         const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baocao.baidang_id)
+    //         console.log('index updated bao cao in store', index)
+    //         if (index > -1) {
+    //             state.auth.user.baocao[index].noidung = baocao.noidung
+    //             console.log(baocao.noidung)
+    //         }
+    //     }
+    // },
 }
 
 export const getters = {

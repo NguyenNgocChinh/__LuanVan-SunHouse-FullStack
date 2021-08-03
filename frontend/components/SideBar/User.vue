@@ -100,6 +100,13 @@ export default {
                     label: 'Yêu thích',
                     tooltip: 'Yêu thích',
                 },
+                {
+                    id: 8,
+                    icon: 'bx bxs-megaphone',
+                    href: '/users/baocao',
+                    label: 'Báo cáo',
+                    tooltip: 'Báo cáo',
+                },
             ],
         }
     },
