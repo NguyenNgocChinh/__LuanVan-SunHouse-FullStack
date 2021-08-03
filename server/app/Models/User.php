@@ -98,6 +98,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
+    public function yeuthich()
+    {
+        return $this->hasMany(YeuThich::class)->select('baidang_id');
+    }
 
     /**
      * Send a password reset notification to the user.

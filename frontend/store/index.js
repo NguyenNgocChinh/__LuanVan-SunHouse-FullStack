@@ -50,6 +50,22 @@ export const mutations = {
             state.baidang_hots = []
         }
     },
+    PUSH_YEUTHICH(state, baidangId) {
+        if (state.auth.loggedIn) {
+            const index = state.auth.user.yeuthich.findIndex((item) => item.baidang_id === baidangId)
+            console.log('index push yeu thich in store', index)
+            if (index < 0) state.auth.user.yeuthich.push({ baidang_id: baidangId })
+        }
+    },
+    REMOVE_YEUTHICH(state, baidangId) {
+        if (state.auth.loggedIn) {
+            const index = state.auth.user.yeuthich.findIndex((item) => item.baidang_id === baidangId)
+            console.log('index removed yeu thich in store', index)
+            if (index > -1) {
+                state.auth.user.yeuthich.splice(index, 1)
+            }
+        }
+    },
 }
 
 export const getters = {

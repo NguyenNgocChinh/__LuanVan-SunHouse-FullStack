@@ -100,13 +100,21 @@
                 <v-chip color="teal darken-1" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
                 <!--                <v-chip color="deep-orange accent-3 " class="white&#45;&#45;text" label>Nổi bật</v-chip>-->
             </v-chip-group>
-            <v-tooltip top content-class="tooltipCustom">
+            <v-tooltip v-if="isYeuThich" top content-class="tooltipCustom">
                 <template #activator="{ on }">
-                    <v-btn class="mx-2 heart" fab dark small color="pink" v-on="on">
+                    <v-btn class="mx-2 heart" fab dark small color="pink" v-on="on" @click="removeYeuThich">
                         <v-icon dark> mdi-heart </v-icon>
                     </v-btn>
                 </template>
                 <span>Bỏ yêu thích</span>
+            </v-tooltip>
+            <v-tooltip v-else top content-class="tooltipCustom">
+                <template #activator="{ on }">
+                    <v-btn class="mx-2 heart" fab dark small color="grey" v-on="on" @click="addYeuThich">
+                        <v-icon> mdi-heart </v-icon>
+                    </v-btn>
+                </template>
+                <span>Yêu thích</span>
             </v-tooltip>
             <v-divider class="mt-2" />
             <div class="pa-4 d-flex size-14 flex-row align-center justify-space-between">
@@ -156,7 +164,19 @@ export default {
             if (this.$auth.loggedIn) return this.$auth.user.id
             return false
         },
+        isYeuThich() {
+            let flag = false
+            if (this.$auth.loggedIn) {
+                this.$auth.user.yeuthich.forEach((item) => {
+                    if (item.baidang_id === this.baidang.id) {
+                        flag = true
+                    }
+                })
+            } else flag = false
+            return flag
+        },
     },
+    mounted() {},
     methods: {
         showChiTietBaiDang() {
             this.$router.push('/baidang/' + this.baidang.id)
@@ -182,6 +202,22 @@ export default {
         },
         getImg(hinh) {
             return this.URI_DICRECTORY_UPLOAD + hinh.filename
+        },
+        addYeuThich() {
+            if (this.$auth.loggedIn) {
+                this.$axios.$post(this.$config.serverUrl + '/addYeuThich', {
+                    baidang_id: this.baidang.id,
+                })
+                this.$store.commit('PUSH_YEUTHICH', this.baidang.id, this.$auth.user.id)
+            }
+        },
+        removeYeuThich() {
+            if (this.$auth.loggedIn) {
+                this.$axios.$post(this.$config.serverUrl + '/removeYeuThich', {
+                    baidang_id: this.baidang.id,
+                })
+                this.$store.commit('REMOVE_YEUTHICH', this.baidang.id)
+            }
         },
     },
 }

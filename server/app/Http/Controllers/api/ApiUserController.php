@@ -64,7 +64,9 @@ class ApiUserController extends Controller
 
     public function userInfo(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+        $user->yeuthich = $user->yeuthich;
+        return response()->json($user);
     }
 
     public function logout(Request $request)

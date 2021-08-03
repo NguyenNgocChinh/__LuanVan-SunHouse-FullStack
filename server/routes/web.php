@@ -11,6 +11,7 @@ use App\Http\Controllers\api\HomeController;
 use App\Http\Controllers\api\ContactController;
 use App\Http\Controllers\UserOnlineController;
 use \App\Http\Controllers\ThongTinDangKyController;
+use App\Http\Controllers\YeuThichController;
 use App\Mail\MailRegistered;
 use App\Models\BaiDang;
 use App\Models\User;
@@ -137,6 +138,12 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
      * TIM KIEM
      */
     Route::get('timkiem', [ApiTimkiemController::class, "timkiem"]);
+    /*
+     * YEU THICH
+     */
+    Route::get('/yeuthich', [YeuThichController::class,"getYeuThichOfUser"]);
+    Route::post('/addYeuThich', [YeuThichController::class,"addYeuThich"])->middleware('auth:sanctum');
+    Route::post('/removeYeuThich', [YeuThichController::class,"removeYeuThich"])->middleware('auth:sanctum');
     /*
      * GIA
      */

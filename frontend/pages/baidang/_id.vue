@@ -57,7 +57,8 @@
                         <!--                        <v-btn text plain>Mô tả</v-btn>-->
                     </div>
                     <div class="col-lg-4 d-flex justify-end d-sticky">
-                        <v-btn text plain> <v-icon class="mr-3">mdi-heart-outline</v-icon> Yêu thích</v-btn>
+                        <v-btn v-if="isYeuThich" text plain @click="removeYeuThich"> <v-icon class="mr-3" color="pink">mdi-heart</v-icon>Bỏ yêu thích</v-btn>
+                        <v-btn v-else text plain @click="addYeuThich"> <v-icon class="mr-3" color="pink">mdi-heart-outline</v-icon> Yêu thích</v-btn>
                         <v-divider vertical />
                         <v-btn id="shareBtn" text plain @click="shareOnFB"> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
                     </div>
@@ -274,7 +275,6 @@ import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import error from '@/layouts/error'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
@@ -389,6 +389,17 @@ export default {
         userIdLoggedIn() {
             if (this.$auth.loggedIn) return this.$auth.user.id
             return false
+        },
+        isYeuThich() {
+            let flag = false
+            if (this.$auth.loggedIn) {
+                this.$auth.user.yeuthich.forEach((item) => {
+                    if (item.baidang_id === this.baidang.id) {
+                        flag = true
+                    }
+                })
+            } else flag = false
+            return flag
         },
     },
     mounted() {
@@ -604,6 +615,22 @@ export default {
             const data = await this.$axios.$get(this.$config.serverUrl + '/baidang/getAllBaiDangOfOtherUser/' + this.baidang.user.id)
             this.dsBaiDangUser = data
             console.log(data)
+        },
+        addYeuThich() {
+            if (this.$auth.loggedIn) {
+                this.$axios.$post(this.$config.serverUrl + '/addYeuThich', {
+                    baidang_id: this.baidang.id,
+                })
+                this.$store.commit('PUSH_YEUTHICH', this.baidang.id)
+            }
+        },
+        removeYeuThich() {
+            if (this.$auth.loggedIn) {
+                this.$axios.$post(this.$config.serverUrl + '/removeYeuThich', {
+                    baidang_id: this.baidang.id,
+                })
+                this.$store.commit('REMOVE_YEUTHICH', this.baidang.id)
+            }
         },
     },
 }

@@ -8,13 +8,7 @@
                 <i id="btn" class="bx bx-menu"></i>
             </div>
             <ul class="nav_list">
-                <li
-                    v-for="item in navItems"
-                    :key="item.id"
-                    class="animate__animated animate__fadeInLeft"
-                    :class="{ active: indexNav === item.id }"
-                    @click="setActive(item.id)"
-                >
+                <li v-for="item in navItems" :key="item.id" class="animate__animated animate__fadeInLeft" :class="{ active: indexNav === item.id }" @click="setActive(item.id)">
                     <nuxt-link :to="item.href">
                         <i :class="item.icon"></i>
                         <span class="links_name">{{ item.label }}</span>
@@ -26,14 +20,7 @@
                 <div class="profile">
                     <div class="profile_details">
                         <img v-if="$auth.user.profile_photo_path == null" :src="$auth.user.profile_photo_url" />
-                        <img
-                            v-else
-                            :src="
-                                isValidHttpUrl($auth.user.profile_photo_path)
-                                    ? $auth.user.profile_photo_path
-                                    : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path
-                            "
-                        />
+                        <img v-else :src="isValidHttpUrl($auth.user.profile_photo_path) ? $auth.user.profile_photo_path : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path" />
                         <div class="name_job">
                             <div class="name">{{ $auth.user.name }}</div>
                             <div class="job">{{ $auth.user.vaitro === 'user' ? 'Thành viên' : 'Quản trị viên' }}</div>
@@ -105,6 +92,13 @@ export default {
                     href: '/users/thongbao',
                     label: 'Thông báo',
                     tooltip: 'Thông báo',
+                },
+                {
+                    id: 7,
+                    icon: 'bx bx-heart',
+                    href: '/users/yeuthich',
+                    label: 'Yêu thích',
+                    tooltip: 'Yêu thích',
                 },
             ],
         }
