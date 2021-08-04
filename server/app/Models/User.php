@@ -79,11 +79,6 @@ class User extends Authenticatable
         DB::table('sessions')->where('user_id', $id)->delete();
     }
 
-    public function goi()
-    {
-        return $this->hasMany('App\Models\UserGoi', 'user_id', 'id')->orderBy('ngaydangky', 'desc');
-    }
-
     /*SOCIAL*/
     public function social()
     {
@@ -104,6 +99,9 @@ class User extends Authenticatable
     }
     public function baocao(){
         return $this->hasMany(BaoCao::class);
+    }
+    public function nguoibibaocao(){
+        return $this->hasMany(BaoCao::class, 'user_bibaocao', 'id');
     }
 
     /**

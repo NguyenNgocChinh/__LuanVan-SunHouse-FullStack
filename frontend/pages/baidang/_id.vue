@@ -683,6 +683,7 @@ export default {
                 .$post(this.$config.serverUrl + '/baocao', {
                     noidung: this.noidungbaocao,
                     baidang_id: this.baidang.id,
+                    user_bibaocao: this.user.id,
                 })
                 .then((res) => {
                     if (res.success) {

@@ -156,6 +156,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
     Route::post('/baocao', [BaoCaoController::class, "storeBaoCao"])->middleware(['auth:sanctum','throttle:1:60']);
     Route::delete('/baocao', [BaoCaoController::class, "deleteBaoCao"])->middleware('auth:sanctum');
     Route::put('/baocao', [BaoCaoController::class, "editBaoCao"])->middleware('auth:sanctum');
+    Route::get('/thongkebaocao', [BaoCaoController::class, "getBaoCaoWithUser"]);
     /*
      * DIEN TICH
      */

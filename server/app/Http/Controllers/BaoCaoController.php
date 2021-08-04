@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BaiDangBiBaoCaoResource;
+use App\Http\Resources\BaiDangDetailResource;
+use App\Http\Resources\BaiDangResource;
+use App\Http\Resources\UserBiBaoCaoResource;
+use App\Http\Resources\UserResource;
 use App\Models\BaiDang;
 use App\Models\BaoCao;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class BaoCaoController extends Controller
@@ -13,6 +20,24 @@ class BaoCaoController extends Controller
     public function getAllBaoCao()
     {
         return response()->json(BaoCao::all());
+    }
+    public function getBaoCaoWithUser()
+    {
+        $baocaos =  BaoCao::groupBy(['user_bibaocao','sdt','email'])
+        ->select(['user_bibaocao','name','sdt','vaitro','email','trangthai',DB::raw('count(*) as slbitocao')])
+        ->leftJoin('users','users.id','=','baocao.user_bibaocao')
+        ->orderBy('slbitocao','desc')
+        ->get();
+
+        foreach($baocaos as $baocao){
+            $baidangsId = BaoCao::select(['baidang_id'])->where('user_bibaocao',$baocao->user_bibaocao)->get();
+            $temp = $baidangsId->implode('baidang_id', ',');
+            $baidangsId = explode(',', trim($temp));
+            $baidangs = BaiDang::whereIn('id', $baidangsId)->get();
+
+            $baocao->baidang = BaiDangBiBaoCaoResource::collection($baidangs);
+        }
+        return response()->json($baocaos);
     }
     public function getBaiDangBaoCaoForUser()
     {
@@ -40,7 +65,8 @@ class BaoCaoController extends Controller
     {
         $request->validate([
             'noidung' => 'required|min:40',
-            'baidang_id' => 'required'
+            'baidang_id' => 'required',
+            'user_bibaocao' => 'required'
         ], [
             'noidung.required' => 'Nội dung báo cáo không được rỗng',
             'noidung.min' => 'Nội dung báo cáo ít nhất 40 ký tự',
@@ -54,6 +80,7 @@ class BaoCaoController extends Controller
         }
         $baocao = new BaoCao();
         $baocao->user_id = Auth::user()->id;
+        $baocao->user_bibaocao = $request->user_bibaocao;
         $baocao->noidung = $request->noidung;
         $baocao->baidang_id = $request->baidang_id;
         $baocao->save();

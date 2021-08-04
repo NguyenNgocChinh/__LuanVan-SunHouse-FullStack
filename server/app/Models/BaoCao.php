@@ -13,6 +13,9 @@ class BaoCao extends Model
 
     public function baidang()
     {
-        return $this->belongsTo(BaiDang::class)->select('id');
+        return $this->belongsTo(BaiDang::class);
+    }
+    public function nguoibibaocao(){
+        return $this->hasMany(User::class, 'id', 'user_bibaocao');
     }
 }

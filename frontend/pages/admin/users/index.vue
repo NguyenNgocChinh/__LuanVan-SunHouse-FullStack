@@ -91,7 +91,6 @@
 
 <script>
 import ModalError from '@/components/Error/modalError'
-import { mapState } from 'vuex'
 export default {
     components: { ModalError },
     layout: 'admin',

@@ -81,6 +81,11 @@ export default {
                 icon: 'bx bxs-landmark',
                 to: '/admin/types',
             },
+            {
+                title: 'Quản lý báo cáo',
+                icon: 'bx bxs-megaphone',
+                to: '/admin/reports',
+            },
         ],
     }),
     computed: {

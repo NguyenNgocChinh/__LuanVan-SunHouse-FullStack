@@ -90,6 +90,11 @@ class BaiDang extends Model
     {
         return $this->hasMany('App\Models\BaiDangHinhAnh', 'baidang_id', 'id')->select('filename','id');
     }
+    public function bibaocao()
+    {
+        return $this->hasMany(BaoCao::class, 'baidang_id', 'id')->rightJoin('users','users.id','=','baocao.user_id')
+        ->select(['noidung','baocao.created_at','user_bibaocao','name','username','profile_photo_path','users.sdt']);
+    }
 
     public function getPrice()
     {
