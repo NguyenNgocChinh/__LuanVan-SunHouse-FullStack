@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->boolean('trangthai')->default(1);
             $table->enum('vaitro', ['user', 'admin'])->default('user');
             $table->string('password', 100);
-            $table->string('diachi',100)->nullable();
+            $table->string('diachi',150)->nullable();
             $table->date('namsinh')->nullable();
             $table->string('profile_photo_path', 200)->nullable();
             $table->timestamp('email_verified_at')->nullable();

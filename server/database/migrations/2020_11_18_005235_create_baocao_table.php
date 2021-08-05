@@ -14,7 +14,7 @@ class CreateBaoCaoTable extends Migration
     public function up()
     {
         Schema::create('baocao', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id',true);
             $table->mediumInteger('user_id');
             $table->mediumInteger('user_bibaocao');
             $table->integer('baidang_id');

@@ -258,6 +258,7 @@ export default {
     layout: 'user',
     data() {
         return {
+            vaild: false,
             expanded: [],
             isLoading: true,
             listHeaders: [

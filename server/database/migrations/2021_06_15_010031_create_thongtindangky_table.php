@@ -25,7 +25,7 @@ class CreateThongtindangkyTable extends Migration
             $table->char('sophongtam',2)->nullable();
             $table->boolean('isChoThue')->nullable();
             $table->string('huong',20)->nullable();
-            $table->string('diachi',100)->nullable();
+            $table->string('diachi',150)->nullable();
             $table->timestamps();
 
             $table->foreign('loai_id')->references('id')->on('loai');

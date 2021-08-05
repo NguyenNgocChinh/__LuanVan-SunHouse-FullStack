@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use Illuminate\Support\Facades\Log;
 use Session;
 
 class FilterView
@@ -24,13 +25,13 @@ class FilterView
     public function handle(Request $request, Closure $next)
     {
         $posts = $this->getViewedPosts();
-
+        Log::info("in middleware filter view");
         if (!is_null($posts))
         {
+            Log::info("post is null");
             $posts = $this->cleanExpiredViews($posts);
             $this->storePosts($posts);
         }
-
         return $next($request);
     }
 
@@ -44,7 +45,7 @@ class FilterView
         $time = time();
 
         // Let the views expire after one hour.
-        $throttleTime = env('THROTTLE_TIME_VIEW', 60);
+        $throttleTime = env('THROTTLE_TIME_VIEW', 500);
 
         return array_filter($posts, function ($timestamp) use ($time, $throttleTime)
         {

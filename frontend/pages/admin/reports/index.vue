@@ -1,116 +1,118 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <v-card>
-            <v-card-title>
-                Quản Lý Báo Cáo
-                <v-spacer />
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
-            </v-card-title>
+            <v-card-title> Quản Lý Báo Cáo </v-card-title>
             <v-data-table :loading="loading" :headers="headersUserBiBaoCao" :items="list" :expanded.sync="expanded" item-key="user_bibaocao" show-expand class="elevation-1">
                 <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                         <v-container>
-                            <v-col cols="12" lg="12">
-                                <v-data-table
-                                    v-model="selectedTable"
-                                    class="animate__animated animate__fadeIn"
-                                    :headers="[
-                                        { text: 'Tin đăng', value: 'tieude' },
-                                        { text: '', value: 'data-table-expand' },
-                                    ]"
-                                    :loading="loadingData"
-                                    must-sort
-                                    show-expand
-                                    :items="item.baidang"
-                                    :calculate-widths="true"
-                                >
-                                    <!--BAO CAO-->
-                                    <template #expanded-item="{ headers, item }">
-                                        <td :colspan="headers.length">
-                                            <v-container>
-                                                <v-row>
-                                                    <v-col cols="12">
-                                                        <v-data-table
-                                                            :headers="[
-                                                                { text: 'Người báo cáo', value: 'name', width: '15%', align: 'center' },
-                                                                { text: 'SĐT', value: 'sdt', width: '15%', align: 'center' },
-                                                                { text: 'Nội dung báo cáo', value: 'noidung', align: 'left' },
-                                                                { text: 'Ngày báo cáo', value: 'created_at', width: '15%', align: 'center' },
-                                                            ]"
-                                                            :items="item.baocao"
-                                                        >
-                                                            <template #[`item.noidung`]="{ item }">
-                                                                <span class="red--text" v-html="item.noidung"></span>
-                                                            </template>
-                                                            <template #[`item.created_at`]="{ item }">
-                                                                {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}
-                                                            </template>
-                                                            <template #[`item.name`]="{ item }"> {{ item.name }} ({{ item.username }}) </template>
-                                                        </v-data-table>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-container>
-                                        </td>
-                                    </template>
-                                    <template #top>
-                                        <v-toolbar flat>
-                                            <v-toolbar-title>Những bài đăng bị tố cáo của {{ item.name }}</v-toolbar-title>
-                                            <v-divider class="mx-4" inset vertical></v-divider>
-                                            <v-spacer></v-spacer>
-                                        </v-toolbar>
-                                    </template>
-                                    <template #[`item.tieude`]="{ item }">
+                            <v-data-table
+                                v-model="selectedTable"
+                                class="animate__animated animate__fadeIn"
+                                :headers="[
+                                    { text: 'Tin đăng', value: 'tieude', width: '70%' },
+                                    { text: 'Hành động', value: 'hanhdong', width: '10%', sort: false },
+                                    { text: 'Mở rộng', value: 'data-table-expand', width: '8%' },
+                                ]"
+                                :loading="loadingData"
+                                must-sort
+                                show-expand
+                                :items="item.baidang"
+                            >
+                                <!--BAO CAO-->
+                                <template #expanded-item="{ headers, item }">
+                                    <td :colspan="headers.length">
                                         <v-container>
-                                            <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `/baidang/${item.id}` })">
-                                                <v-col cols="12" lg="3" sm="12">
-                                                    <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
-                                                    <v-img v-else width="100%" height="100%" aspect-ratio="1.5" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
-                                                </v-col>
-                                                <v-col cols="12" lg="9" sm="12" class="text-left">
-                                                    <h1 class="title text--upercase">
-                                                        {{ item.tieude }}
-                                                    </h1>
-                                                    <div class="mb-2">
-                                                        <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
-                                                        {{ item.diachi }}
-                                                    </div>
-                                                    <div class="introduce-line d-flex mb-2">
-                                                        <div>
-                                                            Ngày đăng:
-                                                            {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
-                                                        </div>
-                                                        <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
-                                                    </div>
-                                                </v-col>
-                                            </v-row>
+                                            <v-data-table
+                                                :disable-pagination="true"
+                                                :hide-default-footer="true"
+                                                :headers="[
+                                                    { text: 'Người báo cáo', value: 'name', width: '15%', align: 'center' },
+                                                    { text: 'SĐT', value: 'sdt', width: '15%', align: 'center' },
+                                                    { text: 'Nội dung báo cáo', value: 'noidung', align: 'left' },
+                                                    { text: 'Ngày báo cáo', value: 'created_at', width: '15%', align: 'center' },
+                                                ]"
+                                                :items="item.baocao"
+                                            >
+                                                <template #[`item.noidung`]="{ item }">
+                                                    <span class="red--text" v-html="item.noidung"></span>
+                                                </template>
+                                                <template #[`item.created_at`]="{ item }">
+                                                    {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}
+                                                </template>
+                                                <template #[`item.name`]="{ item }"> {{ item.name }} ({{ item.username }}) </template>
+                                            </v-data-table>
                                         </v-container>
-                                    </template>
-                                    <template #[`item.noidungbaocao`]="{ item }">
-                                        <p v-html="item.noidungbaocao"></p>
-                                    </template>
-                                    <template #[`item.hanhdong`]="{ item }">
-                                        <v-btn icon color="red" @click="deleteItem(item)"><v-icon>mdi-delete</v-icon></v-btn>
-                                    </template>
-                                </v-data-table>
-                                <sweet-modal ref="modalXacNhanXoa" :title="`Xác nhận xóa báo cáo này`" icon="warning">
-                                    <p class="text-center">Sau khi xóa báo cáo thì sẽ không thể khôi phục được</p>
-                                    <div class="text-right">
-                                        <v-btn text color="primary" @click="$refs.modalXacNhanXoa.close()">Hủy</v-btn>
-                                        <v-btn color="primary" :loading="loadingDelete" @click="confirmDelete">Xóa</v-btn>
-                                    </div>
-                                </sweet-modal>
-                            </v-col>
+                                    </td>
+                                </template>
+                                <template #top>
+                                    <v-toolbar flat>
+                                        <v-toolbar-title>Những bài đăng bị tố cáo của {{ item.name }}</v-toolbar-title>
+                                        <v-spacer></v-spacer>
+                                    </v-toolbar>
+                                </template>
+                                <template #[`item.tieude`]="{ item }">
+                                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `/baidang/${item.id}` })">
+                                        <v-col cols="12" lg="3" sm="12">
+                                            <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
+                                            <v-img v-else width="100%" height="100%" aspect-ratio="1.5" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                                        </v-col>
+                                        <v-col cols="12" lg="9" sm="12" class="text-left">
+                                            <h1 class="title text--upercase">
+                                                {{ item.tieude }}
+                                            </h1>
+                                            <div class="mb-2">
+                                                <v-icon class="mr-1 mb-2">mdi-map-marker-outline</v-icon>
+                                                {{ item.diachi }}
+                                            </div>
+                                            <div class="introduce-line d-flex mb-2">
+                                                <div>
+                                                    Ngày đăng:
+                                                    {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
+                                                </div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaaaaa">Lượt xem: {{ item.luotxem || '-' }}</div>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </template>
+                                <template #[`item.noidungbaocao`]="{ item }">
+                                    <p v-html="item.noidungbaocao"></p>
+                                </template>
+                                <template #[`item.hanhdong`]="{ item }">
+                                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                                        <template #activator="{ on }">
+                                            <v-btn v-if="item.trangthai === 1" icon color="teal" v-on="on" @click="updateTrangThai(item, 0)">
+                                                <v-icon>mdi-check</v-icon>
+                                            </v-btn>
+                                            <v-btn v-else icon color="red" v-on="on" @click="updateTrangThai(item, 1)">
+                                                <v-icon>mdi-close</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>{{ item.trangthai ? 'Bài đăng đang được kích hoạt' : 'Bài đăng đã bị vô hiệu hóa' }}</span>
+                                    </v-tooltip>
+                                    <!--                                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">-->
+                                    <!--                                        <template #activator="{ on }">-->
+                                    <!--                                            <v-btn icon color="red" @click="deleteItem(item)" v-on="on"><v-icon>mdi-delete</v-icon></v-btn>-->
+                                    <!--                                        </template>-->
+                                    <!--                                        <span>Xóa bài đăng</span>-->
+                                    <!--                                    </v-tooltip>-->
+                                </template>
+                            </v-data-table>
                         </v-container>
                     </td>
                 </template>
                 <template #[`item.trangthai`]="{ item }">
-                    <v-btn v-if="item.trangthai === 1" icon color="teal" :loading="loadingDisable" @click="disableUser(item)">
-                        <v-icon>mdi-check</v-icon>
-                    </v-btn>
-
-                    <v-btn v-else icon color="red" :loading="loadingDisable" @click="enable(item)">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
+                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                        <template #activator="{ on }">
+                            <v-btn v-if="item.trangthai === 1" icon color="teal" :loading="loadingDisable" v-on="on" @click="disableUser(item)">
+                                <v-icon>mdi-check</v-icon>
+                            </v-btn>
+                            <v-btn v-else icon color="red" :loading="loadingDisable" v-on="on" @click="enable(item)">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{ item.trangthai ? 'Người dùng đang được kích hoạt' : 'Người dùng đã bị vô hiệu hóa' }}</span>
+                    </v-tooltip>
                 </template>
                 <template #[`item.hanhdong`]="{ item }">
                     <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
@@ -118,12 +120,20 @@
             </v-data-table>
         </v-card>
         <ModalError />
+        <sweet-modal ref="modalXacNhanXoa" :title="`Xác nhận xóa bài đăng này`" icon="warning">
+            <p class="text-center">Sau khi xóa bài đăng thì sẽ không thể khôi phục được</p>
+            <div class="text-right">
+                <v-btn text color="primary" @click="$refs.modalXacNhanXoa.close()">Hủy</v-btn>
+                <v-btn color="primary" :loading="loadingDelete" @click="confirmDelete">Xóa</v-btn>
+            </div>
+        </sweet-modal>
     </v-container>
 </template>
 
 <script>
 import ModalError from '@/components/Error/modalError'
 import URI_DICRECTORY from '@/api/directory'
+import ENV from '@/api/baidang'
 
 export default {
     components: { ModalError },
@@ -240,6 +250,25 @@ export default {
             this.seletedItem = item
             this.$refs.modalXacNhanXoa.open()
         },
+        confirmDeleteBaiDang() {
+            this.$axios
+                .$delete(ENV.delete + this.seletedItem.id)
+                .then((data) => {
+                    const index = this.dsBaiDang.indexOf(this.seletedItem.id)
+                    this.dsBaiDang.splice(index, 1)
+                    this.$toast.success('Xóa bài đăng thành công')
+                })
+                .catch((e) => {
+                    this.loadingDelete = false
+                    let message = 'Xóa Thất Bại'
+                    if (e.response.data.message) message = e.response.data.message
+                    this.message.push({
+                        message,
+                        color: 'red',
+                        timeout: 5000,
+                    })
+                })
+        },
         confirmDelete() {
             if (this.$auth.loggedIn) {
                 this.loadingDelete = true
@@ -284,6 +313,27 @@ export default {
         editItem(item) {
             this.seletedItem = item
             this.$refs.modalBaoCao.open()
+        },
+        updateTrangThai(item, trangthai) {
+            this.$axios
+                .$put(
+                    ENV.update_status,
+                    {},
+                    {
+                        params: {
+                            id: item.id,
+                            trangthai,
+                        },
+                    }
+                )
+                .then((res) => {
+                    item.trangthai = trangthai
+                    this.$toast.success('Cập nhật trạng thái bài đăng thành công')
+                })
+                .catch((e) => {
+                    console.log(e)
+                    this.$toast.error('Cập nhật trạng thái bài đăng thất bại')
+                })
         },
     },
 }

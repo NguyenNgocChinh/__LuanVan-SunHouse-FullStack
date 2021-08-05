@@ -14,7 +14,7 @@ class CreateMessagesTable extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->integer('id',true);
+            $table->id();
             $table->mediumInteger('from')->unsigned();
             $table->mediumInteger('to')->unsigned();
             $table->string('noidung',100);
