@@ -49,7 +49,7 @@
                                     <span class="d-flex flex-row align-center">
                                         <span class="mr-1">Chờ </span>
                                         <Timer :year="nextPush.year" :month="nextPush.month" :date="nextPush.date" :hour="nextPush.hour" :minute="nextPush.minute" :second="nextPush.minute" millisecond="0" />
-                                        <span class="ml-1"> để đẩy lên TOP</span>
+                                        <span class="ml-1"> để thực hiện lại</span>
                                     </span>
                                 </v-btn>
                             </div>
@@ -220,7 +220,7 @@
                                     <div>Tham gia từ: {{ $moment(user.created_at).format('MM/YYYY') || '-' }}</div>
                                 </v-row>
                                 <v-row class="pl-3">
-                                    <div>Số tin đăng: {{ user.sobaidang || '-' }}</div>
+                                    <div>Số tin đăng: {{ user.sobaidang }}</div>
                                 </v-row>
                                 <v-row v-if="!$auth.loggedIn" class="px-3 pt-5">
                                     <button class="btn-chat" @click="$router.push('/login')">Đăng nhập để chat</button>
@@ -238,7 +238,10 @@
                                     <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
                                 </div>
                             </div>
-                            <div v-if="!isBaoCao" style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone yellow darken-3 white--text" @click="baoCaoBaiDang">
+                            <div v-if="user.id === userIdLoggedIn" style="cursor: pointer" class="d-flex justify-space-between align-center grey darken-3 ml-3 wrapper-phone yellow darken-3 white--text">
+                                Không thể báo cáo bài đăng của mình
+                            </div>
+                            <div v-else-if="!isBaoCao" style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone yellow darken-3 white--text" @click="baoCaoBaiDang">
                                 Báo cáo bài đăng
                                 <v-icon color="white">bx bxs-error-alt</v-icon>
                             </div>

@@ -51,7 +51,7 @@
                     <v-text-field
                         v-model="gia"
                         suffix="Triệu/m²"
-                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => v > 0 || 'Giá bán không hợp lệ!!!']"
+                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                         type="number"
                         min="1"
                         hint="Đơn vị triệu đồng"
@@ -772,6 +772,7 @@ export default {
                                 .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
                                     xaid: this.xaphuong.xaid,
                                     tenduong: this.duong,
+                                    baidang_id: data.id,
                                 })
                                 .then(() => {
                                     this.$router.push('/baidang/' + data.id)

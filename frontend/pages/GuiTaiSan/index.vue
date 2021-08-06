@@ -51,7 +51,7 @@
                     <v-text-field
                         v-model="gia"
                         suffix="Triệu/m²"
-                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => v > 0 || 'Giá bán không hợp lệ!!!']"
+                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                         type="number"
                         min="1"
                         hint="Đơn vị triệu đồng"
@@ -120,14 +120,14 @@
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v <= 1000) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
+                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
                         </v-col>
                         <v-col cols="12" lg="4" sm="12">
                             <h3 class="d-inline-block">Số phòng tắm</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v <= 1000) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
+                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>

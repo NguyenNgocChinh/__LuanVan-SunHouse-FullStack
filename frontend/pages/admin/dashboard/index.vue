@@ -81,7 +81,18 @@
                 </template>
 
                 <template #[`item.xem`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                        <template #activator="{ on }">
+                            <v-icon color="blue" class="mr-2" @click="showItem(item)" v-on="on"> mdi-eye </v-icon>
+                        </template>
+                        <span> Xem bài đăng </span>
+                    </v-tooltip>
+                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                        <template #activator="{ on }">
+                            <v-icon color="error" class="mr-2" @click="updateTrangThai(item, 0)" v-on="on"> mdi-eye-off </v-icon>
+                        </template>
+                        <span> Ẩn bài đăng </span>
+                    </v-tooltip>
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
@@ -114,8 +125,8 @@ export default {
                 { text: 'Tiêu đề', value: 'tieude', width: '50%' },
                 { text: 'Người đăng', value: 'user' },
                 { text: 'Thời gian', value: 'thoigian' },
-                { text: 'Xem', value: 'xem', sortable: false },
-                { text: 'Hành động', value: 'hanhdong', sortable: false },
+                { text: '', value: 'xem', sortable: false },
+                { text: '', value: 'hanhdong', sortable: false },
             ],
             dsBaiDang: [],
             loading: true,
@@ -142,7 +153,6 @@ export default {
         this.getSoBaiViet()
         this.getSoThanhVien()
         this.fetchDSBaiDang()
-        this.getSoGoi()
     },
     methods: {
         errorImg(event) {
@@ -185,16 +195,6 @@ export default {
                 .$get(THONGKE.choduyet)
                 .then((data) => {
                     this.choduyet = data
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-        },
-        async getSoGoi() {
-            await this.$axios
-                .$get(THONGKE.goi)
-                .then((data) => {
-                    this.sogoi = data
                 })
                 .catch((e) => {
                     console.log(e)
@@ -277,6 +277,39 @@ export default {
                         }
                     })
             }
+        },
+        updateTrangThai(item, trangthai) {
+            this.$axios
+                .$put(
+                    ENV.update_status,
+                    {},
+                    {
+                        params: {
+                            id: item.id,
+                            trangthai,
+                        },
+                    }
+                )
+                .then((res) => {
+                    item.trangthai = trangthai
+                    this.message.push({
+                        message: 'Ẩn Bài Đăng Thành Công',
+                        color: 'green',
+                        timeout: 5000,
+                    })
+                    const index = this.dsBaiDang.findIndex((i) => i.id === item.id)
+                    if (index > -1) {
+                        this.dsBaiDang.splice(index, 1)
+                    }
+                })
+                .catch((e) => {
+                    console.log(e)
+                    this.message.push({
+                        message: 'Ẩn Bài Đăng Thất Bại',
+                        color: 'red',
+                        timeout: 5000,
+                    })
+                })
         },
     },
 }

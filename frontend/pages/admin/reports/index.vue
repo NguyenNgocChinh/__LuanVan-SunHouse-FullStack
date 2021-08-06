@@ -182,9 +182,8 @@ export default {
         fetchDSUser() {
             this.$axios.$get(this.$config.serverUrl + '/thongkebaocao').then((res) => {
                 this.list = res
+                this.loading = false
             })
-
-            this.loading = false
         },
 
         getAvatar(user) {

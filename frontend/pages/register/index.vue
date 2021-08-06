@@ -355,7 +355,7 @@ export default {
                         console.error(error.message)
                     })
             } catch (e) {
-                this.$toast.error('Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau', { duration: null })
+                this.$toast.error('Xảy ra lỗi không xác định', { duration: null })
             }
         },
 

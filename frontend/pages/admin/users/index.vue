@@ -12,9 +12,9 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn fab dark small color="indigo" class="mr-2">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
+                            <!--                            <v-btn fab dark small color="indigo" class="mr-2">-->
+                            <!--                                <v-icon>mdi-plus</v-icon>-->
+                            <!--                            </v-btn>-->
                         </div>
                     </div>
                 </template>
@@ -125,9 +125,8 @@ export default {
         fetchDSUser() {
             this.$axios.$get(this.$config.serverUrl + this.$config.users).then((res) => {
                 this.userList = res
+                this.loading = false
             })
-
-            this.loading = false
         },
 
         getAvatar(user) {

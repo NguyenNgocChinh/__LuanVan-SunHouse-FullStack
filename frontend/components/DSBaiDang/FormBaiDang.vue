@@ -1,6 +1,6 @@
 <template>
     <v-card outlined class="pa-5">
-        <v-form ref="form" v-model="valid" lazy-validation>
+        <v-form ref="form" lazy-validation>
             <div class="ml-5"><h3>Tìm kiếm tài sản</h3></div>
             <div class="ml-5">
                 <v-text-field v-model="keyword" label="Từ khóa tìm kiếm" hint="Cho phép tìm tiêu đề, địa chỉ, loại nhà, hướng." @keydown.native.enter="searchBaiDangs">
@@ -212,8 +212,6 @@ import ENV from '@/api/timkiem'
 export default {
     data() {
         return {
-            valid: true,
-
             isSaveSearch: false,
             isViTri: true,
 
@@ -382,7 +380,7 @@ export default {
             }
         },
         searchBaiDangs() {
-            if (this.radioGroup === 1) {
+            if (this.radioGroup === 1 && this.banKinhOn) {
                 if (this.inputAddress === '' || typeof this.inputAddress === 'undefined') {
                     this.$toast.show('Bạn cần nhập vào ô tìm kiếm địa chỉ cần tìm lân cận.')
                     this.$refs.inputAddress.focus()

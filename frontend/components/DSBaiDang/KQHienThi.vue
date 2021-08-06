@@ -118,6 +118,7 @@ export default {
     },
     methods: {
         getbaidangs(filter = false) {
+            this.page = 1
             this.detail_page = {
                 to: '?',
                 from: '?',
