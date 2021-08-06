@@ -85,7 +85,7 @@ class BaiDangObserver
             $isChoThue = true;
             $huong = true;
             $user = $thongtin->user;
-            if ($user->id != $baiDang->user->id) {
+            if ($user->id != $baiDang->users->id) {
                 if ($thongtin->giamin && $thongtin->giamax) {
                     $gia = $this->searchBetweenCollection($baiDang, 'gia', $thongtin->giamin, $thongtin->giamax);
                 }

@@ -54,6 +54,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    // app/Providers/RouteServiceProvider.php
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
@@ -61,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('dangbai', function (Request $request) {
-            return Limit::perMinute(5)->by($request->ip());
+            return Limit::perMinute(5)->by(optional($request->user())->id ?: $request->ip());
         });
     }
 }

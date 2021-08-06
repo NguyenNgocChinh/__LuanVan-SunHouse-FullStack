@@ -113,13 +113,16 @@ class ApiTimkiemController extends Controller
         foreach ($column_date as $column) {
             if (request()->has($column . "1") || request()->has($column . "2")) {
                 Log::info("in created_at search");
-                $column1 = request($column . "1");
-                $column2 = request($column . "2");
+                $column1 = date('Y-m-d 00:00:00', strtotime($request->get($column. 1)));
+                $column2 = date('Y-m-d 23:59:59', strtotime($request->get($column . 2)));
                 if (is_null($column1) && !is_null($column2)) {
-                    $baidangs = $baidangs->where($column, '<', $column2);
+                    Log::info("NULL IS COLUMN1");
+                    $baidangs = $baidangs->where($column, '<=', $column2);
                 } else if (!is_null($column1) && is_null($column2)) {
-                    $baidangs = $baidangs->where($column, '>', $column1);
+                    Log::info("NULL IS COLUMN 2");
+                    $baidangs = $baidangs->where($column, '>=', $column1);
                 } else {
+                    Log::info("CA 2 DEU NOT NULL");
                     $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 }
             }
@@ -152,11 +155,10 @@ class ApiTimkiemController extends Controller
             if (request()->has($column)) {
 
                 if (request($column) == 'tatca') {
-                    Log::info("search passed " . $column);
                     continue;
                 }
                 Log::info("search " . $column);
-                $baidangs = $baidangs->where($column, '>=', $column);
+                $baidangs = $baidangs->where($column, '>=', $request->get($column));
             }
         }
 

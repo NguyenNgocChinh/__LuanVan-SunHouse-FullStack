@@ -97,7 +97,19 @@ class ApiBaiDangController extends Controller
     public function getDetailPost(Request $request)
     {
         $post = BaiDang::find($request->id);
-        event(new ViewPostHandler($post));
+        if( $post->trangthai == 1 && $post->choduyet == 0){
+            Log::info("trang thai 1 - cho duyet 0");
+            if(!Auth::check()){
+                Log::info("chua login");
+                event(new ViewPostHandler($post));
+            }else{
+                if(Auth::user()->id != $post->user_id){
+                    Log::info(" user dang dang nhap");
+                    event(new ViewPostHandler($post));
+                }
+            }
+        }
+
         return response()->json(
             new BaiDangDetailResource($post)
         );
@@ -430,8 +442,8 @@ class ApiBaiDangController extends Controller
         $post = BaiDang::find($id);
         if($post != null){
             $post->douutien = BaiDang::max('douutien') + 1;
-            // $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
-            $post->next_push = date('Y-m-d H:i:s', strtotime('1 minute'));
+            $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
+            // $post->next_push = date('Y-m-d H:i:s', strtotime('1 minute'));
             $post->save();
             return $post;
         }
@@ -454,12 +466,9 @@ class ApiBaiDangController extends Controller
     public function verifyCaptcha(Request $request)
     {
         $token = $request->get('g-recaptcha-response');
-        Log::info($request);
-        Log::info("token");
-        Log::info($token);
-        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY'));
+        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY',null));
         $resp = $recaptcha->setExpectedHostname($request->getHost())
-            // ->setExpectedAction('updateBaiDang')
+
             ->verify($token, $request->ip());
         if ($resp->isSuccess()) {
             // Verified!
@@ -472,8 +481,8 @@ class ApiBaiDangController extends Controller
 
     public function checkScopePosts(){
         $user = Auth::user();
-        $posts = BaiDang::whereDate('created_at', Carbon::today())
+        $postCount = BaiDang::whereDate('created_at', Carbon::today())
                 ->where('user_id', $user->id)->count();
-        return response()->json($posts);
+        return response()->json($postCount);
     }
 }

@@ -35,6 +35,7 @@ class CreateBaidang extends Migration
             $table->float('douutien')->default(0);
             $table->timestamp('next_push')->nullable();
             $table->smallInteger('luotxem')->default(0);
+            $table->softDeletes();
 
             $table->foreign('loai_id')->references('id')->on('loai');
             $table->foreign('user_id')->references('id')->on('users');
@@ -56,5 +57,8 @@ class CreateBaidang extends Migration
         //     DB::statement('ALTER TABLE baidang DROP INDEX tieude');
         // });
         Schema::dropIfExists('baidang');
+        Schema::table('baidang', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 }

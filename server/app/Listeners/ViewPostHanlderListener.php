@@ -37,6 +37,7 @@ class ViewPostHanlderListener
         Log::info("session " . json_encode(session()->get('viewed_posts', [])));
 	    if (!$this->isPostViewed($this->post))
 	    {
+            Log::info("increement luotxem");
             $this->post->increment('luotxem');
 	        $this->storePost($this->post);
 	    }

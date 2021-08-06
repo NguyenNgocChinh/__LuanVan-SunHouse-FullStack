@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class BaiDang extends Model
 {
     use HasFactory ; //FullTextSearch
     use SearchableTrait;
+    use SoftDeletes;
 
     protected $table = "baidang";
     protected $primaryKey = "id";
@@ -33,13 +36,6 @@ class BaiDang extends Model
         'choduyet',
         'dientich',
     ];
-    /**
-     * The columns of the full text index
-     */
-    // protected $searchable = [
-    //     'diachi',
-    //     'tieude'
-    // ];
     protected $searchable = [
         'columns' => [
             'users.sdt' => 20,

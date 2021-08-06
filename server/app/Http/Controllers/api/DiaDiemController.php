@@ -44,9 +44,9 @@ class DiaDiemController extends Controller
     public function addDuong(Request $request)
     {
         $xa = XaPhuong::findOrFail((int)$request->id_xaphuong);
-        $td = $request->tenduong;
-        Log::info($td);
-        if($td['id'] != null){
+        $isTonTai = Duong::where(['tenduong' => $request->tenduong, 'baidang_id' => $request->baidang_id])->get();
+        Log::info("isTonTai " . $isTonTai);
+        if(count($isTonTai) > 0){
             return true;
         }
         if($xa != null){
@@ -58,7 +58,8 @@ class DiaDiemController extends Controller
             $duong = new Duong();
             $duong->fill([
                 'tenduong' => $request->tenduong,
-                'xaid' => $xaid
+                'xaid' => $xaid,
+                'baidang_id' => $request->baidang_id
             ]);
             $duong->save();
             return response()->json(

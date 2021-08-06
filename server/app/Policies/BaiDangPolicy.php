@@ -57,7 +57,7 @@ class BaiDangPolicy
      */
     public function update(User $user, BaiDang $baiDang)
     {
-        if ($baiDang->user->id === $user->id || $user->vaitro === 'admin')
+        if ($baiDang->users->id === $user->id || $user->vaitro === 'admin')
             return Response::allow();
         return Response::deny('Bạn không có quyền chỉnh sửa bài viết này.');
     }
@@ -71,7 +71,7 @@ class BaiDangPolicy
      */
     public function delete(User $user, BaiDang $baiDang)
     {
-        if ($baiDang->user->id === $user->id || $user->vaitro === 'admin')
+        if ($baiDang->users->id === $user->id || $user->vaitro === 'admin')
             return Response::allow();
         return Response::deny('Bạn không có quyền xóa bài viết này.');
     }

@@ -11,11 +11,12 @@
     <p>Hệ thống bất động sản SUNHOUSE tìm thấy tin đăng phù hợp với nhu cầu tìm kiếm của bạn.</p>
     <p>Dưới đây là một vài mô tả:</p>
     <ul>
-        <li>Người đăng tin: {{$baidang->user->name}}</li>
+        <li>Người đăng tin: {{$baidang->users->name}}</li>
         <li>Tiêu đề: {{$baidang->tieude}}</li>
         <li>Giá: {{$baidang->gia}} triệu đồng</li>
         <li>Diện tích: {{$baidang->dientich}} m²</li>
         <li>Phòng ngủ: {{$baidang->sophongngu}} phòng</li>
+        <li>Phòng tắm: {{$baidang->sophongtam}} phòng</li>
         <li>Hướng nhà: {{$baidang->huong}}</li>
         <li>Loại nhà: {{$baidang->loai->ten_loai}}</li>
         <li>Hình thức: {{$baidang->isChoThue ? 'Cho thuê' : 'Rao bán'}}</li>
