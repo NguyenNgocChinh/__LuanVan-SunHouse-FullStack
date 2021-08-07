@@ -11,6 +11,7 @@ export const state = () => ({
     baidang_chothue: [],
     baidang_raoban: [],
     contatcs: [],
+    foundedBaiDang: true,
 })
 
 export const mutations = {

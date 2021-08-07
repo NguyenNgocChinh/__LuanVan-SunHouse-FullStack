@@ -86,6 +86,11 @@ export default {
                 icon: 'bx bxs-megaphone',
                 to: '/admin/reports',
             },
+            {
+                title: 'Bài đăng đã xóa',
+                icon: 'bx bxs-trash',
+                to: '/admin/deletedposts',
+            },
         ],
     }),
     computed: {

@@ -296,11 +296,16 @@ import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import Editor from '@/components/UIComponent/Editor'
+import error from '@/layouts/error'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
 export default {
     components: { Editor, BaiDangCard, Timer, OwlCarousel },
+    validate({ params }) {
+        // Must be a number
+        return /^\d+$/.test(params.id)
+    },
     data() {
         return {
             baidang: false,
@@ -524,6 +529,9 @@ export default {
                                 self.hinhanhArr.push(name)
                             })
                             this.searchNear(this.baidang.diachi)
+                        })
+                        .catch((e) => {
+                            return this.$nuxt.error({ statusCode: e.response.status, message: e.message })
                         })
                         .finally(() => {
                             this.$nuxt.$loading.finish()
