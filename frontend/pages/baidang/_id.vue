@@ -105,7 +105,7 @@
                             <div class="info-description">
                                 <h2>Thông tin mô tả</h2>
                                 <v-divider />
-                                <p style="letter-spacing: 0.5px" class="my-4" v-html="baidang.noidung"></p>
+                                <p style="letter-spacing: 0.5px" class="my-4" v-html="$sanitize(baidang.noidung)"></p>
                                 <v-expansion-panels multiple tile :value="[0, 1, 2]" flat hover accordion>
                                     <v-expansion-panel>
                                         <v-expansion-panel-header class="accordion-header"> Thông tin cơ bản </v-expansion-panel-header>
@@ -201,7 +201,7 @@
                         <!--RIGHT-->
                         <v-col class="col-lg-4">
                             <v-card class="ml-3 pa-4 pb-10">
-                                <v-row>
+                                <v-row class="d-flex flex-row align-center">
                                     <v-col class="col-md-3">
                                         <v-avatar size="56">
                                             <v-img v-if="user.profile_photo_path == null" width="100%" height="100%" :src="user.profile_photo_url" />
@@ -213,6 +213,7 @@
                                             {{ user.name || '-' }}
                                         </div>
                                         <div style="word-break: break-word">{{ user.email || '-' }}</div>
+                                        <v-rating length="5" size="18" :value="parseInt(user.sao)" color="yellow darken-3" readonly style="margin-left: -10px"></v-rating>
                                     </v-col>
                                 </v-row>
                                 <v-row class="mb-2"><v-divider /></v-row>
@@ -296,7 +297,6 @@ import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import Editor from '@/components/UIComponent/Editor'
-import error from '@/layouts/error'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 

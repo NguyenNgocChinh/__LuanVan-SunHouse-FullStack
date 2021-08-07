@@ -326,6 +326,16 @@ export default {
         this.getAllLoai()
         window.provider = new OpenStreetMapProvider()
         window.params = {}
+        // get position
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                this.X = pos.coords.latitude
+                this.Y = pos.coords.longitude
+            },
+            () => {
+                alert('Dịch vụ định vị của máy tính bạn không hoạt động.')
+            }
+        )
         this.loadSavedSearch()
     },
     computed: {

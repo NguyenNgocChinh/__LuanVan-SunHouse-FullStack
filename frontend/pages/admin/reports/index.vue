@@ -35,7 +35,7 @@
                                                 :items="item.baocao"
                                             >
                                                 <template #[`item.noidung`]="{ item }">
-                                                    <span class="red--text" v-html="item.noidung"></span>
+                                                    <span class="red--text" v-html="$sanitize(item.noidung)"></span>
                                                 </template>
                                                 <template #[`item.created_at`]="{ item }">
                                                     {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}
