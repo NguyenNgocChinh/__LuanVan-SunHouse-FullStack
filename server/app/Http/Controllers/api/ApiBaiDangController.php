@@ -96,7 +96,7 @@ class ApiBaiDangController extends Controller
 
     public function getDetailPost(Request $request)
     {
-        $post = BaiDang::find($request->id);
+        $post = BaiDang::findOrFail($request->id);
         if( $post->trangthai == 1 && $post->choduyet == 0){
             Log::info("trang thai 1 - cho duyet 0");
             if(!Auth::check()){
@@ -438,6 +438,43 @@ class ApiBaiDangController extends Controller
             ]);
         }
     }
+
+    public function deletePosts(){
+        return response()->json(BaiDangResource::collection(BaiDang::onlyTrashed()->get()));
+    }
+    public function restorePost($idPost){
+        if(Auth::check()){
+            if(Auth::user()->vaitro == 'admin'){
+                BaiDang::onlyTrashed()->where('id',$idPost)->restore();
+                return response()->json([
+                    'success' => 'Khôi phục bài đăng thành công'
+                ]);
+            }
+            return response()->json([
+                'errors' => 'Bạn không có quyền khôi phục'
+            ]);
+        }
+        return response()->json([
+            'errors' => 'Bạn cần đăng nhập để xác minh người dùng'
+        ]);
+    }
+    public function forceDeletePost($idPost){
+        if(Auth::check()){
+            if(Auth::user()->vaitro == 'admin'){
+                BaiDang::onlyTrashed()->where('id',$idPost)->forceDelete();
+                return response()->json([
+                    'success' => 'Xóa bài đăng thành công'
+                ]);
+            }
+            return response()->json([
+                'errors' => 'Bạn không có quyền xóa bài đăng'
+            ]);
+        }
+        return response()->json([
+            'errors' => 'Bạn cần đăng nhập để xác minh người dùng'
+        ]);
+    }
+
     public function pushDoUuTien($id){
         $post = BaiDang::find($id);
         if($post != null){

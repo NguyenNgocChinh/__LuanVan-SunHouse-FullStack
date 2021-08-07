@@ -35,10 +35,12 @@ class CreateBaidang extends Migration
             $table->float('douutien')->default(0);
             $table->timestamp('next_push')->nullable();
             $table->smallInteger('luotxem')->default(0);
+            $table->integer('duong_id')->nullable();
             $table->softDeletes();
 
             $table->foreign('loai_id')->references('id')->on('loai');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('duong_id')->references('id')->on('duong');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `diachi` (`diachi`)');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `tieude` (`tieude`,`diachi`)');
             $table->nullableTimestamps();

@@ -16,12 +16,12 @@ class CreateDuongTable extends Migration
         Schema::create('duong', function (Blueprint $table) {
             $table->integer('id', true);
             $table->string('xaid', 5);
-            $table->integer('baidang_id');
+            // $table->integer('baidang_id');
             $table->string('tenduong');
             $table->boolean('choduyet')->default(true);
 
             $table->foreign('xaid')->references('xaid')->on('xaphuongthitran');
-            $table->foreign('baidang_id')->references('id')->on('baidang');
+            // $table->foreign('baidang_id')->references('id')->on('baidang');
         });
     }
 

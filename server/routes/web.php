@@ -95,6 +95,9 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::get('/choduyet', [ApiBaiDangController::class, 'getChoDuyetPosts']);
         Route::get('/choduyet/count', [ApiBaiDangController::class, 'countChoDuyetPosts']);
         Route::put('/duyetbai', [ApiBaiDangController::class, 'duyetBai'])->middleware('auth:sanctum');
+        Route::get('/deletePosts', [ApiBaiDangController::class, 'deletePosts'])->middleware('auth:sanctum');
+        Route::put('/restorePost/{id}', [ApiBaiDangController::class, 'restorePost'])->middleware('auth:sanctum')->whereNumber('id');
+        Route::delete('/forceDeletePost/{id}', [ApiBaiDangController::class, 'forceDeletePost'])->middleware('auth:sanctum')->whereNumber('id');
 
         Route::put('/updateDuyetBai', [ApiBaiDangController::class, 'updateDuyetBai']);
         Route::put('/updateTrangThai', [ApiBaiDangController::class, 'updateTrangThai']);
