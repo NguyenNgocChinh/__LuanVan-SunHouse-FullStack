@@ -22,7 +22,7 @@
                         v-model="tieude"
                         clearable
                         counter
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 40) || 'Tiêu đề ít nhất phải 40 ký tự']"
+                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
                         dense
@@ -733,7 +733,7 @@ export default {
                         this.$toast.success('Đăng bài thành công!')
                         if (this.duong !== null && this.duong !== '') {
                             this.$axios
-                                .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
+                                .$post(this.$config.serverUrl + '/Duong', {
                                     xaid: this.xaphuong.xaid,
                                     baidang_id: data.id,
                                     tenduong: this.duong,

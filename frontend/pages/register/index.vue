@@ -167,7 +167,7 @@ export default {
             isValidNumerPhone: true,
             isValidEmail: true,
             isValidUsername: true,
-            countDown: 10,
+            countDown: 180,
             error: '',
             disabledDates: {
                 customPredictor(date) {
@@ -316,7 +316,7 @@ export default {
             })
         },
         sendOTP() {
-            this.countDown = 10
+            this.countDown = 180
             this.countDownTimer()
             console.log('sending...')
             const numberphone = '+84' + this.sdt.slice(1, this.sdt.length)
@@ -347,7 +347,7 @@ export default {
                         var user = result.user
                         console.log('verify')
                         console.log(user)
-                        this.step += 1
+                        // Thay doi sdt
                     })
                     .catch((error) => {
                         this.$toast.error('Mã xác minh không chính xác')

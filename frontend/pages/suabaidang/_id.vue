@@ -22,7 +22,7 @@
                         v-model="tieude"
                         clearable
                         counter
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 40) || 'Tiêu đề ít nhất phải 40 ký tự']"
+                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
                         dense
@@ -266,9 +266,10 @@
                                     chips
                                     class="mt-2"
                                     :items="listDuong"
-                                    :search-input.sync="searchDuong"
+                                    :search-input="searchDuong"
                                     item-text="tenduong"
-                                    item-value="id"
+                                    item-value="tenduong"
+                                    :return-object="false"
                                     no-data-text="Đường này chưa có sẵn trong hệ thống.
                                     Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
@@ -769,7 +770,7 @@ export default {
                         this.$toast.success('Sửa bài thành công!')
                         if (this.duong != null && this.duong !== '') {
                             this.$axios
-                                .$post(this.$config.serverUrl + '/Duong/' + this.xaphuong.xaid, {
+                                .$post(this.$config.serverUrl + '/Duong/', {
                                     xaid: this.xaphuong.xaid,
                                     tenduong: this.duong,
                                     baidang_id: data.id,
