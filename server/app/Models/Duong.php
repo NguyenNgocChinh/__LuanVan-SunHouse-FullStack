@@ -15,6 +15,5 @@ class Duong extends Model
     protected $fillable = [
         'tenduong',
         'xaid',
-        'baidang_id',
     ];
 }

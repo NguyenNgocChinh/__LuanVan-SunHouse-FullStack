@@ -61,6 +61,7 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
         Route::put('/disable/{id}', [ApiUserController::class, "disableUser"])->whereNumber('id');
         Route::put('/enable/{id}', [ApiUserController::class, "enableUser"])->whereNumber('id');
         Route::post('/update', [ApiUserController::class, "updateInfomationUser"])->middleware('auth:sanctum');
+        Route::put('/updateNumberPhone', [ApiUserController::class, "updateNumberPhone"])->middleware('auth:sanctum');
         Route::post('/sendMailResetPassword', [ApiUserController::class, "sendMailResetPassword"]);
         Route::get('/checkTokenExpired', [ApiUserController::class, "checkTokenExpired"]);
         Route::post('/resetPassword', [ApiUserController::class, "resetPassword"]);
@@ -136,7 +137,8 @@ Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middlew
 
         Route::get('Duong/{id_xaphuong}', [DiaDiemController::class, "duong"])
         ->whereNumber("id_xaphuong");
-        Route::post('Duong/{id_xaphuong}', [DiaDiemController::class, "addDuong"])->whereNumber("id_xaphuong");
+
+        Route::post('/Duong', [DiaDiemController::class, "addDuong"]);
 
     /*
      * TIM KIEM

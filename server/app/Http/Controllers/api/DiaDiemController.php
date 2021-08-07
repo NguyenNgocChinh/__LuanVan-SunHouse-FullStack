@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BaiDang;
 use App\Models\Duong;
 use App\Models\QuanHuyen;
 use App\Models\ThanhPho;
@@ -43,37 +44,49 @@ class DiaDiemController extends Controller
     }
     public function addDuong(Request $request)
     {
-        $xa = XaPhuong::findOrFail((int)$request->id_xaphuong);
-        $isTonTai = Duong::where(['tenduong' => $request->tenduong, 'baidang_id' => $request->baidang_id])->get();
-        Log::info("isTonTai " . $isTonTai);
-        if(count($isTonTai) > 0){
-            return true;
-        }
-        if($xa != null){
-            $xaid = $xa->xaid;
-            if(strlen($xaid) < 5){
-                for($i = 1; $i <= 5 - strlen($xaid); $i++)
-                    $xaid = substr_replace($xaid, '0', 0, 0);
+        $xaid = $request->xaid;
+        $strlenXaID = strlen($xaid);
+         if ($strlenXaID < 5) {
+            for ($i = 1; $i <= 5 - $strlenXaID; $i++){
+                $xaid = '0'. $xaid;
             }
-            $duong = new Duong();
-            $duong->fill([
-                'tenduong' => $request->tenduong,
-                'xaid' => $xaid,
-                'baidang_id' => $request->baidang_id
-            ]);
-            $duong->save();
+        }
+        $xa = XaPhuong::find($xaid);
+        $post = BaiDang::find($request->baidang_id);
+        $isTonTai = $xa != null ? Duong::where(['tenduong' => $request->tenduong, 'xaid' => $xaid])->first() : null;
+        if ($isTonTai == null) {
+            if ($xa != null) {
+                $duong = new Duong();
+                $duong->fill([
+                    'tenduong' => $request->tenduong,
+                    'xaid' => $xaid,
+                ]);
+                $duong->save();
+                $post->duong_id = $duong->id;
+                $post->save();
+                return response()->json(
+                    ['success' => 'Thêm đường thành công']
+                );
+            }
+            else
+            {
+                return response()->json(
+                    ['errors' => 'Không tìm thấy xã']
+                );
+            }
+        }
+        else{
+            $post->duong_id = $isTonTai->id;
+            $post->save();
             return response()->json(
-                ['success' => 'Thêm đường thành công']
+                ['success' => 'Thêm đường vào bài đăng thành công']
             );
         }
-        return response()->json(
-            ['error' => 'Không tìm thấy xã']
-        );
     }
     public function toggleDuong($id_duong)
     {
         $duong = Duong::findOrFail((int)$id_duong);
-        if($duong != null){
+        if ($duong != null) {
             $duong->choduyet = !$duong->choduyet;
             $duong->update();
             return response()->json(
@@ -87,7 +100,7 @@ class DiaDiemController extends Controller
     public function deleteDuong($id_duong)
     {
         $duong = Duong::findOrFail((int)$id_duong);
-        if($duong != null){
+        if ($duong != null) {
             $duong->delete();
             return response()->json(
                 ['success' => 'Xóa thành công']

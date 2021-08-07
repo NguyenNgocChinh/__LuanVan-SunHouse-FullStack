@@ -135,6 +135,22 @@ class ApiUserController extends Controller
     public function userOnline()
     {
     }
+    public function updateNumberPhone(Request $request)
+    {
+        $user = Auth::user();
+        if ($user) {
+            $user->sdt = $request->sdt;
+            $user->update();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cập nhật SĐT thành công!'
+            ]);
+        }
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'Cần phải đăng nhập!'
+        ]);
+    }
     public function updateInfomationUser(Request $request)
     {
         $user = Auth::user();
@@ -280,7 +296,7 @@ class ApiUserController extends Controller
     }
     public function checkTokenExpired(Request $request)
     {
-Log::info($request);
+        Log::info($request);
         $token = DB::table('password_resets')
             ->where('email', $request->email)
             ->first();
@@ -290,7 +306,7 @@ Log::info($request);
             $to_time = strtotime(Carbon::now());
             $kq =  round(($to_time - $from_time) / 60);
             Log::info($kq);
-            if($kq < 60)
+            if ($kq < 60)
                 return 1;
             return 0;
         }
