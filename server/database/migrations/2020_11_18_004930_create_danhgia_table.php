@@ -17,6 +17,7 @@ class CreateDanhGiaTable extends Migration
             $table->smallInteger('id',true);
             $table->mediumInteger('user_id');
             $table->string('noidung',255);
+            $table->char('sao',1);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

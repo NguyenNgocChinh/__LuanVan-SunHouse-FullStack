@@ -10,13 +10,10 @@ class DanhGia extends Model
     use HasFactory;
     protected $table = "danhgia";
     protected $primaryKey = "id";
-
+    protected $fillable = ['sao','user_id','noidung'];
     public function user()
     {
-        return $this->belongsTo('App\Models\User','id','user_id');
+        return $this->belongsTo(User::class,'user_id','id');
     }
 
-    public function baidang(){
-        return $this->belongsTo('App\Models\BaiDang','baidang_id','id');
-    }
 }

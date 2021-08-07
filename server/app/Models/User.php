@@ -103,6 +103,9 @@ class User extends Authenticatable
     public function nguoibibaocao(){
         return $this->hasMany(BaoCao::class, 'user_bibaocao', 'id');
     }
+    public function danhgia(){
+        return $this->hasMany(DanhGia::class, 'user_id', 'id');
+    }
 
     /**
      * Send a password reset notification to the user.

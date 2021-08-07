@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
                 UserSeeder::class,
                 LoaiSeeder::class,
                 TienNghiSeeder::class,
-                // BaiDangSeeder::class,
+                BaiDangSeeder::class,
                 // LocationSeeder::class, //1
                 // LocationSeeder::class, //2
                 // LocationSeeder::class, //3
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 XaPhuongThiTranSeeder::class,
             ]
         );
-        BaiDang::factory(20)->create();
+        // BaiDang::factory(20)->create();
         Message::factory(100)->create();
     }
 }
