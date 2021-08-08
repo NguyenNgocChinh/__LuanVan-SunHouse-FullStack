@@ -114,7 +114,7 @@
                         <v-icon> mdi-heart </v-icon>
                     </v-btn>
                 </template>
-                <span>Yêu thích</span>
+                <span>{{ $auth.loggedIn ? 'Thêm yêu thích' : 'Đăng nhập để thêm yêu thích' }}</span>
             </v-tooltip>
             <v-divider class="mt-2" />
             <div class="pa-4 d-flex size-14 flex-row align-center justify-space-between">
