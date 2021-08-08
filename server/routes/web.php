@@ -26,19 +26,10 @@ use Illuminate\Http\Request;
 /*
  * Broadcast
  */
-// Broadcast::routes(['middleware' => ['auth:sanctum']]);
-// Broadcast::routes();
-Route::put('users/online', [UserOnlineController::class, 'userOnline'])->middleware(['auth:sanctum']);
-//Route::middleware('auth:sanctum')->put('users/online', 'UserOnlineController');
-
-//Route::post('/broadcasting/auth', function (Request $request) {
-//    $pusher = new Pusher\Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
-//    return $pusher->socket_auth($request->channel_name, $request->socket_id);
-//})->middleware('auth:sanctum');
 
 /*
-     * AUTH
-     */
+* AUTH
+*/
 Route::post('/register', [ApiUserController::class, "register"]);
 Route::post('/login', [ApiUserController::class, "login"]);
 
