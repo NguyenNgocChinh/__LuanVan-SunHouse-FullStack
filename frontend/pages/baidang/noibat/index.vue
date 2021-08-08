@@ -1,38 +1,40 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col>
-                <v-card class="d-flex">
-                    <v-row align="center">
-                        <v-col cols="12" lg="8">
-                            <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
-                        </v-col>
+    <v-container fluid class="orange darken-3">
+        <v-container>
+            <v-row>
+                <v-col>
+                    <v-card class="d-flex">
+                        <v-row align="center">
+                            <v-col cols="12" lg="8">
+                                <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
+                            </v-col>
 
-                        <v-col cols="12" lg="4" class="d-flex align-center">
-                            <v-col cols="4">
-                                <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
+                            <v-col cols="12" lg="4" class="d-flex align-center">
+                                <v-col cols="4">
+                                    <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
+                                </v-col>
+                                <v-col cols="8">
+                                    <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
+                                </v-col>
                             </v-col>
-                            <v-col cols="8">
-                                <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
+                        </v-row>
+                    </v-card>
+                    <v-row class="mt-4 ml-1">
+                        <v-row v-if="baidangs.length < 1">
+                            <v-skeleton-loader v-for="index in 6" :key="index" light class="ma-6 ml-5" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
+                        </v-row>
+                        <v-row v-else>
+                            <v-col v-for="baidang in baidangs" :key="baidang.id" cols="12" lg="4">
+                                <bai-dang-card :baidang="baidang" />
                             </v-col>
-                        </v-col>
+                        </v-row>
                     </v-row>
-                </v-card>
-                <v-row class="mt-4 ml-1">
-                    <v-row v-if="baidangs.length < 1">
-                        <v-skeleton-loader v-for="index in 6" :key="index" light class="ma-6 ml-5" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
-                    </v-row>
-                    <v-row v-else>
-                        <v-col v-for="baidang in baidangs" :key="baidang.id" cols="12" lg="4">
-                            <bai-dang-card outlined :baidang="baidang" />
-                        </v-col>
-                    </v-row>
-                </v-row>
-            </v-col>
-        </v-row>
-        <div class="text-center mt-10">
-            <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangHot"></v-pagination>
-        </div>
+                </v-col>
+            </v-row>
+            <div class="text-center mt-10">
+                <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangHot"></v-pagination>
+            </div>
+        </v-container>
     </v-container>
 </template>
 

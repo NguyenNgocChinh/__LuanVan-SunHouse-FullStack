@@ -1,9 +1,9 @@
 <template>
-    <v-card outlined class="pa-5">
+    <v-card outlined class="pa-5 teal lighten-4">
         <v-form ref="form" lazy-validation>
-            <div class="ml-5"><h3>Tìm kiếm tài sản</h3></div>
+            <div class="ml-5"><h3 style="font-size: 26px">Tìm kiếm tài sản</h3></div>
             <div class="ml-5">
-                <v-text-field v-model="keyword" label="Từ khóa tìm kiếm" hint="Cho phép tìm tiêu đề, địa chỉ, loại nhà, hướng." @keydown.native.enter="searchBaiDangs">
+                <v-text-field v-model="keyword" class="custom-label-color custom-placeholer-color" label="Từ khóa tìm kiếm" hint="Cho phép tìm tiêu đề, địa chỉ, loại nhà, hướng." @keydown.native.enter="searchBaiDangs">
                     <v-icon slot="append" color="black" @click="searchBaiDangs"> mdi-magnify </v-icon>
                 </v-text-field>
             </div>
@@ -198,7 +198,7 @@
                 </v-row>
             </div>
             <div class="ml-1">
-                <v-btn block class="deep-orange lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
+                <v-btn block class="pink lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
             <v-checkbox v-model="isSaveSearch" label="Lưu tìm kiếm" color="pink" hide-details @click="toggleSaveSearch"></v-checkbox>
         </v-form>

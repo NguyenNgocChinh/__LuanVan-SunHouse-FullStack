@@ -1,11 +1,11 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-row>
-            <v-col cols="4">
+            <v-col cols="4" class="teal lighten-2">
                 <FormBaiDang class="mt-2" />
             </v-col>
             <v-col cols="8">
-                <KQHienThi />
+                <KQHienThi class="" />
             </v-col>
         </v-row>
     </v-container>

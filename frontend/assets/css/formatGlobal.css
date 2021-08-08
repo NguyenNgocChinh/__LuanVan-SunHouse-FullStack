@@ -57,3 +57,13 @@ body{
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
+
+.custom-placeholer-color input::placeholder {
+    color: #000 !important;
+    opacity: 1;
+}
+
+.custom-label-color .v-label {
+    color: #000000;
+    opacity: 1;
+}

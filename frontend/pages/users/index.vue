@@ -38,7 +38,14 @@
                                 <v-col class="col-12">
                                     <v-row>
                                         <v-col class="col-md-4">
-                                            <datepicker v-model="birthday" placeholder="Chọn ngày sinh" :format="formatDate" :disabled-dates="disabledDates" @input="formatDateModel(birthday)">
+                                            <datepicker
+                                                v-model="birthday"
+                                                class="custom-placeholer-color custom-label-color"
+                                                placeholder="Chọn ngày sinh"
+                                                :format="formatDate"
+                                                :disabled-dates="disabledDates"
+                                                @input="formatDateModel(birthday)"
+                                            >
                                                 <span slot="beforeCalendarHeader" class="caption red--text text-center">
                                                     <p class="pa-0 ma-0">Ngày hợp lệ từ 01/01/1900 đến hiện nay</p>
                                                 </span>
@@ -60,7 +67,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="12" md="4">
                                             <div class="inputWithIcon">
-                                                <input v-model="sdt" disabled type="text" placeholder="Điện thoại" pattern="(84|0[3|5|7|8|9])+([0-9]{8})" />
+                                                <input v-model="sdt" disabled type="text" class="custom-placeholer-color custom-label-color" placeholder="Điện thoại" pattern="(84|0[3|5|7|8|9])+([0-9]{8})" />
                                                 <i class="bx bx-phone"></i>
                                                 <span class="placeholder-input"> Điện thoại</span>
                                                 <span class="hint-input animate__animated animate__headShake blue--text" style="text-decoration: underline; cursor: pointer !important" @click="$refs.changeNumberPhoneModal.open()">

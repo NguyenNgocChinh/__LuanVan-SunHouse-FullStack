@@ -2,12 +2,12 @@
     <v-app id="inspire">
         <Header v-model="expandOnHover"></Header>
         <Sidebar :expand-on-hover.sync="expandOnHover"></Sidebar>
-        <v-main>
+        <v-main class="grey lighten-1">
             <v-container fluid>
                 <nuxt />
             </v-container>
         </v-main>
-        <Footer />
+        <!--        <Footer />-->
     </v-app>
 </template>
 

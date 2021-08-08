@@ -2,7 +2,7 @@
     <div>
         <v-app>
             <HeaderDefault />
-            <v-main app>
+            <v-main app style="padding-bottom: 0">
                 <v-fade-transition hide-on-leave>
                     <Nuxt />
                 </v-fade-transition>

@@ -1,7 +1,8 @@
 <template>
     <nav>
         <!--IS DESKTOP-->
-        <v-app-bar v-show="!isMobile" dense flat app color="sunhouse_primary">
+        <v-app-bar v-show="!isMobile" dense flat app class="light-blue accent-4">
+            <!--color="sunhouse_primary"-->
             <v-toolbar-title class="text-uppercase">
                 <nuxt-link class="text-decoration-none white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b></nuxt-link>
             </v-toolbar-title>
@@ -21,9 +22,9 @@
                 <!--Loggin: true-->
                 <HasLogin v-else />
             </client-only>
-            <v-btn elevation="2" rounded color="sunhouse_pinkLinght" to="/GuiTaiSan">
+            <v-btn elevation="2" rounded color="yellow lighten-2" to="/GuiTaiSan">
                 <!--<v-icon dark> mdi-plus</v-icon>-->
-                <span class="text-uppercase">Đăng tin</span>
+                Đăng tin
             </v-btn>
         </v-app-bar>
         <!--IS MOBILE-->
@@ -39,9 +40,10 @@
                     <NotLogin v-if="!$auth.user" />
                     <HasLogin v-else />
                 </div>
-                <v-btn elevation="2" rounded color="sunhouse_pinkLinght" to="/GuiTaiSan">
+                <v-btn elevation="2" rounded class="yellow lighten-1 text-uppercase" to="/GuiTaiSan">
+                    <!--sunhouse_pinkLinght-->
                     <!--<v-icon dark> mdi-plus</v-icon>-->
-                    <span class="text-uppercase">Đăng tin</span>
+                    Đăng tin
                 </v-btn>
             </v-app-bar>
             <v-navigation-drawer v-model="isMenuResponsive" absolute temporary>

@@ -3,7 +3,7 @@
         <div class="sidebar">
             <div class="logo_content animate__animated animate__fadeInLeft">
                 <div class="logo">
-                    <div class="logo_name ml-2">SunHouse</div>
+                    <div class="logo_name ml-2 font-weight-bold">SunHouse</div>
                 </div>
                 <i id="btn" class="bx bx-menu"></i>
             </div>
@@ -11,7 +11,7 @@
                 <li v-for="item in navItems" :key="item.id" class="animate__animated animate__fadeInLeft" :class="{ active: indexNav === item.id }" @click="setActive(item.id)">
                     <nuxt-link :to="item.href">
                         <i :class="item.icon"></i>
-                        <span class="links_name">{{ item.label }}</span>
+                        <span class="links_name font-weight-bold">{{ item.label }}</span>
                     </nuxt-link>
                     <span class="tooltip">{{ item.tooltip }}</span>
                 </li>

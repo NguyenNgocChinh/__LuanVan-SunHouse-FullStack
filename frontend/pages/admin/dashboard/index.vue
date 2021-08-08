@@ -4,18 +4,18 @@
         <v-container class="mt-4 text-center">
             <v-row>
                 <v-spacer />
-                <v-card elevation="2" outlined width="300">
+                <v-card elevation="2" outlined width="300" class="red lighten-3">
                     <v-card-title class="justify-center">Số Thành Viên</v-card-title>
                     <v-card-text>{{ thanhvien }} thành viên</v-card-text>
                 </v-card>
                 <v-spacer />
-                <v-card elevation="2" outlined width="300">
+                <v-card elevation="2" outlined width="300" class="yellow lighten-3">
                     <v-card-title class="justify-center">Tổng Bài Viết</v-card-title>
                     <v-card-text>{{ baiviet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
-                <v-card elevation="2" outlined width="300">
+                <v-card elevation="2" outlined width="300" class="green lighten-3">
                     <v-card-title class="justify-center">Đang Chờ Duyệt</v-card-title>
                     <v-card-text>{{ choduyet }} bài viết</v-card-text>
                 </v-card>

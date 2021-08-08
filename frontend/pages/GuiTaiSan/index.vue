@@ -1,330 +1,354 @@
 <template>
-    <v-container>
-        <v-breadcrumbs :link="true" :items="breadcumb">
-            <template #item="{ item }">
-                <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
-                    {{ item.text }}
-                </v-breadcrumbs-item>
-            </template>
-            <template #divider>
-                <v-icon>mdi-chevron-right</v-icon>
-            </template>
-        </v-breadcrumbs>
-        <v-form ref="form" v-model="vaild" class="mb-6">
-            <v-card>
-                <v-card-title>THÔNG TIN CƠ BẢN</v-card-title>
-                <v-card-text>
-                    <h3 class="d-inline-block">Tiêu đề</h3>
-                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
-                    </span>
-                    <v-text-field
-                        v-model="tieude"
-                        clearable
-                        counter
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
-                        placeholder="Nhập tiêu đề bài đăng"
-                        required
-                        dense
-                    ></v-text-field>
-                    <div class="spacer-line-form"></div>
-                    <h3 class="d-inline-block">Loại tài sản</h3>
-                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
-                    </span>
-                    <v-select
-                        v-model="loai"
-                        :items="loais"
-                        :rules="[(v) => !!v || 'Vui lòng chọn loại']"
-                        item-text="ten_loai"
-                        item-value="id"
-                        solo
-                        class="mt-4"
-                        label="Đang tải loại nhà"
-                        :loading="loais.length < 1"
-                        no-data-text="Đang tải..."
-                    ></v-select>
-                    <h3 class="d-inline-block">Giá bán</h3>
-                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
-                    </span>
-                    <v-text-field
-                        v-model="gia"
-                        suffix="Triệu/m²"
-                        :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
-                        type="number"
-                        min="1"
-                        hint="Đơn vị triệu đồng"
-                        placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"
-                    ></v-text-field>
-                    <div class="spacer-line-form"></div>
-                    <h3 class="d-inline-block">Mô tả tài sản</h3>
-                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
-                    </span>
-                    <!--                    <v-text-field-->
-                    <!--                        v-model="noidung"-->
-                    <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
-                    <!--                        counter-->
-                    <!--                        placeholder="Nhập nội dung bài viết..."-->
-                    <!--                    ></v-text-field>-->
-                    <editor id="sunhouseEditor" :min-length="40" class="mt-2" />
+    <v-container fluid class="pink lighten-4">
+        <v-container>
+            <v-breadcrumbs :link="true" :items="breadcumb">
+                <template #item="{ item }">
+                    <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
+                        {{ item.text }}
+                    </v-breadcrumbs-item>
+                </template>
+                <template #divider>
+                    <v-icon>mdi-chevron-right</v-icon>
+                </template>
+            </v-breadcrumbs>
+            <v-form ref="form" v-model="vaild" class="mb-6">
+                <v-card>
+                    <v-card-title class="font-weight-bold">THÔNG TIN CƠ BẢN</v-card-title>
+                    <v-card-text>
+                        <h3 class="d-inline-block black--text">Tiêu đề</h3>
+                        <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                            <sup>(*)</sup>
+                        </span>
+                        <v-text-field
+                            v-model="tieude"
+                            clearable
+                            counter
+                            class="custom-placeholer-color custom-label-color"
+                            :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
+                            placeholder="Nhập tiêu đề bài đăng"
+                            required
+                            dense
+                        ></v-text-field>
+                        <div class="spacer-line-form"></div>
+                        <h3 class="d-inline-block black--text">Loại tài sản</h3>
+                        <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                            <sup>(*)</sup>
+                        </span>
+                        <v-select
+                            v-model="loai"
+                            :items="loais"
+                            :rules="[(v) => !!v || 'Vui lòng chọn loại']"
+                            item-text="ten_loai"
+                            item-value="id"
+                            solo
+                            class="mt-4"
+                            label="Đang tải loại nhà"
+                            :loading="loais.length < 1"
+                            no-data-text="Đang tải..."
+                        ></v-select>
+                        <h3 class="d-inline-block black--text">Giá bán</h3>
+                        <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                            <sup>(*) </sup>
+                        </span>
+                        <v-text-field
+                            v-model="gia"
+                            class="custom-placeholer-color custom-label-color"
+                            suffix="Triệu/m²"
+                            :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
+                            type="number"
+                            min="1"
+                            hint="Đơn vị triệu đồng"
+                            placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"
+                        ></v-text-field>
+                        <div class="spacer-line-form"></div>
+                        <h3 class="d-inline-block black--text">Mô tả tài sản</h3>
+                        <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                            <sup>(*) </sup>
+                        </span>
+                        <!--                    <v-text-field-->
+                        <!--                        v-model="noidung"-->
+                        <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
+                        <!--                        counter-->
+                        <!--                        placeholder="Nhập nội dung bài viết..."-->
+                        <!--                    ></v-text-field>-->
+                        <editor id="sunhouseEditor" :min-length="40" class="mt-2" />
 
-                    <div class="spacer-line-form"></div>
-                    <h3>Hình ảnh</h3>
-                    <v-file-input
-                        ref="files"
-                        v-model="files"
-                        accept="image/*"
-                        label="Có thể chọn nhiều hình ảnh"
-                        placeholder="Có thể chọn nhiều hình ảnh"
-                        prepend-icon="mdi-camera"
-                        multiple
-                        chips
-                        color="pink"
-                        @change="addFiles"
-                    ></v-file-input>
-                    <v-row>
-                        <v-col v-for="(file, f) in files" :key="f">
-                            {{ file.name }} -
-                            <span class="size" v-text="getFileSize(files[f].size)"></span>
-                            <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-                <v-divider class="mt-12"></v-divider>
-            </v-card>
-            <v-card class="mt-6">
-                <v-card-title>THÔNG TIN CHI TIẾT</v-card-title>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Hình thức</h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-                            <v-select
-                                v-model="hinhthuc"
-                                class="mt-2"
-                                item-text="v"
-                                item-value="k"
-                                :items="[
-                                    { k: '1', v: 'Cho thuê' },
-                                    { k: '0', v: 'Rao Bán' },
-                                ]"
-                                solo
-                            ></v-select>
-                        </v-col>
-                        <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Số phòng ngủ</h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
-                        </v-col>
-                        <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Số phòng tắm</h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Hướng nhà</h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-
-                            <v-select
-                                v-model="selectedhuong"
-                                class="mt-2"
-                                item-value="k"
-                                item-text="v"
-                                :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
-                                :items="[
-                                    { k: 'Đông', v: 'Hướng nhà: Đông' },
-                                    { k: 'Tây', v: 'Hướng nhà: Tây' },
-                                    { k: 'Nam', v: 'Hướng nhà: Nam' },
-                                    { k: 'Bắc', v: 'Hướng nhà: Bắc' },
-                                    { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
-                                    { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
-                                    { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
-                                    { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
-                                ]"
-                                solo
-                            ></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Năm xây dựng</h3>
-                            <v-text-field v-model="namxaydung" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-                            <v-text-field
-                                v-model="dientich"
-                                class="mt-2"
-                                type="number"
-                                :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
-                                placeholder="ví dụ: 100"
-                                solo
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-            </v-card>
-            <v-card class="mt-8">
-                <v-card-title>NỘI THẤT</v-card-title>
-                <v-card-text>
-                    <v-container fluid>
-                        <v-row v-if="tiennghis.length < 1" align-content="center" justify="center">
-                            <v-progress-circular class="align-items-center" color="grey" indeterminate rounded height="6"></v-progress-circular>
-                        </v-row>
-
-                        <v-row v-else>
-                            <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="12" lg="2" class="pb-0">
-                                <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="primary" :value="tiennghi.id" class=""></v-checkbox>
+                        <div class="spacer-line-form"></div>
+                        <h3 class="black--text">Hình ảnh</h3>
+                        <v-file-input
+                            ref="files"
+                            v-model="files"
+                            accept="image/*"
+                            label="Có thể chọn nhiều hình ảnh"
+                            placeholder="Có thể chọn nhiều hình ảnh"
+                            prepend-icon="mdi-camera"
+                            multiple
+                            class="custom-label-color custom-placeholer-color"
+                            chips
+                            color="pink"
+                            @change="addFiles"
+                        ></v-file-input>
+                        <v-row>
+                            <v-col v-for="(file, f) in files" :key="f">
+                                {{ file.name }} -
+                                <span class="size" v-text="getFileSize(files[f].size)"></span>
+                                <img :ref="'file'" width="250" src="//placehold.it/400/99cc77" :title="'file' + f" />
                             </v-col>
                         </v-row>
-                    </v-container>
-                </v-card-text>
-            </v-card>
-            <v-card class="mt-8 py-1">
-                <v-card-title>CHỌN VỊ TRÍ</v-card-title>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" lg="4" sm="12">
-                            <div>
-                                <h3 class="d-inline-block">Tỉnh/Thành phố</h3>
-                                <v-combobox
-                                    v-model="thanhpho"
-                                    class="mt-2"
-                                    :items="listThanhPho"
-                                    placeholder="Tìm kiếm"
-                                    item-text="name"
-                                    item-value="matp"
-                                    no-data-text="Tải dữ liệu thành phố thất bại"
-                                    label="Chọn Tỉnh/Thành Phố"
-                                    solo
-                                ></v-combobox>
-                            </div>
-                            <div v-if="thanhpho">
-                                <h3 class="d-inline-block">Quận/Huyện</h3>
-                                <v-combobox
-                                    v-model="quanhuyen"
-                                    class="mt-2"
-                                    placeholder="Tìm kiếm"
-                                    :items="listQuanHuyen"
-                                    item-text="name"
-                                    item-value="maqh"
-                                    no-data-text="Tải dữ liệu quận huyện thất bại"
-                                    label="Chọn Quận/Huyện"
-                                    solo
-                                ></v-combobox>
-                            </div>
-                            <div v-if="quanhuyen">
-                                <h3 class="d-inline-block">Xã/Phường</h3>
-                                <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
-                            </div>
-                            <div v-if="xaphuong">
-                                <h3 class="d-inline-block">Đường/Phố</h3>
-                                <!--                                <v-combobox-->
-                                <!--                                    v-model="duong"-->
-                                <!--                                    class="mt-2"-->
-                                <!--                                    :items="listDuong"-->
-                                <!--                                    hide-selected-->
-                                <!--                                    chips-->
-                                <!--                                    clearable-->
-                                <!--                                    :search-input.sync="searchDuong"-->
-                                <!--                                    item-text="name"-->
-                                <!--                                    item-value="maduong"-->
-                                <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
-                                <!--                                    label="Chọn Đường/Phố"-->
-                                <!--                                    solo-->
-                                <!--                                >-->
-                                <!--                                    <template #no-data>-->
-                                <!--                                        <v-list-item>-->
-                                <!--                                            <v-list-item-content>-->
-                                <!--                                                <v-list-item-title>-->
-                                <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
-                                <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
-                                <!--                                                </v-list-item-title>-->
-                                <!--                                            </v-list-item-content>-->
-                                <!--                                        </v-list-item>-->
-                                <!--                                    </template>-->
-                                <!--                                </v-combobox>-->
-                                <v-combobox
-                                    v-model="duong"
-                                    chips
-                                    class="mt-2"
-                                    :items="listDuong"
-                                    :search-input.sync="searchDuong"
-                                    item-text="tenduong"
-                                    item-value="id"
-                                    no-data-text="Đường này chưa có sẵn trong hệ thống.
-                                    Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
-                                    label="Chọn Đường/Phố"
-                                    solo
-                                >
-                                </v-combobox>
-                                <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
-                            </div>
-                            <div class="f-flex flex-row align-center">
-                                <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
+                    </v-card-text>
+                    <v-divider class="mt-12"></v-divider>
+                </v-card>
+                <v-card class="mt-6">
+                    <v-card-title class="font-weight-bold">THÔNG TIN CHI TIẾT</v-card-title>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12" lg="4" sm="12">
+                                <h3 class="d-inline-block black--text">Hình thức</h3>
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
-                                <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
-                            </div>
-                        </v-col>
-                        <v-col cols="12" lg="8" sm="12">
-                            <v-card outlined elevation="4">
-                                <div style="height: 500px; width: 100%">
-                                    <client-only>
-                                        <l-map id="map" ref="map" :zoom="zoom" :center="center">
-                                            <l-tile-layer :url="layers.url" :subdomains="layers.subdomains" :attribution="layers.attribution" />
+                                <v-select
+                                    v-model="hinhthuc"
+                                    class="mt-2"
+                                    item-text="v"
+                                    item-value="k"
+                                    :items="[
+                                        { k: '1', v: 'Cho thuê' },
+                                        { k: '0', v: 'Rao Bán' },
+                                    ]"
+                                    solo
+                                ></v-select>
+                            </v-col>
+                            <v-col cols="12" lg="4" sm="12">
+                                <h3 class="d-inline-block black--text">Số phòng ngủ</h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-text-field
+                                    v-model="phongngu"
+                                    class="mt-2 custom-placeholer-color custom-label-color"
+                                    :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
+                                    type="number"
+                                    solo
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" lg="4" sm="12">
+                                <h3 class="d-inline-block black--text">Số phòng tắm</h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-text-field
+                                    v-model="phongtam"
+                                    class="pr-3 mt-2 custom-placeholer-color custom-label-color"
+                                    type="number"
+                                    :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
+                                    solo
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12" sm="4">
+                                <h3 class="d-inline-block black--text">Hướng nhà</h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
 
-                                            <l-control position="topleft" style="border-radius: 0.1em">
-                                                <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
-                                                    <v-btn color="white" class="pa-0" style="width: 30px; height: 30px; min-width: 30px" @click="findMyLocationOnMap">
-                                                        <v-icon v-if="!isFound" size="22" color="blue darken-1">mdi-map-marker-outline</v-icon>
+                                <v-select
+                                    v-model="selectedhuong"
+                                    class="mt-2"
+                                    item-value="k"
+                                    item-text="v"
+                                    :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
+                                    :items="[
+                                        { k: 'Đông', v: 'Hướng nhà: Đông' },
+                                        { k: 'Tây', v: 'Hướng nhà: Tây' },
+                                        { k: 'Nam', v: 'Hướng nhà: Nam' },
+                                        { k: 'Bắc', v: 'Hướng nhà: Bắc' },
+                                        { k: 'Đông Bắc', v: 'Hướng nhà: Đông Bắc' },
+                                        { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
+                                        { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
+                                        { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
+                                    ]"
+                                    solo
+                                ></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="4">
+                                <h3 class="d-inline-block black--text">Năm xây dựng</h3>
+                                <v-text-field v-model="namxaydung" class="mt-2 custom-placeholer-color custom-label-color" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="4">
+                                <h3 class="d-inline-block black--text">Diện tích: m<sup>2</sup></h3>
+                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                    <sup>(*) </sup>
+                                </span>
+                                <v-text-field
+                                    v-model="dientich"
+                                    class="mt-2 custom-label-color custom-placeholer-color"
+                                    type="number"
+                                    :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
+                                    placeholder="ví dụ: 100"
+                                    solo
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+                <v-card class="mt-8">
+                    <v-card-title class="font-weight-bold">NỘI THẤT</v-card-title>
+                    <v-card-text>
+                        <v-container fluid>
+                            <v-row v-if="tiennghis.length < 1" align-content="center" justify="center">
+                                <v-progress-circular class="align-items-center" color="grey" indeterminate rounded height="6"></v-progress-circular>
+                            </v-row>
 
-                                                        <v-icon v-else size="22" color="blue darken-3">mdi-map-marker</v-icon>
-                                                    </v-btn>
-                                                </div>
-                                            </l-control>
-                                            <l-marker v-if="marker != null" ref="marker" :draggable="true" :lat-lng.sync="marker" @add="openPopup">
-                                                <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
-                                            </l-marker>
-                                        </l-map>
-                                        <small v-if="toadoX" class="red--text mb-5"> {{ toadoX }} , {{ toadoY }} </small>
-                                    </client-only>
+                            <v-row v-else>
+                                <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="12" lg="2" class="pb-0">
+                                    <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="primary" :value="tiennghi.id" class=""></v-checkbox>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+                <v-card class="mt-8 py-1">
+                    <v-card-title class="font-weight-bold">CHỌN VỊ TRÍ</v-card-title>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12" lg="4" sm="12">
+                                <div>
+                                    <h3 class="d-inline-block black--text">Tỉnh/Thành phố</h3>
+                                    <v-combobox
+                                        v-model="thanhpho"
+                                        class="mt-2"
+                                        :items="listThanhPho"
+                                        placeholder="Tìm kiếm"
+                                        item-text="name"
+                                        item-value="matp"
+                                        no-data-text="Tải dữ liệu thành phố thất bại"
+                                        label="Chọn Tỉnh/Thành Phố"
+                                        solo
+                                    ></v-combobox>
                                 </div>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-            </v-card>
-        </v-form>
-        <v-row class="text-center my-5" style="position: relative; height: 100px">
-            <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-                <div class="g-recaptcha" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                                <div v-if="thanhpho">
+                                    <h3 class="d-inline-block black--text">Quận/Huyện</h3>
+                                    <v-combobox
+                                        v-model="quanhuyen"
+                                        class="mt-2"
+                                        placeholder="Tìm kiếm"
+                                        :items="listQuanHuyen"
+                                        item-text="name"
+                                        item-value="maqh"
+                                        no-data-text="Tải dữ liệu quận huyện thất bại"
+                                        label="Chọn Quận/Huyện"
+                                        solo
+                                    ></v-combobox>
+                                </div>
+                                <div v-if="quanhuyen">
+                                    <h3 class="d-inline-block black--text">Xã/Phường</h3>
+                                    <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
+                                </div>
+                                <div v-if="xaphuong">
+                                    <h3 class="d-inline-block black--text">Đường/Phố</h3>
+                                    <!--                                <v-combobox-->
+                                    <!--                                    v-model="duong"-->
+                                    <!--                                    class="mt-2"-->
+                                    <!--                                    :items="listDuong"-->
+                                    <!--                                    hide-selected-->
+                                    <!--                                    chips-->
+                                    <!--                                    clearable-->
+                                    <!--                                    :search-input.sync="searchDuong"-->
+                                    <!--                                    item-text="name"-->
+                                    <!--                                    item-value="maduong"-->
+                                    <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
+                                    <!--                                    label="Chọn Đường/Phố"-->
+                                    <!--                                    solo-->
+                                    <!--                                >-->
+                                    <!--                                    <template #no-data>-->
+                                    <!--                                        <v-list-item>-->
+                                    <!--                                            <v-list-item-content>-->
+                                    <!--                                                <v-list-item-title>-->
+                                    <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
+                                    <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
+                                    <!--                                                </v-list-item-title>-->
+                                    <!--                                            </v-list-item-content>-->
+                                    <!--                                        </v-list-item>-->
+                                    <!--                                    </template>-->
+                                    <!--                                </v-combobox>-->
+                                    <v-combobox
+                                        v-model="duong"
+                                        chips
+                                        class="mt-2 custom-placeholer-color custom-label-color"
+                                        :items="listDuong"
+                                        :search-input.sync="searchDuong"
+                                        item-text="tenduong"
+                                        item-value="id"
+                                        no-data-text="Đường này chưa có sẵn trong hệ thống.
+                                    Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
+                                        label="Chọn Đường/Phố"
+                                        solo
+                                    >
+                                    </v-combobox>
+                                    <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
+                                </div>
+                                <div class="f-flex flex-row align-center">
+                                    <h3 class="d-inline-block black--text">Địa chỉ cụ thể</h3>
+                                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                                        <sup>(*) </sup>
+                                    </span>
+                                    <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
+                                    <v-text-field
+                                        v-model="diachicuthe"
+                                        disabled
+                                        class="mt-2 custom-placeholer-color custom-label-color"
+                                        placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
+                                        solo
+                                        :loading="loadingDiaChiCuThe"
+                                    ></v-text-field>
+                                </div>
+                            </v-col>
+                            <v-col cols="12" lg="8" sm="12">
+                                <v-card outlined elevation="4">
+                                    <div style="height: 500px; width: 100%">
+                                        <client-only>
+                                            <l-map id="map" ref="map" :zoom="zoom" :center="center">
+                                                <l-tile-layer :url="layers.url" :subdomains="layers.subdomains" :attribution="layers.attribution" />
+
+                                                <l-control position="topleft" style="border-radius: 0.1em">
+                                                    <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
+                                                        <v-btn color="white" class="pa-0" style="width: 30px; height: 30px; min-width: 30px" @click="findMyLocationOnMap">
+                                                            <v-icon v-if="!isFound" size="22" color="blue darken-1">mdi-map-marker-outline</v-icon>
+
+                                                            <v-icon v-else size="22" color="blue darken-3">mdi-map-marker</v-icon>
+                                                        </v-btn>
+                                                    </div>
+                                                </l-control>
+                                                <l-marker v-if="marker != null" ref="marker" :draggable="true" :lat-lng.sync="marker" @add="openPopup">
+                                                    <l-popup v-if="diachicuthe !== ''" ref="popup" :content="diachicuthe"></l-popup>
+                                                </l-marker>
+                                            </l-map>
+                                            <small v-if="toadoX" class="red--text mb-5"> {{ toadoX }} , {{ toadoY }} </small>
+                                        </client-only>
+                                    </div>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-form>
+            <v-row class="text-center my-5" style="position: relative; height: 100px">
+                <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                    <div class="g-recaptcha" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                </div>
+            </v-row>
+            <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
+            <div class="text-center">
+                <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
             </div>
-        </v-row>
-        <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
-        <div class="text-center">
-            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
-        </div>
-        <client-only>
-            <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
-        </client-only>
+            <client-only>
+                <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
+            </client-only>
+        </v-container>
     </v-container>
 </template>
 <script>

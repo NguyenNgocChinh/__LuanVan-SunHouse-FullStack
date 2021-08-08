@@ -1,8 +1,9 @@
 <template>
     <div>
-        <v-container fluid class="red lighten-2 pb-10 pt-5 baidang">
-            <h3 class="white--text text-center">NHÀ NỔI BẬT</h3>
-            <h4 class="py-2 white--text text-center">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
+        <v-container fluid class="pink darken-1 pb-10 pt-5 baidang text-center">
+            <h3 class="white--text mb-2 pa-1" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">NHÀ NỔI BẬT</h3>
+            <br />
+            <h4 class="white--text text-center pa-1" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
                 <v-slide-group v-if="baidanghots_loading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index">
@@ -10,7 +11,7 @@
                     </v-slide-item>
                 </v-slide-group>
 
-                <v-slide-group v-else v-model="model" class="pa-4">
+                <v-slide-group v-else v-model="model" class="pa-4 text-left">
                     <v-slide-item v-for="baidang in baidanghots" :key="baidang.id">
                         <bai-dang-card :baidang="baidang" />
                     </v-slide-item>

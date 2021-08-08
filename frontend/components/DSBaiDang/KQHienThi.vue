@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-container v-if="!isEmpty">
+        <v-container v-if="!isEmpty" class="brown lighten-2 pt-0" fluid>
             <v-row>
                 <v-col>
-                    <v-card class="d-flex">
+                    <v-card class="d-flex mt-4">
                         <v-row align="center">
                             <v-col cols="12" lg="8">
                                 <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
@@ -19,11 +19,13 @@
                             </v-col>
                         </v-row>
                     </v-card>
-                    <v-row class="mt-4 ml-1">
+                    <v-row class="mt-4">
                         <v-row v-show="baidangs.length < 1" class="">
                             <v-skeleton-loader v-for="index in 6" :key="index" class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
                         </v-row>
-                        <bai-dang-card v-for="(baidang, index) in baidangs" :key="index" outlined :baidang="baidang" />
+                        <v-col v-for="(baidang, index) in baidangs" :key="index" cols="12" lg="6" class="d-flex flex-row justify-center">
+                            <bai-dang-card outlined :baidang="baidang" />
+                        </v-col>
                     </v-row>
                 </v-col>
             </v-row>
