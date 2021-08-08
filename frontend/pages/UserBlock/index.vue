@@ -8,9 +8,13 @@
                     <span
                         >Tài khoản của bạn đã bị vô hiệu hóa bởi admin.
                         <br />
-                        <br />
+                        <div v-if="danhgiaList.length > 0" class="mb-4">
+                            <span class="mb-5">Lý do:</span>
+                            <ul>
+                                <li v-for="(item, index) in danhgiaList" :key="index">{{ item.noidung }}</li>
+                            </ul>
+                        </div>
                         Để mở lại vui lòng liên hệ admin.
-                        <br />
                         <br />
                         Bạn sẽ được chuyển về trang chủ ngay sau khi bạn click Đồng Ý.
                     </span>
@@ -33,12 +37,30 @@ export default {
     data() {
         return {
             dialog: true,
+            danhgiaList: [],
         }
+    },
+    created() {
+        this.$nextTick(() => {
+            this.getDanhGia()
+        })
     },
     methods: {
         redirectHome() {
             this.dialog = false
-            this.$router.push('/')
+            if (this.$auth.loggedIn) this.$auth.logout()
+        },
+        getDanhGia() {
+            this.$nuxt.$loading.start()
+            this.$axios
+                .$get(this.$config.serverUrl + '/danhgia/getDanhGiaForUser', { withCredentials: true })
+                .then((respone) => {
+                    this.danhgiaList = respone
+                })
+                .catch(() => {})
+                .finally(() => {
+                    this.$nuxt.$loading.finish()
+                })
         },
     },
 }

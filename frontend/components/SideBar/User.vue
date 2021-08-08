@@ -102,10 +102,17 @@ export default {
                 },
                 {
                     id: 8,
-                    icon: 'bx bxs-megaphone',
+                    icon: 'bx bx-user-voice',
                     href: '/users/baocao',
                     label: 'Báo cáo',
                     tooltip: 'Báo cáo',
+                },
+                {
+                    id: 9,
+                    icon: 'bx bx-detail',
+                    href: '/users/danhgia',
+                    label: 'Đánh giá',
+                    tooltip: 'Đánh giá',
                 },
             ],
         }

@@ -147,7 +147,13 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
+                        <template #activator="{ on }">
+                            <v-icon color="blue" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
+                        </template>
+                        <span>Xem chi tiết người dùng</span>
+                    </v-tooltip>
+
                     <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
                 </template>
@@ -275,11 +281,11 @@ export default {
         showItem(item) {
             this.$router.push('/admin/users/' + item.user.id)
         },
-        changeVaitro(user) {
+        changeVaitro(item) {
             this.$axios
                 .$put(this.$config.serverUrl + '/users/toggleVaiTro', {
-                    id: user.id,
-                    vaitro: user.vaitro,
+                    id: item.user.id,
+                    vaitro: item.user.vaitro,
                 })
                 .then((res) => {
                     if (res.success) {
