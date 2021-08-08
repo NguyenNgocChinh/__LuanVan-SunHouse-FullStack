@@ -11,6 +11,7 @@ export const state = () => ({
     baidang_chothue: [],
     baidang_raoban: [],
     contatcs: [],
+    usersOnline: [],
     foundedBaiDang: true,
 })
 
@@ -83,16 +84,24 @@ export const mutations = {
             }
         }
     },
-    // UPDATE_BAOCAO(state, baocao) {
-    //     if (state.auth.loggedIn) {
-    //         const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baocao.baidang_id)
-    //         console.log('index updated bao cao in store', index)
-    //         if (index > -1) {
-    //             state.auth.user.baocao[index].noidung = baocao.noidung
-    //             console.log(baocao.noidung)
-    //         }
-    //     }
-    // },
+    PUSH_USER_ONLINE(state, user) {
+        let index = -1
+        if (state.usersOnline.length > 0) index = state.usersOnline.findIndex((item) => item.id === user.id)
+        console.log('index push user online in store', index)
+        if (index < 0) state.usersOnline.push({ id: user.id, name: user.name })
+    },
+    REMOVE_USER_ONLINE(state, userId) {
+        let index = -1
+        if (state.usersOnline.length > 0) index = state.usersOnline.findIndex((item) => item.id === userId)
+        console.log('index removed user online in store', index)
+        if (index > -1) {
+            state.usersOnline.splice(index, 1)
+        }
+    },
+    UPDATE_USER_ONLINE(state, users) {
+        state.usersOnline = users
+        console.log(users)
+    },
 }
 
 export const getters = {

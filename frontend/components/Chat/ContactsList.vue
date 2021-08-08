@@ -6,7 +6,7 @@
                     <v-list-item-action class="ml-6">
                         <div class="avatar" style="position: relative">
                             <img :src="item.profile_photo_path || item.profile_photo_url" :alt="item.name" />
-                            <!--                            <div id="online"></div>-->
+                            <div v-if="isOnline(item)" id="online"></div>
                         </div>
                     </v-list-item-action>
 
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     props: {
         contacts: {
@@ -42,6 +44,10 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            usersOnline: (state) => state.usersOnline,
+        }),
+
         sortedContacts() {
             let res = null
             // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -69,6 +75,16 @@ export default {
                 behavior: 'smooth',
             })
             this.$emit('selected', contact)
+        },
+        isOnline(user) {
+            // if (user.online) return true
+            let flag = false
+            this.usersOnline.forEach((item) => {
+                if (item.id === user.id) {
+                    flag = true
+                }
+            })
+            return flag
         },
     },
 }

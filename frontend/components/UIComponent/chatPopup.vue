@@ -76,7 +76,7 @@ export default {
             selectedList: [],
         }
     },
-    computed: {},
+
     watch: {
         searchContactID(newValue) {
             const result = this.filterContacts(this.contacts, newValue)
@@ -132,13 +132,17 @@ export default {
                     })
                     // Join to Presence channel
                     // ERROR
-                    // window.Echo.join('user.online')
-                    //     .here((users) => {
-                    //         alert('In the channel!')
-                    //     })
-                    //     .joining((user) => {
-                    //         console.log('joining', user)
-                    //     })
+                    window.Echo.join('user.online')
+                        .here((users) => {
+                            this.$store.commit('UPDATE_USER_ONLINE', users)
+                        })
+                        .joining((user) => {
+                            console.log('connected')
+                            this.$store.commit('PUSH_USER_ONLINE', user)
+                        })
+                        .leaving((user) => {
+                            this.$store.commit('REMOVE_USER_ONLINE', user.id)
+                        })
                 }
             }
         },

@@ -12,7 +12,7 @@
                                     </v-layout>
                                 </v-img>
                             </v-avatar>
-                            <!--                            <v-icon class="status-user" size="11px" color="green" style="position: absolute; right: 0; bottom: -5px">mdi-checkbox-blank-circle</v-icon>-->
+                            <v-icon v-if="isOnline(contact)" class="status-user" size="11px" color="green" style="position: absolute; right: 0; bottom: -5px">mdi-checkbox-blank-circle</v-icon>
                         </span>
                         <span style="font-weight: 500; position: relative" class="ml-1 contact-name"
                             >{{ truncateString(contact.name, 23, true) }}
@@ -39,6 +39,7 @@ import MessagesFeed from '@/components/Chat/MessagesFeed'
 import MessageComposer from '@/components/Chat/MessageComposer'
 import ENV from '@/api/chat'
 import { truncateSpace } from 'assets/js/core'
+import { mapState } from 'vuex'
 export default {
     name: 'ChatPopupContent',
     components: { MessageComposer, MessagesFeed },
@@ -66,6 +67,11 @@ export default {
                 self.messages.push(message)
             }
         })
+    },
+    computed: {
+        ...mapState({
+            usersOnline: (state) => state.usersOnline,
+        }),
     },
     created() {
         if (this.$auth.loggedIn) {
@@ -121,6 +127,16 @@ export default {
         },
         truncateString(fullStr, strLen, separator) {
             return truncateSpace(fullStr, strLen, separator)
+        },
+        isOnline(user) {
+            // if (user.online) return true
+            let flag = false
+            this.usersOnline.forEach((item) => {
+                if (item.id === user.id) {
+                    flag = true
+                }
+            })
+            return flag
         },
     },
 }
