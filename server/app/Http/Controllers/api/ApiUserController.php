@@ -115,8 +115,8 @@ class ApiUserController extends Controller
     }
     public function enableUser($id)
     {
-        $user = User::find($id);
-        if ($user) {
+        $user = User::findOrFail($id);
+        if ($user != null) {
             $user->trangthai = 1;
             $user->save();
             return response()->json(

@@ -166,12 +166,14 @@ Route::get('/thongkebaocao', [BaoCaoController::class, "getBaoCaoWithUser"]);
 /*
      * DANH GIA
      */
-Route::prefix('danhgia')->middleware(['auth:sanctum'])->group(function () {
+    Route::group(['prefix' => 'danhgia',  'middleware' => 'auth:sanctum'], function()
+    {
+    // Route::prefix('danhgia')->middleware(['auth:sanctum'])->group(['prefix' => 'baidang'],function () {
     Route::get('/', [DanhGiaController::class, 'getAllDanhGia']);
+    Route::post('/', [DanhGiaController::class, 'danhGiaUser']);
+    Route::put('/', [DanhGiaController::class, 'editDanhGia']);
+    Route::delete('/{idDanhGia}', [DanhGiaController::class, 'removeDanhGia']);
     Route::get('/getDanhGiaForUser', [DanhGiaController::class, 'getDanhGiaForUser']);
-    Route::post('/danhGiaUser', [DanhGiaController::class, 'danhGiaUser']);
-    Route::put('/editDanhGia', [DanhGiaController::class, 'editDanhGia']);
-    Route::delete('/removeDanhGia/{idDanhGia}', [DanhGiaController::class, 'removeDanhGia']);
 });
 
 /*

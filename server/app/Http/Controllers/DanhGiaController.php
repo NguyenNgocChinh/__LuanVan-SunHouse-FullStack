@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DanhGiaController extends Controller
 {
@@ -42,12 +43,12 @@ class DanhGiaController extends Controller
             'user_id.required' => 'Phải chọn user để đánh giá.'
         ]);
         $user = User::findOrFail($request->user_id);
-        DanhGia::create($request->only(['sao', 'user_id', 'noidung']));
+        $danhgia =  DanhGia::create($request->only(['sao', 'user_id', 'noidung']));
         $user->sao = $request->sao;
         $user->save();
-        return response()->json([
-            'success' => 'Tạo mới đánh giá thành công'
-        ]);
+        return response()->json(
+            new DanhGiaResource($danhgia)
+        );
     }
     public function editDanhGia(Request $request){
         $request->validate([
@@ -64,16 +65,21 @@ class DanhGiaController extends Controller
         $user->sao = $request->sao;
         $user->save();
         return response()->json([
-            'success' => 'Chỉnh sửa đánh giá thành công'
+            'success' => 'Chỉnh sửa đánh giá thành công',
+            'danhgia' => $danhgia,
         ]);
     }
     public function removeDanhGia($idDanhGia){
         $danhgia = DanhGia::findOrFail($idDanhGia);
-        $minSao = DanhGia::select(DB::raw('min(sao)'))->where('user_id',$danhgia->user_id)->get();
-        $user = User::findOrFail($danhgia->user_id);
-        $user->sao = $minSao;
-        $user->save();
         $danhgia->delete();
+        $user = User::findOrFail($danhgia->user_id);
+        $minSao = DanhGia::select(DB::raw('min(sao) as minSao'))->where('user_id',$danhgia->user_id)->get();
+        Log::info($minSao);
+        if($minSao[0]->minSao != null)
+            $user->sao = $minSao[0]->minSao;
+        else
+            $user->sao = 5;
+        $user->save();
         return response()->json([
             'success' => 'Xóa đánh giá thành công'
         ]);
