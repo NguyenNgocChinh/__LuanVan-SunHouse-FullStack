@@ -363,6 +363,9 @@ import { scrollToInputInvalid } from '~/assets/js/scrollToView'
 
 export default {
     components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
+    // beforeRouteEnter(to, from, next) {
+    //     alert(this.$auth.user.sdt)
+    // },
     middleware: ['auth', 'checkScopePosts'],
     async asyncData({ $axios }) {
         const loais = await $axios.$get(ENVL.default.all)
@@ -523,6 +526,13 @@ export default {
         },
     },
     mounted() {
+        this.$nextTick(() => {
+            if (!this.$auth.user.sdt) {
+                this.$router.replace('/')
+                this.$nuxt.$emit('openChangeSDTModal')
+            }
+        })
+
         this.$nextTick(() => {
             const map = this.$refs.map.mapObject
             const search = new GeoSearchControl({

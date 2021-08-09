@@ -4,7 +4,7 @@
             <v-col cols="4" class="teal lighten-2">
                 <FormBaiDang class="mt-2" />
             </v-col>
-            <v-col cols="8">
+            <v-col cols="8" class="pb-0 pr-0">
                 <KQHienThi class="" />
             </v-col>
         </v-row>

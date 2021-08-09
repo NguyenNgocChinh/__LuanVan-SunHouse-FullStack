@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-4 pt-5 article-card animate__animated animate__fadeInRight" style="width: 315px; height: 100%">
+    <div class="mx-4 pt-5 article-card animate__animated animate__fadeInRight" :style="'width:' + width + 'px'" style="height: 100%">
         <v-card v-if="baidang" :loading="loading" class="mx-auto article-card" style="height: unset" :outlined="outlined" flat>
             <div class="header-card">
                 <v-img v-if="baidang.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" :lazy-src="getImg(baidang.hinhanh[0])" :src="isImgFail ? wrong_imgSrc : getImg(baidang.hinhanh[0])" @error="errorImg">
@@ -145,6 +145,10 @@ export default {
         },
         outlined: {
             default: false,
+        },
+        width: {
+            type: Number,
+            default: 315,
         },
     },
     data: () => ({

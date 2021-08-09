@@ -9,6 +9,7 @@
             </v-main>
             <FooterDefault />
             <chat-popup v-if="$auth.loggedIn" />
+            <verify-numberphone v-if="$auth.loggedIn" />
         </v-app>
     </div>
 </template>
@@ -17,7 +18,15 @@
 import HeaderDefault from '@/components/Header/Default'
 import FooterDefault from '@/components/Footer/Default'
 import ChatPopup from '@/components/UIComponent/chatPopup'
+import VerifyNumberphone from '@/components/UIComponent/verifyNumberphone'
 export default {
-    components: { HeaderDefault, ChatPopup, FooterDefault },
+    components: { VerifyNumberphone, HeaderDefault, ChatPopup, FooterDefault },
+    mounted() {
+        if (this.$auth.loggedIn) {
+            if (!this.$auth.user.sdt) {
+                this.$nuxt.$emit('openChangeSDTModal')
+            }
+        }
+    },
 }
 </script>

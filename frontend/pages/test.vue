@@ -1,10 +1,12 @@
 <template>
     <div>
-        <div id="recaptcha-container"></div>
-        <v-text-field id="number" @keydown.enter="sendOTP" />
-        <div id="successAuth" class="green--text"></div>
-        <div id="error" class="red--text"></div>
-        <timer />
+        <!--        <div id="recaptcha-container"></div>-->
+        <!--        <v-text-field id="number" @keydown.enter="sendOTP" />-->
+        <!--        <div id="successAuth" class="green&#45;&#45;text"></div>-->
+        <!--        <div id="error" class="red&#45;&#45;text"></div>-->
+        <!--        <timer />-->
+        <v-btn @click="$nuxt.$emit('openChangeSDTModal')">click</v-btn>
+        <verify-numberphone />
     </div>
 </template>
 
@@ -15,28 +17,10 @@ import 'firebase/analytics'
 // Add the Firebase products that you want to use
 import 'firebase/auth'
 import 'firebase/firestore'
-import Timer from '@/components/UIComponent/Timer'
+import VerifyNumberphone from '@/components/UIComponent/verifyNumberphone'
 export default {
-    components: { Timer },
-    mounted() {
-        this.$nextTick(() => {
-            const firebaseConfig = {
-                databaseURL: 'https://sun-house-8f320.firebaseio.com',
-                apiKey: 'AIzaSyBJk3Z9JjtG6W0vNUnej2GtNQq1V1nH0zY',
-                authDomain: 'sun-house-8f320.firebaseapp.com',
-                projectId: 'sun-house-8f320',
-                storageBucket: 'sun-house-8f320.appspot.com',
-                messagingSenderId: '196147953061',
-                appId: '1:196147953061:web:60dfc88291cac736087c4c',
-                measurementId: 'G-VT1MYJP2GC',
-            }
-            // Initialize Firebase
-            firebase.initializeApp(firebaseConfig)
-            firebase.auth().languageCode = 'vi'
-            // firebase.auth().useDeviceLanguage();
-            this.renderReCaptcha()
-        })
-    },
+    components: { VerifyNumberphone },
+    mounted() {},
     methods: {
         renderReCaptcha() {
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
@@ -76,6 +60,7 @@ export default {
                     window.$('#error').show()
                 })
         },
+        openModal() {},
     },
 }
 </script>

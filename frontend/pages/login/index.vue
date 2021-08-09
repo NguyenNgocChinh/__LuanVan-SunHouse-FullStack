@@ -45,18 +45,18 @@
     <!--        </v-form>-->
     <!--    </v-card>-->
 
-    <div class="limiter">
+    <v-form ref="form" v-model="form" lazy-validation class="limiter" @submit.prevent="login">
         <div class="container-login100" style="background-image: url('/images/login/bg-01.jpg')">
             <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
                 <form class="login100-form validate-form flex-sb flex-w">
                     <span class="login100-form-title p-b-53"> Đăng nhập với </span>
 
-                    <a href="#" class="btn-face m-b-20" style="text-decoration: none">
+                    <a href="javascript:void(0)" class="btn-face m-b-20" style="text-decoration: none" @click="loginFB">
                         <i class="bx bxl-facebook"></i>
                         Facebook
                     </a>
 
-                    <a href="#" class="btn-google m-b-20" style="text-decoration: none">
+                    <a href="javascript:void(0)" class="btn-google m-b-20" style="text-decoration: none" @click="loginGG">
                         <img src="images/icon-google.png" alt="GOOGLE" />
                         Google
                     </a>
@@ -65,38 +65,37 @@
                         <span class="txt1"> Tên tài khoản hoặc Email </span>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Username is required">
-                        <input class="input100" type="text" name="username" />
+                        <input ref="email" v-model="loginForm.username" class="input100" type="text" name="username" />
+                        <!--                        <v-text-field ref="email" v-model="loginForm.username" outlined :rules="[rules.required]" label="Địa Chỉ Email hoặc Username" placeholder="Nhập địa chỉ email hoặc username của bạn" required></v-text-field>-->
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="p-t-13 p-b-9">
                         <span class="txt1"> Mật khẩu </span>
 
-                        <a href="#" class="txt2 bo1 m-l-5" style="text-decoration: none"> Quên mật khẩu? </a>
+                        <a href="javascript:void(0)" class="txt2 bo1 m-l-5" style="text-decoration: none" @click.prevent="$router.push('/resetpassword/sendmail')"> Quên mật khẩu? </a>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="pass" />
+                        <input ref="pass" v-model="loginForm.password" class="input100" type="password" name="pass" />
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="container-login100-form-btn m-t-17">
-                        <button class="login100-form-btn">Đăng nhập</button>
+                        <button type="submit" class="login100-form-btn" @click.prevent="login">Đăng nhập</button>
                     </div>
 
                     <div class="w-full text-center p-t-55">
                         <span class="txt2"> Chưa phải là thành viên? </span>
 
-                        <a href="#" class="txt2 bo1" style="text-decoration: none"> Đăng ký ngay</a>
+                        <a href="javascript:void(0)" class="txt2 bo1" style="text-decoration: none" @click="$router.push('/register')"> Đăng ký ngay</a>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+    </v-form>
 </template>
 <script>
 import ENV from '@/api/user'
-// import ENVCHAT from '@/api/chat'
-// import * as EVNAPP from '@/api/app'
 export default {
     middleware: 'auth',
     auth: 'guest',

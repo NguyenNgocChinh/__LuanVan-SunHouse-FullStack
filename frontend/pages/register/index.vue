@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="mx-auto mt-10" style="max-width: 90%">
+        <v-card class="mx-auto my-10" style="max-width: 90%">
             <v-toolbar color="deep-purple accent-4" cards dark flat>
                 <v-btn v-if="step > 1 && step !== 3" icon @click="step -= 1">
                     <v-icon>mdi-arrow-left</v-icon>

@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container center-element">
         <div class="loader"></div>
         <p>Vui lòng chờ hệ thống xử lý yêu cầu đăng nhập</p>
     </div>
@@ -25,7 +25,8 @@ export default {
                 await this.$auth
                     .fetchUserOnce()
                     .then((data) => {
-                        this.$router.push('/')
+                        this.$router.replace('/')
+                        this.$nuxt.$emit('openChangeSDTModal')
                     })
                     .catch((e) => {
                         this.$auth.logout()

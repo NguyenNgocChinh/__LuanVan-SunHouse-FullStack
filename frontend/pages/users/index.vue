@@ -451,6 +451,11 @@ export default {
                 this.$store.commit('user/SET_INDEX_NAV', 2)
             }
         },
+        openModalUpdateSDT() {
+            this.$nuxt.$emit('openChangeSDTModal')
+            console.log('click')
+            console.log(this.$nuxt.$refs)
+        },
         formatDate(date) {
             return this.$moment(date).format('DD/MM/YYYY')
         },
@@ -758,26 +763,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.otp-input {
-    width: 40px;
-    height: 40px;
-    padding: 5px;
-    margin: 0 10px;
-    font-size: 20px;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    text-align: center;
-    &.error {
-        border: 1px solid red !important;
-    }
-}
-.otp-input::-webkit-inner-spin-button,
-.otp-input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>
 <style>
 .v-application ul,
 .v-application ol {

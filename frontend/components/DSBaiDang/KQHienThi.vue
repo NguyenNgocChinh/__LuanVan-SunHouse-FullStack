@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container v-if="!isEmpty" class="brown lighten-2 pt-0" fluid>
+        <v-container v-if="!isEmpty" class="brown lighten-2 py-0" fluid>
             <v-row>
                 <v-col>
                     <v-card class="d-flex mt-4">
@@ -21,15 +21,17 @@
                     </v-card>
                     <v-row class="mt-4">
                         <v-row v-show="baidangs.length < 1" class="">
-                            <v-skeleton-loader v-for="index in 6" :key="index" class="ma-6 ml-5" width="325" type="card"></v-skeleton-loader>
+                            <v-col v-for="index in 6" :key="index" cols="12" lg="6" class="d-flex flex-row justify-center">
+                                <v-skeleton-loader width="325" type="card"></v-skeleton-loader>
+                            </v-col>
                         </v-row>
                         <v-col v-for="(baidang, index) in baidangs" :key="index" cols="12" lg="6" class="d-flex flex-row justify-center">
-                            <bai-dang-card outlined :baidang="baidang" />
+                            <bai-dang-card width="375" outlined :baidang="baidang" />
                         </v-col>
                     </v-row>
                 </v-col>
             </v-row>
-            <div class="text-center mt-10">
+            <div class="text-center py-5">
                 <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
             </div>
         </v-container>
