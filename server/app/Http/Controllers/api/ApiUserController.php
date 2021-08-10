@@ -156,7 +156,7 @@ class ApiUserController extends Controller
         $user = Auth::user();
         if ($user) {
             $user->email = $request->email;
-            $user->sdt = $request->sdt;
+            // $user->sdt = $request->sdt;
             $namsinh = str_replace('/', '-', $request->namsinh);
             $user->namsinh = date('Y-m-d', strtotime($namsinh));
             $user->name = $request->name;

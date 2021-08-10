@@ -35,6 +35,7 @@ class ViewPostHanlderListener
     {
         Log::info("in handle");
         Log::info("session " . json_encode(session()->get('viewed_posts', [])));
+        Log::info("Bài đăng đã được xem " . $this->isPostViewed($this->post));
 	    if (!$this->isPostViewed($this->post))
 	    {
             Log::info("increement luotxem");
@@ -46,7 +47,7 @@ class ViewPostHanlderListener
     private function isPostViewed($post)
 	{
 	    $viewed = $this->session->get('viewed_posts', []);
-
+        Log::info("get post... " . array_key_exists($post->id, $viewed));
 	    return array_key_exists($post->id, $viewed);
 	}
 

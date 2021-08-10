@@ -7,7 +7,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Events\NewMessage;
+use App\Events\newMessage;
 use Illuminate\Support\Facades\Log;
 use OneSignal;
 
@@ -75,13 +75,13 @@ class ContactController extends Controller
             array(
                 ["field" => "tag", "key" => "user_id", "relation" => "=", "value" => $message->to],
             ),
-            $url = 'http://localhost:3000/test',
+            $url = env('CLIENT_BASE_URL', 'http://localhost:3000/'),
             $data = null,
             $buttons = null,
             $schedule = null
         );
 
-        broadcast(new NewMessage($message));
+        broadcast(new newMessage($message));
 
         return response()->json($message);
     }
