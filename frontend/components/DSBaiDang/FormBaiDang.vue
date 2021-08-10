@@ -1,5 +1,5 @@
 <template>
-    <v-card outlined class="pa-5 teal lighten-4">
+    <v-card outlined class="pa-5 sunhouse_white">
         <v-form ref="form" lazy-validation>
             <div class="ml-5"><h3 style="font-size: 26px">Tìm kiếm tài sản</h3></div>
             <div class="ml-5">
@@ -198,9 +198,9 @@
                 </v-row>
             </div>
             <div class="ml-1">
-                <v-btn block class="pink lighten-1 white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
+                <v-btn block class="sunhouse_red2 sunhouse_white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
-            <v-checkbox v-model="isSaveSearch" label="Lưu tìm kiếm" color="pink" hide-details @click="toggleSaveSearch"></v-checkbox>
+            <v-checkbox v-model="isSaveSearch" label="Lưu tìm kiếm" color="sunhouse_blue2" hide-details @click="toggleSaveSearch"></v-checkbox>
         </v-form>
     </v-card>
 </template>

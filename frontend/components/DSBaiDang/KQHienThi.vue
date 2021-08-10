@@ -1,12 +1,12 @@
 <template>
     <div>
-        <v-container v-if="!isEmpty" class="brown lighten-2 py-0" fluid>
+        <v-container v-if="!isEmpty" class="py-0" fluid>
             <v-row>
                 <v-col>
                     <v-card class="d-flex mt-4">
                         <v-row align="center">
                             <v-col cols="12" lg="8">
-                                <div class="ml-5">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
+                                <div class="ml-5 font-weight-bold">Kết quả hiển thị {{ detail_page.from }} - {{ detail_page.to }} trên tổng {{ detail_page.total }} kết quả</div>
                             </v-col>
 
                             <v-col cols="12" lg="4" class="d-flex align-center">
@@ -32,7 +32,7 @@
                 </v-col>
             </v-row>
             <div class="text-center py-5">
-                <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
+                <v-pagination v-model="page" color="sunhouse_blue2 white--text" :length="detail_page.last_page" circle @click="getbaidangs"></v-pagination>
             </div>
         </v-container>
         <v-container v-else>
@@ -121,8 +121,7 @@ export default {
         })
     },
     methods: {
-        getbaidangs(filter = false) {
-            this.page = 1
+        async getbaidangs(filter = false) {
             this.detail_page = {
                 to: '?',
                 from: '?',
@@ -139,7 +138,7 @@ export default {
                 this.$toast.error('Ngày nhập vào không hợp lệ')
                 return
             }
-            this.$axios
+            await this.$axios
                 .$get(url, {
                     params: {
                         page: this.page,

@@ -1,16 +1,16 @@
 <template>
-    <v-container fluid class="pink lighten-4">
+    <v-container fluid>
         <v-container>
-            <v-breadcrumbs :link="true" :items="breadcumb">
-                <template #item="{ item }">
-                    <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">
-                        {{ item.text }}
-                    </v-breadcrumbs-item>
-                </template>
-                <template #divider>
-                    <v-icon>mdi-chevron-right</v-icon>
-                </template>
-            </v-breadcrumbs>
+            <!--            <v-breadcrumbs :link="true" :items="breadcumb">-->
+            <!--                <template #item="{ item }">-->
+            <!--                    <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">-->
+            <!--                        {{ item.text }}-->
+            <!--                    </v-breadcrumbs-item>-->
+            <!--                </template>-->
+            <!--                <template #divider>-->
+            <!--                    <v-icon>mdi-chevron-right</v-icon>-->
+            <!--                </template>-->
+            <!--            </v-breadcrumbs>-->
             <v-form ref="form" v-model="vaild" class="mb-6">
                 <v-card>
                     <v-card-title class="font-weight-bold">THÔNG TIN CƠ BẢN</v-card-title>
@@ -23,7 +23,7 @@
                             v-model="tieude"
                             clearable
                             counter
-                            class="custom-placeholer-color custom-label-color"
+                            class=""
                             :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
                             placeholder="Nhập tiêu đề bài đăng"
                             required
@@ -52,7 +52,7 @@
                         </span>
                         <v-text-field
                             v-model="gia"
-                            class="custom-placeholer-color custom-label-color"
+                            class=""
                             suffix="Triệu/m²"
                             :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                             type="number"
@@ -124,26 +124,14 @@
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-text-field
-                                    v-model="phongngu"
-                                    class="mt-2 custom-placeholer-color custom-label-color"
-                                    :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
-                                    type="number"
-                                    solo
-                                ></v-text-field>
+                                <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
                             </v-col>
                             <v-col cols="12" lg="4" sm="12">
                                 <h3 class="d-inline-block black--text">Số phòng tắm</h3>
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-text-field
-                                    v-model="phongtam"
-                                    class="pr-3 mt-2 custom-placeholer-color custom-label-color"
-                                    type="number"
-                                    :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
-                                    solo
-                                ></v-text-field>
+                                <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -176,7 +164,7 @@
                             </v-col>
                             <v-col cols="12" sm="4">
                                 <h3 class="d-inline-block black--text">Năm xây dựng</h3>
-                                <v-text-field v-model="namxaydung" class="mt-2 custom-placeholer-color custom-label-color" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                                <v-text-field v-model="namxaydung" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="4">
                                 <h3 class="d-inline-block black--text">Diện tích: m<sup>2</sup></h3>
@@ -185,7 +173,7 @@
                                 </span>
                                 <v-text-field
                                     v-model="dientich"
-                                    class="mt-2 custom-label-color custom-placeholer-color"
+                                    class="mt-2"
                                     type="number"
                                     :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
                                     placeholder="ví dụ: 100"
@@ -278,7 +266,7 @@
                                     <v-combobox
                                         v-model="duong"
                                         chips
-                                        class="mt-2 custom-placeholer-color custom-label-color"
+                                        class="mt-2"
                                         :items="listDuong"
                                         :search-input.sync="searchDuong"
                                         item-text="tenduong"
@@ -297,14 +285,7 @@
                                         <sup>(*) </sup>
                                     </span>
                                     <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
-                                    <v-text-field
-                                        v-model="diachicuthe"
-                                        disabled
-                                        class="mt-2 custom-placeholer-color custom-label-color"
-                                        placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
-                                        solo
-                                        :loading="loadingDiaChiCuThe"
-                                    ></v-text-field>
+                                    <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
                                 </div>
                             </v-col>
                             <v-col cols="12" lg="8" sm="12">

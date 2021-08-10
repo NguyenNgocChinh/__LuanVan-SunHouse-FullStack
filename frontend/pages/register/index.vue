@@ -1,13 +1,13 @@
 <template>
     <div>
         <v-card class="mx-auto my-10" style="max-width: 90%">
-            <v-toolbar color="deep-purple accent-4" cards dark flat>
+            <v-toolbar color="sunhouse_red1" cards dark flat>
                 <v-btn v-if="step > 1 && step !== 3" icon @click="step -= 1">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
-                <v-card-title class="title font-weight-regular"> Đăng ký</v-card-title>
+                <v-card-title class="title font-weight-regular sunhouse_white--text font-weight-bold"> Đăng ký</v-card-title>
                 <v-spacer></v-spacer>
-                <v-btn text @click="$router.push('/Login')">Đã có tài khoản? </v-btn>
+                <v-btn text class="sunhouse_white--text font-weight-bold" @click="$router.push('/Login')">Đã có tài khoản? </v-btn>
             </v-toolbar>
             <v-stepper v-model="step">
                 <v-stepper-header>
@@ -54,7 +54,7 @@
 
                             <div class="text-center">
                                 <p class="red--text py-5">{{ error }}</p>
-                                <div v-if="error === ''" class="mt-5 mb-4">
+                                <div class="mt-5 mb-4">
                                     Hệ thống đã gửi mã xác nhận cho bạn.
                                     <span v-if="countDown > 0">Nếu chưa nhận được mã có thể gửi lại sau:</span>
                                     <span v-else> Nếu bạn chưa nhận được tin nhắn,vui lòng chọn gửi lại. </span>
@@ -69,7 +69,7 @@
                     <!-- TAB 3-->
                     <v-stepper-content step="3">
                         <v-form ref="form3" v-model="valid3" @submit.prevent="xulydangky">
-                            <v-card class="mb-5">
+                            <v-card flat :outlined="false" color="" class="mb-5 pa-2">
                                 <v-card-text>
                                     <v-text-field v-model="name" outlined :rules="[$rules.required, $rules.checkWord(name, 2)]" :error-messages="errorMessages" label="Họ và Tên " placeholder="Nhập tên..." required></v-text-field>
                                     <v-text-field
@@ -347,7 +347,7 @@ export default {
                         var user = result.user
                         console.log('verify')
                         console.log(user)
-                        // Thay doi sdt
+                        this.step += 1
                     })
                     .catch((error) => {
                         this.$toast.error('Mã xác minh không chính xác')

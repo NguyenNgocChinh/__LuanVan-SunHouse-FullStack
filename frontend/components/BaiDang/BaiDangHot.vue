@@ -1,17 +1,21 @@
 <template>
     <div>
-        <v-container fluid class="pink darken-1 pb-10 pt-5 baidang text-center">
-            <h3 class="white--text mb-2 pa-1" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">NHÀ NỔI BẬT</h3>
+        <v-container fluid class="pt-10 baidang text-center">
+            <div style="position: relative; display: inline-block">
+                <v-img class="firegif" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>
+                <h3 class="sunhouse_red2--text mb-2 pa-1" style="display: inline-block; text-shadow: 0px 2px 6px #fff">NHÀ NỔI BẬT</h3>
+                <v-img class="firegif2" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>
+            </div>
             <br />
-            <h4 class="white--text text-center pa-1" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
+            <h4 class="sunhouse_red1--text text-center pa-1 pb-4" style="display: inline-block; text-shadow: 0px 2px 6px #fff">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
                 <v-slide-group v-if="baidanghots_loading" class="pa-4">
-                    <v-slide-item v-for="index in 5" :key="index">
+                    <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-slide-item>
                 </v-slide-group>
 
-                <v-slide-group v-else v-model="model" class="pa-4 text-left">
+                <v-slide-group v-else v-model="model" class="px-4 pt-4 text-left">
                     <v-slide-item v-for="baidang in baidanghots" :key="baidang.id">
                         <bai-dang-card :baidang="baidang" />
                     </v-slide-item>
@@ -74,5 +78,15 @@ export default {
     .animate__fadeInRight:nth-child(#{$i}n) {
         animation-delay: #{$i * 0.1}s;
     }
+}
+.firegif {
+    position: absolute;
+    top: -8px;
+    left: -37px;
+}
+.firegif2 {
+    position: absolute;
+    top: -8px;
+    right: -35px;
 }
 </style>

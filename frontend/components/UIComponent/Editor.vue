@@ -163,5 +163,8 @@ export default {
             border-bottom: 1px solid #ccc;
         }
     }
+    .ql-editor {
+        font-size: 18px;
+    }
 }
 </style>

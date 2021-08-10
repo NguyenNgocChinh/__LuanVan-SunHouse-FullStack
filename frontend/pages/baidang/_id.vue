@@ -42,10 +42,12 @@
                     <div class="col-lg-8">
                         <div v-if="$auth.loggedIn && baidang !== false">
                             <div v-if="$auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin'">
-                                <v-btn class="white--text primary" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
-                                <v-btn class="white--text" :class="baidang.trangthai ? 'warning' : 'green'" @click="updateTrangThai">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
-                                <v-btn v-if="($auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin') && isCanPush" class="white--text primary" @click="pushToTop"><v-icon>bx bx-chevrons-up bx-burst</v-icon>Đẩy lên TOP</v-btn>
-                                <v-btn v-else class="white--text primary" disabled>
+                                <v-btn class="white--text sunhouse_blue2" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
+                                <v-btn class="white--text sunhouse_blue2" :class="baidang.trangthai ? 'warning' : 'green'" @click="updateTrangThai">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
+                                <v-btn v-if="($auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin') && isCanPush" class="white--text sunhouse_red2" @click="pushToTop"
+                                    ><v-icon>bx bx-chevrons-up bx-burst</v-icon>Đẩy lên TOP</v-btn
+                                >
+                                <v-btn v-else class="white--text sunhouse_red1">
                                     <span class="d-flex flex-row align-center">
                                         <span class="mr-1">Chờ </span>
                                         <Timer :year="nextPush.year" :month="nextPush.month" :date="nextPush.date" :hour="nextPush.hour" :minute="nextPush.minute" :second="nextPush.minute" millisecond="0" />
@@ -56,11 +58,12 @@
                         </div>
                         <!--                        <v-btn text plain>Mô tả</v-btn>-->
                     </div>
-                    <div class="col-lg-4 d-flex justify-end d-sticky">
-                        <v-btn v-if="isYeuThich" text plain @click="removeYeuThich"> <v-icon class="mr-3" color="pink">mdi-heart</v-icon>Bỏ yêu thích</v-btn>
-                        <v-btn v-else text plain @click="addYeuThich"> <v-icon class="mr-3" color="pink">mdi-heart-outline</v-icon> Yêu thích</v-btn>
-                        <v-divider vertical />
-                        <v-btn id="shareBtn" text plain @click="shareOnFB"> <v-icon class="mr-3">mdi-share-variant</v-icon> Chia sẻ</v-btn>
+                    <div class="col-lg-4 d-flex justify-end d-sticky white--text">
+                        <v-btn v-if="!$auth.loggedIn" text @click="$router.push('/login')"> <v-icon class="mr-3" color="pink white--text">mdi-heart-outline</v-icon> Đăng nhập để thêm yêu thích</v-btn>
+                        <v-btn v-else-if="isYeuThich" class="white--text" text @click="removeYeuThich"> <v-icon class="mr-3" color="pink white--text">mdi-heart</v-icon>Bỏ yêu thích</v-btn>
+                        <v-btn v-else text class="white--text" @click="addYeuThich"> <v-icon class="mr-3" color="pink white--text">mdi-heart-outline</v-icon> Yêu thích</v-btn>
+                        <v-divider vertical class="white" />
+                        <v-btn id="shareBtn" text class="white--text" @click="shareOnFB"> <v-icon class="mr-3 white--text">mdi-share-variant</v-icon> Chia sẻ</v-btn>
                     </div>
                 </v-row>
             </v-banner>
@@ -73,7 +76,7 @@
                 <v-card elevation="1" class="px-6 py-7">
                     <v-row>
                         <v-col class="col-lg-8">
-                            <h1 class="title text--upercase">
+                            <h1 class="title text--upercase sunhouse_blue1--text">
                                 {{ baidang.tieude }}
                             </h1>
                             <div class="mb-2">
@@ -87,7 +90,7 @@
                             <div class="col-12 d-flex align-items-center pl-0 mb-2 price-sec">
                                 <div class="item">
                                     Mức giá:
-                                    <div class="price">{{ baidang.gia }} Triệu / m<sup>2</sup></div>
+                                    <div class="price sunhouse_red2--text">{{ baidang.gia }} Triệu / m<sup>2</sup></div>
                                 </div>
                                 <div class="item">
                                     Diện tích:
@@ -227,22 +230,23 @@
                                     <button class="btn-chat" @click="$router.push('/login')">Đăng nhập để chat</button>
                                 </v-row>
                                 <v-row v-if="user.id !== userIdLoggedIn && userIdLoggedIn" class="px-3 pt-5">
-                                    <button class="btn-chat" @click="chatWithSeller">Chat với người đăng tin</button>
+                                    <button class="btn-chat sunhouse_blue1--text" @click="chatWithSeller">
+                                        <v-icon size="20" color="sunhouse_blue1" class="mr-1">mdi-facebook-messenger</v-icon>
+                                        Chat với người đăng tin
+                                    </button>
                                 </v-row>
                             </v-card>
-                            <div class="d-flex justify-space-between align-center ml-3 wrapper-phone">
+                            <div class="d-flex justify-space-between align-center ml-3 wrapper-phone sunhouse_blue2">
                                 <div id="numberphone" class="phone" :data-phone="user.sdt">
                                     {{ numberphone }}
                                 </div>
                                 <div v-if="user.sdt">
-                                    <a v-if="isHideNumberPhone" class="white--text" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
-                                    <a v-else class="white--text" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
+                                    <a v-if="isHideNumberPhone" class="white--text sunhouse_blue2" href="javascript:void(0)" @click="showNumberPhone">Bấm để hiện số</a>
+                                    <a v-else class="white--text sunhouse_blue2" href="javascript:void(0)" @click="hideNumberPhone">Thu gọn</a>
                                 </div>
                             </div>
-                            <div v-if="user.id === userIdLoggedIn" style="cursor: pointer" class="d-flex justify-space-between align-center grey darken-3 ml-3 wrapper-phone yellow darken-3 white--text">
-                                Không thể báo cáo bài đăng của mình
-                            </div>
-                            <div v-else-if="!isBaoCao" style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone yellow darken-3 white--text" @click="baoCaoBaiDang">
+                            <div v-if="user.id === userIdLoggedIn" style="cursor: pointer" class="text-center ml-3 wrapper-phone grey darken-3 white--text">Không thể báo cáo bài đăng của mình</div>
+                            <div v-else-if="!isBaoCao" style="cursor: pointer" class="d-flex justify-space-between align-center ml-3 wrapper-phone sunhouse_red2 white--text" @click="baoCaoBaiDang">
                                 Báo cáo bài đăng
                                 <v-icon color="white">bx bxs-error-alt</v-icon>
                             </div>

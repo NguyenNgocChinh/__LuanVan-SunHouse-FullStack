@@ -50,24 +50,24 @@
 /*USER */
 .btn-chat {
     height: 40px;
-    padding: 8px 3px 8px 32px;
+    padding: 8px 3px 8px 8px;
     border-radius: 8px;
     border: solid 1px #e0e0e0;
     width: 100%;
-    position: relative;
     outline: none;
-    color: #ab8843;
+    //color: #ab8843;
+
 }
-.btn-chat:before {
-    content: '';
-    position: absolute;
-    background-image: url('https://cdn.meeyland.com/img/icons/messenge.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 16px;
-    left: 5px;
-    top: 3px;
-}
+//.btn-chat:before {
+//    content: '';
+//    position: absolute;
+//    background-image: url('https://cdn.meeyland.com/img/icons/messenge.svg');
+//    background-position: center;
+//    background-repeat: no-repeat;
+//    padding: 16px;
+//    left: 5px;
+//    top: 3px;
+//}
 /*PHONE*/
 .wrapper-phone {
     height: 48px;

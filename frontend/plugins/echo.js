@@ -48,6 +48,7 @@ export default function ({ $axios }) {
                             }
                         )
                         .then((response) => {
+                            console.log('success')
                             console.log('suc', response)
                             // eslint-disable-next-line node/no-callback-literal
                             callback(false, response)

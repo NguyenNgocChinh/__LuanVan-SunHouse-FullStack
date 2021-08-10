@@ -354,14 +354,14 @@ export default {
             this.isLoading = false
         },
         editItem(item) {
-            this.indexEdit = item.id
-            this.giamin = item.giamin
-            this.giamax = item.giamax
-            this.sophongngu = item.sophongngu
-            this.sophongtam = item.sophongtam
+            this.indexEdit = parseInt(item.id)
+            this.giamin = parseFloat(item.giamin)
+            this.giamax = parseFloat(item.giamax)
+            this.sophongngu = parseInt(item.sophongngu)
+            this.sophongtam = parseInt(item.sophongtam)
             this.selectedhuong = item.huong
-            this.dientichmin = item.dientichmin
-            this.dientichmax = item.dientichmax
+            this.dientichmin = parseFloat(item.dientichmin)
+            this.dientichmax = parseFloat(item.dientichmax)
             this.diachicuthe = item.diachi
             this.hinhthuc = parseInt(item.isChoThue)
             this.loai = null

@@ -31,10 +31,10 @@
                             <!-- <v-btn fab dark small color="green" class="mr-2">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>-->
-                            <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
+                            <v-btn fab dark small color="sunhouse_blue1" class="mr-2" @click="openDangBai">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItems(selected)">
+                            <v-btn v-if="selected.length > 0" fab dark small color="red" class="mr-5" @click="$refs.deleteMultileModal.open()">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                         </div>
@@ -50,7 +50,7 @@
                             <div class="baidang-title">
                                 <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                                     <template #activator="{ on }">
-                                        <h3 class="title font-700 text--upercase" v-on="on">
+                                        <h3 class="title font-700 text--upercase sunhouse_blue1--text" v-on="on">
                                             {{ item.tieude }}
                                         </h3>
                                     </template>
@@ -99,8 +99,8 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
-                    <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <v-icon color="sunhouse_grey" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-icon color="sunhouse_blue2" class="" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #activator="{ on, attrs }">
                             <v-btn icon color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
@@ -121,6 +121,13 @@
                 </template>
             </v-data-table>
         </v-card>
+        <sweet-modal ref="deleteMultileModal" blocking icon="warning" title="Xóa bài đăng">
+            Bạn có thật sự muốn xóa {{ selected.length }} bài đăng hay không?
+            <template #button>
+                <v-btn color="primary" @click="$refs.deleteMultileModal.close()">HỦY</v-btn>
+                <v-btn color="primary" class="ml-2" @click="deleteMultipleItems(selected)">XÓA</v-btn>
+            </template>
+        </sweet-modal>
         <v-snackbars :objects.sync="message" bottom right />
     </v-container>
 </template>
@@ -138,7 +145,7 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'Tiêu đề', width: '40%', value: 'tieude', align: 'left' },
+                { text: 'Tiêu đề', width: '50%', value: 'tieude', align: 'left' },
                 { text: 'Người đăng', value: 'user', width: '10%' },
                 { text: 'Time', value: 'thoigian', width: '7%' },
                 { text: 'Status', value: 'trangthai', width: '8%' },
@@ -274,7 +281,7 @@ export default {
         },
 
         deleteMultipleItems(dsBaiDang) {
-            if (Array.isArray(dsBaiDang)) {
+            try {
                 dsBaiDang.forEach((item) => {
                     this.$axios
                         .$delete(ENV.delete + item.id)
@@ -299,6 +306,8 @@ export default {
                             this.choduyet = this.choduyet - 1
                         })
                 })
+            } finally {
+                this.$refs.deleteMultileModal.close()
             }
         },
     },
@@ -309,7 +318,6 @@ export default {
     text-transform: uppercase;
 }
 .title {
-    color: #7873f5;
     display: inline-block;
 }
 .baidang-title {

@@ -115,7 +115,12 @@
                     </v-tooltip>
                 </template>
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-tooltip top content-class="tooltipCustom">
+                        <template #activator="{ on }">
+                            <v-icon color="blue" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
+                        </template>
+                        <span>Xem chi tiết người dùng</span>
+                    </v-tooltip>
                 </template>
             </v-data-table>
         </v-card>

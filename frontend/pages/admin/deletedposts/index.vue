@@ -180,7 +180,7 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: '', width: '40%', value: 'tieude', align: 'left', sortable: false },
+                { text: '', width: '65%', value: 'tieude', align: 'left', sortable: false },
                 { text: 'Người đăng', value: 'user', width: '10%' },
                 { text: 'Time', value: 'thoigian', width: '7%' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false, width: '12%' },

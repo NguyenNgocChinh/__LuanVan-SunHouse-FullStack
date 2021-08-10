@@ -2,7 +2,7 @@
     <v-app id="inspire">
         <Header v-model="expandOnHover"></Header>
         <Sidebar :expand-on-hover.sync="expandOnHover"></Sidebar>
-        <v-main class="grey lighten-1">
+        <v-main class="grey lighten-2">
             <v-container fluid>
                 <nuxt />
             </v-container>

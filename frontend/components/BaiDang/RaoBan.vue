@@ -1,17 +1,16 @@
 <template>
-    <v-container fluid class="indigo darken-2">
-        <v-container class="pt-10 chothue text-center">
-            <h3 class="pa-1 mb-2 white--text" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">NHÀ BÁN MỚI NHẤT</h3>
-            <br />
-            <h4 class="pa-1 white--text" style="display: inline-block; background-color: rgba(0, 0, 0, 0.7)">Sun House trao trọn niềm tin</h4>
+    <v-container fluid class="py-0">
+        <v-container class="chothue text-center py-0">
+            <h3 class="sunhouse_grey2--text pb-2">NHÀ BÁN MỚI NHẤT</h3>
+            <h4 class="pb-4 sunhouse_grey2--text">Sun House trao trọn niềm tin</h4>
             <v-row>
                 <v-slide-group v-if="baidangs_loading" class="pa-4">
-                    <v-slide-item v-for="index in 5" :key="index">
+                    <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-slide-item>
                 </v-slide-group>
 
-                <v-slide-group v-else v-model="model" class="pa-4 text-left">
+                <v-slide-group v-else v-model="model" class="px-4 pt-4 text-left">
                     <v-slide-item v-for="baidang in baidangs" :key="baidang.id">
                         <bai-dang-card :baidang="baidang" />
                     </v-slide-item>

@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col cols="4" class="teal lighten-2">
+            <v-col cols="4" class="">
                 <FormBaiDang class="mt-2" />
             </v-col>
             <v-col cols="8" class="pb-0 pr-0">

@@ -202,27 +202,23 @@
                 </v-row>
             </v-row>
         </sweet-modal>
-        <v-container fluid class="sunhouse_secondary">
-            <v-container>
-                <v-row class="align-center">
-                    <v-col cols="12" lg="9" class="white--text introNhanTin pl-3">
-                        Bạn không tìm thấy căn hộ nào phù hợp?
-                        <br />
-                        Hãy để lại tiêu chí tìm kiếm của bạn. <br />
-                        Chúng tôi sẽ gửi thông báo nếu có căn hộ phù hợp cho bạn.
-                    </v-col>
-                    <v-col cols="12" lg="3">
-                        <v-btn class="btn-rounded" @click="openModalNhanTin">
+        <v-container fluid class="sunhouse_grey">
+            <v-container fluid class="align-center d-flex flex-row justify-center">
+                <v-container fluid style="width: 85%">
+                    <div class="d-flex flex-row align-center sunhouse_grey2--text flex-row justify-center py-2" style=" !important; border-radius: 8px; border: 1px solid #3b383a">
+                        <v-btn class="btn-rounded mr-3" @click="openModalNhanTin">
                             <v-icon class="pr-2">mdi-radio-tower</v-icon>
                             Đăng ký nhận tin
                         </v-btn>
-                    </v-col>
-                </v-row>
+                        <div class="introNhanTin pl-3" style="display: inline">Bạn không tìm thấy căn hộ nào phù hợp? Hãy để lại tiêu chí tìm kiếm của bạn. Chúng tôi sẽ gửi thông báo nếu có căn hộ phù hợp cho bạn.</div>
+                    </div>
+                </v-container>
             </v-container>
         </v-container>
         <v-footer app padless class="footer">
             <v-container fluid class="pa-0">
-                <v-card color="light-blue accent-4" flat tile class="white--text text-center">
+                <!--                <v-divider class="sunhouse_white"></v-divider>-->
+                <v-card color="sunhouse_black" flat tile class="sunhouse_white--text text-center">
                     <v-card-text class="pa-0 pt-4">
                         <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon>
                             <v-icon size="24">
@@ -230,9 +226,8 @@
                             </v-icon>
                         </v-btn>
                     </v-card-text>
-                    <v-card-text class="white--text"> {{ slogan }}</v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-text class="white--text"> &copy; {{ new Date().getFullYear() }} — {{ title }}<strong></strong> </v-card-text>
+                    <v-card-text class="sunhouse_white--text pb-0"> {{ slogan }}</v-card-text>
+                    <v-card-text class="sunhouse_white--text"> &copy; {{ new Date().getFullYear() }} — {{ title }}<strong></strong> </v-card-text>
                 </v-card>
             </v-container>
         </v-footer>
@@ -409,7 +404,7 @@ export default {
 }
 
 .introNhanTin {
-    border-left: 1px solid #fff;
+    border-left: 1px solid #3b383a;
 }
 
 .btn-rounded {

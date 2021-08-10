@@ -15,7 +15,7 @@
             </template>
 
             <v-list>
-                <v-list-item v-for="(item, i) in userprofile" :key="i" @click="href">
+                <v-list-item v-for="(item, i) in userprofile" :key="i" @click="$router.push(item.href)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -37,7 +37,7 @@ export default {
         },
     },
     data: () => ({
-        userprofile: [{ title: 'Hồ sơ' }, { title: 'Tin nhắn' }],
+        userprofile: [{ title: 'Hồ sơ', href: '/users' }],
         href() {
             return undefined
         },

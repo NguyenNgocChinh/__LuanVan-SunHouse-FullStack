@@ -3,6 +3,7 @@ import vi from './locale/vi'
 export default {
     ssr: false,
     target: 'static',
+    // target: 'server',
     // fetchOnServer: false,
     generate: {
         fallback: true,
@@ -156,6 +157,15 @@ export default {
                     sunhouse_pinkLinght: '#FBB2D2',
                     sunhouse_pinkDeep: '#FF9CC7',
                     sunhouse_darkSky: '#23717D',
+
+                    sunhouse_red1: '#c70512',
+                    sunhouse_red2: '#dd2d4a',
+                    sunhouse_blue1: '#005fb8',
+                    sunhouse_blue2: '#477998',
+                    sunhouse_white: '#f4f4f4',
+                    sunhouse_grey: '#bbbfca',
+                    sunhouse_grey2: '#3b383a',
+                    sunhouse_black: '#040101',
                 },
             },
         },

@@ -1,5 +1,6 @@
 <template>
-    <div class="mx-4 pt-5 article-card animate__animated animate__fadeInRight" :style="'width:' + width + 'px'" style="height: 100%">
+    <!--    animate__animated animate__fadeInRightanimate__animated animate__fadeInRight-->
+    <div class="mx-4 pt-5 article-card" :style="'width:' + parseInt(width) + 'px'" style="height: 100%">
         <v-card v-if="baidang" :loading="loading" class="mx-auto article-card" style="height: unset" :outlined="outlined" flat>
             <div class="header-card">
                 <v-img v-if="baidang.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" :lazy-src="getImg(baidang.hinhanh[0])" :src="isImgFail ? wrong_imgSrc : getImg(baidang.hinhanh[0])" @error="errorImg">
@@ -14,7 +15,7 @@
                     </v-layout>
                 </v-img>
             </div>
-            <v-card-title class="purple--text text-uppercase">
+            <v-card-title class="text-uppercase" style="color: #005fb8">
                 <div class="card-title">
                     <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                         <template #activator="{ on, attrs }">
@@ -97,7 +98,7 @@
                 </v-row>
             </v-card-subtitle>
             <v-chip-group class="loainha">
-                <v-chip color="teal darken-1" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
+                <v-chip :style="'background-color: #' + (baidang.isChoThue === 1 ? '477998' : 'dd2d4a !important')" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
                 <!--                <v-chip color="deep-orange accent-3 " class="white&#45;&#45;text" label>Nổi bật</v-chip>-->
             </v-chip-group>
             <v-tooltip v-if="isYeuThich" top content-class="tooltipCustom">
@@ -147,7 +148,6 @@ export default {
             default: false,
         },
         width: {
-            type: Number,
             default: 315,
         },
     },
@@ -213,6 +213,8 @@ export default {
                     baidang_id: this.baidang.id,
                 })
                 this.$store.commit('PUSH_YEUTHICH', this.baidang.id, this.$auth.user.id)
+            } else {
+                this.$router.push('/login')
             }
         },
         removeYeuThich() {
@@ -298,7 +300,7 @@ export default {
 }
 .chatnow,
 .chatnow i {
-    color: #ffab00;
+    color: #de0202;
 }
 </style>
 

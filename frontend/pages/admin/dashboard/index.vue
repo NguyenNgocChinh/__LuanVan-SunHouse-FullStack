@@ -1,23 +1,23 @@
 <template>
     <div>
         <h2>Thống kê</h2>
-        <v-container class="mt-4 text-center">
+        <v-container class="mt-4 text-center white--text">
             <v-row>
                 <v-spacer />
-                <v-card elevation="2" outlined width="300" class="red lighten-3">
+                <v-card elevation="2" outlined width="300" class="sunhouse_blue2 white--text">
                     <v-card-title class="justify-center">Số Thành Viên</v-card-title>
-                    <v-card-text>{{ thanhvien }} thành viên</v-card-text>
+                    <v-card-text class="white--text">{{ thanhvien }} thành viên</v-card-text>
                 </v-card>
                 <v-spacer />
-                <v-card elevation="2" outlined width="300" class="yellow lighten-3">
+                <v-card elevation="2" outlined width="300" class="sunhouse_blue2 white--text">
                     <v-card-title class="justify-center">Tổng Bài Viết</v-card-title>
-                    <v-card-text>{{ baiviet }} bài viết</v-card-text>
+                    <v-card-text class="white--text">{{ baiviet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
-                <v-card elevation="2" outlined width="300" class="green lighten-3">
+                <v-card elevation="2" outlined width="300" class="sunhouse_blue2 white--text">
                     <v-card-title class="justify-center">Đang Chờ Duyệt</v-card-title>
-                    <v-card-text>{{ choduyet }} bài viết</v-card-text>
+                    <v-card-text class="white--text">{{ choduyet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
 
@@ -50,7 +50,7 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn dark small color="green" class="mr-2" @click="duyetbai(selected)"> PHÊ DUYỆT </v-btn>
+                            <v-btn dark small color="sunhouse_red2" class="mr-2" @click="duyetbai(selected)"> PHÊ DUYỆT </v-btn>
                         </div>
                     </div>
                 </template>
@@ -83,7 +83,7 @@
                 <template #[`item.xem`]="{ item }">
                     <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                         <template #activator="{ on }">
-                            <v-icon color="blue" class="mr-2" @click="showItem(item)" v-on="on"> mdi-eye </v-icon>
+                            <v-icon color="sunhouse_grey" class="mr-2" @click="showItem(item)" v-on="on"> mdi-eye </v-icon>
                         </template>
                         <span> Xem bài đăng </span>
                     </v-tooltip>
@@ -96,7 +96,7 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-btn small color="primary" @click="duyetbai(item)">DUYỆT</v-btn>
+                    <v-btn small color="sunhouse_blue2 white--text" @click="duyetbai(item)">DUYỆT</v-btn>
                 </template>
             </v-data-table>
             <v-snackbars :objects.sync="message" bottom right />

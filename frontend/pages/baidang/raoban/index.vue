@@ -1,6 +1,6 @@
 <template>
-    <v-container fluid class="yellow accent-4">
-        <v-container>
+    <v-container fluid>
+        <v-container v-if="!isEmpty">
             <v-row>
                 <v-col>
                     <v-card class="d-flex">
@@ -32,8 +32,13 @@
                 </v-col>
             </v-row>
             <div class="text-center mt-10">
-                <v-pagination v-model="page" :length="detail_page.last_page" circle @click="getBaiDangRaoBan"></v-pagination>
+                <v-pagination v-model="page" color="sunhouse_blue2" :length="detail_page.last_page" circle @click="getBaiDangRaoBan"></v-pagination>
             </div>
+        </v-container>
+        <v-container v-else>
+            <v-row>
+                <p class="white--text pa-5 font-700 text-center center-element" style="font-size: 24px">Hệ thống không tìm thấy bài đăng được rao bán. Bạn có thể để lại yêu cầu bằng cách đăng ký nhận tin</p>
+            </v-row>
         </v-container>
     </v-container>
 </template>
@@ -48,6 +53,7 @@ export default {
             baidangs: [],
             page: 1,
             items: ['Mới nhất', 'Cũ nhất', 'Giá tăng dần', 'Giá giảm dần'],
+            isEmpty: false,
             selected: null,
             detail_page: {
                 from: 0,
@@ -81,13 +87,17 @@ export default {
     },
     methods: {
         async getBaiDangRaoBan(filter = false) {
+            this.isEmpty = false
             let result
             if (this.baidang_raoban.length < 1) {
                 result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
                 result = result.baidangs
                 this.$store.commit('SET_BAIDANG_RAOBAN', result)
             } else result = this.baidang_raoban
-
+            if (result.length < 1) {
+                this.isEmpty = true
+                return
+            }
             result = this._.sortBy(result, (o) => o.luotxem).reverse()
             if (filter) {
                 result = this.sortBy(result)

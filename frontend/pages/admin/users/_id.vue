@@ -11,20 +11,20 @@ s
                     >
                 </v-row>
                 <v-row>
-                    <v-col><b>username: </b></v-col>
+                    <v-col><b>Tên người dùng: </b></v-col>
                     <v-col
-                        ><b>{{ user.username }}</b></v-col
+                        ><b>{{ user.username || '-' }}</b></v-col
                     >
                 </v-row>
 
                 <v-row>
-                    <v-col><b>vaitro: </b></v-col>
+                    <v-col><b>Vai trò: </b></v-col>
                     <v-col
                         ><b>{{ user.vaitro }}</b></v-col
                     >
                 </v-row>
                 <v-row>
-                    <v-col><b>email: </b></v-col>
+                    <v-col><b>Email: </b></v-col>
                     <v-col
                         ><b>{{ user.email }}</b></v-col
                     >
@@ -32,7 +32,7 @@ s
                 <v-row>
                     <v-col><b>SĐT: </b></v-col>
                     <v-col
-                        ><b>{{ user.sdt }}</b></v-col
+                        ><b>{{ user.sdt || '-' }}</b></v-col
                     >
                 </v-row>
             </v-card-text>

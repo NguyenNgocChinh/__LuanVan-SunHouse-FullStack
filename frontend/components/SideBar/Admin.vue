@@ -1,7 +1,7 @@
 <template>
     <v-navigation-drawer id="main-sidebar" v-model="Sidebar_drawer" :color="SidebarColor" mobile-breakpoint="960" clipped :right="$vuetify.rtl" mini-variant-width="70" :expand-on-hover="expandOnHover" app>
         <!---USer Area -->
-        <div class="d-flex flex-row mt-3 mb-2 mx-2">
+        <div class="ml-7 d-flex flex-row mt-5 mb-2 mx-2">
             <v-avatar size="45">
                 <v-img :src="$auth.user.profile_photo_path || $auth.user.profile_photo_url"></v-img>
             </v-avatar>
@@ -13,8 +13,8 @@
         </div>
         <!---USer Area -->
         <v-list shaped>
-            <v-list-item-group v-model="selectedMenu" active-class="sunhouse_primary white--text">
-                <v-list-item v-for="(item, index) in items" :key="index" :to="item.to">
+            <v-list-item-group v-model="selectedMenu" active-class="sunhouse_red2 white--text">
+                <v-list-item v-for="(item, index) in items" :key="index" :to="item.to" class="pl-7">
                     <v-list-item-icon>
                         <v-icon v-text="item.icon"></v-icon>
                     </v-list-item-icon>
@@ -56,6 +56,11 @@ export default {
     data: () => ({
         selectedMenu: 1,
         items: [
+            {
+                title: 'Trang chủ',
+                icon: 'bx bx-home-heart',
+                to: '/',
+            },
             {
                 title: 'Dashboard',
                 icon: 'mdi-view-dashboard',

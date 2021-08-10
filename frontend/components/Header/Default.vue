@@ -1,16 +1,16 @@
 <template>
     <nav>
         <!--IS DESKTOP-->
-        <v-app-bar v-show="!isMobile" dense flat app class="light-blue accent-4">
+        <v-app-bar v-show="!isMobile" dense flat app class="sunhouse_black sunhouse_white--text">
             <!--color="sunhouse_primary"-->
             <v-toolbar-title class="text-uppercase">
-                <nuxt-link class="text-decoration-none white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b></nuxt-link>
+                <nuxt-link class="text-decoration-none sunhouse_white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b></nuxt-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <div class="list-menu">
-                <nuxt-link v-for="(item, index) in listMenus" :key="index" class="text-decoration-none white--text" :to="item.href">
-                    <v-btn class="navlink white--text">
+                <nuxt-link v-for="(item, index) in listMenus" :key="index" class="text-decoration-none sunhouse_white--text" :to="item.href">
+                    <v-btn class="navlink sunhouse_white--text">
                         <span>{{ item.menu }}</span>
                     </v-btn>
                 </nuxt-link>
@@ -22,7 +22,7 @@
                 <!--Loggin: true-->
                 <HasLogin v-else />
             </client-only>
-            <v-btn elevation="2" rounded color="yellow lighten-2" to="/GuiTaiSan">
+            <v-btn text rounded class="white--text" to="/GuiTaiSan" style="background-color: #c70512 !important">
                 <!--<v-icon dark> mdi-plus</v-icon>-->
                 Đăng tin
             </v-btn>

@@ -8,7 +8,7 @@
                         <v-img v-else :src="isValidHttpUrl($auth.user.profile_photo_path) ? $auth.user.profile_photo_path : URI_AVATAR + $auth.user.profile_photo_path" style="width: 30px"></v-img>
                     </v-avatar>
 
-                    <span :style="'color:' + color">{{ $auth.user.name }}</span>
+                    <span class="sunhouse_white--text">{{ $auth.user.name }}</span>
                     <v-icon>{{ isClickUser ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                 </v-btn>
             </template>
