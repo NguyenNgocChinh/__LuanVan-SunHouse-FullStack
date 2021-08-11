@@ -21,6 +21,7 @@ class BaiDangObserver
     }
     public function updated(BaiDang $baiDang)
     {
+        // $this->resetDoUuTien($baiDang);
     }
     public function deleted(BaiDang $baiDang)
     {
@@ -33,14 +34,15 @@ class BaiDangObserver
     }
     public function forceDeleted(BaiDang $baiDang)
     {
-        //
+
     }
 
     //reset douutien
-    private function resetDoUuTien(BaiDang $baiDang){
+    private function resetDoUuTien(BaiDang $baiDang)
+    {
         $baiDang->douutien = BaiDang::max('douutien') + 1;
         $baiDang->save();
-        if($baiDang->douutien > 10){
+        if ($baiDang->douutien > 10) {
             foreach (BaiDang::cursor() as $baidang) {
                 $baidang->douutien = $baidang->douutien / 9;
                 $baidang->save();
@@ -53,7 +55,7 @@ class BaiDangObserver
     {
         Log::info($baiDang);
         $trangthai = 0;
-        if($baiDang->trangthai && $baiDang->choduyet)
+        if ($baiDang->trangthai && $baiDang->choduyet)
             $trangthai = 1;
         DB::table('location')
             ->insert(
@@ -63,11 +65,12 @@ class BaiDangObserver
                     'position' => DB::raw("ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326)"),
                     'trangthai' => $trangthai
                 ]
-                );
+            );
         // DB::statement("INSERT INTO location(baidang_id,position,trangthai)
         // value($baiDang->id,ST_GeomFromText('point($baiDang->toadoX $baiDang->toadoY)',4326),$trangthai");
     }
-    private function removeLocationTable(BaiDang $baiDang){
+    private function removeLocationTable(BaiDang $baiDang)
+    {
         DB::table('location')->where('baidang_id', $baiDang->id)->delete();
     }
     //Handler Function
@@ -139,5 +142,4 @@ class BaiDangObserver
     {
         return $collection->$field == $value;
     }
-
 }

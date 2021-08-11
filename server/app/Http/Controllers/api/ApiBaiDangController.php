@@ -60,7 +60,7 @@ class ApiBaiDangController extends Controller
     public function getRaoBanPosts()
     {
         $raoban_posts = BaiDang::where('isChoThue', 0)
-            ->where('trangthai',1)
+            ->where('trangthai', 1)
             ->where('choduyet', 0)
             ->orderBy('douutien', 'desc')
             ->paginate($this->page_size);
@@ -74,7 +74,7 @@ class ApiBaiDangController extends Controller
     public function getChoThuePosts()
     {
         $chothue_posts = BaiDang::where('isChoThue', 1)
-            ->where('trangthai',1)
+            ->where('trangthai', 1)
             ->where('choduyet', 0)
             ->orderBy('douutien', 'desc')
             ->paginate($this->page_size);
@@ -97,13 +97,13 @@ class ApiBaiDangController extends Controller
     public function getDetailPost(Request $request)
     {
         $post = BaiDang::findOrFail($request->id);
-        if( $post->trangthai == 1 && $post->choduyet == 0){
+        if ($post->trangthai == 1 && $post->choduyet == 0) {
             Log::info("trang thai 1 - cho duyet 0");
-            if(!Auth::check()){
+            if (!Auth::check()) {
                 Log::info("chua login");
                 event(new ViewPostHandler($post));
-            }else{
-                if(Auth::user()->id != $post->user_id){
+            } else {
+                if (Auth::user()->id != $post->user_id) {
                     Log::info(" user dang dang nhap");
                     event(new ViewPostHandler($post));
                 }
@@ -118,7 +118,7 @@ class ApiBaiDangController extends Controller
     public function getChoDuyetPosts()
     {
         $choduyet = BaiDang::where('choduyet', 1)
-            ->where('trangthai',1)
+            ->where('trangthai', 1)
             ->orderBy('created_at', 'desc')
             ->paginate($this->page_size);
         return response()->json([
@@ -183,6 +183,7 @@ class ApiBaiDangController extends Controller
         if (Gate::forUser($user)->allows('duyet-bai')) {
             $post = BaiDang::find($request->id);
             $post->choduyet = 0;
+            $post->douutien = BaiDang::max('douutien') + 1;
             $ok = $post->save();
             $this->toggleStatusLocationTable($post);
             if ($ok)
@@ -199,87 +200,87 @@ class ApiBaiDangController extends Controller
     {
         $user = Auth::user();
         if (Gate::forUser($user)->allows('dang-bai')) {
-            if(!$this->verifyCaptcha($request))
-            return response()->json(['errors' => 'Chưa xác thực Captcha']);
-        $request->validate(
-            [
-                'tieude' => 'required',
-                'loai_id' => 'required',
-                'gia' => 'required',
-                'hinhthuc' => 'required',
-                'noidung' => 'required',
-                'sophongngu' => 'required',
-                'sophongtam' => 'required',
-                'huong' => 'required',
-                'dientich' => 'required',
-                'diachi' => 'required',
-                'toadoX' => 'required',
-                'toadoY' => 'required',
-                'g-recaptcha-response' => 'required'
-            ],
-            [
-                'tieude.required' => 'Tiêu đề không được để trống!',
-                'loai_id.required' => 'Chưa chọn loại của căn nhà!',
-                'gia.required' => 'Giá không được để trống!',
-                'hinhthuc.required' => 'Chưa chọn hình thức đăng tải!',
-                'noidung.required' => 'Nội dung mô tả không được trống!',
-                'sophongngu.required' => 'Số phòng ngủ không được để trống!',
-                'sophongtam.required' => 'Số phòng tắm không được để trống!',
-                'namxaydung.required' => 'Năm xây dựng không được để trống!',
-                'huong.required' => 'Chưa chọn hướng nhà!',
-                'dientich.required' => 'Diện tích không được để trống!',
-                'diachi.required' => 'Địa chỉ nhà không được để trống!',
-                'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
-                'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
-            ]
-        );
+            if (!$this->verifyCaptcha($request))
+                return response()->json(['errors' => 'Chưa xác thực Captcha']);
+            $request->validate(
+                [
+                    'tieude' => 'required',
+                    'loai_id' => 'required',
+                    'gia' => 'required',
+                    'hinhthuc' => 'required',
+                    'noidung' => 'required',
+                    'sophongngu' => 'required',
+                    'sophongtam' => 'required',
+                    'huong' => 'required',
+                    'dientich' => 'required',
+                    'diachi' => 'required',
+                    'toadoX' => 'required',
+                    'toadoY' => 'required',
+                    'g-recaptcha-response' => 'required'
+                ],
+                [
+                    'tieude.required' => 'Tiêu đề không được để trống!',
+                    'loai_id.required' => 'Chưa chọn loại của căn nhà!',
+                    'gia.required' => 'Giá không được để trống!',
+                    'hinhthuc.required' => 'Chưa chọn hình thức đăng tải!',
+                    'noidung.required' => 'Nội dung mô tả không được trống!',
+                    'sophongngu.required' => 'Số phòng ngủ không được để trống!',
+                    'sophongtam.required' => 'Số phòng tắm không được để trống!',
+                    'namxaydung.required' => 'Năm xây dựng không được để trống!',
+                    'huong.required' => 'Chưa chọn hướng nhà!',
+                    'dientich.required' => 'Diện tích không được để trống!',
+                    'diachi.required' => 'Địa chỉ nhà không được để trống!',
+                    'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                    'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                ]
+            );
 
-        $baidang = new BaiDang();
-        $baidang->tieude = $request->tieude;
-        $baidang->loai_id = $request->loai_id;
-        $baidang->gia = $request->gia;
-        $baidang->isChoThue = $request->hinhthuc;
-        $baidang->noidung = $request->noidung;
-        $baidang->sophongngu = $request->sophongngu;
-        $baidang->sophongtam = $request->sophongtam;
-        $baidang->namxaydung = $request->namxaydung;
-        $baidang->huong = $request->huong;
-        $baidang->dientich = $request->dientich;
-        $baidang->diachi = $request->diachi;
-        $baidang->toadoX = $request->toadoX;
-        $baidang->toadoY = $request->toadoY;
-        /**********************************************/
-        $baidang->user_id = Auth::user()->id;
-        /**********************************************/
+            $baidang = new BaiDang();
+            $baidang->tieude = $request->tieude;
+            $baidang->loai_id = $request->loai_id;
+            $baidang->gia = $request->gia;
+            $baidang->isChoThue = $request->hinhthuc;
+            $baidang->noidung = $request->noidung;
+            $baidang->sophongngu = $request->sophongngu;
+            $baidang->sophongtam = $request->sophongtam;
+            $baidang->namxaydung = $request->namxaydung;
+            $baidang->huong = $request->huong;
+            $baidang->dientich = $request->dientich;
+            $baidang->diachi = $request->diachi;
+            $baidang->toadoX = $request->toadoX;
+            $baidang->toadoY = $request->toadoY;
+            /**********************************************/
+            $baidang->user_id = Auth::user()->id;
+            /**********************************************/
 
-        $baidang->choduyet = 1;
-        /**********************************************/
+            $baidang->choduyet = 1;
+            /**********************************************/
 
-        /**********************************************/
-        $kq = $baidang->save();
+            /**********************************************/
+            $kq = $baidang->save();
 
-        if ($kq) {
-            if (is_array($request->dstiennghi)) {
-                foreach ($request->dstiennghi as $tiennghi) {
-                    $tiennghi_bd = new TienNghiBaiDang();
-                    $tiennghi_bd->baidang_id = $baidang->id;
-                    $tiennghi_bd->tiennghi_id = $tiennghi;
-                    $tiennghi_bd->save();
+            if ($kq) {
+                if (is_array($request->dstiennghi)) {
+                    foreach ($request->dstiennghi as $tiennghi) {
+                        $tiennghi_bd = new TienNghiBaiDang();
+                        $tiennghi_bd->baidang_id = $baidang->id;
+                        $tiennghi_bd->tiennghi_id = $tiennghi;
+                        $tiennghi_bd->save();
+                    }
+                }
+
+                $data = $this->saveImage($request);
+
+                if (count($data) > 0) {
+                    foreach ($data as $hinhanh) {
+                        $hinhanh_new = new BaiDangHinhAnh();
+                        $hinhanh_new->baidang_id = $baidang->id;
+                        $hinhanh_new->filename = $hinhanh;
+                        $hinhanh_new->save();
+                    }
                 }
             }
-
-            $data = $this->saveImage($request);
-
-            if (count($data) > 0) {
-                foreach ($data as $hinhanh) {
-                    $hinhanh_new = new BaiDangHinhAnh();
-                    $hinhanh_new->baidang_id = $baidang->id;
-                    $hinhanh_new->filename = $hinhanh;
-                    $hinhanh_new->save();
-                }
-            }
-        }
-        return response()->json(new BaiDangDetailResource($baidang));
+            return response()->json(new BaiDangDetailResource($baidang));
         }
         return response()->json([
             'errors' => 'Bạn đã đạt số lượng bài đăng cho phép trong 1 ngày!'
@@ -290,7 +291,7 @@ class ApiBaiDangController extends Controller
     {
         $baidang = BaiDang::find($request->id);
         $this->authorize('update', $baidang);
-        if(!$this->verifyCaptcha($request))
+        if (!$this->verifyCaptcha($request))
             return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
             [
@@ -418,9 +419,10 @@ class ApiBaiDangController extends Controller
         }
     }
 
-    public function getAllBaiDangOfOtherUser($idUser){
-        $posts = BaiDang::where(['trangthai' => 1, 'choduyet' => 0,'user_id' => $idUser])->get();
-            return response()->json(BaiDangResource::collection($posts));
+    public function getAllBaiDangOfOtherUser($idUser)
+    {
+        $posts = BaiDang::where(['user_id' => $idUser])->get();
+        return response()->json(BaiDangResource::collection($posts));
     }
 
     public function getWaitingBaiDangOfUser()
@@ -439,13 +441,15 @@ class ApiBaiDangController extends Controller
         }
     }
 
-    public function deletePosts(){
+    public function deletePosts()
+    {
         return response()->json(BaiDangResource::collection(BaiDang::onlyTrashed()->get()));
     }
-    public function restorePost($idPost){
-        if(Auth::check()){
-            if(Auth::user()->vaitro == 'admin'){
-                BaiDang::onlyTrashed()->where('id',$idPost)->restore();
+    public function restorePost($idPost)
+    {
+        if (Auth::check()) {
+            if (Auth::user()->vaitro == 'admin') {
+                BaiDang::onlyTrashed()->where('id', $idPost)->restore();
                 return response()->json([
                     'success' => 'Khôi phục bài đăng thành công'
                 ]);
@@ -458,10 +462,21 @@ class ApiBaiDangController extends Controller
             'errors' => 'Bạn cần đăng nhập để xác minh người dùng'
         ]);
     }
-    public function forceDeletePost($idPost){
-        if(Auth::check()){
-            if(Auth::user()->vaitro == 'admin'){
-                BaiDang::onlyTrashed()->where('id',$idPost)->forceDelete();
+    public function forceDeletePost($idPost)
+    {
+        if (Auth::check()) {
+            if (Auth::user()->vaitro == 'admin') {
+                $baiDang =  BaiDang::withTrashed()->where('id', $idPost)->first();
+                Log::info($baiDang);
+                foreach ($baiDang->tiennghiBaiDang as $tiennghi) {
+                    $tiennghi->delete();
+                }
+                foreach ($baiDang->hinhanh as $hinhanh) {
+                    Log::info($hinhanh);
+                    $kq = $hinhanh->delete();
+                    Log::info("kq " . $kq);
+                }
+                $baiDang->forceDelete();
                 return response()->json([
                     'success' => 'Xóa bài đăng thành công'
                 ]);
@@ -475,9 +490,10 @@ class ApiBaiDangController extends Controller
         ]);
     }
 
-    public function pushDoUuTien($id){
+    public function pushDoUuTien($id)
+    {
         $post = BaiDang::find($id);
-        if($post != null){
+        if ($post != null) {
             $post->douutien = BaiDang::max('douutien') + 1;
             $post->next_push = date('Y-m-d H:i:s', strtotime('1 hour'));
             // $post->next_push = date('Y-m-d H:i:s', strtotime('1 minute'));
@@ -503,7 +519,7 @@ class ApiBaiDangController extends Controller
     public function verifyCaptcha(Request $request)
     {
         $token = $request->get('g-recaptcha-response');
-        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY',null));
+        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY', null));
         $resp = $recaptcha->setExpectedHostname($request->getHost())
 
             ->verify($token, $request->ip());
@@ -516,10 +532,11 @@ class ApiBaiDangController extends Controller
         }
     }
 
-    public function checkScopePosts(){
+    public function checkScopePosts()
+    {
         $user = Auth::user();
         $postCount = BaiDang::whereDate('created_at', Carbon::today())
-                ->where('user_id', $user->id)->count();
+            ->where('user_id', $user->id)->count();
         return response()->json($postCount);
     }
 }

@@ -132,18 +132,7 @@ class BaiDang extends Model
     {
         parent::boot();
         static::deleting(function ($baidang) {
-            foreach ($baidang->tiennghiBaiDang as $tiennghi) {
-                $tiennghi->delete();
-            }
-//            foreach ($baidang->binhluan as $binhluan) {
-//                $binhluan->delete();
-//            }
-Log::info('Bai Dang Hinh Anh '.$baidang->hinhanh);
-            foreach ($baidang->hinhanh as $hinhanh) {
-                Log::info($hinhanh);
-               $kq = $hinhanh->delete();
-               Log::info("kq " . $kq);
-            }
+
         });
     }
 }
