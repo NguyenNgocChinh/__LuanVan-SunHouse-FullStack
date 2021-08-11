@@ -50,4 +50,8 @@ Vue.prototype.$rules = {
         const regex = /^(0[3|5|7|8|9])+([0-9]{8}$)/
         return regex.test(sdt)
     },
+    maxLenght(v, max) {
+        if (v === '') return true
+        return v.length <= max || 'Độ dài tối đa phải ' + max + ' ký tự.'
+    },
 }

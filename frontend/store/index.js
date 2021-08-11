@@ -2,10 +2,6 @@ import ENV from '@/api/baidang'
 import ENV_CHAT from '@/api/chat'
 import axios from 'axios'
 export const state = () => ({
-    state: {
-        SearchResult: null,
-        loadingSearchResult: false,
-    },
     baidangs: [],
     baidang_hots: [],
     baidang_chothue: [],
@@ -35,34 +31,67 @@ export const mutations = {
     SET_CONTACTS(state, payload) {
         state.contatcs = payload
     },
+    RESET_BAIDANG_RAOBAN(state) {
+        state.baidang_raoban = []
+    },
+    RESET_BAIDANG_CHOTHUE(state) {
+        state.baidang_chothue = []
+    },
+    RESET_BAIDANG_HOT(state) {
+        state.baidang_hots = []
+    },
     UPDATE_DOUUTIEN_BAIDANG(state, baidang) {
-        console.table(baidang)
+        const max = Math.max.apply(
+            Math,
+            state.baidang_hots.map(function (o) {
+                return o.douutien
+            })
+        )
         if (baidang.isChoThue) {
-            // const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
-            // state.baidang_chothue[index].douutien = state.baidang_chothue[index].douutien + 1
-            state.baidang_chothue = []
+            const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
+            if (index > -1) state.baidang_chothue[index].douutien = max + 1
         } else {
-            // const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
-            // state.baidang_raoban[index].douutien = state.baidang_raoban[index].douutien + 1
-            state.baidang_raoban = []
+            const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
+            if (index > -1) state.baidang_raoban[index].douutien = max + 1
+        }
+        const index = state.baidang_hots.findIndex((item) => item.id === baidang.id)
+        if (index > -1) state.baidang_hots[index].douutien = max + 1
+    },
+    PUSH_BAIDANG(state, baidang) {
+        if (baidang.isChoThue) {
+            const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
+            if (index < 0) state.baidang_chothue.unshift(baidang)
+        } else {
+            const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
+            if (index < 0) state.baidang_raoban.unshift(baidang)
+        }
+        const index = state.baidang_hots.findIndex((item) => item.id === baidang.id)
+        if (index < 0) state.baidang_hots.unshift(baidang)
+
+        // this.commit('UPDATE_DOUUTIEN_BAIDANG', baidang)
+    },
+    REMOVE_BAIDANG(state, baidang) {
+        if (baidang.isChoThue) {
+            const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
+            if (index > -1) state.baidang_chothue.splice(index, 1)
+        } else {
+            const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
+            if (index > -1) state.baidang_raoban.splice(index, 1)
         }
         const index = state.baidang_hots.findIndex((item) => item.id === baidang.id)
         if (index > -1) {
-            // state.baidang_hots[index].douutien = state.baidang_hots[index].douutien + 1
-            state.baidang_hots = []
+            state.baidang_hots.splice(index, 1)
         }
     },
     PUSH_YEUTHICH(state, baidangId) {
         if (state.auth.loggedIn) {
             const index = state.auth.user.yeuthich.findIndex((item) => item.baidang_id === baidangId)
-            console.log('index push yeu thich in store', index)
             if (index < 0) state.auth.user.yeuthich.push({ baidang_id: baidangId })
         }
     },
     REMOVE_YEUTHICH(state, baidangId) {
         if (state.auth.loggedIn) {
             const index = state.auth.user.yeuthich.findIndex((item) => item.baidang_id === baidangId)
-            console.log('index removed yeu thich in store', index)
             if (index > -1) {
                 state.auth.user.yeuthich.splice(index, 1)
             }
@@ -71,14 +100,12 @@ export const mutations = {
     PUSH_BAOCAO(state, baidangId) {
         if (state.auth.loggedIn) {
             const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baidangId)
-            console.log('index push bao cao in store', index)
             if (index < 0) state.auth.user.baocao.push({ baidang_id: baidangId })
         }
     },
     REMOVE_BAOCAO(state, baidangId) {
         if (state.auth.loggedIn) {
             const index = state.auth.user.baocao.findIndex((item) => item.baidang_id === baidangId)
-            console.log('index removed bao cao in store', index)
             if (index > -1) {
                 state.auth.user.baocao.splice(index, 1)
             }
@@ -87,33 +114,26 @@ export const mutations = {
     PUSH_USER_ONLINE(state, user) {
         let index = -1
         if (state.usersOnline.length > 0) index = state.usersOnline.findIndex((item) => item.id === user.id)
-        console.log('index push user online in store', index)
         if (index < 0) state.usersOnline.push({ id: user.id, name: user.name })
     },
     REMOVE_USER_ONLINE(state, userId) {
         let index = -1
         if (state.usersOnline.length > 0) index = state.usersOnline.findIndex((item) => item.id === userId)
-        console.log('index removed user online in store', index)
         if (index > -1) {
             state.usersOnline.splice(index, 1)
         }
     },
     UPDATE_USER_ONLINE(state, users) {
         state.usersOnline = users
-        console.log(users)
     },
 }
 
 export const getters = {
-    GET_SEARCH_RESULT(state) {
-        return state.SearchResult
-    },
     GET_BAIDANG(state) {
         return state.baidangs
     },
     GET_BAIDANG_HOT(state) {
         return state.baidang_hots
-        // return baidanghots
     },
     GET_BAIDANG_CHOTHUE(state) {
         return state.baidangs.filter((baidang) => baidang.isChoThue === 1)

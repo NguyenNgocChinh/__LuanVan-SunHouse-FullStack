@@ -1,7 +1,7 @@
 <template>
     <nav>
         <!--IS DESKTOP-->
-        <v-app-bar v-show="!isMobile" dense flat app class="sunhouse_black sunhouse_white--text">
+        <v-app-bar v-show="!isMobile" dense flat app class="sunhouse_grey2 sunhouse_white--text">
             <!--color="sunhouse_primary"-->
             <v-toolbar-title class="text-uppercase">
                 <nuxt-link class="text-decoration-none sunhouse_white--text" to="/"><span class="font-weight-light">Sun</span><b>House</b></nuxt-link>

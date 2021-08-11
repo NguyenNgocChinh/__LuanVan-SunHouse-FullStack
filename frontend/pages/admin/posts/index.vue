@@ -200,11 +200,8 @@ export default {
                 .then((data) => {
                     const index = this.dsBaiDang.indexOf(item)
                     this.dsBaiDang.splice(index, 1)
-                    this.message.push({
-                        message: 'Xóa Thành Công',
-                        color: 'green',
-                        timeout: 5000,
-                    })
+                    this.$store.commit('REMOVE_BAIDANG', item)
+                    this.$toast.success('Xóa Thành Công')
                     this.loadingDelete = false
                 })
                 .catch((e) => {
@@ -235,19 +232,15 @@ export default {
                 )
                 .then((res) => {
                     item.choduyet = choduyet
-                    this.message.push({
-                        message: 'Cập Nhật Thành Công',
-                        color: 'green',
-                        timeout: 5000,
-                    })
+                    if (choduyet) {
+                        this.$store.commit('REMOVE_BAIDANG', item)
+                    } else {
+                        this.$store.commit('PUSH_BAIDANG', item)
+                    }
+                    this.$toast.success('Cập Nhật Thành Công')
                 })
                 .catch((e) => {
-                    console.log(e)
-                    this.message.push({
-                        message: 'Cập Nhật Thất Bại',
-                        color: 'red',
-                        timeout: 5000,
-                    })
+                    this.$toast.error('Cập Nhật Thất Bại')
                 })
         },
         updateTrangThai(item, trangthai) {
@@ -264,19 +257,15 @@ export default {
                 )
                 .then((res) => {
                     item.trangthai = trangthai
-                    this.message.push({
-                        message: 'Cập Nhật Thành Công',
-                        color: 'green',
-                        timeout: 5000,
-                    })
+                    if (!trangthai) {
+                        this.$store.commit('REMOVE_BAIDANG', item)
+                    } else {
+                        this.$store.commit('PUSH_BAIDANG', item)
+                    }
+                    this.$toast.success('Cập Nhật Thành Công')
                 })
                 .catch((e) => {
-                    console.log(e)
-                    this.message.push({
-                        message: 'Cập Nhật Thất Bại',
-                        color: 'red',
-                        timeout: 5000,
-                    })
+                    this.$toast.error('Cập Nhật Thất Bại')
                 })
         },
 
@@ -288,21 +277,14 @@ export default {
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
-                            this.message.push({
-                                message: 'Xóa Bài Đăng Thành Công',
-                                color: 'green',
-                                timeout: 5000,
-                            })
+                            this.$store.commit('REMOVE_BAIDANG', item)
                             this.choduyet = this.choduyet - 1
+                            this.$toast.success('Xóa Bài Đăng Thành Công')
                             this.duyetbaiLoading = false
                         })
                         .catch((e) => {
                             this.duyetbaiLoading = false
-                            this.message.push({
-                                message: 'Xóa Bài Viết Thất Bại',
-                                color: 'red',
-                                timeout: -1,
-                            })
+                            this.$toast.error('Xóa Bài Viết Thất Bại')
                             this.choduyet = this.choduyet - 1
                         })
                 })

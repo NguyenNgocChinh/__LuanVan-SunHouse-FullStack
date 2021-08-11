@@ -178,8 +178,9 @@ export default {
                 this.$toast.error('Phải nhập nội dung báo cáo')
                 return
             }
-            if (this.noidungbaocao.length < 40) {
-                this.$toast.error('Nội dung báo cáo phải ít nhất 40 ký tự')
+            if (this.noidungbaocao.length < 40 || this.noidungbaocao.length > 255) {
+                this.$toast.error('Nội dung báo cáo phải ít nhất 40 - 255 ký tự')
+                return
             }
             this.loadingBaoCao = true
             this.$axios

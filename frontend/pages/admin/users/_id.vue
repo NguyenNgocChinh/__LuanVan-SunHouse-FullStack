@@ -67,9 +67,9 @@ s
                             <!-- <v-btn fab dark small color="green" class="mr-2">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>-->
-                            <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
+                            <!--                            <v-btn fab dark small color="indigo" class="mr-2" @click="openDangBai">-->
+                            <!--                                <v-icon>mdi-plus</v-icon>-->
+                            <!--                            </v-btn>-->
                             <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItems(selected)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
@@ -79,14 +79,14 @@ s
                 <template #[`item.tieude`]="{ item }">
                     <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
                         <v-col cols="12" lg="4" sm="12">
-                            <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
-                            <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
+                            <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="100" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
+                            <v-img v-else height="100" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                         </v-col>
                         <v-col cols="12" lg="8" sm="12" class="text-left">
                             <div class="baidang-title">
                                 <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                                     <template #activator="{ on }">
-                                        <h3 class="title font-700 text--upercase" v-on="on">
+                                        <h3 class="title font-700 text--uppercase sunhouse_blue1--text" v-on="on">
                                             {{ item.tieude }}
                                         </h3>
                                     </template>
@@ -135,8 +135,8 @@ s
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
-                    <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <v-icon color="sunhouse_grey1" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-icon color="sunhouse_blue1" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #activator="{ on, attrs }">
                             <v-btn icon color="red"><v-icon color="red" v-bind="attrs" v-on="on"> mdi-delete </v-icon></v-btn>
@@ -175,7 +175,7 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: 'Tiêu đề', width: '40%', value: 'tieude', align: 'left' },
+                { text: 'Tiêu đề', width: '50%', value: 'tieude', align: 'left' },
                 { text: 'Người đăng', value: 'user', width: '10%' },
                 { text: 'Time', value: 'thoigian', width: '7%' },
                 { text: 'Status', value: 'trangthai', width: '8%' },
@@ -270,6 +270,11 @@ export default {
                 )
                 .then((res) => {
                     item.choduyet = choduyet
+                    if (choduyet) {
+                        this.$store.commit('REMOVE_BAIDANG', item)
+                    } else {
+                        this.$store.commit('PUSH_BAIDANG', item)
+                    }
                     this.message.push({
                         message: 'Cập Nhật Thành Công',
                         color: 'green',
@@ -299,6 +304,11 @@ export default {
                 )
                 .then((res) => {
                     item.trangthai = trangthai
+                    if (!trangthai) {
+                        this.$store.commit('REMOVE_BAIDANG', item)
+                    } else {
+                        this.$store.commit('PUSH_BAIDANG', item)
+                    }
                     this.message.push({
                         message: 'Cập Nhật Thành Công',
                         color: 'green',
@@ -323,6 +333,7 @@ export default {
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
+                            this.$store.commit('REMOVE_BAIDANG', item)
                             this.message.push({
                                 message: 'Xóa Bài Đăng Thành Công',
                                 color: 'green',

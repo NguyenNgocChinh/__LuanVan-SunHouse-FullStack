@@ -125,11 +125,11 @@
                                     <v-row class="align-center">
                                         <v-col cols="12" sm="1"> Từ </v-col>
                                         <v-col cols="12" sm="5">
-                                            <v-text-field v-model.number="giamin" :rules="[$rules.minNumber(giamin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
+                                            <v-text-field v-model.number="giamin" suffix="Triệu/m²" :rules="[$rules.minNumber(giamin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="1">đến</v-col>
                                         <v-col cols="12" sm="5">
-                                            <v-text-field v-model.number="giamax" :rules="[$rules.minNumber(giamax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
+                                            <v-text-field v-model.number="giamax" suffix="Triệu/m²" :rules="[$rules.minNumber(giamax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -140,11 +140,11 @@
                                     <v-row class="align-center">
                                         <v-col cols="12" sm="1"> Từ </v-col>
                                         <v-col cols="12" sm="5">
-                                            <v-text-field v-model.number="dientichmin" :rules="[$rules.minNumber(dientichmin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
+                                            <v-text-field v-model.number="dientichmin" suffix="m²" :rules="[$rules.minNumber(dientichmin, 1)]" class="mt-2" type="number" placeholder="100" min="1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="1">đến</v-col>
                                         <v-col cols="12" sm="5">
-                                            <v-text-field v-model.number="dientichmax" :rules="[$rules.minNumber(dientichmax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
+                                            <v-text-field v-model.number="dientichmax" suffix="m²" :rules="[$rules.minNumber(dientichmax, 1)]" class="mt-2" type="number" placeholder="200" min="1"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -234,7 +234,7 @@
                                     </div>
                                     <div>
                                         <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
-                                        <v-text-field v-model="diachicuthe" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo></v-text-field>
+                                        <v-text-field v-model="diachicuthe" :rules="[$rules.maxLenght(diachicuthe, 150)]" class="mt-2" placeholder="Số nhà, tên tòa nhà, tên đường, ..." solo></v-text-field>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -362,7 +362,7 @@ export default {
             this.selectedhuong = item.huong
             this.dientichmin = parseFloat(item.dientichmin)
             this.dientichmax = parseFloat(item.dientichmax)
-            this.diachicuthe = item.diachi
+            this.diachicuthe = item.diachi || ''
             this.hinhthuc = parseInt(item.isChoThue)
             this.loai = null
             this.listLoai.forEach((l) => {
@@ -415,6 +415,12 @@ export default {
             if (this.dientichmin !== '' && this.dientichmax !== '') {
                 if (this.dientichmin > this.dientichmax) {
                     this.$toast.error('Giá trị nhập vào không hợp lệ!')
+                    return
+                }
+            }
+            if (this.diachicuthe !== '') {
+                if (this.diachicuthe.length > 150) {
+                    this.$toast.error('Địa chỉ nhập vào không được hơn 150 ký tự!')
                     return
                 }
             }

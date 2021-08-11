@@ -332,11 +332,11 @@ export default {
                     })
                     .catch((error) => {
                         this.error = 'Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau'
-                        this.$toast.error('Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau', { duration: null })
+                        this.$toast.error('Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau', { duration: 5000 })
                         console.error(error.message)
                     })
             } catch (e) {
-                this.$toast.error('Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau', { duration: null })
+                this.$toast.error('Bạn đã đạt giới hạn nhận mã, vui lòng thử lại sau', { duration: 5000 })
             }
         },
         verify(code) {
@@ -355,7 +355,7 @@ export default {
                         console.error(error.message)
                     })
             } catch (e) {
-                this.$toast.error('Xảy ra lỗi không xác định', { duration: null })
+                this.$toast.error('Xảy ra lỗi không xác định', { duration: 5000 })
             }
         },
 

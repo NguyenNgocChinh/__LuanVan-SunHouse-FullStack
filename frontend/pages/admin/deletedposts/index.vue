@@ -71,7 +71,7 @@
                             <div class="baidang-title">
                                 <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                                     <template #activator="{ on }">
-                                        <h3 class="title font-700 text--upercase" v-on="on">
+                                        <h3 class="title font-700 text--upercase sunhouse_blue1--text" v-on="on">
                                             {{ item.tieude }}
                                         </h3>
                                     </template>

@@ -2,9 +2,9 @@
     <div>
         <v-container fluid class="pt-10 baidang text-center">
             <div style="position: relative; display: inline-block">
-                <v-img class="firegif" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>
+                <!--                <v-img class="firegif" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>-->
                 <h3 class="sunhouse_red2--text mb-2 pa-1" style="display: inline-block; text-shadow: 0px 2px 6px #fff">NHÀ NỔI BẬT</h3>
-                <v-img class="firegif2" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>
+                <!--                <v-img class="firegif2" lazy-src="/gif/fire.gif" :aspect-ratio="16 / 9" width="40px" height="40px" src="/gif/fire.gif"></v-img>-->
             </div>
             <br />
             <h4 class="sunhouse_red1--text text-center pa-1 pb-4" style="display: inline-block; text-shadow: 0px 2px 6px #fff">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
@@ -45,13 +45,13 @@ export default {
         getBaiDangHot() {
             try {
                 if (this.baidang_hots.length > 0) {
-                    this.baidanghots = this.baidang_hots
+                    this.baidanghots = this._.sortBy(this.baidang_hots, (o) => o.douutien, 'asc').reverse()
                     this.baidanghots_loading = false
                 } else {
                     this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat).then((res) => {
                         this.baidanghots = res.baidangs
                         this.baidanghots_loading = false
-                        this.$store.commit('SET_BAIDANG_HOT', res.baidangs)
+                        this.$store.commit('SET_BAIDANG_HOT', this._.sortBy(res.baidangs, (o) => o.douutien, 'asc').reverse())
                     })
                 }
             } catch (e) {}

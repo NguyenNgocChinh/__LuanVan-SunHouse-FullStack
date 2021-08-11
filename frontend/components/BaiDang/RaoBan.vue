@@ -40,11 +40,11 @@ export default {
         async getRaoBan() {
             try {
                 if (this.baidang_raoban.length > 0) {
-                    this.baidangs = this.baidang_raoban
+                    this.baidangs = this._.sortBy(this.baidang_raoban, (o) => o.douutien, 'asc').reverse()
                 } else {
                     const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
                     this.baidangs = baidangs.baidangs
-                    this.$store.commit('SET_BAIDANG_RAOBAN', this.baidangs)
+                    this.$store.commit('SET_BAIDANG_RAOBAN', this._.sortBy(this.baidangs, (o) => o.douutien, 'asc').reverse())
                 }
             } catch (e) {}
             this.baidangs_loading = false

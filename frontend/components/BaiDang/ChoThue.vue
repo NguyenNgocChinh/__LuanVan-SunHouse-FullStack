@@ -3,7 +3,7 @@
         <v-container class="chothue text-center py-0">
             <h3 class="sunhouse_grey2--text pb-2">NHÀ CHO THUÊ MỚI NHẤT</h3>
             <h4 class="pb-4 sunhouse_grey2--text">Sun House trao trọn niềm tin</h4>
-            <v-row>
+            <v-row class="justify-center">
                 <v-slide-group v-if="baidangs_loading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
@@ -38,11 +38,11 @@ export default {
         async getChoThue() {
             try {
                 if (this.baidang_chothue.length > 0) {
-                    this.baidangs = this.baidang_chothue
+                    this.baidangs = this._.sortBy(this.baidang_chothue, (o) => o.douutien, 'asc').reverse()
                 } else {
                     const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
                     this.baidangs = baidangs.baidangs
-                    this.$store.commit('SET_BAIDANG_CHOTHUE', this.baidangs)
+                    this.$store.commit('SET_BAIDANG_CHOTHUE', this._.sortBy(this.baidangs, (o) => o.douutien, 'asc').reverse())
                 }
             } catch (e) {}
             this.baidangs_loading = false

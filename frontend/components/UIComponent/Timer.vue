@@ -63,7 +63,6 @@ export default {
                 this.displayDays = this.formatNum(days)
                 this.dispatchHours = this.formatNum(hours)
                 this.displayMinutes = this.formatNum(minutes)
-                console.log(this.displayMinutes)
                 this.displaySeconds = this.formatNum(seconds)
                 this.loaded = true
             }, 1000)

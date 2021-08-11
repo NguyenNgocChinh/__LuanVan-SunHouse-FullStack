@@ -63,6 +63,7 @@
                                                 <input v-model="fullname" type="text" placeholder="Họ và tên" />
                                                 <i class="bx bx-user"></i>
                                                 <span class="placeholder-input">Họ và Tên</span>
+                                                <span v-if="!isValidName" class="hint-input animate__animated animate__headShake"> Tên phải từ 5 - 30 ký tự </span>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" sm="12" md="4">
@@ -81,7 +82,7 @@
                                                 <i class="bx bx-envelope"></i>
                                                 <span class="placeholder-input">Email</span>
                                                 <span v-if="!isValidEmail" class="hint-input animate__animated animate__headShake">
-                                                    {{ 'Địa chỉ email đã được sử dụng' }}
+                                                    {{ errorsEmail }}
                                                 </span>
                                             </div>
                                         </v-col>
@@ -137,7 +138,7 @@
                                                     <i class="bx bx-show" @click="togglePassword('reNewPassword', $event, 'newPassword', 'showNewPassword')"></i>
                                                 </div>
                                                 <span class="placeholder-input">Xác nhận mật khẩu mới</span>
-                                                <span v-if="!isValidLength2" class="hint-input">Mật khẩu tối thiểu 8 ký tự</span>
+                                                <span v-if="!isValidLength2 && isSame" class="hint-input">Mật khẩu tối thiểu 8 ký tự</span>
                                                 <span v-if="!isSame" class="hint-input">Xác nhận mật khẩu không khớp</span>
                                             </div>
                                         </v-col>
@@ -146,7 +147,7 @@
                             </v-row>
                             <v-row class="content_item animate__animated animate__fadeInUp">
                                 <v-col class="col-md-12 d-flex flex-row justify-end mt-7">
-                                    <v-btn class="btn-cancel" :disabled="loadingSave">Hủy</v-btn>
+                                    <!--                                    <v-btn class="btn-cancel" :disabled="loadingSave">Hủy</v-btn>-->
                                     <v-btn type="submit" class="btn-save ml-4" :disabled="loadingSave" :loading="loadingSave">Lưu</v-btn>
                                 </v-col>
                             </v-row>
@@ -274,6 +275,8 @@ export default {
             loadingToStep: false,
             countDown: 180,
             error: '',
+            isValidName: true,
+            errorsEmail: '',
         }
     },
 
@@ -298,6 +301,20 @@ export default {
         error(val) {
             if (val !== '') {
                 this.$refs.modelError.open()
+            }
+        },
+        fullname(value) {
+            this.fullname = value
+            this.isValidName = !(value.length < 5 || value.length > 30)
+        },
+        email(value) {
+            const regex = /\S+@\S+\.\S+/
+            if (regex.test(value)) {
+                this.isValidEmail = true
+                this.errorsEmail = ''
+            } else {
+                this.isValidEmail = false
+                this.errorsEmail = 'Địa chỉ email không hợp lệ'
             }
         },
     },
@@ -463,10 +480,14 @@ export default {
             this.birthday = this.formatDate(date)
         },
         async updateUserInfo() {
+            if (this.fullname.length < 5 || this.fullname.length > 30) {
+                this.isValidName = false
+                this.$toast.error('Tên phải từ 5 - 30 ký tự')
+                return
+            }
             this.loadingSave = true
             const data = new FormData()
             data.append('name', this.fullname)
-            // data.append('sdt', this.numberPhone)
             data.append('email', this.email)
             data.append('namsinh', this.birthday)
             data.append('file', this.file)
@@ -476,6 +497,7 @@ export default {
                     .then((res) => {
                         if (res) {
                             this.$toast.error('Email đã được sử dụng')
+                            this.errorsEmail = 'Địa chỉ email đã được sử dụng'
                             this.isValidEmail = false
                             this.loadingSave = false
                         }
@@ -516,6 +538,18 @@ export default {
                 })
         },
         updatePasswordUser() {
+            if (this.password.length < 8 || this.password.length > 100) {
+                this.$toast.error('Mật khẩu cũ phải từ 8 - 100 ký tự')
+                return
+            }
+            if (this.newPassword.length < 8 || this.newPassword.length > 100) {
+                this.$toast.error('Mật khẩu mới phải từ 8 - 100 ký tự')
+                return
+            }
+            if (this.reNewPassword.length < 8 || this.reNewPassword.length > 100) {
+                this.$toast.error('Mật khẩu mới phải từ 8 - 100 ký tự')
+                return
+            }
             this.loadingSave = true
             this.$axios
                 .$put(

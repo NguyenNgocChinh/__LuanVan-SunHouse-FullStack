@@ -65,7 +65,7 @@
                             <div class="baidang-title">
                                 <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                                     <template #activator="{ on }">
-                                        <h3 class="title font-700 text--upercase" style="height: 57px" v-on="on">
+                                        <h3 class="title font-700 text--uppercase sunhouse_blue1--text" style="height: 57px" v-on="on">
                                             {{ item.tieude }}
                                         </h3>
                                     </template>
@@ -217,18 +217,12 @@ export default {
                             if (data.success) {
                                 const index = this.dsBaiDang.indexOf(item)
                                 this.dsBaiDang.splice(index, 1)
+                                this.$store.commit('PUSH_BAIDANG', item)
+                                this.$store.commit('UPDATE_DOUUTIEN_BAIDANG', item)
+                                this.$toast.success('Duyệt Bài Thành Công')
                                 this.choduyet = this.choduyet - 1
-                                this.message.push({
-                                    message: 'Duyệt Bài Thành Công',
-                                    color: 'green',
-                                    timeout: 5000,
-                                })
                             } else {
-                                this.message.push({
-                                    message: 'Duyệt Bài Thất Bại',
-                                    color: 'red',
-                                    timeout: 5000,
-                                })
+                                this.$toast.error('Duyệt Bài Thất Bại')
                             }
                             this.duyetbaiLoading = false
                         })
@@ -253,24 +247,17 @@ export default {
                         if (data.success) {
                             const index = this.dsBaiDang.indexOf(dsDuyet)
                             this.dsBaiDang.splice(index, 1)
-                            this.message.push({
-                                message: data.success,
-                                color: 'green',
-                                timeout: 5000,
-                            })
+                            this.$store.commit('PUSH_BAIDANG', dsDuyet)
+                            this.$store.commit('UPDATE_DOUUTIEN_BAIDANG', dsDuyet)
+                            this.$toast.success(data.success)
                             this.choduyet = this.choduyet - 1
                         } else {
-                            this.message.push({
-                                message: data.fail,
-                                color: 'red',
-                                timeout: 5000,
-                            })
+                            this.$toast.error(data.fail)
                         }
                         this.duyetbaiLoading = false
                     })
                     .catch((e) => {
                         this.duyetbaiLoading = false
-
                         if (!isError) {
                             isError = true
                             this.$nuxt.$emit('openErrorModal')
@@ -292,23 +279,19 @@ export default {
                 )
                 .then((res) => {
                     item.trangthai = trangthai
-                    this.message.push({
-                        message: 'Ẩn Bài Đăng Thành Công',
-                        color: 'green',
-                        timeout: 5000,
-                    })
+                    this.$toast.success('Ẩn Bài Đăng Thành Công')
                     const index = this.dsBaiDang.findIndex((i) => i.id === item.id)
                     if (index > -1) {
                         this.dsBaiDang.splice(index, 1)
+                        if (!trangthai) {
+                            this.$store.commit('REMOVE_BAIDANG', item)
+                        } else {
+                            this.$store.commit('PUSH_BAIDANG', item)
+                        }
                     }
                 })
                 .catch((e) => {
-                    console.log(e)
-                    this.message.push({
-                        message: 'Ẩn Bài Đăng Thất Bại',
-                        color: 'red',
-                        timeout: 5000,
-                    })
+                    this.$toast.error('Ẩn Bài Đăng Thất Bại')
                 })
         },
     },

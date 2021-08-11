@@ -58,7 +58,7 @@
                                             <v-img v-else width="100%" height="100%" aspect-ratio="1.5" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                                         </v-col>
                                         <v-col cols="12" lg="9" sm="12" class="text-left">
-                                            <h1 class="title text--upercase">
+                                            <h1 class="title text--uppercase sunhouse_blue1--text">
                                                 {{ item.tieude }}
                                             </h1>
                                             <div class="mb-2">
@@ -117,7 +117,7 @@
                 <template #[`item.hanhdong`]="{ item }">
                     <v-tooltip top content-class="tooltipCustom">
                         <template #activator="{ on }">
-                            <v-icon color="blue" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
+                            <v-icon color="sunhouse_grey" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
                         </template>
                         <span>Xem chi tiết người dùng</span>
                     </v-tooltip>
@@ -332,6 +332,11 @@ export default {
                 )
                 .then((res) => {
                     item.trangthai = trangthai
+                    if (!trangthai) {
+                        this.$store.commit('REMOVE_BAIDANG', item)
+                    } else {
+                        this.$store.commit('PUSH_BAIDANG', item)
+                    }
                     this.$toast.success('Cập nhật trạng thái bài đăng thành công')
                 })
                 .catch((e) => {

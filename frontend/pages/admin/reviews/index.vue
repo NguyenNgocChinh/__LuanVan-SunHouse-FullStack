@@ -14,7 +14,7 @@
                         <div class="pt-4">
                             <v-dialog v-model="dialog" max-width="500px" persistent>
                                 <template #activator="{ on, attrs }">
-                                    <v-btn fab dark small color="indigo" class="mr-2" v-bind="attrs" v-on="on">
+                                    <v-btn fab dark small color="sunhouse_blue1" class="mr-2" v-bind="attrs" v-on="on">
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
                                     <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItem(selected)">
@@ -149,12 +149,12 @@
                 <template #[`item.hanhdong`]="{ item }">
                     <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                         <template #activator="{ on }">
-                            <v-icon color="blue" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
+                            <v-icon color="sunhouse_grey1" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
                         </template>
                         <span>Xem chi tiết người dùng</span>
                     </v-tooltip>
 
-                    <v-icon color="orange" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <v-icon color="sunhouse_blue1" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
                 </template>
             </v-data-table>
