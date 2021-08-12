@@ -60,7 +60,7 @@
                                     <v-row>
                                         <v-col cols="12" sm="12" md="4">
                                             <div class="inputWithIcon">
-                                                <input v-model="fullname" type="text" placeholder="Họ và tên" />
+                                                <input v-model="fullname" type="text" placeholder="Họ và tên" @input="fullname = fullname.replace(/\s+ /g, ' ')" />
                                                 <i class="bx bx-user"></i>
                                                 <span class="placeholder-input">Họ và Tên</span>
                                                 <span v-if="!isValidName" class="hint-input animate__animated animate__headShake"> Tên phải từ 5 - 30 ký tự </span>

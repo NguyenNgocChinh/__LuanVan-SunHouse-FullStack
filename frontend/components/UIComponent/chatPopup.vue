@@ -147,7 +147,21 @@ export default {
             }
         },
         getAvatar(user) {
-            return user.profile_photo_path || user.profile_photo_url
+            if (user.profile_photo_path !== null) {
+                return this.isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path
+            }
+            return user.profile_photo_url
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
         toogleExpaneded() {
             this.isExpanded = !this.isExpanded

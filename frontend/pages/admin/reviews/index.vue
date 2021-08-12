@@ -65,13 +65,14 @@
                                                     </v-col>
                                                     <v-col cols="12" sm="12" class="pa-0">
                                                         <v-text-field
-                                                            v-model.lazy="editedItem.noidung"
+                                                            v-model="editedItem.noidung"
                                                             label="Nội dung báo cáo"
                                                             clearable
                                                             outlined
-                                                            :rules="[() => !!editedItem.noidung || 'Phải nhập nội dung đánh giá']"
+                                                            :rules="[() => !!editedItem.noidung || 'Phải nhập nội dung đánh giá', (editedItem.noidung.length >= 20 && editedItem.noidung.length <= 30) || 'Nội dung phải từ 20-255 ký tự']"
                                                             hint="Nội dung đánh giá"
                                                             required
+                                                            @input="editedItem.noidung = editedItem.noidung.replace(/ \s+/g, ' ')"
                                                         ></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" sm="12" class="text-center pa-0">
@@ -116,7 +117,7 @@
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </template>
-                        <span>{{ item.trangthai ? 'Người dùng đang được kích hoạt' : 'Người dùng đã bị vô hiệu hóa' }}</span>
+                        <span>{{ item.user.trangthai === 1 ? 'Người dùng đang được kích hoạt' : 'Người dùng đã bị vô hiệu hóa' }}</span>
                     </v-tooltip>
                 </template>
                 <template #[`item.baidang`]="{ item }"> {{ item.user.baidangDaDuyet }} / {{ item.user.baidang }} </template>
@@ -232,7 +233,7 @@ export default {
                     name: null,
                 },
                 sao: 4,
-                noidung: null,
+                noidung: '',
             },
             editedItem: {
                 id: '',
@@ -258,7 +259,6 @@ export default {
         },
     },
     created() {
-        this.fetchDSUser()
         this.fetchAllUser()
     },
     methods: {
@@ -276,7 +276,21 @@ export default {
         },
 
         getAvatar(user) {
-            return user.profile_photo_path || user.profile_photo_url
+            if (user.profile_photo_path !== null) {
+                return this.isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path
+            }
+            return user.profile_photo_url
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
         showItem(item) {
             this.$router.push('/admin/users/' + item.user.id)

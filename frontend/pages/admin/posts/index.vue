@@ -4,14 +4,12 @@
             <v-card-title>
                 Danh Sách Bài Đăng
                 <v-spacer />
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
             </v-card-title>
             <v-data-table
                 v-model="selected"
                 :search="search"
                 :loading="loading"
-                :sort-by="['id']"
-                :sort-desc="[true]"
                 :headers="headers"
                 :items="dsBaiDang"
                 :single-select="singleSelect"
@@ -76,7 +74,6 @@
                         {{ item.loading }}
                         <v-icon>mdi-check</v-icon>
                     </v-btn>
-
                     <v-btn v-else icon color="red" :loading="item.loading" @click="updateChoDuyet(item, 0)">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -89,10 +86,9 @@
                     </div>
                 </template>
                 <template #[`item.trangthai`]="{ item }">
-                    <v-btn v-if="item.trangthai === 1" icon color="teal" :loading="item.loading" @click="updateTrangThai(item, 0)">
+                    <v-btn v-if="item.trangthai" icon color="teal" :loading="item.loading" @click="updateTrangThai(item, 0)">
                         <v-icon>mdi-check</v-icon>
                     </v-btn>
-
                     <v-btn v-else icon color="red" :loading="item.loading" @click="updateTrangThai(item, 1)">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -146,10 +142,10 @@ export default {
             selected: [],
             headers: [
                 { text: 'Tiêu đề', width: '50%', value: 'tieude', align: 'left' },
-                { text: 'Người đăng', value: 'user', width: '10%' },
-                { text: 'Time', value: 'thoigian', width: '7%' },
-                { text: 'Status', value: 'trangthai', width: '8%' },
-                { text: 'Duyệt', value: 'choduyet', width: '7%' },
+                { text: 'Người đăng', value: 'user', width: '11%' },
+                { text: 'Time', value: 'thoigian', width: '8%' },
+                { text: 'Status', value: 'trangthai', width: '9%' },
+                { text: 'Duyệt', value: 'choduyet', width: '9%' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false, width: '12%' },
             ],
             dsBaiDang: [],
@@ -198,6 +194,10 @@ export default {
             this.$axios
                 .$delete(ENV.delete + item.id)
                 .then((data) => {
+                    const i = this.selected.findIndex((a) => a.id === item.id)
+                    if (i > -1) {
+                        this.selected.splice(i, 1)
+                    }
                     const index = this.dsBaiDang.indexOf(item)
                     this.dsBaiDang.splice(index, 1)
                     this.$store.commit('REMOVE_BAIDANG', item)

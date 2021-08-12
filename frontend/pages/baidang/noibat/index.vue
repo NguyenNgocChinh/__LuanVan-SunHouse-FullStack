@@ -99,7 +99,7 @@ export default {
             }
             if (filter) {
                 result = this.sortBy(result)
-            }
+            } else result = this._.sortBy(result, (o) => o.douutien, 'asc').reverse()
             const perpage = 6
             const start = (this.page - 1) * perpage
 

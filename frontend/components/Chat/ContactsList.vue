@@ -5,7 +5,7 @@
                 <v-list-item :key="item.id" class="list-contact-item" :class="{ selected: item === selected }" @click="selectContact(item)">
                     <v-list-item-action class="ml-6">
                         <div class="avatar" style="position: relative">
-                            <img :src="item.profile_photo_path || item.profile_photo_url" :alt="item.name" />
+                            <img :src="getAvatar(item)" :alt="item.name" />
                             <div v-if="isOnline(item)" id="online"></div>
                         </div>
                     </v-list-item-action>
@@ -85,6 +85,23 @@ export default {
                 }
             })
             return flag
+        },
+        getAvatar(user) {
+            if (user.profile_photo_path !== null) {
+                return this.isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path
+            }
+            return user.profile_photo_url
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
     },
 }

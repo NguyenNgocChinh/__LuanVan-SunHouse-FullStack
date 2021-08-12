@@ -12,25 +12,27 @@
         <!--        </v-breadcrumbs>-->
         <v-form ref="form" v-model="vaild" class="mb-6">
             <v-card>
-                <v-card-title>THÔNG TIN CƠ BẢN</v-card-title>
+                <v-card-title class="font-weight-bold">THÔNG TIN CƠ BẢN</v-card-title>
                 <v-card-text>
-                    <h3 class="d-inline-block">Tiêu đề</h3>
+                    <h3 class="d-inline-block black--text">Tiêu đề</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
+                        <sup>(*)</sup>
                     </span>
                     <v-text-field
                         v-model="tieude"
                         clearable
                         counter
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
+                        class=""
+                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20 && tieude.length <= 100) || 'Tiêu đề từ 20 - 100 ký tự']"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
                         dense
+                        @input="tieude = tieude.replace(/\s+ /g, ' ').trim()"
                     ></v-text-field>
                     <div class="spacer-line-form"></div>
-                    <h3 class="d-inline-block">Loại tài sản</h3>
+                    <h3 class="d-inline-block black--text">Loại tài sản</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                        <sup>(*) </sup>
+                        <sup>(*)</sup>
                     </span>
                     <v-select
                         v-model="loai"
@@ -44,21 +46,23 @@
                         :loading="loais.length < 1"
                         no-data-text="Đang tải..."
                     ></v-select>
-                    <h3 class="d-inline-block">Giá bán</h3>
+                    <h3 class="d-inline-block black--text">Giá bán</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
                     <v-text-field
                         v-model="gia"
+                        class=""
                         suffix="Triệu/m²"
                         :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                         type="number"
                         min="1"
+                        max="999999"
                         hint="Đơn vị triệu đồng"
                         placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"
                     ></v-text-field>
                     <div class="spacer-line-form"></div>
-                    <h3 class="d-inline-block">Mô tả tài sản</h3>
+                    <h3 class="d-inline-block black--text">Mô tả tài sản</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
@@ -68,10 +72,10 @@
                     <!--                        counter-->
                     <!--                        placeholder="Nhập nội dung bài viết..."-->
                     <!--                    ></v-text-field>-->
-                    <editor id="sunhouseEditor" :min-length="40" class="mt-2" :old="noidung" />
+                    <editor id="sunhouseEditor" :min-length="40" :old="noidung" class="mt-2" />
 
                     <div class="spacer-line-form"></div>
-                    <h3>Hình ảnh</h3>
+                    <h3 class="black--text">Hình ảnh</h3>
                     <v-file-input
                         ref="files"
                         v-model="files"
@@ -80,6 +84,7 @@
                         placeholder="Có thể chọn nhiều hình ảnh"
                         prepend-icon="mdi-camera"
                         multiple
+                        class="custom-label-color custom-placeholer-color"
                         chips
                         color="pink"
                         @change="addFiles"
@@ -95,11 +100,11 @@
                 <v-divider class="mt-12"></v-divider>
             </v-card>
             <v-card class="mt-6">
-                <v-card-title>THÔNG TIN CHI TIẾT</v-card-title>
+                <v-card-title class="font-weight-bold">THÔNG TIN CHI TIẾT</v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Hình thức</h3>
+                            <h3 class="d-inline-block black--text">Hình thức</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
@@ -116,25 +121,41 @@
                             ></v-select>
                         </v-col>
                         <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Số phòng ngủ</h3>
+                            <h3 class="d-inline-block black--text">Số phòng ngủ</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v <= 1000) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
+                            <v-text-field
+                                v-model="phongngu"
+                                min="0"
+                                max="99"
+                                class="mt-2"
+                                :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
+                                type="number"
+                                solo
+                            ></v-text-field>
                         </v-col>
                         <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block">Số phòng tắm</h3>
+                            <h3 class="d-inline-block black--text">Số phòng tắm</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
-                            <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v <= 1000) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
+                            <v-text-field
+                                v-model="phongtam"
+                                min="0"
+                                max="99"
+                                class="pr-3 mt-2"
+                                type="number"
+                                :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
+                                solo
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Hướng nhà</h3>
+                            <h3 class="d-inline-block black--text">Hướng nhà</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
@@ -159,13 +180,11 @@
                             ></v-select>
                         </v-col>
                         <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Năm xây dựng</h3>
-                            {{ typeof namxaydung }}
-                            {{ namxaydung }}
-                            <v-text-field v-model.number="namxaydung" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                            <h3 class="d-inline-block black--text">Năm xây dựng</h3>
+                            <v-text-field v-model="namxaydung" min="1900" :max="new Date().getFullYear()" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4">
-                            <h3 class="d-inline-block">Diện tích: m<sup>2</sup></h3>
+                            <h3 class="d-inline-block black--text">Diện tích: m<sup>2</sup></h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                 <sup>(*) </sup>
                             </span>
@@ -173,6 +192,7 @@
                                 v-model="dientich"
                                 class="mt-2"
                                 type="number"
+                                min="1"
                                 :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
                                 placeholder="ví dụ: 100"
                                 solo
@@ -182,7 +202,7 @@
                 </v-card-text>
             </v-card>
             <v-card class="mt-8">
-                <v-card-title>NỘI THẤT</v-card-title>
+                <v-card-title class="font-weight-bold">NỘI THẤT</v-card-title>
                 <v-card-text>
                     <v-container fluid>
                         <v-row v-if="tiennghis.length < 1" align-content="center" justify="center">
@@ -190,20 +210,20 @@
                         </v-row>
 
                         <v-row v-else>
-                            <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="12" lg="2" class="pb-0">
-                                <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="primary" :value="tiennghi.id" class=""></v-checkbox>
+                            <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="4" class="pb-0">
+                                <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="sunhouse_red2" :value="tiennghi.id" class=""></v-checkbox>
                             </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
             </v-card>
             <v-card class="mt-8 py-1">
-                <v-card-title>CHỌN VỊ TRÍ</v-card-title>
+                <v-card-title class="font-weight-bold">CHỌN VỊ TRÍ</v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" lg="4" sm="12">
                             <div>
-                                <h3 class="d-inline-block">Tỉnh/Thành phố</h3>
+                                <h3 class="d-inline-block black--text">Tỉnh/Thành phố</h3>
                                 <v-combobox
                                     v-model="thanhpho"
                                     class="mt-2"
@@ -217,7 +237,7 @@
                                 ></v-combobox>
                             </div>
                             <div v-if="thanhpho">
-                                <h3 class="d-inline-block">Quận/Huyện</h3>
+                                <h3 class="d-inline-block black--text">Quận/Huyện</h3>
                                 <v-combobox
                                     v-model="quanhuyen"
                                     class="mt-2"
@@ -231,11 +251,11 @@
                                 ></v-combobox>
                             </div>
                             <div v-if="quanhuyen">
-                                <h3 class="d-inline-block">Xã/Phường</h3>
+                                <h3 class="d-inline-block black--text">Xã/Phường</h3>
                                 <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
                             </div>
                             <div v-if="xaphuong">
-                                <h3 class="d-inline-block">Đường/Phố</h3>
+                                <h3 class="d-inline-block black--text">Đường/Phố</h3>
                                 <!--                                <v-combobox-->
                                 <!--                                    v-model="duong"-->
                                 <!--                                    class="mt-2"-->
@@ -266,10 +286,9 @@
                                     chips
                                     class="mt-2"
                                     :items="listDuong"
-                                    :search-input="searchDuong"
+                                    :search-input.sync="searchDuong"
                                     item-text="tenduong"
-                                    item-value="tenduong"
-                                    :return-object="false"
+                                    item-value="id"
                                     no-data-text="Đường này chưa có sẵn trong hệ thống.
                                     Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
@@ -279,12 +298,20 @@
                                 <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
                             </div>
                             <div class="f-flex flex-row align-center">
-                                <h3 class="d-inline-block">Địa chỉ cụ thể</h3>
+                                <h3 class="d-inline-block black--text">Địa chỉ cụ thể</h3>
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
                                 <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
-                                <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
+                                <v-text-field
+                                    v-model="diachicuthe"
+                                    disabled
+                                    class="mt-2"
+                                    messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường"
+                                    placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
+                                    solo
+                                    :loading="loadingDiaChiCuThe"
+                                ></v-text-field>
                             </div>
                         </v-col>
                         <v-col cols="12" lg="8" sm="12">
@@ -316,14 +343,15 @@
                 </v-card-text>
             </v-card>
             <v-row class="text-center my-5" style="position: relative; height: 100px">
-                <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-                    <div id="html_element_captcha" class="g-recaptcha" onload="onloadCallback();" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                <div class="my-2 d-flex flex-row align-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                    <div id="g-recaptcha" class="g-recaptcha"></div>
+                    <v-btn class="ml-2" fab small color="sunhouse_grey1" @click="resetCaptcha"><v-icon color="sunhouse_grey2">mdi-restart</v-icon></v-btn>
                 </div>
             </v-row>
         </v-form>
         <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
         <div class="text-center">
-            <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Sửa bài</v-btn>
+            <v-btn class="mx-auto" color="sunhouse_blue1 sunhouse_white--text" elevation="6" large @click="xulydangbai"> Sửa bài</v-btn>
         </div>
         <client-only>
             <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
@@ -429,7 +457,12 @@ export default {
                 href: '/css/geosearch.css',
             },
         ],
-        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js?hl=vi' }],
+        script: [
+            { src: '/js/leaflet.js' },
+            { src: '/js/geosearch.umd.js' },
+            { src: '/js/leaflet-geosearch-bundle.min.js' },
+            { src: 'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
+        ],
     },
 
     watch: {
@@ -501,9 +534,18 @@ export default {
             }
         },
     },
+    created() {},
     mounted() {
         this.getBaiDangSua()
         this.$nextTick(() => {
+            // eslint-disable-next-line no-unused-vars,nuxt/no-globals-in-created
+            window.onloadCallback = function () {
+                // eslint-disable-next-line no-undef
+                window.captcha = grecaptcha.render('g-recaptcha', {
+                    sitekey: '6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB',
+                })
+            }
+
             const map = this.$refs.map.mapObject
             const search = new GeoSearchControl({
                 provider: new OpenStreetMapProvider(),
@@ -585,6 +627,10 @@ export default {
         })
     },
     methods: {
+        resetCaptcha() {
+            // eslint-disable-next-line no-undef
+            grecaptcha.reset(window.captcha)
+        },
         getSelectOnComboBox(address) {
             const diaChi = address.split(',')
 
@@ -718,6 +764,12 @@ export default {
                 return
             }
             if (this.noidung === '') {
+                const top = document.getElementById('sunhouseEditor').offsetTop
+                window.scroll(0, top)
+                return
+            }
+            if (this.noidung.length < 40 || this.noidung.length > 3000) {
+                this.$toast.error('Nội dung từ 40 - 3000 ký tự')
                 const top = document.getElementById('sunhouseEditor').offsetTop
                 window.scroll(0, top)
                 return

@@ -47,7 +47,7 @@ export default {
         },
         maxLength: {
             type: Number,
-            default: 5000,
+            default: 3000,
         },
         old: {
             default: undefined,
@@ -151,6 +151,7 @@ export default {
     .ql-container {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
+        max-width: 87vw;
     }
     .output {
         border: 1px solid #ccc;

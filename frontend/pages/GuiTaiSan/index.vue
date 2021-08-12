@@ -24,10 +24,11 @@
                             clearable
                             counter
                             class=""
-                            :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20) || 'Tiêu đề ít nhất phải 20 ký tự']"
+                            :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20 && tieude.length <= 100) || 'Tiêu đề từ 20 - 100 ký tự']"
                             placeholder="Nhập tiêu đề bài đăng"
                             required
                             dense
+                            @input="tieude = tieude.replace(/\s+ /g, ' ')"
                         ></v-text-field>
                         <div class="spacer-line-form"></div>
                         <h3 class="d-inline-block black--text">Loại tài sản</h3>
@@ -57,6 +58,7 @@
                             :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                             type="number"
                             min="1"
+                            max="999999"
                             hint="Đơn vị triệu đồng"
                             placeholder="Giá bán bài đăng. Ví dụ: 100 (triệu)!!"
                         ></v-text-field>
@@ -124,14 +126,30 @@
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-text-field v-model="phongngu" class="mt-2" :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']" type="number" solo></v-text-field>
+                                <v-text-field
+                                    v-model="phongngu"
+                                    min="0"
+                                    max="99"
+                                    class="mt-2"
+                                    :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
+                                    type="number"
+                                    solo
+                                ></v-text-field>
                             </v-col>
                             <v-col cols="12" lg="4" sm="12">
                                 <h3 class="d-inline-block black--text">Số phòng tắm</h3>
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                                     <sup>(*) </sup>
                                 </span>
-                                <v-text-field v-model="phongtam" class="pr-3 mt-2" type="number" :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']" solo></v-text-field>
+                                <v-text-field
+                                    v-model="phongtam"
+                                    min="0"
+                                    max="99"
+                                    class="pr-3 mt-2"
+                                    type="number"
+                                    :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
+                                    solo
+                                ></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -164,7 +182,7 @@
                             </v-col>
                             <v-col cols="12" sm="4">
                                 <h3 class="d-inline-block black--text">Năm xây dựng</h3>
-                                <v-text-field v-model="namxaydung" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                                <v-text-field v-model="namxaydung" min="1900" :max="new Date().getFullYear()" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="4">
                                 <h3 class="d-inline-block black--text">Diện tích: m<sup>2</sup></h3>
@@ -175,6 +193,7 @@
                                     v-model="dientich"
                                     class="mt-2"
                                     type="number"
+                                    min="1"
                                     :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
                                     placeholder="ví dụ: 100"
                                     solo
@@ -192,8 +211,8 @@
                             </v-row>
 
                             <v-row v-else>
-                                <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="12" lg="2" class="pb-0">
-                                    <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="primary" :value="tiennghi.id" class=""></v-checkbox>
+                                <v-col v-for="tiennghi in tiennghis" :key="tiennghi.id" cols="4" class="pb-0">
+                                    <v-checkbox v-model="noithat" :label="tiennghi.ten_tiennghi" color="sunhouse_red2" :value="tiennghi.id" class=""></v-checkbox>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -267,10 +286,12 @@
                                         v-model="duong"
                                         chips
                                         class="mt-2"
+                                        :rules="[(v) => v === null || v.length < 30 || 'Tên đường không được quá 30 ký tự']"
                                         :items="listDuong"
                                         :search-input.sync="searchDuong"
                                         item-text="tenduong"
                                         item-value="id"
+                                        :return-object="false"
                                         no-data-text="Đường này chưa có sẵn trong hệ thống.
                                     Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                         label="Chọn Đường/Phố"
@@ -285,7 +306,15 @@
                                         <sup>(*) </sup>
                                     </span>
                                     <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
-                                    <v-text-field v-model="diachicuthe" disabled class="mt-2" placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ" solo :loading="loadingDiaChiCuThe"></v-text-field>
+                                    <v-text-field
+                                        v-model="diachicuthe"
+                                        disabled
+                                        class="mt-2"
+                                        messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường"
+                                        placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
+                                        solo
+                                        :loading="loadingDiaChiCuThe"
+                                    ></v-text-field>
                                 </div>
                             </v-col>
                             <v-col cols="12" lg="8" sm="12">
@@ -319,7 +348,10 @@
             </v-form>
             <v-row class="text-center my-5" style="position: relative; height: 100px">
                 <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-                    <div class="g-recaptcha" data-sitekey="6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB"></div>
+                    <div class="my-2 d-flex flex-row align-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+                        <div id="g-recaptcha" class="g-recaptcha"></div>
+                        <v-btn class="ml-2" fab small color="sunhouse_grey1" @click="resetCaptcha"><v-icon color="sunhouse_grey2">mdi-restart</v-icon></v-btn>
+                    </div>
                 </div>
             </v-row>
             <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
@@ -405,8 +437,8 @@ export default {
             thanhpho: null,
             quanhuyen: null,
             xaphuong: null,
-            duong: null,
-            searchDuong: null,
+            duong: '',
+            searchDuong: '',
             diachicuthe: '',
             marker: null,
             zoom: 14,
@@ -434,7 +466,12 @@ export default {
                 href: '/css/geosearch.css',
             },
         ],
-        script: [{ src: '/js/leaflet.js' }, { src: '/js/geosearch.umd.js' }, { src: '/js/leaflet-geosearch-bundle.min.js' }, { src: 'https://www.google.com/recaptcha/api.js?hl=vi' }],
+        script: [
+            { src: '/js/leaflet.js' },
+            { src: '/js/geosearch.umd.js' },
+            { src: '/js/leaflet-geosearch-bundle.min.js' },
+            { src: 'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
+        ],
     },
 
     watch: {
@@ -515,6 +552,14 @@ export default {
         })
 
         this.$nextTick(() => {
+            // eslint-disable-next-line no-unused-vars,nuxt/no-globals-in-created
+            window.onloadCallback = function () {
+                // eslint-disable-next-line no-undef
+                window.captcha = grecaptcha.render('g-recaptcha', {
+                    sitekey: '6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB',
+                })
+            }
+
             const map = this.$refs.map.mapObject
             const search = new GeoSearchControl({
                 provider: new OpenStreetMapProvider(),
@@ -596,6 +641,10 @@ export default {
         })
     },
     methods: {
+        resetCaptcha() {
+            // eslint-disable-next-line no-undef
+            grecaptcha.reset(window.captcha)
+        },
         getSelectOnComboBox(address) {
             const diaChi = address.split(',')
 
@@ -695,6 +744,12 @@ export default {
                 return
             }
             if (this.noidung === '') {
+                const top = document.getElementById('sunhouseEditor').offsetTop
+                window.scroll(0, top)
+                return
+            }
+            if (this.noidung.length < 40 || this.noidung.length > 3000) {
+                this.$toast.error('Nội dung từ 40 - 3000 ký tự')
                 const top = document.getElementById('sunhouseEditor').offsetTop
                 window.scroll(0, top)
                 return

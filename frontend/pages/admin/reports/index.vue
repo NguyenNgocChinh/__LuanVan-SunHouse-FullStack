@@ -1,8 +1,12 @@
 <template>
     <v-container>
         <v-card>
-            <v-card-title> Quản Lý Báo Cáo </v-card-title>
-            <v-data-table :loading="loading" :headers="headersUserBiBaoCao" :items="list" :expanded.sync="expanded" item-key="user_bibaocao" show-expand class="elevation-1">
+            <v-card-title>
+                Quản Lý Báo Cáo
+                <v-spacer />
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
+            </v-card-title>
+            <v-data-table :search="search" :loading="loading" :headers="headersUserBiBaoCao" :items="list" :expanded.sync="expanded" item-key="user_bibaocao" show-expand class="elevation-1">
                 <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                         <v-container>
@@ -117,7 +121,7 @@
                 <template #[`item.hanhdong`]="{ item }">
                     <v-tooltip top content-class="tooltipCustom">
                         <template #activator="{ on }">
-                            <v-icon color="sunhouse_grey" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
+                            <v-icon color="sunhouse_grey" class="mr-2" v-on="on" @click="showItem(item)"> bx bxs-user-detail </v-icon>
                         </template>
                         <span>Xem chi tiết người dùng</span>
                     </v-tooltip>

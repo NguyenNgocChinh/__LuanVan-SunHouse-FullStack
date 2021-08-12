@@ -31,12 +31,16 @@
                                                     </v-col>
                                                     <v-col cols="12" sm="6">
                                                         <v-text-field
-                                                            v-model.lazy="editedItem.ten_tiennghi"
+                                                            v-model="editedItem.ten_tiennghi"
                                                             label="Tên Tiện Nghi"
                                                             clearable
-                                                            :rules="[() => !!editedItem.ten_tiennghi || 'Phải nhập tên tiện nghi']"
+                                                            :rules="[
+                                                                () => !!editedItem.ten_tiennghi || 'Phải nhập tên tiện nghi',
+                                                                (editedItem.ten_tiennghi.length >= 4 && editedItem.ten_tiennghi.length <= 30) || 'Tên tiện nghi phải từ 4-30',
+                                                            ]"
                                                             hint="Hồ Bơi"
                                                             required
+                                                            @input="editedItem.ten_tiennghi = editedItem.ten_tiennghi.replace(/\s+ /g, ' ')"
                                                         ></v-text-field>
                                                     </v-col>
                                                 </v-row>

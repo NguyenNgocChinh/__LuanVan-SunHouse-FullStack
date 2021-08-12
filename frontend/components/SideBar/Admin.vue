@@ -3,7 +3,7 @@
         <!---USer Area -->
         <div class="ml-7 d-flex flex-row mt-5 mb-2 mx-2">
             <v-avatar size="45">
-                <v-img :src="$auth.user.profile_photo_path || $auth.user.profile_photo_url"></v-img>
+                <v-img :src="getAvatar($auth.user)"></v-img>
             </v-avatar>
 
             <div class="pl-3">
@@ -125,6 +125,24 @@ export default {
         },
     },
 
-    methods: {},
+    methods: {
+        getAvatar(user) {
+            if (user.profile_photo_path !== null) {
+                return this.isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path
+            }
+            return user.profile_photo_url
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
+        },
+    },
 }
 </script>

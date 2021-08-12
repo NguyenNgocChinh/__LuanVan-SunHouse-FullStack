@@ -10,7 +10,7 @@
                                 <v-img :src="wrong_image" />
                             </div>
                             <div v-else>
-                                <viewer ref="viewer" style="position: relative" :options="options" :images="hinhanhArr" class="viewer" @inited="inited">
+                                <viewer ref="viewer" style="position: relative" rebuild :options="options" :images="[]" class="viewer" @inited="inited">
                                     <owl-carousel id="carouselTop">
                                         <template #body>
                                             <img v-for="src in hinhanhArr" :key="src" class="owl-carousel-item" :src="isImgFail ? wrong_image : src" @error="wrongImage" />
@@ -36,17 +36,30 @@
                 </v-row>
             </v-card>
         </v-container>
+        <div v-if="baidang.choduyet || !baidang.trangthai" style="position: fixed; z-index: 999; top: 55px">
+            <v-alert v-model="alertModal" dismissible color="sunhouse_blue2" border="left" elevation="2" colored-border icon="mdi-clock-fast">
+                Bài đăng đang chờ <strong>{{ !baidang.trangthai ? 'kích hoạt' : 'phê duyệt' }}</strong>
+            </v-alert>
+        </div>
         <v-container>
             <v-banner sticky>
                 <v-row class="pt-2">
-                    <div class="col-lg-8">
+                    <div class="col-lg-9">
                         <div v-if="$auth.loggedIn && baidang !== false">
                             <div v-if="$auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin'">
                                 <v-btn class="white--text sunhouse_blue2" @click="$router.push('/suabaidang/' + baidang.id)">Sửa bài đăng</v-btn>
-                                <v-btn class="white--text sunhouse_blue2" :class="baidang.trangthai ? 'warning' : 'green'" @click="updateTrangThai">{{ baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng' }}</v-btn>
-                                <v-btn v-if="($auth.user.id === baidang.user.id || $auth.user.vaitro === 'admin') && isCanPush" class="white--text sunhouse_red2" @click="pushToTop"
-                                    ><v-icon>bx bx-chevrons-up bx-burst</v-icon>Đẩy lên TOP</v-btn
-                                >
+                                <v-btn v-if="$auth.user.vaitro === 'admin'" class="white--text sunhouse_blue2" :class="baidang.trangthai ? 'warning' : 'green'" @click="updateTrangThai">{{
+                                    baidang.trangthai ? 'Ẩn bài đăng' : 'Hiện bài đăng'
+                                }}</v-btn>
+                                <v-btn class="white--text sunhouse_blue2" @click="$refs.deleteModal.open()">Xóa bài đăng</v-btn>
+                                <sweet-modal ref="deleteModal" blocking title="Xác nhận xóa bài đăng">
+                                    Bạn có chắc chắn muốn xóa bài đăng này không?
+                                    <template #button>
+                                        <v-btn class="mr-2" @click="$refs.deleteModal.close()">HỦY</v-btn>
+                                        <v-btn class="sunhouse_white--text" color="sunhouse_red2" @click="removeBaiDang">XÁC NHẬN XÓA</v-btn>
+                                    </template>
+                                </sweet-modal>
+                                <v-btn v-if="isCanPush" class="white--text sunhouse_red2" @click="pushToTop"><v-icon>bx bx-chevrons-up bx-burst</v-icon>Đẩy lên TOP</v-btn>
                                 <v-btn v-else class="white--text sunhouse_red1">
                                     <span class="d-flex flex-row align-center">
                                         <span class="mr-1">Chờ </span>
@@ -58,8 +71,8 @@
                         </div>
                         <!--                        <v-btn text plain>Mô tả</v-btn>-->
                     </div>
-                    <div class="col-lg-4 d-flex justify-end d-sticky white--text">
-                        <v-btn v-if="!$auth.loggedIn" text @click="$router.push('/login')"> <v-icon class="mr-3" color="pink white--text">mdi-heart-outline</v-icon> Đăng nhập để thêm yêu thích</v-btn>
+                    <div class="col-lg-3 d-flex justify-end d-sticky white--text">
+                        <v-btn v-if="!$auth.loggedIn" text class="white--text" @click="$router.push('/login')"> <v-icon class="mr-3" color="pink white--text">mdi-heart-outline</v-icon> Đăng nhập để thêm yêu thích</v-btn>
                         <v-btn v-else-if="isYeuThich" class="white--text" text @click="removeYeuThich"> <v-icon class="mr-3" color="pink white--text">mdi-heart</v-icon>Bỏ yêu thích</v-btn>
                         <v-btn v-else text class="white--text" @click="addYeuThich"> <v-icon class="mr-3" color="pink white--text">mdi-heart-outline</v-icon> Yêu thích</v-btn>
                         <v-divider vertical class="white" />
@@ -108,7 +121,8 @@
                             <div class="info-description">
                                 <h2>Thông tin mô tả</h2>
                                 <v-divider />
-                                <p style="letter-spacing: 0.5px" class="my-4" v-html="$sanitize(baidang.noidung)"></p>
+                                <p style="letter-spacing: 0.5px" class="my-4" :class="{ readLess: !readMore }" v-html="$sanitize(baidang.noidung)"></p>
+                                <v-btn v-if="!readMore" rounded small color="sunhouse_blue2 sunhouse_white--text" class="mb-4" @click="readMore = !readMore">Xem thêm</v-btn>
                                 <v-expansion-panels multiple tile :value="[0, 1, 2]" flat hover accordion>
                                     <v-expansion-panel>
                                         <v-expansion-panel-header class="accordion-header"> Thông tin cơ bản </v-expansion-panel-header>
@@ -276,17 +290,14 @@
                 </v-col>
             </v-row>
         </sweet-modal>
-        <sweet-modal v-if="user" ref="modalBaoCao" :title="`Báo cáo bài đăng của ${user.name}`" width="90%" blocking>
+        <sweet-modal v-if="user" ref="modalBaoCao" enable-mobile-fullscreen :title="`Báo cáo bài đăng của ${user.name}`" width="90%" blocking>
             <v-row>
                 <h3 class="d-inline-block">Nhập nội dung báo cáo</h3>
-                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                    <sup>(*) </sup>
-                </span>
             </v-row>
-            <editor id="sunhouseEditor" :min-length="40" class="mt-2 py-5" />
-            <div class="text-right">
+            <editor id="sunhouseEditor" :min-length="40" :max-length="255" class="mt-2 py-5" />
+            <template slot="button">
                 <v-btn color="primary" :loading="loadingBaoCao" @click="xulybaocao">Báo cáo</v-btn>
-            </div>
+            </template>
         </sweet-modal>
     </v-container>
 </template>
@@ -301,6 +312,7 @@ import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import Editor from '@/components/UIComponent/Editor'
+import ENV from '@/api/baidang'
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
@@ -312,6 +324,8 @@ export default {
     },
     data() {
         return {
+            readMore: true,
+            alertModal: false,
             baidang: false,
             tabs: null,
             numberphone: 'Chưa đặt số',
@@ -491,6 +505,11 @@ export default {
                         .$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id)
                         .then((data) => {
                             this.baidang = data
+                            this.alertModal = true
+                            if (data.noidung.length > 980) {
+                                this.readMore = false
+                            }
+
                             if (data.next_push === null) {
                                 this.nextPush = null
                                 this.isCanPush = true
@@ -557,26 +576,22 @@ export default {
             }
         },
         inited(viewer) {
-            if (process.browser) {
-                this.$viewer = viewer
-            }
+            this.$viewer = viewer
         },
         showImgIndex() {
-            if (process.browser) {
-                let index = 0
-                const carousel = document.getElementById('carouselTop')
-                const items = carousel.getElementsByClassName('owl-item')
-                for (let i = 0; i < items.length; i++) {
-                    const classItem = items[i].className.split(' ')
-                    for (let j = 0; j < classItem.length; j++) {
-                        if (classItem[j] === 'active') {
-                            index = i
-                            break
-                        }
+            let index = 0
+            const carousel = document.getElementById('carouselTop')
+            const items = carousel.getElementsByClassName('owl-item')
+            for (let i = 0; i < items.length; i++) {
+                const classItem = items[i].className.split(' ')
+                for (let j = 0; j < classItem.length; j++) {
+                    if (classItem[j] === 'active') {
+                        index = i
+                        break
                     }
                 }
-                this.$viewer.view(index)
             }
+            this.$viewer.view(index)
         },
         isValidHttpUrl(string) {
             let url
@@ -628,8 +643,25 @@ export default {
                     if (res.success) {
                         this.$toast.success(res.success)
                         this.baidang.trangthai = !this.baidang.trangthai
+                        if (!this.baidang.trangthai) {
+                            this.$store.commit('REMOVE_BAIDANG', this.baidang)
+                        } else {
+                            this.$store.commit('PUSH_BAIDANG', this.baidang)
+                        }
                     }
                     if (res.fail) this.$toast.error(res.fail)
+                })
+        },
+        removeBaiDang() {
+            this.$axios
+                .$delete(this.$config.serverUrl + '/baidang/' + this.baidang.id)
+                .then((data) => {
+                    this.$store.commit('REMOVE_BAIDANG', this.baidang)
+                    this.$toast.success('Xóa Thành Công')
+                    this.$router.push('/')
+                })
+                .catch((e) => {
+                    this.$toast.error('Xóa Thất Bại')
                 })
         },
 
@@ -722,3 +754,9 @@ export default {
 }
 </script>
 <style scoped src="~/assets/css/detailPost.css"></style>
+<style scoped>
+.readLess {
+    height: 260px;
+    overflow: hidden;
+}
+</style>

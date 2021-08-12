@@ -4,12 +4,11 @@
             <v-card-title>
                 Quản Lý User
                 <v-spacer />
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="name" show-select class="elevation-1">
+            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="name" class="elevation-1">
                 <template #top>
                     <div class="d-flex justify-space-between">
-                        <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
                             <!--                            <v-btn fab dark small color="indigo" class="mr-2">-->
@@ -66,7 +65,7 @@
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-icon color="blue" class="mr-2" @click="showItem(item)"> mdi-eye </v-icon>
+                    <v-icon color="sunhouse_grey1" class="" @click="showItem(item)"> mdi-eye </v-icon>
 
                     <v-dialog transition="dialog-top-transition" max-width="600">
                         <template #default="dialog">
@@ -130,7 +129,21 @@ export default {
         },
 
         getAvatar(user) {
-            return user.profile_photo_path || user.profile_photo_url
+            if (user.profile_photo_path !== null) {
+                return this.isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path
+            }
+            return user.profile_photo_url
+        },
+        isValidHttpUrl(string) {
+            let url
+
+            try {
+                url = new URL(string)
+            } catch (_) {
+                return false
+            }
+
+            return url.protocol === 'http:' || url.protocol === 'https:'
         },
         showItem(item) {
             this.$router.push('/admin/users/' + item.id)

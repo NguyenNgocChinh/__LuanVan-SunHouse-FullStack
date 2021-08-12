@@ -30,7 +30,15 @@
                                                         <v-text-field v-model="editedItem.id" label="ID" disabled></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" sm="6">
-                                                        <v-text-field v-model.lazy="editedItem.ten_loai" label="Tên Loại" clearable :rules="[() => !!editedItem.ten_loai || 'Phải nhập tên loại']" hint="Hồ Bơi" required></v-text-field>
+                                                        <v-text-field
+                                                            v-model="editedItem.ten_loai"
+                                                            label="Tên Loại"
+                                                            clearable
+                                                            :rules="[() => !!editedItem.ten_loai || 'Phải nhập tên loại', (editedItem.ten_loai.length >= 4 && editedItem.ten_loai.length <= 30) || 'Tên loại phải từ 4-30']"
+                                                            hint="Tên Tiện Nghi : Hồ Bơi, Sân cỏ,..."
+                                                            required
+                                                            @input="editedItem.ten_loai = editedItem.ten_loai.replace(/\s+ /g, ' ')"
+                                                        ></v-text-field>
                                                     </v-col>
                                                 </v-row>
                                             </v-container>
