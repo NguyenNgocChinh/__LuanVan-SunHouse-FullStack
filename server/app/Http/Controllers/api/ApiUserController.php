@@ -100,6 +100,7 @@ class ApiUserController extends Controller
         $user = User::find($id);
         if ($user) {
             $user->trangthai = 0;
+// turn off baidang
             $user->save();
             return response()->json(
                 [

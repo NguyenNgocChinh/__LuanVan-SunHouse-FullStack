@@ -46,14 +46,15 @@ class DiaDiemController extends Controller
     {
         $xaid = $request->xaid;
         $strlenXaID = strlen($xaid);
-         if ($strlenXaID < 5) {
+        $duong = gettype($request->tenduong) == 'array' ? $request->tenduong['tenduong'] : $request->tenduong;
+        if ($strlenXaID < 5) {
             for ($i = 1; $i <= 5 - $strlenXaID; $i++){
                 $xaid = '0'. $xaid;
             }
         }
         $xa = XaPhuong::find($xaid);
         $post = BaiDang::find($request->baidang_id);
-        $isTonTai = $xa != null ? Duong::where(['tenduong' => $request->tenduong, 'xaid' => $xaid])->first() : null;
+        $isTonTai = $xa != null ? Duong::where(['tenduong' => $duong, 'xaid' => $xaid])->first() : null;
         if ($isTonTai == null) {
             if ($xa != null) {
                 $duong = new Duong();

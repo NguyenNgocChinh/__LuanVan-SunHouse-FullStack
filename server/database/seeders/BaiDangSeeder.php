@@ -41,7 +41,7 @@ class BaiDangSeeder extends Seeder
             $toadoY = $this->mt_random_float($minY, $maxY);
             BaiDang::create([
                 'user_id' => $user->random(),
-                'tieude' => 'Tiêu đề random số ' . $faker->numberBetween(1, $maxLoop),
+                'tieude' => 'Tiêu đề random số ' . $index,
                 'noidung' => $faker->text(1000),
                 'loai_id' => $loai->random(),
                 'gia' => rand(3000, 8000),

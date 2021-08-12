@@ -18,7 +18,7 @@ class CreateBaidang extends Migration
             $table->integer('id', true);
             $table->mediumInteger('user_id');
             $table->string('tieude',100);
-            $table->text('noidung');
+            $table->string('noidung', 3000);
             $table->smallInteger('loai_id');
             $table->double('gia', 8, 2);
             $table->string('huong',20);/**/

@@ -25,7 +25,7 @@ class BaiDangObserver
     }
     public function deleted(BaiDang $baiDang)
     {
-        $this->removeLocationTable($baiDang);
+
     }
 
     public function restored(BaiDang $baiDang)
@@ -34,7 +34,7 @@ class BaiDangObserver
     }
     public function forceDeleted(BaiDang $baiDang)
     {
-
+        $this->removeLocationTable($baiDang);
     }
 
     //reset douutien
