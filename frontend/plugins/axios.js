@@ -1,6 +1,6 @@
 export default function ({ $axios, app }) {
     $axios.onRequest((config) => {
-        config.headers.Authorization = app.$auth.strategy.token.get()
+        config.headers.Authorization = app.$auth?.strategy.token.get()
         config.headers.withCredentials = true
     })
     // $axios.onError((error) => {

@@ -63,6 +63,7 @@ export default {
         { src: '~/plugins/axios.js', ssr: true },
         { src: '~/plugins/fb-sdk.js', ssr: false },
         { src: '~/plugins/sanitize.js', ssr: false },
+        { src: '~/plugins/callapi.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
