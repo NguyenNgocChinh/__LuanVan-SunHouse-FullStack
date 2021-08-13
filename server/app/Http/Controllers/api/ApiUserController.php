@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApiLoginRequest;
 use App\Http\Requests\ApiRegisterRequest;
+use App\Http\Resources\BaiDangResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Rules\match_old_password;
@@ -100,11 +101,16 @@ class ApiUserController extends Controller
         $user = User::find($id);
         if ($user) {
             $user->trangthai = 0;
-// turn off baidang
+            // turn off baidang
+            $rows_effect = DB::table('baidang')->where([
+                'user_id' => $user->id,
+                'trangthai' => 1
+            ])->update(['trangthai' => -1]);
             $user->save();
             return response()->json(
                 [
-                    'success' => "Vô hiệu hóa thành công"
+                    'success' => "Vô hiệu hóa thành công",
+                    'baidangvohieu' => $rows_effect
                 ]
             );
         }
@@ -119,16 +125,23 @@ class ApiUserController extends Controller
         $user = User::findOrFail($id);
         if ($user != null) {
             $user->trangthai = 1;
+            $rows = $user->baidang->where('trangthai',-1);
+            $rows_effect = DB::table('baidang')->where([
+                'user_id' => $user->id,
+                'trangthai' => -1
+            ])->update(['trangthai' => 1]);
             $user->save();
             return response()->json(
                 [
-                    'success' => "Kích hoạt tài khoản thành công"
+                    'success' => "Kích hoạt tài khoản thành công",
+                    'baidangkichhoat' => $rows_effect,
+                    'baidang' => BaiDangResource::collection($rows),
                 ]
             );
         }
         return response()->json(
             [
-                'error' => "Kích hoạt tài khoản thất bại"
+                'error' => "Kích hoạt tài khoản thất bại",
             ]
         );
     }

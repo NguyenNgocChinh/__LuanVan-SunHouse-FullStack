@@ -96,7 +96,7 @@ class BaoCaoController extends Controller
         ]);
         $baocao = BaoCao::findOrFail($request->id);
         if ($baocao != null) {
-            if (Auth::user()->id === $baocao->user_id) {
+            if (Auth::user()->id === $baocao->user_id || Auth::user()->vaitro === 'admin') {
                 $baocao->delete();
                 return response()->json([
                     'success' => 'Xóa báo cáo thành công'
