@@ -178,6 +178,7 @@ export default {
                     item.trangthai = 0
                     if (response.success) {
                         this.$toast.success(response.success)
+                        this.$store.commit('REMOVE_BAIDANG_OF_USER', item.id)
                     } else this.$toast.error(response.error, { duration: 5000 })
                 })
                 .catch(() => {
@@ -190,9 +191,11 @@ export default {
             this.$axios
                 .$put(this.$config.serverUrl + this.$config.userEnable + item.id)
                 .then((response) => {
+                    response.baidang.forEach((item) => this.$store.commit('PUSH_BAIDANG', item))
                     item.trangthai = 1
                     if (response.success) {
                         this.$toast.success(response.success)
+                        this.$toast.success(`Đã kích hoạt lại bài đăng`)
                     } else this.$toast.error(response.error, { duration: 5000 })
                 })
                 .catch(() => {

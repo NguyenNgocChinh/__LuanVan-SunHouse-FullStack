@@ -6,7 +6,7 @@
                 <v-spacer />
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table :search="search" :loading="loading" :headers="headersUserBiBaoCao" :items="list" :expanded.sync="expanded" item-key="user_bibaocao" show-expand class="elevation-1">
+            <v-data-table :search="search" :loading="loading" :headers="headersUserBiBaoCao" :items="list" single-expand :expanded.sync="expanded" item-key="user_bibaocao" show-expand class="elevation-1" @item-expanded="chooseExpand">
                 <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                         <v-container>
@@ -21,7 +21,9 @@
                                 :loading="loadingData"
                                 must-sort
                                 show-expand
+                                single-expand
                                 :items="item.baidang"
+                                @item-expanded="chooseBaiDang"
                             >
                                 <!--BAO CAO-->
                                 <template #expanded-item="{ headers, item }">
@@ -35,6 +37,7 @@
                                                     { text: 'SĐT', value: 'sdt', width: '15%', align: 'center' },
                                                     { text: 'Nội dung báo cáo', value: 'noidung', align: 'left' },
                                                     { text: 'Ngày báo cáo', value: 'created_at', width: '15%', align: 'center' },
+                                                    { text: '', value: 'hanhdong', sortable: false, width: '8%' },
                                                 ]"
                                                 :items="item.baocao"
                                             >
@@ -45,6 +48,9 @@
                                                     {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}
                                                 </template>
                                                 <template #[`item.name`]="{ item }"> {{ item.name }} ({{ item.username }}) </template>
+                                                <template #[`item.hanhdong`]="{ item }">
+                                                    <v-btn icon color="red"><v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon></v-btn>
+                                                </template>
                                             </v-data-table>
                                         </v-container>
                                     </td>
@@ -94,12 +100,6 @@
                                         </template>
                                         <span>{{ item.trangthai ? 'Bài đăng đang được kích hoạt' : 'Bài đăng đã bị vô hiệu hóa' }}</span>
                                     </v-tooltip>
-                                    <!--                                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">-->
-                                    <!--                                        <template #activator="{ on }">-->
-                                    <!--                                            <v-btn icon color="red" @click="deleteItem(item)" v-on="on"><v-icon>mdi-delete</v-icon></v-btn>-->
-                                    <!--                                        </template>-->
-                                    <!--                                        <span>Xóa bài đăng</span>-->
-                                    <!--                                    </v-tooltip>-->
                                 </template>
                             </v-data-table>
                         </v-container>
@@ -129,8 +129,8 @@
             </v-data-table>
         </v-card>
         <ModalError />
-        <sweet-modal ref="modalXacNhanXoa" :title="`Xác nhận xóa bài đăng này`" icon="warning">
-            <p class="text-center">Sau khi xóa bài đăng thì sẽ không thể khôi phục được</p>
+        <sweet-modal ref="modalXacNhanXoa" :title="`Xác nhận xóa báo cáo này`" icon="warning">
+            <p class="text-center">Sau khi xóa báo cáo thì sẽ không thể khôi phục được</p>
             <div class="text-right">
                 <v-btn text color="primary" @click="$refs.modalXacNhanXoa.close()">Hủy</v-btn>
                 <v-btn color="primary" :loading="loadingDelete" @click="confirmDelete">Xóa</v-btn>
@@ -175,7 +175,12 @@ export default {
             loadingDelete: false,
             loadingBaoCao: false,
             noidungbaocao: null,
+            selectedUser: {},
+            selectedBaiDang: {},
             seletedItem: {},
+            indexUser: -1,
+            indexBaiDang: -1,
+            indexItem: -1,
         }
     },
     computed: {
@@ -188,6 +193,14 @@ export default {
         this.fetchDSUser()
     },
     methods: {
+        chooseExpand(i) {
+            this.selectedUser = i.item
+            this.indexUser = this.list.findIndex((item) => item.id === i.item.id)
+        },
+        chooseBaiDang(i) {
+            this.selectedBaiDang = i.item
+            this.indexBaiDang = this.selectedUser.baidang.findIndex((item) => item.id === i.item.id)
+        },
         fetchDSUser() {
             this.$axios.$get(this.$config.serverUrl + '/thongkebaocao').then((res) => {
                 this.list = res
@@ -255,7 +268,9 @@ export default {
         },
 
         deleteItem(item) {
+            console.log(item)
             this.seletedItem = item
+            this.indexItem = this.selectedBaiDang.baocao.findIndex((i) => i.id === item.id)
             this.$refs.modalXacNhanXoa.open()
         },
         confirmDeleteBaiDang() {
@@ -282,18 +297,26 @@ export default {
                 this.loadingDelete = true
                 this.$axios
                     .$delete(this.$config.serverUrl + '/baocao', {
-                        params: {
+                        data: {
                             baidang_id: this.seletedItem.id,
-                            id: this.seletedItem.idbaocao,
+                            id: this.seletedItem.id,
                         },
                     })
                     .then((res) => {
                         if (res.success) {
                             this.$toast.success(res.success)
                             this.$refs.modalXacNhanXoa.close()
-                            const index = this.tindangs.findIndex((i) => i.id === this.seletedItem.id)
-                            this.tindangs.splice(index, 1)
+                            this.selectedBaiDang.baocao.splice(this.indexItem, 1)
+                            if (this.selectedBaiDang.baocao.length < 1) {
+                                this.selectedUser.baidang.splice(this.indexBaiDang, 1)
+                            }
+                            this.selectedUser.slbitocao -= 1
+                            if (this.selectedUser.slbitocao < 1) this.list.splice(this.indexUser, 1)
+
                             this.$store.commit('REMOVE_BAOCAO', this.seletedItem.id)
+                        }
+                        if (res.errors) {
+                            this.$toast.error(res.errors)
                         }
                     })
                     .catch((e) => {

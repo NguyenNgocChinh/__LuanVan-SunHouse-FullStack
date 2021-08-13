@@ -4,7 +4,7 @@
             <v-card-title>
                 Quản Lý Đánh giá
                 <v-spacer />
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm bản báo cáo" single-line hide-details></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm bản đánh giá" single-line hide-details></v-text-field>
             </v-card-title>
             <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="id" show-select class="elevation-1">
                 <template #top>
@@ -66,7 +66,7 @@
                                                     <v-col cols="12" sm="12" class="pa-0">
                                                         <v-text-field
                                                             v-model="editedItem.noidung"
-                                                            label="Nội dung báo cáo"
+                                                            label="Nội dung đánh giá"
                                                             clearable
                                                             outlined
                                                             :rules="[() => !!editedItem.noidung || 'Phải nhập nội dung đánh giá', (editedItem.noidung.length >= 20 && editedItem.noidung.length <= 30) || 'Nội dung phải từ 20-255 ký tự']"
@@ -121,20 +121,20 @@
                     </v-tooltip>
                 </template>
                 <template #[`item.baidang`]="{ item }"> {{ item.user.baidangDaDuyet }} / {{ item.user.baidang }} </template>
-                <template #[`item.user.vaitro`]="{ item }">
-                    <v-select
-                        :value="item.user.vaitro"
-                        item-text="v"
-                        item-value="k"
-                        :items="[
-                            { k: 'user', v: 'user' },
-                            { k: 'admin', v: 'admin' },
-                        ]"
-                        hide-details
-                        hide-selected
-                        @change="changeVaitro(item)"
-                    />
-                </template>
+                <!--                <template #[`item.user.vaitro`]="{ item }">-->
+                <!--                    <v-select-->
+                <!--                        :value="item.user.vaitro"-->
+                <!--                        item-text="v"-->
+                <!--                        item-value="k"-->
+                <!--                        :items="[-->
+                <!--                            { k: 'user', v: 'user' },-->
+                <!--                            { k: 'admin', v: 'admin' },-->
+                <!--                        ]"-->
+                <!--                        hide-details-->
+                <!--                        hide-selected-->
+                <!--                        @change="changeVaitro(item)"-->
+                <!--                    />-->
+                <!--                </template>-->
 
                 <template #[`item.user.name`]="{ item }">
                     {{ item.user.name }}
@@ -272,6 +272,7 @@ export default {
         fetchAllUser() {
             this.$axios.$get(this.$config.serverUrl + '/users').then((res) => {
                 this.allUser = res
+                this.loading = false
             })
         },
 

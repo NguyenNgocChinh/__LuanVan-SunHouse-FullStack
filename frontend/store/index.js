@@ -83,6 +83,27 @@ export const mutations = {
             state.baidang_hots.splice(index, 1)
         }
     },
+    REMOVE_BAIDANG_OF_USER(state, userId) {
+        console.log('remove bai dang user')
+        state.baidang_hots.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_hots.splice(state.baidang_hots.indexOf(x), 1))
+        state.baidang_chothue.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_chothue.splice(state.baidang_chothue.indexOf(x), 1))
+        state.baidang_raoban.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_raoban.splice(state.baidang_raoban.indexOf(x), 1))
+        state.baidang_hots
+            .filter((x) => x.userObject.id === userId)
+            .forEach((x) => {
+                console.log(x)
+            })
+        state.baidang_raoban
+            .filter((x) => x.userObject.id === userId)
+            .forEach((x) => {
+                console.log(x)
+            })
+        state.baidang_chothue
+            .filter((x) => x.userObject.id === userId)
+            .forEach((x) => {
+                console.log(x)
+            })
+    },
     PUSH_YEUTHICH(state, baidangId) {
         if (state.auth.loggedIn) {
             const index = state.auth.user.yeuthich.findIndex((item) => item.baidang_id === baidangId)
