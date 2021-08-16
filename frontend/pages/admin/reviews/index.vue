@@ -419,7 +419,6 @@ export default {
                             this.loading = false
                         })
                 }
-                this.selected = []
             } else {
                 const item = this.editedItem
                 const index = this.editedIndex
@@ -445,6 +444,7 @@ export default {
                         this.loading = false
                     })
             }
+            this.selected = []
         },
         save() {
             const validate = this.$refs.form.validate()

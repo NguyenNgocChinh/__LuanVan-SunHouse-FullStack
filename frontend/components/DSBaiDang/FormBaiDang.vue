@@ -7,34 +7,6 @@
                     <v-icon slot="append" color="black" @click="searchBaiDangs"> mdi-magnify </v-icon>
                 </v-text-field>
             </div>
-            <!--            <div v-show="!banKinhOn" class="ml-5">-->
-            <!--                <v-select v-model="inputThanhPho" :items="thanhpho" item-text="name" label="Địa điểm">-->
-            <!--                    <template #item="{ item, attrs, on }">-->
-            <!--                        <v-list-item v-bind="attrs" v-on="on" @change="getQuanHuyen(item.matp)">-->
-            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
-            <!--                        </v-list-item>-->
-            <!--                    </template>-->
-            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
-            <!--                </v-select>-->
-            <!--                &lt;!&ndash;            Quan huyen&ndash;&gt;-->
-            <!--                <v-select v-if="inputThanhPho" v-model="inputQuanHuyen" :items="quanhuyen" item-text="name" label="Quyện Huyện">-->
-            <!--                    <template #item="{ item, attrs, on }">-->
-            <!--                        <v-list-item v-bind="attrs" v-on="on" @change="getXaPhuong(item.maqh)">-->
-            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
-            <!--                        </v-list-item>-->
-            <!--                    </template>-->
-            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
-            <!--                </v-select>-->
-            <!--                &lt;!&ndash;            Phuong xa&ndash;&gt;-->
-            <!--                <v-select v-if="inputQuanHuyen" v-model="inputXaPhuong" :items="xaphuong" item-text="name" label="Xã phường">-->
-            <!--                    <template #item="{ item, attrs, on }">-->
-            <!--                        <v-list-item v-bind="attrs" v-on="on">-->
-            <!--                            <v-list-item-title :id="attrs['aria-labelledby']" v-text="item.name"></v-list-item-title>-->
-            <!--                        </v-list-item>-->
-            <!--                    </template>-->
-            <!--                    <v-icon slot="append" color="black"> mdi-map-marker </v-icon>-->
-            <!--                </v-select>-->
-            <!--            </div>-->
             <div class="ml-5">
                 <v-switch v-model="banKinhOn" inset label="Tìm theo bán kính:"></v-switch>
             </div>

@@ -72,8 +72,7 @@
 import Vue from 'vue'
 import OtpInput from '@bachdgvn/vue-otp-input'
 import firebase from 'firebase/app'
-import 'firebase/analytics'
-// Add the Firebase products that you want to use
+// import 'firebase/analytics'
 import 'firebase/auth'
 import 'firebase/firestore'
 Vue.component('VOtpInput', OtpInput)
@@ -85,7 +84,7 @@ export default {
             errorMessages: '',
             step: 1,
             loadingToStep: false,
-            countDown: 180,
+            countDown: 0,
             error: '',
             isValidNumerPhone: true,
             sdt: null,
@@ -108,6 +107,8 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
+            // eslint-disable-next-line no-undef
+            console.log(firebase)
             const firebaseConfig = {
                 databaseURL: 'https://sun-house-8f320.firebaseio.com',
                 apiKey: 'AIzaSyBJk3Z9JjtG6W0vNUnej2GtNQq1V1nH0zY',

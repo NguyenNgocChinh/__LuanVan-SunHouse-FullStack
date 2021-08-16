@@ -117,6 +117,7 @@ export default {
         this.getbaidangs(true)
         this.$nuxt.$on('search', () => {
             this.baidangs = []
+            this.page = 1
             this.getbaidangs()
         })
     },

@@ -1,6 +1,6 @@
 <template>
     <div class="sunhouse-editor">
-        <quill-editor ref="myQuillEditor" v-model="content" class="editor" :options="editorOption" @change="onEditorChange($event)">
+        <quillEditor ref="myQuillEditor" v-model="content" class="editor" :options="editorOption" @change="onEditorChange($event)">
             <div id="toolbar" slot="toolbar">
                 <!-- Add a bold button -->
                 <span class="ql-formats">
@@ -26,7 +26,7 @@
                     <button class="ql-indent" value="+1"></button>
                 </span>
             </div>
-        </quill-editor>
+        </quillEditor>
         <div v-show="error" class="red--text caption">{{ error }}</div>
     </div>
 </template>
@@ -165,7 +165,9 @@ export default {
         }
     }
     .ql-editor {
-        font-size: 18px;
+        p {
+            font-size: 16px;
+        }
     }
 }
 </style>

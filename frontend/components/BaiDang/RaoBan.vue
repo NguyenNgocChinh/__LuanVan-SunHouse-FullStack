@@ -4,7 +4,7 @@
             <h3 class="sunhouse_grey2--text pb-2">NHÀ BÁN MỚI NHẤT</h3>
             <h4 class="pb-4 sunhouse_grey2--text">Sun House trao trọn niềm tin</h4>
             <v-row>
-                <v-slide-group v-if="baidangs_loading" class="pa-4">
+                <v-slide-group v-if="isLoading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-slide-item>
@@ -16,42 +16,43 @@
                     </v-slide-item>
                 </v-slide-group>
 
-                <div v-if="(baidangs.length === 0) & !baidangs_loading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào là Rao Bán trên hệ thống!</div>
+                <div v-if="(baidangs.length === 0) & !isLoading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào là Rao Bán trên hệ thống!</div>
             </v-row>
         </v-container>
     </v-container>
 </template>
 <script>
-import { mapState } from 'vuex'
 import BaiDangCard from '~/components/BaiDang/BaiDangCard'
 export default {
     name: 'RaoBan',
     components: { BaiDangCard },
     data: () => ({
         model: null,
-        isActive: true,
-        baidangs: [],
-        baidangs_loading: true,
     }),
-    created() {
-        this.getRaoBan()
-    },
-    methods: {
-        async getRaoBan() {
-            try {
-                if (this.baidang_raoban.length > 0) {
-                    this.baidangs = this._.sortBy(this.baidang_raoban, (o) => o.douutien, 'asc').reverse()
-                } else {
-                    const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
-                    this.baidangs = baidangs.baidangs
-                    this.$store.commit('SET_BAIDANG_RAOBAN', this._.sortBy(this.baidangs, (o) => o.douutien, 'asc').reverse())
-                }
-            } catch (e) {}
-            this.baidangs_loading = false
+    computed: {
+        baidangs() {
+            return this.$store.getters.GET_BAIDANG_RAOBAN
+        },
+        isLoading() {
+            return this.$store.state.isLoadingBan
         },
     },
-    computed: {
-        ...mapState(['baidang_raoban']),
+    created() {
+        // this.getRaoBan()
+    },
+    methods: {
+        // getRaoBan() {
+        // try {
+        //     if (this.baidang_raoban.length > 0) {
+        //         this.baidangs = this._.sortBy(this.baidang_raoban, (o) => o.douutien, 'asc').reverse()
+        //     } else {
+        //         const baidangs = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
+        //         this.baidangs = baidangs.baidangs
+        //         this.$store.commit('SET_BAIDANG_RAOBAN', this._.sortBy(this.baidangs, (o) => o.douutien, 'asc').reverse())
+        //     }
+        // } catch (e) {}
+        // this.baidangs_loading = false
+        // },
     },
 }
 </script>

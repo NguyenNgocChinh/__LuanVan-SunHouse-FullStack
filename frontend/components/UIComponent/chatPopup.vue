@@ -124,26 +124,26 @@ export default {
                 await this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
                     this.contacts = response
                 })
-                if (process.browser) {
-                    // Listen Channel Private Message
-                    // WORK
-                    window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
-                        self.hanleIncoming(e.message)
+
+                // Listen Channel Private Message
+                // WORK
+                window.Echo.private(`messages.${this.$auth.user.id}`).listen('.newMessage', (e) => {
+                    self.hanleIncoming(e.message)
+                })
+                // Join to Presence channel
+                // WORK
+                window.Echo.join('user.online')
+                    .here((users) => {
+                        this.$store.commit('UPDATE_USER_ONLINE', users)
                     })
-                    // Join to Presence channel
-                    // ERROR
-                    window.Echo.join('user.online')
-                        .here((users) => {
-                            this.$store.commit('UPDATE_USER_ONLINE', users)
-                        })
-                        .joining((user) => {
-                            console.log('connected')
-                            this.$store.commit('PUSH_USER_ONLINE', user)
-                        })
-                        .leaving((user) => {
-                            this.$store.commit('REMOVE_USER_ONLINE', user.id)
-                        })
-                }
+                    .joining((user) => {
+                        console.log(user.name + 'connected')
+                        this.$store.commit('PUSH_USER_ONLINE', user)
+                    })
+                    .leaving((user) => {
+                        console.log(user.name + 'disconnect')
+                        this.$store.commit('REMOVE_USER_ONLINE', user.id)
+                    })
             }
         },
         getAvatar(user) {

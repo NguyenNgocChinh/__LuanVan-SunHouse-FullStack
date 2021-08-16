@@ -86,9 +86,10 @@
                                         outlined
                                         label="Tên đăng nhập"
                                         counter
-                                        :rules="[$rules.required, $rules.min(username, 5), isValidUsername || 'Tên đăng nhập đã tồn tại trong hệ thống']"
+                                        :rules="[$rules.required, $rules.min(username, 5), username.length <= 30 || 'Độ dài tối đa là 30 ký tự', isValidUsername || 'Tên đăng nhập đã tồn tại trong hệ thống']"
                                         placeholder="Hãy nhập tên đăng nhập..."
                                         required
+                                        @input="username = username.replace(/\s+/g, '')"
                                         @change="isValidUsername = true"
                                     ></v-text-field>
                                     <v-text-field

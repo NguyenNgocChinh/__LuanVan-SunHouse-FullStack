@@ -57,7 +57,7 @@
                     </a>
 
                     <a href="javascript:void(0)" class="btn-google m-b-20" style="text-decoration: none" @click="loginGG">
-                        <img src="images/icon-google.png" alt="GOOGLE" />
+                        <img src="/images/icon-google.png" alt="GOOGLE" />
                         Google
                     </a>
 

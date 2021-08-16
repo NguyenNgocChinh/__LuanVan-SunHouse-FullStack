@@ -9,7 +9,7 @@
             <br />
             <h4 class="sunhouse_red1--text text-center pa-1 pb-4" style="display: inline-block; text-shadow: 0px 2px 6px #fff">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
             <v-row>
-                <v-slide-group v-if="baidanghots_loading" class="pa-4">
+                <v-slide-group v-if="isLoading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>
                     </v-slide-item>
@@ -21,7 +21,7 @@
                     </v-slide-item>
                 </v-slide-group>
 
-                <div v-if="(baidanghots.length === 0) & !baidanghots_loading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào được đánh giá là HOT trên hệ thống!</div>
+                <div v-if="(baidanghots.length === 0) & !isLoading" class="white--text mt-4" style="margin: 0 auto">Hiện tại không có bài đăng nào được đánh giá là HOT trên hệ thống!</div>
             </v-row>
         </v-container>
     </div>
@@ -29,36 +29,37 @@
 
 <script>
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import { mapState } from 'vuex'
 export default {
     components: { BaiDangCard },
     data: () => ({
         model: null,
-        isActive: true,
-        baidanghots: [],
-        baidanghots_loading: true,
     }),
-    mounted() {
-        this.getBaiDangHot()
-    },
-    methods: {
-        getBaiDangHot() {
-            try {
-                if (this.baidang_hots.length > 0) {
-                    this.baidanghots = this._.sortBy(this.baidang_hots, (o) => o.douutien, 'asc').reverse()
-                    this.baidanghots_loading = false
-                } else {
-                    this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat).then((res) => {
-                        this.baidanghots = res.baidangs
-                        this.baidanghots_loading = false
-                        this.$store.commit('SET_BAIDANG_HOT', this._.sortBy(res.baidangs, (o) => o.douutien, 'asc').reverse())
-                    })
-                }
-            } catch (e) {}
+    computed: {
+        baidanghots() {
+            return this.$store.getters.GET_BAIDANG_HOT
+        },
+        isLoading() {
+            return this.$store.state.isLoadingHot
         },
     },
-    computed: {
-        ...mapState(['baidang_hots']),
+    mounted() {
+        // this.getBaiDangHot()
+    },
+    methods: {
+        // getBaiDangHot() {
+        // try {
+        //     if (this.baidang_hots.length > 0) {
+        //        this.baidanghots = this._.sortBy(this.baidang_hots, (o) => o.douutien, 'asc').reverse()
+        // this.baidanghots_loading = false
+        //     } else {
+        //         this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat).then((res) => {
+        //             this.baidanghots = res.baidangs
+        //             this.baidanghots_loading = false
+        //             this.$store.commit('SET_BAIDANG_HOT', this._.sortBy(res.baidangs, (o) => o.douutien, 'asc').reverse())
+        //         })
+        //     }
+        // } catch (e) {}
+        // },
     },
 }
 </script>

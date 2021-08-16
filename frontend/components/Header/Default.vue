@@ -121,14 +121,13 @@ export default {
     },
 }
 </script>
-
 <style lang="scss">
 .navlink {
     background: transparent !important;
     box-shadow: none;
     text-transform: unset;
     &:hover {
-        background-color: $sunhouse-darkSky !important;
+        background-color: $sunhouse_red2 !important;
     }
 }
 </style>

@@ -30,7 +30,7 @@ export default {
                     })
                     .catch((e) => {
                         this.$auth.logout()
-                        this.$nuxt.$toast.error('Bạn đã bị QTV cấm tài khoản', {
+                        this.$nuxt.$toast.error(e, {
                             duration: null,
                         })
                     })

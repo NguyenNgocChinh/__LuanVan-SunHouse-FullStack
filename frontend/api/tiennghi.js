@@ -1,5 +1,5 @@
 const ENV = {
-    all: 'http://localhost:8000/tiennghi',
+    all: 'http://127.0.0.1:8000/tiennghi',
 }
 
 export default ENV

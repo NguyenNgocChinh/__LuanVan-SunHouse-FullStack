@@ -1,5 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 import vi from './locale/vi'
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 export default {
     ssr: false,
     target: 'static',
@@ -7,6 +8,7 @@ export default {
     // fetchOnServer: false,
     generate: {
         fallback: true,
+        crawler: false,
     },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -31,10 +33,6 @@ export default {
         ],
         script: [
             {
-                src: '/js/lodash.min.js',
-                type: 'text/javascript',
-            },
-            {
                 src: '/js/OneSignalSDK.js',
                 type: 'text/javascript',
             },
@@ -43,27 +41,31 @@ export default {
                 type: 'text/javascript',
             },
             { src: '/js/jquery-3.6.0.min.js', type: 'text/javascript' },
+            {
+                src: '/js/lodash.min.js',
+                type: 'text/javascript',
+            },
         ],
     },
     router: {
         // middleware: 'auth',
     },
     // Global CSS: https://go.nuxtjs.dev/config-css
-    css: ['~/assets/css/formatToast.css', '~/assets/css/formatGlobal.css'],
+    css: ['~/assets/css/formatToast', '~/assets/css/formatGlobal'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        { src: '~/plugins/callapi.js', ssr: false },
         { src: '~/plugins/spinners.js', ssr: false, mode: 'client' },
         { src: '~/plugins/rules.js', ssr: false },
         { src: '~/plugins/lodash.js', ssr: false },
-        { src: '~plugins/leaflet.js', ssr: false },
-        { src: '~plugins/sweetAlert.js', ssr: false },
-        { src: '~plugins/moment.js', ssr: true },
+        { src: '~/plugins/leaflet.js', ssr: false },
+        { src: '~/plugins/moment.js', ssr: true },
         { src: '~/plugins/echo.js', ssr: false },
         { src: '~/plugins/axios.js', ssr: true },
         { src: '~/plugins/fb-sdk.js', ssr: false },
         { src: '~/plugins/sanitize.js', ssr: false },
-        { src: '~/plugins/callapi.js', ssr: false },
+        { src: '~/plugins/sweetAlert.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -173,7 +175,23 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
+    build: {
+        extend(config, { isClient, isDev }) {
+            config.optimization.splitChunks.maxSize = 30000
+        },
+        devtool: 'inline-source-map',
+        // analyze: true,
+        cssSourceMap: false,
+        cache: true, // try
+        minimize: true,
+        splitChunks: {
+            chunks: 'all',
+            automaticNameDelimiter: '.',
+            name: undefined,
+            cacheGroups: {},
+        },
+        plugin: [new VuetifyLoaderPlugin()],
+    },
     publicRuntimeConfig: {
         baseUrl: process.env.BASE_URL,
         serverUrl: process.env.SERVER_URL,
@@ -197,4 +215,12 @@ export default {
             secret: process.env.RECAPTCHA_SECRET,
         },
     },
+    // render: {
+    //     // bundleRenderer: {
+    //     //     shouldPreload: (file, type) => {
+    //     //         return ['script', 'style', 'font'].includes(type)
+    //     //     },
+    //     // },
+    //     // resourceHints: true,
+    // },
 }

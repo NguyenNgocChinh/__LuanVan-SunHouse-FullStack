@@ -1,6 +1,4 @@
-import ENV from '@/api/baidang'
-import ENV_CHAT from '@/api/chat'
-import axios from 'axios'
+import sortBy from 'lodash/sortBy'
 export const state = () => ({
     baidangs: [],
     baidang_hots: [],
@@ -8,13 +6,13 @@ export const state = () => ({
     baidang_raoban: [],
     contatcs: [],
     usersOnline: [],
+    isLoadingHot: true,
+    isLoadingBan: true,
+    isLoadingThue: true,
     foundedBaiDang: true,
 })
 
 export const mutations = {
-    SET_KQ_BAIDANG_TIMKIEM(state, payload) {
-        state.SearchResult = payload
-    },
     SET_BAIDANG(state, payload) {
         state.baidangs = payload
     },
@@ -88,21 +86,6 @@ export const mutations = {
         state.baidang_hots.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_hots.splice(state.baidang_hots.indexOf(x), 1))
         state.baidang_chothue.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_chothue.splice(state.baidang_chothue.indexOf(x), 1))
         state.baidang_raoban.filter((x) => x.userObject.id === userId).forEach((x) => state.baidang_raoban.splice(state.baidang_raoban.indexOf(x), 1))
-        state.baidang_hots
-            .filter((x) => x.userObject.id === userId)
-            .forEach((x) => {
-                console.log(x)
-            })
-        state.baidang_raoban
-            .filter((x) => x.userObject.id === userId)
-            .forEach((x) => {
-                console.log(x)
-            })
-        state.baidang_chothue
-            .filter((x) => x.userObject.id === userId)
-            .forEach((x) => {
-                console.log(x)
-            })
     },
     PUSH_YEUTHICH(state, baidangId) {
         if (state.auth.loggedIn) {
@@ -147,6 +130,15 @@ export const mutations = {
     UPDATE_USER_ONLINE(state, users) {
         state.usersOnline = users
     },
+    SET_LOADING_HOTS(state) {
+        state.isLoadingHot = false
+    },
+    SET_LOADING_BAN(state) {
+        state.isLoadingBan = false
+    },
+    SET_LOADING_THUE(state) {
+        state.isLoadingThue = false
+    },
 }
 
 export const getters = {
@@ -154,13 +146,13 @@ export const getters = {
         return state.baidangs
     },
     GET_BAIDANG_HOT(state) {
-        return state.baidang_hots
+        return sortBy(state.baidang_hots, (o) => o.douutien, 'asc').reverse()
     },
     GET_BAIDANG_CHOTHUE(state) {
-        return state.baidangs.filter((baidang) => baidang.isChoThue === 1)
+        return sortBy(state.baidang_chothue, (o) => o.douutien, 'asc').reverse()
     },
     GET_BAIDANG_RAOBAN(state) {
-        return state.baidangs.filter((baidang) => baidang.isChoThue === 0)
+        return sortBy(state.baidang_raoban, (o) => o.douutien, 'asc').reverse()
     },
     GET_CONTACTS(state) {
         return state.contatcs
@@ -170,34 +162,7 @@ export const getters = {
 export const actions = {
     // nuxtServerInit is called by Nuxt.js before server-rendering every page
     async nuxtServerInit({ dispatch }) {
-        await dispatch('storeBaiDang')
-        dispatch('ORDER_BAIDANG_HOT')
-    },
-
-    // async nuxtServerInit({ commit, state }, { app }) {
-    //     const res = await axios.get(ENV.baidangs)
-    //     commit('SET_BAIDANG', res.data.baidangs)
-    // },
-
-    // axios...
-    async storeBaiDang({ commit }) {
-        const { data } = await axios.get(ENV.baidangs)
-        commit('SET_BAIDANG', data.baidangs)
-    },
-    // axios...
-    async storeContact({ commit }) {
-        if (this.$auth.loggedIn) {
-            const { data } = await axios.get(ENV_CHAT.contacts, { withCredentials: true })
-            commit('SET_CONTACTS', data)
-        }
-    },
-    async ORDER_BAIDANG_HOT({ commit, state }) {
-        // await commit(
-        //     'SET_BAIDANG_HOT',
-        //     sortBy(state.baidangs, {
-        //         prop: 'luotxem',
-        //         desc: true,
-        //     }).slice(0, 10)
-        // )
+        // await dispatch('storeBaiDang')
+        // dispatch('ORDER_BAIDANG_HOT')
     },
 }

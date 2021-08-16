@@ -46,9 +46,9 @@ export default {
         })
     },
     methods: {
-        redirectHome() {
+        async redirectHome() {
+            if (this.$auth.loggedIn) await this.$auth.logout()
             this.dialog = false
-            if (this.$auth.loggedIn) this.$auth.logout()
         },
         getDanhGia() {
             this.$nuxt.$loading.start()
