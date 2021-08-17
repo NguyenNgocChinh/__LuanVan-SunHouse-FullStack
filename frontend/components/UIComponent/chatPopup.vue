@@ -59,7 +59,6 @@
     </client-only>
 </template>
 <script>
-import ENV from '@/api/chat'
 import ContactsList from '@/components/Chat/ContactsList'
 import ChatPopupContent from '@/components/Chat/ChatPopupContent'
 export default {
@@ -121,7 +120,7 @@ export default {
         async setContact() {
             if (this.$auth.loggedIn) {
                 const self = this
-                await this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+                await this.$axios.$get('/contacts', { withCredentials: true }).then((response) => {
                     this.contacts = response
                 })
 
@@ -214,7 +213,7 @@ export default {
         },
         // cache
         fetchMessageToCache() {
-            this.$axios.$get(ENV.messages, { withCredentials: true }).then((response) => {
+            this.$axios.$get('/messages', { withCredentials: true }).then((response) => {
                 localStorage.setItem('messages', JSON.stringify(response))
             })
         },

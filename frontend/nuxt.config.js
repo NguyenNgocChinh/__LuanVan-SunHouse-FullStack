@@ -1,5 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 import vi from './locale/vi'
+// eslint-disable-next-line nuxt/no-cjs-in-config
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 export default {
     ssr: false,
@@ -36,10 +37,6 @@ export default {
                 src: '/js/OneSignalSDK.js',
                 type: 'text/javascript',
             },
-            {
-                src: '/notify.js',
-                type: 'text/javascript',
-            },
             { src: '/js/jquery-3.6.0.min.js', type: 'text/javascript' },
             {
                 src: '/js/lodash.min.js',
@@ -59,13 +56,13 @@ export default {
         { src: '~/plugins/spinners.js', ssr: false, mode: 'client' },
         { src: '~/plugins/rules.js', ssr: false },
         { src: '~/plugins/lodash.js', ssr: false },
-        { src: '~/plugins/leaflet.js', ssr: false },
         { src: '~/plugins/moment.js', ssr: true },
         { src: '~/plugins/echo.js', ssr: false },
         { src: '~/plugins/axios.js', ssr: true },
         { src: '~/plugins/fb-sdk.js', ssr: false },
         { src: '~/plugins/sanitize.js', ssr: false },
         { src: '~/plugins/sweetAlert.js', ssr: false },
+        { src: '~/plugins/onesignal.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -83,6 +80,7 @@ export default {
     modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/toast'],
     axios: {
         credentials: true,
+        baseURL: process.env.APP_URL,
     },
 
     auth: {
@@ -195,21 +193,10 @@ export default {
     publicRuntimeConfig: {
         baseUrl: process.env.BASE_URL,
         serverUrl: process.env.SERVER_URL,
+        uploadUrl: process.env.UPLOAD_URL,
         googleLoginUrl: process.env.GOOGLE_LOGIN_URL,
         facebookLoginUrl: process.env.FACEBOOK_LOGIN_URL,
-        // baidang
-        baidangInfo: process.env.BAIDANG_INFO,
-        baidangChoThue: process.env.BAIDANG_CHOTHUE,
-        baidangRaoBan: process.env.BAIDANG_RAOBAN,
-        baidangNoiBat: process.env.BAIDANG_HOT,
-        baidangTimKiem: process.env.BAIDANG_TIMKIEM,
-        // users
-        users: process.env.USERS,
-        userDisable: process.env.USER_DISABLE,
-        userEnable: process.env.USER_ENABLE,
-    },
-    privateRuntimeConfig: {
-        apiSecret: process.env.API_SECRET,
+
         recaptcha: {
             siteKey: process.env.RECAPTCHA_SITEKEY,
             secret: process.env.RECAPTCHA_SECRET,

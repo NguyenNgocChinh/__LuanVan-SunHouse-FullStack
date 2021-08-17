@@ -62,7 +62,7 @@
                     </div>
                 </template>
                 <template #[`item.tieude`]="{ item }">
-                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                    <v-row class="my-1" style="cursor: pointer">
                         <v-col cols="12" lg="4" sm="12">
                             <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
                             <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
@@ -170,7 +170,6 @@
 
 <script>
 import VSnackbars from 'v-snackbars'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: { VSnackbars },
     layout: 'admin',
@@ -200,7 +199,7 @@ export default {
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
 
         wrong_imgSrc() {

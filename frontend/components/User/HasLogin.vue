@@ -47,8 +47,6 @@
 </template>
 
 <script>
-import URI_DICRECTORY from '@/api/directory'
-
 export default {
     name: 'HasLogin',
     props: {
@@ -63,7 +61,7 @@ export default {
     },
     computed: {
         URI_AVATAR() {
-            return URI_DICRECTORY.avatar
+            return this.$config.serverUrl
         },
     },
     methods: {

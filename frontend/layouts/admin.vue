@@ -15,11 +15,9 @@
 import { mapState, mapMutations } from 'vuex'
 import Sidebar from '@/components/SideBar/Admin'
 import Header from '@/components/Header/Admin'
-import Footer from '@/components/Footer/Admin'
 export default {
     name: 'Layout',
     components: {
-        Footer,
         Sidebar,
         Header,
     },

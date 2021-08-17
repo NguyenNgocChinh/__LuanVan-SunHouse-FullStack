@@ -154,7 +154,7 @@ export default {
     },
     methods: {
         async fetchDSTienNghi() {
-            const data = await this.$axios.$get(this.$config.serverUrl + '/loai')
+            const data = await this.$axios.$get('/loai')
             this.dsTienNghi = data
             this.loading = false
         },
@@ -167,7 +167,7 @@ export default {
             const index = this.editedIndex
             if (index > -1) {
                 this.$axios
-                    .$put(this.$config.serverUrl + '/loai', item)
+                    .$put('/loai', item)
                     .then((res) => {
                         Object.assign(this.dsTienNghi[index], item)
                         this.message.push({
@@ -192,7 +192,7 @@ export default {
                     })
             } else {
                 this.$axios
-                    .$post(this.$config.serverUrl + '/loai', item)
+                    .$post('/loai', item)
                     .then((res) => {
                         item.id = res.id
                         this.dsTienNghi.unshift(item)
@@ -250,7 +250,7 @@ export default {
                 const editedMultipleIndex = this.editedMultipleIndex
                 for (let i = 0; i < editedMultipleItem.length; i++) {
                     this.$axios
-                        .$delete(this.$config.serverUrl + '/loai/' + editedMultipleItem[i].id)
+                        .$delete('/loai/' + editedMultipleItem[i].id)
                         .then((res) => {
                             this.dsTienNghi.splice(editedMultipleIndex[i], 1)
                             this.message.push({
@@ -275,7 +275,7 @@ export default {
                 const item = this.editedItem
                 const index = this.editedIndex
                 this.$axios
-                    .$delete(this.$config.serverUrl + '/loai/' + item.id)
+                    .$delete('/loai/' + item.id)
                     .then((res) => {
                         this.dsTienNghi.splice(index, 1)
                         this.closeDelete()

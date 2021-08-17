@@ -136,7 +136,6 @@
     </div>
 </template>
 <script>
-import URI_DICRECTORY from '@/api/directory'
 export default {
     name: 'BaiDangCard',
     components: {},
@@ -157,7 +156,7 @@ export default {
 
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
         wrong_imgSrc() {
             return this.URI_DICRECTORY_UPLOAD + 'no-image.png'

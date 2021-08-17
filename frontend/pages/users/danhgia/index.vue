@@ -37,14 +37,14 @@ export default {
     computed: {},
 
     mounted() {
-        this.$store.commit('user/SET_INDEX_NAV', 9)
+        this.$store.commit('user/SET_INDEX_NAV', 8)
         this.getDanhGia()
     },
     methods: {
         getDanhGia() {
             this.loadingData = true
             this.$axios
-                .$get(this.$config.serverUrl + '/danhgia/getDanhGiaForUser', { withCredentials: true })
+                .$get('/danhgia/getDanhGiaForUser', { withCredentials: true })
                 .then((respone) => {
                     this.danhgiaList = respone
                 })

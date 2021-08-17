@@ -1,16 +1,6 @@
 <template>
     <v-container fluid>
         <v-container>
-            <!--            <v-breadcrumbs :link="true" :items="breadcumb">-->
-            <!--                <template #item="{ item }">-->
-            <!--                    <v-breadcrumbs-item :to="item.href" :disabled="item.disabled">-->
-            <!--                        {{ item.text }}-->
-            <!--                    </v-breadcrumbs-item>-->
-            <!--                </template>-->
-            <!--                <template #divider>-->
-            <!--                    <v-icon>mdi-chevron-right</v-icon>-->
-            <!--                </template>-->
-            <!--            </v-breadcrumbs>-->
             <v-form ref="form" v-model="vaild" class="mb-6">
                 <v-card>
                     <v-card-title class="font-weight-bold">THÔNG TIN CƠ BẢN</v-card-title>
@@ -365,10 +355,6 @@
     </v-container>
 </template>
 <script>
-import ENV from '@/api/baidang'
-import * as ENVL from '@/api/loai'
-import * as ENVTN from '@/api/tiennghi'
-import * as ENVTK from '@/api/timkiem'
 import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
 import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
 import Editor from '@/components/UIComponent/Editor'
@@ -381,9 +367,9 @@ export default {
     // },
     middleware: ['auth', 'checkScopePosts'],
     async asyncData({ $axios }) {
-        const loais = await $axios.$get(ENVL.default.all)
-        const tiennghis = await $axios.$get(ENVTN.default.all)
-        const listThanhPho = await $axios.$get(ENVTK.default.thanhpho)
+        const loais = await $axios.$get('/loai')
+        const tiennghis = await $axios.$get('/tiennghi')
+        const listThanhPho = await $axios.$get('/ThanhPho')
         return { loais, tiennghis, listThanhPho }
     },
 
@@ -483,7 +469,7 @@ export default {
             if (this.thanhpho != null) {
                 this.arrDiaChi.push(this.thanhpho.name)
 
-                this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
+                this.$nuxt.$axios.$get('/QuanHuyen/' + this.thanhpho.matp).then((result) => {
                     this.listQuanHuyen = result
                 })
             }
@@ -500,7 +486,7 @@ export default {
             if (this.quanhuyen != null) {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
 
-                this.$nuxt.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
+                this.$nuxt.$axios.$get('/XaPhuong/' + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
             }
@@ -549,14 +535,11 @@ export default {
                 this.$router.replace('/')
                 this.$nuxt.$emit('openChangeSDTModal')
             }
-        })
-
-        this.$nextTick(() => {
             // eslint-disable-next-line no-unused-vars,nuxt/no-globals-in-created
-            window.onloadCallback = function () {
+            window.onloadCallback = () => {
                 // eslint-disable-next-line no-undef
                 window.captcha = grecaptcha.render('g-recaptcha', {
-                    sitekey: '6LfUEsYbAAAAADeaPYjXh-3XiNoLpsAEpNCrNcWB',
+                    sitekey: this.$config.recaptcha.siteKey,
                 })
             }
 
@@ -789,7 +772,7 @@ export default {
                     this.$nuxt.$loading.start()
                 })
                 this.kq = this.$axios
-                    .$post(ENV.store, data, {
+                    .$post('/baidang', data, {
                         headers: { 'content-type': 'multipart/form-data' },
                         withCredentials: true,
                     })

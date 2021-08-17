@@ -7,7 +7,7 @@
                     <Nuxt />
                 </v-fade-transition>
                 <chat-popup v-if="$auth.loggedIn" />
-                <verify-numberphone v-if="$auth.loggedIn" />
+                <verify-numberphone v-if="$auth.loggedIn && $auth.user.sdt === null" />
             </v-main>
             <FooterDefault />
         </v-app>
@@ -21,12 +21,5 @@ import ChatPopup from '@/components/UIComponent/chatPopup'
 import VerifyNumberphone from '@/components/UIComponent/verifyNumberphone'
 export default {
     components: { VerifyNumberphone, HeaderDefault, ChatPopup, FooterDefault },
-    mounted() {
-        // if (this.$auth.loggedIn) {
-        //     if (!this.$auth.user.sdt) {
-        //         this.$nuxt.$emit('openChangeSDTModal')
-        //     }
-        // }
-    },
 }
 </script>

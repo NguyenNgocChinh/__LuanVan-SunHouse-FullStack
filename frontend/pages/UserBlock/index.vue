@@ -53,7 +53,7 @@ export default {
         getDanhGia() {
             this.$nuxt.$loading.start()
             this.$axios
-                .$get(this.$config.serverUrl + '/danhgia/getDanhGiaForUser', { withCredentials: true })
+                .$get('/danhgia/getDanhGiaForUser', { withCredentials: true })
                 .then((respone) => {
                     this.danhgiaList = respone
                 })

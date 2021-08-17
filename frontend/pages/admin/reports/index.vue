@@ -141,8 +141,6 @@
 
 <script>
 import ModalError from '@/components/Error/modalError'
-import URI_DICRECTORY from '@/api/directory'
-import ENV from '@/api/baidang'
 
 export default {
     components: { ModalError },
@@ -185,7 +183,7 @@ export default {
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
     },
 
@@ -202,7 +200,7 @@ export default {
             this.indexBaiDang = this.selectedUser.baidang.findIndex((item) => item.id === i.item.id)
         },
         fetchDSUser() {
-            this.$axios.$get(this.$config.serverUrl + '/thongkebaocao').then((res) => {
+            this.$axios.$get('/thongkebaocao').then((res) => {
                 this.list = res
                 this.loading = false
             })
@@ -216,7 +214,7 @@ export default {
         },
         changeVaitro(user) {
             this.$axios
-                .$put(this.$config.serverUrl + '/users/toggleVaiTro', {
+                .$put('/users/toggleVaiTro', {
                     id: user.user_bibaocao,
                     vaitro: user.vaitro,
                 })
@@ -239,7 +237,7 @@ export default {
         disableUser(item) {
             this.$toast.show('Đang gửi yêu cầu vô hiệu hóa tài khoản')
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userDisable + item.user_bibaocao)
+                .$put('/users/disable/' + item.user_bibaocao)
                 .then((response) => {
                     item.trangthai = 0
                     if (response.success) {
@@ -254,7 +252,7 @@ export default {
         enable(item) {
             this.$toast.show('Đang gửi yêu cầu kích hoạt lại tài khoản')
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userEnable + item.user_bibaocao)
+                .$put('/users/enable/' + item.user_bibaocao)
                 .then((response) => {
                     item.trangthai = 1
                     if (response.success) {
@@ -275,7 +273,7 @@ export default {
         },
         confirmDeleteBaiDang() {
             this.$axios
-                .$delete(ENV.delete + this.seletedItem.id)
+                .$delete('/baidang/' + this.seletedItem.id)
                 .then((data) => {
                     const index = this.dsBaiDang.indexOf(this.seletedItem.id)
                     this.dsBaiDang.splice(index, 1)
@@ -296,7 +294,7 @@ export default {
             if (this.$auth.loggedIn) {
                 this.loadingDelete = true
                 this.$axios
-                    .$delete(this.$config.serverUrl + '/baocao', {
+                    .$delete('/baocao', {
                         data: {
                             baidang_id: this.seletedItem.id,
                             id: this.seletedItem.id,
@@ -348,7 +346,7 @@ export default {
         updateTrangThai(item, trangthai) {
             this.$axios
                 .$put(
-                    ENV.update_status,
+                    '/baidang/updateTrangThai',
                     {},
                     {
                         params: {

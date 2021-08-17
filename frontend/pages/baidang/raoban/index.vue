@@ -90,7 +90,7 @@ export default {
             this.isEmpty = false
             let result
             if (this.baidang_raoban.length < 1) {
-                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangRaoBan)
+                result = await this.$axios.$get('/baidang/raoban')
                 result = result.baidangs
                 this.$store.commit('SET_BAIDANG_RAOBAN', result)
             } else result = this.baidang_raoban

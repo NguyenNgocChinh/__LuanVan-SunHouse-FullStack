@@ -131,7 +131,7 @@ export default {
             this.baidangs = []
             if (this.isEmpty) this.isEmpty = false
             const arrAddress = this.diachi
-            const url = `${this.$config.serverUrl}${this.$config.baidangTimKiem}?` + this.sortBy()
+            const url = '/timkiem?' + this.sortBy()
             const toDay = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10).replace(/-/g, '/')
             const date1 = this.dateStart !== null ? this.dateStart.replace(/-/g, '/') : null
             const date2 = this.dateEnd !== null ? this.dateEnd.replace(/-/g, '/') : null

@@ -39,7 +39,7 @@
                     </div>
                 </template>
                 <template #[`item.tieude`]="{ item }">
-                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                    <v-row class="my-1" style="cursor: pointer" @click="$router.push('/baidang/' + item.id)">
                         <v-col cols="12" lg="4" sm="12">
                             <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
                             <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
@@ -129,9 +129,7 @@
 </template>
 
 <script>
-import ENV from '@/api/baidang'
 import VSnackbars from 'v-snackbars'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: { VSnackbars },
     layout: 'admin',
@@ -160,7 +158,7 @@ export default {
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
 
         wrong_imgSrc() {
@@ -172,7 +170,7 @@ export default {
     },
     methods: {
         fetchDSBaiDang() {
-            this.$axios.$get(ENV.baidangs).then((data) => {
+            this.$axios.$get('/baidang').then((data) => {
                 this.dsBaiDang = data
                 this.loading = false
             })
@@ -192,7 +190,7 @@ export default {
         deleteItem(item) {
             this.loadingDelete = true
             this.$axios
-                .$delete(ENV.delete + item.id)
+                .$delete('/baidang/' + item.id)
                 .then((data) => {
                     const i = this.selected.findIndex((a) => a.id === item.id)
                     if (i > -1) {
@@ -200,7 +198,7 @@ export default {
                     }
                     const index = this.dsBaiDang.indexOf(item)
                     this.dsBaiDang.splice(index, 1)
-                    this.$store.commit('REMOVE_BAIDANG', item)
+                    this.$store.commit('REMOVE_BAIDANG', { ...item })
                     this.$toast.success('Xóa Thành Công')
                     this.loadingDelete = false
                 })
@@ -221,7 +219,7 @@ export default {
         updateChoDuyet(item, choduyet) {
             this.$axios
                 .$put(
-                    ENV.update_choduyet,
+                    '/baidang/updateDuyetBai',
                     {},
                     {
                         params: {
@@ -230,12 +228,12 @@ export default {
                         },
                     }
                 )
-                .then((res) => {
+                .then(async (res) => {
                     item.choduyet = choduyet
                     if (choduyet) {
-                        this.$store.commit('REMOVE_BAIDANG', item)
+                        await this.$store.commit('REMOVE_BAIDANG', { ...item })
                     } else {
-                        this.$store.commit('PUSH_BAIDANG', item)
+                        await this.$store.commit('PUSH_BAIDANG', { ...item })
                     }
                     this.$toast.success('Cập Nhật Thành Công')
                 })
@@ -246,7 +244,7 @@ export default {
         updateTrangThai(item, trangthai) {
             this.$axios
                 .$put(
-                    ENV.update_status,
+                    '/baidang/updateTrangThai',
                     {},
                     {
                         params: {
@@ -258,9 +256,9 @@ export default {
                 .then((res) => {
                     item.trangthai = trangthai
                     if (!trangthai) {
-                        this.$store.commit('REMOVE_BAIDANG', item)
+                        this.$store.commit('REMOVE_BAIDANG', { ...item })
                     } else {
-                        this.$store.commit('PUSH_BAIDANG', item)
+                        this.$store.commit('PUSH_BAIDANG', { ...item })
                     }
                     this.$toast.success('Cập Nhật Thành Công')
                 })
@@ -273,11 +271,11 @@ export default {
             try {
                 dsBaiDang.forEach((item) => {
                     this.$axios
-                        .$delete(ENV.delete + item.id)
+                        .$delete('/baidang/' + item.id)
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
-                            this.$store.commit('REMOVE_BAIDANG', item)
+                            this.$store.commit('REMOVE_BAIDANG', { ...item })
                             this.choduyet = this.choduyet - 1
                             this.$toast.success('Xóa Bài Đăng Thành Công')
                             this.duyetbaiLoading = false

@@ -1,9 +1,4 @@
 import Vue from 'vue'
-
-// export default ({ app }, inject) => {
-//     inject(rules, Vue.observable({ foo: "rules" }));
-// };
-
 Vue.prototype.$rules = {
     required: (value) => !!value || 'Không được để trống!',
     min: (v, lenght) => v.length >= lenght || 'Ít nhất ' + lenght + ' kí tự',
@@ -50,8 +45,38 @@ Vue.prototype.$rules = {
         const regex = /^(0[3|5|7|8|9])+([0-9]{8}$)/
         return regex.test(sdt)
     },
+    minLenght(v, min) {
+        if (v === '') return true
+        return v.length >= min || 'Độ dài tối thiểu phải ' + min + ' ký tự.'
+    },
     maxLenght(v, max) {
         if (v === '') return true
         return v.length <= max || 'Độ dài tối đa phải ' + max + ' ký tự.'
+    },
+    preventExtraSpace(e) {
+        // @keydown.space="$rules.preventExtraSpace"
+        // only prevent the keypress if the value is blank
+        if (!e.target.value) e.preventDefault()
+        // otherwise, if the leading character is a space, remove all leading white-space
+        else e.target.value = e.target.value.replace(/\s+/u, ' ').trim()
+    },
+    preventNumericInput($event) {
+        // @keypress="$rules.preventNumericInput($event)"
+        var keyCode = $event.keyCode ? $event.keyCode : $event.which
+        if (keyCode > 47 && keyCode < 58) {
+            $event.preventDefault()
+        }
+    },
+    onlyNumberic($event) {
+        // @keypress="$rules.onlyNumberic($event)"
+        if (!/[0-9]/g.test($event.key)) {
+            $event.preventDefault()
+        }
+    },
+    onlyCharacter($event) {
+        // @keypress="$rules.onlyCharacter($event)"
+        if (!/\p{L}|\s+/u.test($event.key)) {
+            $event.preventDefault()
+        }
     },
 }

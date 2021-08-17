@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
-import * as EVNAPP from '@/api/app'
 Pusher.logToConsole = true
 // NEW ECHO
 
@@ -35,7 +34,7 @@ export default function ({ $axios }) {
                 authorize: (socketId, callback) => {
                     $axios
                         .$post(
-                            EVNAPP.default.broadcastAuth,
+                            '/broadcasting/auth',
                             {
                                 socket_id: socketId,
                                 channel_name: channel.name,

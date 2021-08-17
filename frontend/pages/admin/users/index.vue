@@ -6,7 +6,7 @@
                 <v-spacer />
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm kiếm" single-line hide-details></v-text-field>
             </v-card-title>
-            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="name" class="elevation-1">
+            <v-data-table v-model="selected" :search="search" :loading="loading" :sort-desc="[true]" :headers="headers" :items="userList" :single-select="singleSelect" item-key="id" class="elevation-1">
                 <template #top>
                     <div class="d-flex justify-space-between">
                         <v-spacer />
@@ -122,7 +122,7 @@ export default {
     },
     methods: {
         fetchDSUser() {
-            this.$axios.$get(this.$config.serverUrl + this.$config.users).then((res) => {
+            this.$axios.$get('/users').then((res) => {
                 this.userList = res
                 this.loading = false
             })
@@ -150,7 +150,7 @@ export default {
         },
         changeVaitro(user) {
             this.$axios
-                .$put(this.$config.serverUrl + '/users/toggleVaiTro', {
+                .$put('/users/toggleVaiTro', {
                     id: user.id,
                     vaitro: user.vaitro,
                 })
@@ -173,7 +173,7 @@ export default {
         disableUser(item) {
             this.$toast.show('Đang gửi yêu cầu vô hiệu hóa tài khoản')
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userDisable + item.id)
+                .$put('/users/disable/' + item.id)
                 .then((response) => {
                     item.trangthai = 0
                     if (response.success) {
@@ -189,9 +189,9 @@ export default {
         enable(item) {
             this.$toast.show('Đang gửi yêu cầu kích hoạt lại tài khoản')
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userEnable + item.id)
+                .$put('/users/enable/' + item.id)
                 .then((response) => {
-                    response.baidang.forEach((item) => this.$store.commit('PUSH_BAIDANG', item))
+                    response.baidang.forEach((item) => this.$store.commit('PUSH_BAIDANG', { ...item }))
                     item.trangthai = 1
                     if (response.success) {
                         this.$toast.success(response.success)

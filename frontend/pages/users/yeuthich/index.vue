@@ -61,8 +61,6 @@
 </template>
 
 <script>
-import ENV from '@/api/baidang'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: {},
     layout: 'user',
@@ -78,22 +76,22 @@ export default {
     }),
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
     },
 
     mounted() {
-        this.$store.commit('user/SET_INDEX_NAV', 7)
+        this.$store.commit('user/SET_INDEX_NAV', 6)
         this.getYeuThichPosts()
     },
     methods: {
         async getYeuThichPosts() {
-            this.tindangs = await this.$axios.$get(this.$config.serverUrl + '/yeuthich')
+            this.tindangs = await this.$axios.$get('/yeuthich')
         },
 
         deleteItem(item) {
             if (this.$auth.loggedIn) {
-                this.$axios.$post(this.$config.serverUrl + '/removeYeuThich', {
+                this.$axios.$post('/removeYeuThich', {
                     baidang_id: item.id,
                 })
                 this.$store.commit('REMOVE_YEUTHICH', item.id)

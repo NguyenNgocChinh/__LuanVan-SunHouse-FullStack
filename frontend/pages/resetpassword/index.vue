@@ -71,7 +71,7 @@ export default {
                 this.$toast.error('Điền thông tin chính xác trước khi tiếp tục')
             }
             this.$axios
-                .$post(this.$config.serverUrl + '/users/resetPassword', {
+                .$post('/users/resetPassword', {
                     password: this.password,
                     password_confirmation: this.password_confirmation,
                     token: this.token,
@@ -86,7 +86,7 @@ export default {
                 })
         },
         async checkTokenExpired() {
-            const token = await this.$axios.$get(this.$config.serverUrl + '/users/checkTokenExpired', {
+            const token = await this.$axios.$get('/users/checkTokenExpired', {
                 params: {
                     token: this.token,
                     email: this.email,
@@ -101,7 +101,7 @@ export default {
         sendMailResetPassword() {
             this.$nuxt.$loading.start()
             this.$axios
-                .$post(this.$config.serverUrl + '/users/sendMailResetPassword', {
+                .$post('/users/sendMailResetPassword', {
                     email: this.email,
                 })
                 .then((res) => {

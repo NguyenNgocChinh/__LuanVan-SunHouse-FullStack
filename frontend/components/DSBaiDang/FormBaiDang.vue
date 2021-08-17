@@ -180,7 +180,6 @@
 import { mapGetters } from 'vuex'
 import { mapFields } from 'vuex-map-fields'
 import { OpenStreetMapProvider } from 'leaflet-geosearch'
-import ENV from '@/api/timkiem'
 export default {
     data() {
         return {
@@ -289,11 +288,7 @@ export default {
             console.log('watch ', val)
         },
     },
-    created() {
-        // this.getGiaMinMax()
-        // this.getDienTich()
-        // this.getThanhPho()
-    },
+    created() {},
     mounted() {
         this.getAllLoai()
         window.provider = new OpenStreetMapProvider()
@@ -411,7 +406,7 @@ export default {
         },
         async getAllLoai() {
             try {
-                const loai = await this.$axios.$get(ENV.loai)
+                const loai = await this.$axios.$get('/loai')
                 loai.forEach((item) => this.loaiNha.push(item))
                 await this.loaiNha.push({ id: 'tatca', ten_loai: 'Tất cả' })
                 this.loaded = true
@@ -419,24 +414,6 @@ export default {
             } catch (e) {
                 console.log(e)
             }
-        },
-        async getThanhPho() {
-            try {
-                const thanhPhoArr = await this.$axios.$get(ENV.thanhpho)
-                this.thanhpho = thanhPhoArr
-            } catch (e) {
-                console.log(e)
-            }
-        },
-
-        async getQuanHuyen(id) {
-            const quanhuyen = await this.$axios.$get(ENV.quanhuyen + id)
-            this.quanhuyen = quanhuyen
-        },
-
-        async getXaPhuong(id) {
-            const xaphuong = await this.$axios.$get(ENV.xaphuong + id)
-            this.xaphuong = xaphuong
         },
         saveSearch() {
             localStorage.setItem('saveSearch', JSON.stringify(window.params))

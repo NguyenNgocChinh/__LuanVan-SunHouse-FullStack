@@ -1,5 +1,9 @@
 import sortBy from 'lodash/sortBy'
 export const state = () => ({
+    state: {
+        SearchResult: null,
+        loadingSearchResult: false,
+    },
     baidangs: [],
     baidang_hots: [],
     baidang_chothue: [],
@@ -13,6 +17,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+    SET_KQ_BAIDANG_TIMKIEM(state, payload) {
+        state.SearchResult = payload
+    },
     SET_BAIDANG(state, payload) {
         state.baidangs = payload
     },
@@ -142,6 +149,9 @@ export const mutations = {
 }
 
 export const getters = {
+    GET_SEARCH_RESULT(state) {
+        return state.SearchResult
+    },
     GET_BAIDANG(state) {
         return state.baidangs
     },

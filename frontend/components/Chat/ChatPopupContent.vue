@@ -37,7 +37,6 @@
 <script>
 import MessagesFeed from '@/components/Chat/MessagesFeed'
 import MessageComposer from '@/components/Chat/MessageComposer'
-import ENV from '@/api/chat'
 import { truncateSpace } from 'assets/js/core'
 import { mapState } from 'vuex'
 export default {
@@ -75,7 +74,7 @@ export default {
     },
     created() {
         if (this.$auth.loggedIn) {
-            this.$axios.$get(ENV.conversationID + this.contact.id, { withCredentials: true }).then((response) => {
+            this.$axios.$get('/conversation/' + this.contact.id, { withCredentials: true }).then((response) => {
                 this.messages = response
                 this.loading = false
             })
@@ -89,7 +88,7 @@ export default {
             const self = this
             this.messages.push({ to: this.contact.id, noidung: text })
             this.$axios
-                .$post(ENV.send, {
+                .$post('/conversation/send', {
                     contact_id: this.contact.id,
                     text,
                 })

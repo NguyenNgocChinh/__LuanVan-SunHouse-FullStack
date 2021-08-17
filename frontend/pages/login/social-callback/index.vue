@@ -31,7 +31,7 @@ export default {
                     .catch((e) => {
                         this.$auth.logout()
                         this.$nuxt.$toast.error(e, {
-                            duration: null,
+                            duration: 5000,
                         })
                     })
             } catch (e) {

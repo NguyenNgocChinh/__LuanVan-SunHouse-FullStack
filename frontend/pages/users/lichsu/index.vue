@@ -4,15 +4,7 @@
             <v-col cols="12" class="white">
                 <v-row>
                     <v-col cols="12" lg="12">
-                        <v-text-field
-                            v-model="searchInput"
-                            placeholder="Tiêu đề tin đăng"
-                            class="rounded-lg animate__animated animate__fadeInDown"
-                            prepend-inner-icon="mdi-magnify"
-                            filled
-                            solo
-                            rounded
-                        ></v-text-field>
+                        <v-text-field v-model="searchInput" placeholder="Tiêu đề tin đăng" class="rounded-lg animate__animated animate__fadeInDown" prepend-inner-icon="mdi-magnify" filled solo rounded></v-text-field>
                         <v-data-table
                             v-model="selectedTable"
                             class="animate__animated animate__fadeIn"
@@ -27,40 +19,15 @@
                         >
                             <template #top>
                                 <v-row class="justify-end mr-2">
-                                    <v-btn
-                                        class="red white--text"
-                                        small
-                                        :disabled="selectedTable.length < 1"
-                                        @click="deleteArrayItem(selectedTable)"
-                                    >
-                                        Xóa
-                                    </v-btn>
+                                    <v-btn class="red white--text" small :disabled="selectedTable.length < 1" @click="deleteArrayItem(selectedTable)"> Xóa </v-btn>
                                 </v-row>
                             </template>
                             <template #[`item.tieude`]="{ item }">
                                 <v-container>
-                                    <v-row
-                                        class="my-1"
-                                        style="cursor: pointer"
-                                        @click="$router.push({ path: `/baidang/${item.id}` })"
-                                    >
+                                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `/baidang/${item.id}` })">
                                         <v-col cols="12" lg="3" sm="12">
-                                            <v-img
-                                                v-if="item.hinhanh.length > 0"
-                                                aspect-ratio="1"
-                                                width="100%"
-                                                height="100%"
-                                                class="thumb-nail"
-                                                :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename"
-                                            />
-                                            <v-img
-                                                v-else
-                                                width="100%"
-                                                height="100%"
-                                                aspect-ratio="1.5"
-                                                class="thumb-nail"
-                                                :src="URI_DICRECTORY_UPLOAD + 'no-image.png'"
-                                            />
+                                            <v-img v-if="item.hinhanh.length > 0" aspect-ratio="1" width="100%" height="100%" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + item.hinhanh[0].filename" />
+                                            <v-img v-else width="100%" height="100%" aspect-ratio="1.5" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
                                         </v-col>
                                         <v-col cols="12" lg="9" sm="12" class="text-left">
                                             <h1 class="title text--upercase">
@@ -75,12 +42,8 @@
                                                     Ngày đăng:
                                                     {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY') || '-' }}
                                                 </div>
-                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
-                                                    Lượt xem: {{ item.luotxem || '-' }}
-                                                </div>
-                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">
-                                                    Ngày xem: {{ item.timeSave || '-' }}
-                                                </div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Lượt xem: {{ item.luotxem || '-' }}</div>
+                                                <div class="ml-4 pl-4" style="border-left: 1px solid #aaa">Ngày xem: {{ item.timeSave || '-' }}</div>
                                             </div>
                                         </v-col>
                                     </v-row>
@@ -98,8 +61,6 @@
 </template>
 
 <script>
-import ENV from '@/api/baidang'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: {},
     layout: 'user',
@@ -115,7 +76,7 @@ export default {
     }),
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
     },
 
@@ -131,7 +92,7 @@ export default {
         getAllPost() {
             this.loadingData = true
             this.$axios
-                .$get(ENV.baidangs, { withCredentials: true })
+                .$get('/baidang', { withCredentials: true })
                 .then((respone) => {
                     const allPosts = respone.baidangs
                     const localPosts = JSON.parse(localStorage.getItem('history')) || []
@@ -198,11 +159,7 @@ export default {
 }
 </style>
 <style>
-.theme--light.v-data-table
-    > .v-data-table__wrapper
-    > table
-    > tbody
-    > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+.theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
     background: #ade8f4 !important;
 }
 </style>

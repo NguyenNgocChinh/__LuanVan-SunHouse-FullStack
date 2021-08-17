@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import ENV from '@/api/chat'
 import MessagesFeed from '@/components/Chat/MessagesFeed'
 import MessageComposer from '@/components/Chat/MessageComposer'
 
@@ -61,7 +60,7 @@ export default {
             }
 
             this.$nuxt.$axios
-                .$post(ENV.send, {
+                .$post('/conversation/send', {
                     contact_id: this.contact.id,
                     text,
                 })

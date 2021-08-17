@@ -305,14 +305,12 @@
 import 'viewerjs/dist/viewer.css'
 import Vue from 'vue'
 import Viewer from 'v-viewer'
-import ENVAPP from '@/api/app'
-import URI_DICRECTORY from '@/api/directory'
 import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
 import Editor from '@/components/UIComponent/Editor'
-import ENV from '@/api/baidang'
+
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
@@ -419,13 +417,13 @@ export default {
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
         wrong_image() {
             return this.URI_DICRECTORY_UPLOAD + 'no-image.png'
         },
         URL_FRONTEND() {
-            return ENVAPP.app
+            return this.$config.baseUrl
         },
         title() {
             return this.baidang ? this.truncate(this.baidang.tieude.toUpperCase(), 30, true) + ' - SUNHOUSE' : `SUNHOUSE - Căn hộ có ID: ${this.$route.params.id}`
@@ -502,7 +500,7 @@ export default {
                     this.$nuxt.$loading.start()
 
                     this.$axios
-                        .$get(this.$config.serverUrl + this.$config.baidangInfo + this.$route.params.id)
+                        .$get('/baidang/' + this.$route.params.id)
                         .then((data) => {
                             this.baidang = data
                             this.alertModal = true
@@ -635,7 +633,7 @@ export default {
         },
         updateTrangThai() {
             this.$axios
-                .$put(this.$config.serverUrl + '/baidang/updateTrangThai', {
+                .$put('/baidang/updateTrangThai', {
                     id: this.baidang.id,
                     trangthai: !this.baidang.trangthai,
                 })
@@ -654,7 +652,7 @@ export default {
         },
         removeBaiDang() {
             this.$axios
-                .$delete(this.$config.serverUrl + '/baidang/' + this.baidang.id)
+                .$delete('/baidang/' + this.baidang.id)
                 .then((data) => {
                     this.$store.commit('REMOVE_BAIDANG', this.baidang)
                     this.$toast.success('Xóa Thành Công')
@@ -668,7 +666,7 @@ export default {
         pushToTop() {
             this.$nuxt.$loading.start()
             this.$axios
-                .$put(this.$config.serverUrl + '/baidang/pushDoUuTien/' + this.baidang.id)
+                .$put('/baidang/pushDoUuTien/' + this.baidang.id)
                 .then((data) => {
                     this.$toast.success('Đẩy bài đăng lên TOP thành công')
                     this.nextPush = {
@@ -694,13 +692,13 @@ export default {
         },
         async showPostUser() {
             this.$refs.modelPostUser.open()
-            const data = await this.$axios.$get(this.$config.serverUrl + '/baidang/getAllBaiDangOfOtherUser/' + this.baidang.user.id)
+            const data = await this.$axios.$get('/baidang/getAllBaiDangOfOtherUser/' + this.baidang.user.id)
             this.dsBaiDangUser = data
             console.log(data)
         },
         addYeuThich() {
             if (this.$auth.loggedIn) {
-                this.$axios.$post(this.$config.serverUrl + '/addYeuThich', {
+                this.$axios.$post('/addYeuThich', {
                     baidang_id: this.baidang.id,
                 })
                 this.$store.commit('PUSH_YEUTHICH', this.baidang.id)
@@ -708,7 +706,7 @@ export default {
         },
         removeYeuThich() {
             if (this.$auth.loggedIn) {
-                this.$axios.$post(this.$config.serverUrl + '/removeYeuThich', {
+                this.$axios.$post('/removeYeuThich', {
                     baidang_id: this.baidang.id,
                 })
                 this.$store.commit('REMOVE_YEUTHICH', this.baidang.id)
@@ -728,7 +726,7 @@ export default {
             }
             this.loadingBaoCao = true
             this.$axios
-                .$post(this.$config.serverUrl + '/baocao', {
+                .$post('/baocao', {
                     noidung: this.noidungbaocao,
                     baidang_id: this.baidang.id,
                     user_bibaocao: this.user.id,

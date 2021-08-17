@@ -29,7 +29,7 @@ export default {
             }
             this.$nuxt.$loading.start()
             this.$axios
-                .$post(this.$config.serverUrl + '/users/sendMailResetPassword', {
+                .$post('/users/sendMailResetPassword', {
                     email: this.email,
                 })
                 .then((res) => {

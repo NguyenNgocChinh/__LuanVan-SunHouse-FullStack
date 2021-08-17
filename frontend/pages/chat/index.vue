@@ -71,8 +71,6 @@
     </v-container>
 </template>
 <script>
-import * as EVNAPP from '@/api/app'
-import ENV from '@/api/chat'
 import Conversation from '@/components/Chat/Conversation'
 import ContactsList from '@/components/Chat/ContactsList'
 
@@ -123,7 +121,7 @@ export default {
             self.hanleIncoming(e.message)
         })
 
-        this.$axios.$get(ENV.contacts, { withCredentials: true }).then((response) => {
+        this.$axios.$get('/contacts', { withCredentials: true }).then((response) => {
             this.contacts = response
 
             if (this.$route.query.id != null) {
@@ -140,25 +138,25 @@ export default {
         this.fetchMessageToCache()
     },
     methods: {
-        notify(title, message) {
-            if (Notification.permission !== 'granted') Notification.requestPermission()
-            else {
-                const notification = new Notification(title, {
-                    icon: EVNAPP.default.appURL + 'logo.png',
-                    body: message,
-                })
-                notification.onclick = function () {
-                    window.open(EVNAPP.default.chatURL + '/')
-                }
-            }
-        },
+        // notify(title, message) {
+        //     if (Notification.permission !== 'granted') Notification.requestPermission()
+        //     else {
+        //         const notification = new Notification(title, {
+        //             icon: EVNAPP.default.appURL + 'logo.png',
+        //             body: message,
+        //         })
+        //         notification.onclick = function () {
+        //             window.open(EVNAPP.default.chatURL + '/')
+        //         }
+        //     }
+        // },
         startConversationWith(contact) {
             this.selectedContact = contact
             this.updateUnreadCount(contact, true)
             // load cache
             this.messages = this.loadCacheMessage(contact.id)
             // end loadcache
-            this.$nuxt.$axios.$get(ENV.conversationID + contact.id, { withCredentials: true }).then((response) => {
+            this.$nuxt.$axios.$get('/conversation/' + contact.id, { withCredentials: true }).then((response) => {
                 this.messages = response
             })
             this.fetchMessageToCache()
@@ -189,7 +187,7 @@ export default {
         },
         // cache
         fetchMessageToCache() {
-            this.$nuxt.$axios.$get(ENV.messages, { withCredentials: true }).then((response) => {
+            this.$nuxt.$axios.$get('/messages', { withCredentials: true }).then((response) => {
                 localStorage.setItem('messages', JSON.stringify(response))
             })
         },

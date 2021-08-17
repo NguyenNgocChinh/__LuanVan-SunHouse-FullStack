@@ -162,9 +162,7 @@ s
 </template>
 
 <script>
-import ENV from '@/api/baidang'
 import VSnackbars from 'v-snackbars'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: { VSnackbars },
     layout: 'admin',
@@ -194,7 +192,7 @@ export default {
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
 
         wrong_imgSrc() {
@@ -231,7 +229,7 @@ export default {
         deleteItem(item) {
             this.loadingDelete = true
             this.$axios
-                .$delete(ENV.delete + item.id)
+                .$delete('/baidang/' + item.id)
                 .then((data) => {
                     const index = this.dsBaiDang.indexOf(item)
                     this.dsBaiDang.splice(index, 1)
@@ -259,7 +257,7 @@ export default {
         updateChoDuyet(item, choduyet) {
             this.$axios
                 .$put(
-                    ENV.update_choduyet,
+                    '/baidang/choduyet',
                     {},
                     {
                         params: {
@@ -271,9 +269,9 @@ export default {
                 .then((res) => {
                     item.choduyet = choduyet
                     if (choduyet) {
-                        this.$store.commit('REMOVE_BAIDANG', item)
+                        this.$store.commit('REMOVE_BAIDANG', { ...item })
                     } else {
-                        this.$store.commit('PUSH_BAIDANG', item)
+                        this.$store.commit('PUSH_BAIDANG', { ...item })
                     }
                     this.message.push({
                         message: 'Cập Nhật Thành Công',
@@ -293,7 +291,7 @@ export default {
         updateTrangThai(item, trangthai) {
             this.$axios
                 .$put(
-                    ENV.update_status,
+                    '/baidang/updateTrangThai',
                     {},
                     {
                         params: {
@@ -305,9 +303,9 @@ export default {
                 .then((res) => {
                     item.trangthai = trangthai
                     if (!trangthai) {
-                        this.$store.commit('REMOVE_BAIDANG', item)
+                        this.$store.commit('REMOVE_BAIDANG', { ...item })
                     } else {
-                        this.$store.commit('PUSH_BAIDANG', item)
+                        this.$store.commit('PUSH_BAIDANG', { ...item })
                     }
                     this.message.push({
                         message: 'Cập Nhật Thành Công',
@@ -329,11 +327,11 @@ export default {
             if (Array.isArray(dsBaiDang)) {
                 dsBaiDang.forEach((item) => {
                     this.$axios
-                        .$delete(ENV.delete + item.id)
+                        .$delete('/baidang/' + item.id)
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
-                            this.$store.commit('REMOVE_BAIDANG', item)
+                            this.$store.commit('REMOVE_BAIDANG', { ...item })
                             this.message.push({
                                 message: 'Xóa Bài Đăng Thành Công',
                                 color: 'green',

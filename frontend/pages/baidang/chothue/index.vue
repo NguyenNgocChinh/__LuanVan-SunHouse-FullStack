@@ -89,7 +89,7 @@ export default {
             this.isEmpty = false
             let result
             if (this.baidang_chothue.length < 1) {
-                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangChoThue)
+                result = await this.$axios.$get('/baidang/chothue')
                 result = result.baidangs
                 this.$store.commit('SET_BAIDANG_CHOTHUE', result)
             } else result = this.baidang_chothue

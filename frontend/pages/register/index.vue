@@ -34,6 +34,7 @@
                                 :rules="[$rules.required, ($rules.isNumber(sdt) && $rules.numberPhone(sdt)) || 'Số điện thoại không hợp lệ', isValidNumerPhone || 'Số điện thoại đã được đăng ký']"
                                 clearable
                                 @change="isValidNumerPhone = true"
+                                @keypress="$rules.onlyNumberic($event)"
                             ></v-text-field>
                             <div id="recaptcha-container"></div>
                             <div class="text-right">
@@ -71,14 +72,26 @@
                         <v-form ref="form3" v-model="valid3" @submit.prevent="xulydangky">
                             <v-card flat :outlined="false" color="" class="mb-5 pa-2">
                                 <v-card-text>
-                                    <v-text-field v-model="name" outlined :rules="[$rules.required, $rules.checkWord(name, 2)]" :error-messages="errorMessages" label="Họ và Tên " placeholder="Nhập tên..." required></v-text-field>
+                                    <v-text-field
+                                        v-model="name"
+                                        outlined
+                                        type="text"
+                                        :rules="[$rules.required, $rules.checkWord(name, 2), name.length <= 30 || 'Độ dài tối đa là 30 ký tự']"
+                                        :error-messages="errorMessages"
+                                        label="Họ và Tên "
+                                        placeholder="Nhập tên..."
+                                        required
+                                        @keypress="$rules.onlyCharacter($event)"
+                                        @keydown.space="$rules.preventExtraSpace"
+                                    ></v-text-field>
                                     <v-text-field
                                         v-model="email"
                                         outlined
-                                        :rules="[$rules.required, $rules.email, isValidEmail || 'Email đã tồn tại trong hệ thống']"
+                                        :rules="[$rules.required, $rules.email, $rules.maxLenght(email, 64), isValidEmail || 'Email đã tồn tại trong hệ thống']"
                                         label="Địa Chỉ Email"
                                         placeholder="Nhập địa chỉ email của bạn"
                                         required
+                                        @keydown.space.prevent="$event.preventDefault()"
                                         @change="isValidEmail = true"
                                     ></v-text-field>
                                     <v-text-field
@@ -89,36 +102,38 @@
                                         :rules="[$rules.required, $rules.min(username, 5), username.length <= 30 || 'Độ dài tối đa là 30 ký tự', isValidUsername || 'Tên đăng nhập đã tồn tại trong hệ thống']"
                                         placeholder="Hãy nhập tên đăng nhập..."
                                         required
-                                        @input="username = username.replace(/\s+/g, '')"
+                                        @keydown.space.prevent="$event.preventDefault()"
                                         @change="isValidUsername = true"
                                     ></v-text-field>
                                     <v-text-field
                                         v-model="password"
                                         outlined
                                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :rules="[$rules.required, $rules.min(password, 8)]"
+                                        :rules="[$rules.required, $rules.min(password, 8), $rules.maxLenght(password, 100)]"
                                         :type="show1 ? 'text' : 'password'"
                                         label="Nhập mật khẩu"
                                         hint="Nhập ít nhất 8 ký tự"
                                         counter
+                                        required
                                         @click:append="show1 = !show1"
                                     ></v-text-field>
                                     <v-text-field
                                         v-model="password_confirmation"
                                         outlined
                                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                        :rules="[$rules.required, $rules.min(password_confirmation, 8), $rules.confirmPassword(password, password_confirmation)]"
+                                        :rules="[$rules.required, $rules.min(password_confirmation, 8), $rules.maxLenght(password_confirmation, 100), $rules.confirmPassword(password, password_confirmation)]"
                                         :type="show1 ? 'text' : 'password'"
                                         label="Nhập Lại mật khẩu"
                                         hint="Nhập ít nhất 8 ký tự"
                                         counter
+                                        required
                                         @click:append="show1 = !show1"
                                     ></v-text-field>
-                                    <datepicker v-model="birthday" placeholder="Chọn ngày sinh" :format="formatDate" :disabled-dates="disabledDates" @input="formatDateModel(birthday)">
-                                        <span slot="beforeCalendarHeader" class="caption red--text text-center">
-                                            <p class="pa-0 ma-0">Ngày hợp lệ từ 01/01/1900 đến hiện nay</p>
-                                        </span>
-                                    </datepicker>
+                                    <!--                                    <datepicker v-model="birthday" placeholder="Chọn ngày sinh" :format="formatDate" :disabled-dates="disabledDates" @input="formatDateModel(birthday)">-->
+                                    <!--                                        <span slot="beforeCalendarHeader" class="caption red&#45;&#45;text text-center">-->
+                                    <!--                                            <p class="pa-0 ma-0">Ngày hợp lệ từ 01/01/1900 đến hiện nay</p>-->
+                                    <!--                                        </span>-->
+                                    <!--                                    </datepicker>-->
                                 </v-card-text>
                             </v-card>
                             <div class="text-right">
@@ -136,19 +151,15 @@
     </div>
 </template>
 <script>
-import ENV from '@/api/user'
 import Vue from 'vue'
 import OtpInput from '@bachdgvn/vue-otp-input'
 import firebase from 'firebase/app'
-import 'firebase/analytics'
-
 // Add the Firebase products that you want to use
 import 'firebase/auth'
 import 'firebase/firestore'
-import Datepicker from 'vuejs-datepicker'
 Vue.component('VOtpInput', OtpInput)
 export default {
-    components: { Datepicker },
+    components: {},
     data() {
         return {
             valid1: false,
@@ -160,7 +171,7 @@ export default {
             password_confirmation: '',
             username: '',
             email: '',
-            birthday: '',
+            // birthday: '',
             show1: false,
             step: 1,
             sdt: '',
@@ -226,7 +237,7 @@ export default {
             }
             this.loadingToStep = true
             this.$axios
-                .$get(this.$config.serverUrl + '/users/checkIsValidEmail/' + this.email)
+                .$get('/users/checkIsValidEmail/' + this.email)
                 .then((res) => {
                     if (res) {
                         this.$toast.error('Email đã được sử dụng')
@@ -238,7 +249,7 @@ export default {
                 })
             if (!this.isValidEmail) return
             this.$axios
-                .$get(this.$config.serverUrl + '/users/checkIsValidUsername/' + this.username)
+                .$get('/users/checkIsValidUsername/' + this.username)
                 .then((res) => {
                     if (res) {
                         this.isValidUsername = false
@@ -249,11 +260,11 @@ export default {
                 })
             if (!this.isValidUsername) return
             this.$axios
-                .$post(ENV.register, {
+                .$post('/register', {
                     name: this.name.trim(),
                     email: this.email,
                     sdt: this.sdt,
-                    namsinh: this.birthday,
+                    // namsinh: this.birthday,
                     username: this.username,
                     password: this.password,
                     password_confirmation: this.password_confirmation,
@@ -292,7 +303,7 @@ export default {
             }
             this.loadingToStep = true
             this.$axios
-                .$get(this.$config.serverUrl + '/users/checkIsValidNumberPhone/' + this.sdt)
+                .$get('/users/checkIsValidNumberPhone/' + this.sdt)
                 .then((res) => {
                     if (res) {
                         this.error = 'Số điện thoại đã được sử dụng'

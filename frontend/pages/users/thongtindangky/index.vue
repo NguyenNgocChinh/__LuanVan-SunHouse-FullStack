@@ -251,9 +251,6 @@
     </v-container>
 </template>
 <script>
-import ENV from '@/api/user'
-import * as ENVTK from '@/api/timkiem'
-import * as ENVL from '@/api/loai'
 export default {
     layout: 'user',
     data() {
@@ -305,7 +302,7 @@ export default {
             if (this.thanhpho != null) {
                 this.arrDiaChi.push(this.thanhpho.name)
 
-                this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
+                this.$nuxt.$axios.$get('/QuanHuyen/' + this.thanhpho.matp).then((result) => {
                     this.listQuanHuyen = result
                 })
                 this.diachicuthe = this.arrDiaChi.join(',')
@@ -320,7 +317,7 @@ export default {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
                 this.diachicuthe = this.arrDiaChi.join(',')
 
-                this.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
+                this.$axios.$get('/XaPhuong/' + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
             }
@@ -350,7 +347,7 @@ export default {
     },
     methods: {
         async getListThongTinDangKy() {
-            this.items = await this.$axios.$get(ENV.dangKyNhanTin, { withCredentials: true })
+            this.items = await this.$axios.$get('/users/dangkynhantin', { withCredentials: true })
             this.isLoading = false
         },
         editItem(item) {
@@ -378,7 +375,7 @@ export default {
                 this.$nuxt.$loading.start()
                 try {
                     this.$axios
-                        .$delete(ENV.dangKyNhanTin + '/' + item.id, { withCredentials: true })
+                        .$delete('/users/dangkynhantin/' + item.id, { withCredentials: true })
                         .then((data) => {
                             this.$toast.success(data.success)
                             if (data.success) {
@@ -396,7 +393,7 @@ export default {
         },
         async getAllLoai() {
             try {
-                this.listLoai = await this.$axios.$get(ENVL.default.all)
+                this.listLoai = await this.$axios.$get('/loai')
             } catch (e) {}
         },
         async thayDoiDangKyNhanTin(item) {
@@ -427,7 +424,7 @@ export default {
             this.$nuxt.$loading.start()
             this.$axios
                 .$put(
-                    ENV.dangKyNhanTin + '/' + this.indexEdit,
+                    '/users/dangkynhantin/' + this.indexEdit,
                     {
                         giamin: this.giamin,
                         giamax: this.giamax,
@@ -453,7 +450,7 @@ export default {
         },
         async getThanhPho() {
             try {
-                const result = await this.$axios.$get(ENVTK.default.thanhpho)
+                const result = await this.$axios.$get('/ThanhPho')
                 this.listThanhPho = result
             } catch (e) {}
         },

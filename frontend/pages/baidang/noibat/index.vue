@@ -89,7 +89,7 @@ export default {
             this.isEmpty = false
             let result
             if (this.baidang_hots.length < 1) {
-                result = await this.$axios.$get(this.$config.serverUrl + this.$config.baidangNoiBat)
+                result = await this.$axios.$get('/baidang/hot')
                 result = result.baidangs
                 this.$store.commit('SET_BAIDANG_HOT', result)
             } else result = this.baidang_hots

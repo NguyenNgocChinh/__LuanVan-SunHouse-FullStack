@@ -234,10 +234,6 @@
     </footer>
 </template>
 <script>
-import * as ENVL from '@/api/loai'
-import ENV from '@/api/user'
-import * as ENVTK from '@/api/timkiem'
-
 export default {
     name: 'FooterDefault',
     components: {},
@@ -284,7 +280,7 @@ export default {
             if (this.thanhpho != null) {
                 this.arrDiaChi.push(this.thanhpho.name)
 
-                this.$nuxt.$axios.$get(ENVTK.default.quanhuyen + this.thanhpho.matp).then((result) => {
+                this.$nuxt.$axios.$get('/QuanHuyen/' + this.thanhpho.matp).then((result) => {
                     this.listQuanHuyen = result
                 })
                 this.diachicuthe = this.arrDiaChi.join(',')
@@ -299,7 +295,7 @@ export default {
                 this.arrDiaChi.unshift(this.quanhuyen.name)
                 this.diachicuthe = this.arrDiaChi.join(',')
 
-                this.$axios.$get(ENVTK.default.xaphuong + this.quanhuyen.maqh).then((result) => {
+                this.$axios.$get('/XaPhuong/' + this.quanhuyen.maqh).then((result) => {
                     this.listXaPhuong = result
                 })
             }
@@ -339,7 +335,7 @@ export default {
         },
         async getAllLoai() {
             try {
-                this.listLoai = await this.$axios.$get(ENVL.default.all)
+                this.listLoai = await this.$axios.$get('/loai')
             } catch (e) {}
         },
         async dangKyNhanTin() {
@@ -370,7 +366,7 @@ export default {
             this.$nuxt.$loading.start()
             this.$axios
                 .$post(
-                    ENV.dangKyNhanTin,
+                    '/users/dangkynhantin',
                     {
                         giamin: this.giamin,
                         giamax: this.giamax,
@@ -397,7 +393,7 @@ export default {
         },
         async getThanhPho() {
             try {
-                const result = await this.$axios.$get(ENVTK.default.thanhpho)
+                const result = await this.$axios.$get('/ThanhPho')
                 this.listThanhPho = result
             } catch (e) {}
         },

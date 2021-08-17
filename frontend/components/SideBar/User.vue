@@ -38,8 +38,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import URI_DICRECTORY from '@/api/directory'
-
 export default {
     data() {
         return {
@@ -86,29 +84,29 @@ export default {
                     label: 'Thông tin đăng ký',
                     tooltip: 'Thông tin đăng ký',
                 },
+                // {
+                //     id: 6,
+                //     icon: 'bx bx-error-circle',
+                //     href: '/users/thongbao',
+                //     label: 'Thông báo',
+                //     tooltip: 'Thông báo',
+                // },
                 {
                     id: 6,
-                    icon: 'bx bx-error-circle',
-                    href: '/users/thongbao',
-                    label: 'Thông báo',
-                    tooltip: 'Thông báo',
-                },
-                {
-                    id: 7,
                     icon: 'bx bx-heart',
                     href: '/users/yeuthich',
                     label: 'Yêu thích',
                     tooltip: 'Yêu thích',
                 },
                 {
-                    id: 8,
+                    id: 7,
                     icon: 'bx bx-user-voice',
                     href: '/users/baocao',
                     label: 'Báo cáo',
                     tooltip: 'Báo cáo',
                 },
                 {
-                    id: 9,
+                    id: 8,
                     icon: 'bx bx-detail',
                     href: '/users/danhgia',
                     label: 'Đánh giá',
@@ -120,7 +118,7 @@ export default {
     computed: {
         ...mapState({ indexNav: (state) => state.user.indexNav }),
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.avatar
+            return this.$config.serverUrl
         },
     },
     head: {

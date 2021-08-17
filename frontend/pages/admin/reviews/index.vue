@@ -259,18 +259,19 @@ export default {
         },
     },
     created() {
+        this.fetchDSUser()
         this.fetchAllUser()
     },
     methods: {
         fetchDSUser() {
-            this.$axios.$get(this.$config.serverUrl + '/danhgia').then((res) => {
+            this.$axios.$get('/danhgia').then((res) => {
                 this.userList = res
                 console.table(res)
                 this.loading = false
             })
         },
         fetchAllUser() {
-            this.$axios.$get(this.$config.serverUrl + '/users').then((res) => {
+            this.$axios.$get('/users').then((res) => {
                 this.allUser = res
                 this.loading = false
             })
@@ -298,7 +299,7 @@ export default {
         },
         changeVaitro(item) {
             this.$axios
-                .$put(this.$config.serverUrl + '/users/toggleVaiTro', {
+                .$put('/users/toggleVaiTro', {
                     id: item.user.id,
                     vaitro: item.user.vaitro,
                 })
@@ -322,7 +323,7 @@ export default {
             this.$toast.show('Đang gửi yêu cầu vô hiệu hóa tài khoản')
             console.log(item)
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userDisable + item.user.id)
+                .$put('/users/disable/' + item.user.id)
                 .then((response) => {
                     this.$set(this.userList[this.userList.findIndex((i) => i.id === item.id)], 'trangthai', 0)
                     item.user.trangthai = 0
@@ -339,7 +340,7 @@ export default {
             console.log(item)
             this.$toast.show('Đang gửi yêu cầu kích hoạt lại tài khoản')
             this.$axios
-                .$put(this.$config.serverUrl + this.$config.userEnable + item.user.id)
+                .$put('/users/enable/' + item.user.id)
                 .then((response) => {
                     this.$set(this.userList[this.userList.findIndex((i) => i.id === item.id)], 'trangthai', 1)
                     item.user.trangthai = 1
@@ -399,7 +400,7 @@ export default {
                 const editedMultipleIndex = this.editedMultipleIndex
                 for (let i = 0; i < editedMultipleItem.length; i++) {
                     this.$axios
-                        .$delete(this.$config.serverUrl + '/danhgia/' + editedMultipleItem[i].id)
+                        .$delete('/danhgia/' + editedMultipleItem[i].id)
                         .then((res) => {
                             this.userList.splice(editedMultipleIndex[i], 1)
                             this.message.push({
@@ -423,7 +424,7 @@ export default {
                 const item = this.editedItem
                 const index = this.editedIndex
                 this.$axios
-                    .$delete(this.$config.serverUrl + '/danhgia/' + item.id)
+                    .$delete('/danhgia/' + item.id)
                     .then((res) => {
                         this.userList.splice(index, 1)
                         this.closeDelete()
@@ -454,7 +455,7 @@ export default {
             const index = this.editedIndex
             if (index > -1) {
                 this.$axios
-                    .$put(this.$config.serverUrl + '/danhgia', {
+                    .$put('/danhgia', {
                         id: item.id,
                         user_id: item.user.id,
                         sao: item.sao,
@@ -489,7 +490,7 @@ export default {
                     })
             } else {
                 this.$axios
-                    .$post(this.$config.serverUrl + '/danhgia', {
+                    .$post('/danhgia', {
                         id: item.id,
                         user_id: item.user.id,
                         sao: item.sao,

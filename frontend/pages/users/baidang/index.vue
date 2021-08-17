@@ -79,8 +79,6 @@
 </template>
 
 <script>
-import ENV from '@/api/baidang'
-import URI_DICRECTORY from '@/api/directory'
 export default {
     components: {},
     layout: 'user',
@@ -103,7 +101,7 @@ export default {
     }),
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
         tindangs: {
             get() {
@@ -143,7 +141,7 @@ export default {
         getAllPost() {
             this.loadingData = true
             this.$axios
-                .$get(ENV.forUser, { withCredentials: true })
+                .$get('/baidang/getUserPost', { withCredentials: true })
                 .then((respone) => {
                     this.allPosts = respone
                     this.posts = this.daDang
@@ -156,7 +154,7 @@ export default {
                 })
         },
         deleteItem(item) {
-            this.$axios.$delete(ENV.delete + item.id).then((res) => {
+            this.$axios.$delete('/baidang/' + item.id).then((res) => {
                 if (res.success) {
                     this.$toast.success(res.success)
                     this.allPosts.splice(this.allPosts.indexOf(item), 1)

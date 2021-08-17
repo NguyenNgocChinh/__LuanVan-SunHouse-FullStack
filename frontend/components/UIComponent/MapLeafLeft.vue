@@ -4,12 +4,7 @@
 
         <l-control position="topleft" style="border-radius: 0.1em">
             <div style="border: 2px solid rgba(0, 0, 0, 0.2)">
-                <v-btn
-                    color="white"
-                    class="pa-0"
-                    style="width: 30px; height: 30px; min-width: 30px"
-                    @click="findMyLocationOnMap"
-                >
+                <v-btn color="white" class="pa-0" style="width: 30px; height: 30px; min-width: 30px" @click="findMyLocationOnMap">
                     <v-icon v-if="!isFound" size="22" color="blue darken-1">mdi-map-marker-outline</v-icon>
 
                     <v-icon v-else size="22" color="blue darken-3">mdi-map-marker</v-icon>
@@ -24,8 +19,6 @@
 
 <script>
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch'
-import * as ENVL from '@/api/loai'
-
 export default {
     name: 'MapLeafLeft',
     data: () => {
@@ -143,20 +136,18 @@ export default {
         },
         setViewFormAddress(address, zoom = 13) {
             if (address !== '' || address != null) {
-                this.$nuxt.$axios
-                    .$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1')
-                    .then(async (res) => {
-                        if (res.length === 0) {
-                            this.$refs.modalPleaseMoveToMarker.open()
-                        } else {
-                            const lat = res[0].lat
-                            const lng = res[0].lon
-                            this.toadoX = lat
-                            this.toadoY = lng
-                            await this.$refs.map.mapObject.flyTo([lat, lng], zoom)
-                            this.marker = [lat, lng]
-                        }
-                    })
+                this.$nuxt.$axios.$get('https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&limit=1').then(async (res) => {
+                    if (res.length === 0) {
+                        this.$refs.modalPleaseMoveToMarker.open()
+                    } else {
+                        const lat = res[0].lat
+                        const lng = res[0].lon
+                        this.toadoX = lat
+                        this.toadoY = lng
+                        await this.$refs.map.mapObject.flyTo([lat, lng], zoom)
+                        this.marker = [lat, lng]
+                    }
+                })
             }
         },
         async setDisplayNameFromlatLng(lat, lng) {
@@ -167,9 +158,7 @@ export default {
                     if (result.display_name != null) {
                         const diaChi = result.display_name.split(',')
                         for (let i = 0; i < diaChi.length; i++) {
-                            const checkResult = /\(?([0-9]{2})\)?([ .-]?)([0-9]{3})\2([0-9]{3})?([ .-]?)([0-9]{3})/.test(
-                                diaChi[i]
-                            )
+                            const checkResult = /\(?([0-9]{2})\)?([ .-]?)([0-9]{3})\2([0-9]{3})?([ .-]?)([0-9]{3})/.test(diaChi[i])
 
                             const checkResult2 = /\d{5}/.test(diaChi[i])
                             if (checkResult) {
@@ -193,7 +182,7 @@ export default {
         },
         async getAllLoai() {
             try {
-                const loai = await this.$axios.$get(ENVL.default.all)
+                const loai = await this.$axios.$get('/loai')
                 this.items = loai
             } catch (e) {
             } finally {

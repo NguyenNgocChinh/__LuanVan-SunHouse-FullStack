@@ -224,14 +224,10 @@
     </v-container>
 </template>
 <script>
-import URI_DICRECTORY from '@/api/directory'
-import ENV from '@/api/user'
 import Datepicker from 'vuejs-datepicker'
 import Vue from 'vue'
 import OtpInput from '@bachdgvn/vue-otp-input'
 import firebase from 'firebase/app'
-import 'firebase/analytics'
-
 // Add the Firebase products that you want to use
 import 'firebase/auth'
 import 'firebase/firestore'
@@ -282,7 +278,7 @@ export default {
 
     computed: {
         URI_AVATAR() {
-            return URI_DICRECTORY.avatar
+            return this.$config.serverUrl
         },
         ParamIndex() {
             return this.$route.hash.charAt(1) || 1
@@ -493,7 +489,7 @@ export default {
             data.append('file', this.file)
             if (this.oldEmail !== this.email) {
                 await this.$axios
-                    .$get(this.$config.serverUrl + '/users/checkIsValidEmail/' + this.email)
+                    .$get('/users/checkIsValidEmail/' + this.email)
                     .then((res) => {
                         if (res) {
                             this.$toast.error('Email đã được sử dụng')
@@ -508,7 +504,7 @@ export default {
                 if (!this.isValidEmail) return
             }
             this.$axios
-                .$post(ENV.update, data, {
+                .$post('/users/update', data, {
                     withCredentials: true,
                     headers: { 'content-type': 'multipart/form-data' },
                 })
@@ -553,7 +549,7 @@ export default {
             this.loadingSave = true
             this.$axios
                 .$put(
-                    ENV.updatePass,
+                    '/users/updatepass',
                     {
                         current_password: this.password,
                         new_password: this.newPassword,
@@ -600,7 +596,7 @@ export default {
             if (this.oldnumberPhone !== this.sdt) {
                 this.loadingToStep = true
                 this.$axios
-                    .$get(this.$config.serverUrl + '/users/checkIsValidNumberPhone/' + this.sdt)
+                    .$get('/users/checkIsValidNumberPhone/' + this.sdt)
                     .then((res) => {
                         if (res) {
                             this.error = 'Số điện thoại đã được sử dụng'
@@ -695,7 +691,7 @@ export default {
 
             this.$axios
                 .$put(
-                    this.$config.serverUrl + '/users/updateNumberPhone',
+                    '/users/updateNumberPhone',
                     {
                         sdt: this.sdt,
                     },

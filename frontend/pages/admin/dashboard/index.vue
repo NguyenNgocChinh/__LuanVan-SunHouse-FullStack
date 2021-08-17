@@ -20,12 +20,6 @@
                     <v-card-text class="white--text">{{ choduyet }} bài viết</v-card-text>
                 </v-card>
                 <v-spacer />
-
-                <!--                <v-card elevation="2" outlined width="200">-->
-                <!--                    <v-card-title class="justify-center">Số Gói</v-card-title>-->
-                <!--                    <v-card-text>{{ sogoi }} gói</v-card-text>-->
-                <!--                </v-card>-->
-                <v-spacer />
             </v-row>
         </v-container>
         <h2 class="mt-12">Phê duyệt bài đăng</h2>
@@ -56,7 +50,7 @@
                 </template>
 
                 <template #[`item.tieude`]="{ item }">
-                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${$config.baidangInfo}${item.id}` })">
+                    <v-row class="my-1" style="cursor: pointer" @click="$router.push({ path: `${'/baidang/' + item.id}` })">
                         <v-col cols="12" lg="4" sm="12">
                             <v-img v-if="item.hinhanh.length > 0" :aspect-ratio="16 / 9" height="200" class="thumb-nail" :lazy-src="getImg(item.hinhanh[0])" :src="getImg(item.hinhanh[0])" @error="errorImg" />
                             <v-img v-else height="200" :aspect-ratio="1" class="thumb-nail" :src="URI_DICRECTORY_UPLOAD + 'no-image.png'" />
@@ -99,21 +93,16 @@
                     <v-btn small color="sunhouse_blue2 white--text" @click="duyetbai(item)">DUYỆT</v-btn>
                 </template>
             </v-data-table>
-            <v-snackbars :objects.sync="message" bottom right />
         </v-container>
         <ModalError />
     </div>
 </template>
 
 <script>
-import ENV from '@/api/baidang'
-import THONGKE from '@/api/thongke'
 import ModalError from '@/components/Error/modalError'
-import VSnackbars from 'v-snackbars'
-import URI_DICRECTORY from '@/api/directory'
 
 export default {
-    components: { ModalError, VSnackbars },
+    components: { ModalError },
     layout: 'admin',
     data() {
         return {
@@ -130,18 +119,15 @@ export default {
             ],
             dsBaiDang: [],
             loading: true,
-            fab: false,
             duyetbaiLoading: false,
             thanhvien: 0,
             baiviet: 0,
             choduyet: 0,
-            sogoi: 0,
-            message: [],
         }
     },
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
 
         wrong_imgSrc() {
@@ -165,14 +151,14 @@ export default {
             this.$router.push('/baidang/' + item.id)
         },
         fetchDSBaiDang() {
-            this.$axios.$get(ENV.choduyet).then((data) => {
+            this.$axios.$get('/baidang/choduyet').then((data) => {
                 this.dsBaiDang = data.baidangs
                 this.loading = false
             })
         },
         async getSoThanhVien() {
             await this.$axios
-                .$get(THONGKE.user)
+                .$get('/users/count')
                 .then((data) => {
                     this.thanhvien = data
                 })
@@ -182,7 +168,7 @@ export default {
         },
         async getSoBaiViet() {
             await this.$axios
-                .$get(THONGKE.baidang)
+                .$get('/baidang/count')
                 .then((data) => {
                     this.baiviet = data
                 })
@@ -192,7 +178,7 @@ export default {
         },
         async getSoChoDuyet() {
             await this.$axios
-                .$get(THONGKE.choduyet)
+                .$get('/baidang/choduyet/count')
                 .then((data) => {
                     this.choduyet = data
                 })
@@ -208,7 +194,7 @@ export default {
             if (Array.isArray(dsDuyet)) {
                 dsDuyet.forEach((item) => {
                     this.$axios
-                        .$put(ENV.duyetbai, null, {
+                        .$put(this.$config.serverUrl + '/baidang/duyetbai', null, {
                             params: {
                                 id: item.id,
                             },
@@ -237,7 +223,7 @@ export default {
                 })
             } else {
                 this.$axios
-                    .$put(ENV.duyetbai, null, {
+                    .$put(this.$config.serverUrl + '/baidang/duyetbai', null, {
                         params: {
                             id: dsDuyet.id,
                         },
@@ -268,7 +254,7 @@ export default {
         updateTrangThai(item, trangthai) {
             this.$axios
                 .$put(
-                    ENV.update_status,
+                    this.$config.serverUrl + '/baidang/updateTrangThai',
                     {},
                     {
                         params: {

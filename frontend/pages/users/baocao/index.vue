@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import URI_DICRECTORY from '@/api/directory'
 import Editor from '@/components/UIComponent/Editor'
 export default {
     components: { Editor },
@@ -106,12 +105,12 @@ export default {
     }),
     computed: {
         URI_DICRECTORY_UPLOAD() {
-            return URI_DICRECTORY.upload
+            return this.$config.uploadUrl
         },
     },
 
     mounted() {
-        this.$store.commit('user/SET_INDEX_NAV', 8)
+        this.$store.commit('user/SET_INDEX_NAV', 7)
         this.getBaoCaoPost()
         this.$nuxt.$on('blurTieuDe', (noidung) => {
             this.noidungbaocao = noidung
@@ -120,7 +119,7 @@ export default {
     methods: {
         async getBaoCaoPost() {
             this.loadingData = true
-            this.tindangs = await this.$axios.$get(this.$config.serverUrl + '/getBaoCaoForUser')
+            this.tindangs = await this.$axios.$get('/getBaoCaoForUser')
             this.loadingData = false
         },
 
@@ -132,7 +131,7 @@ export default {
             if (this.$auth.loggedIn) {
                 this.loadingDelete = true
                 this.$axios
-                    .$delete(this.$config.serverUrl + '/baocao', {
+                    .$delete('/baocao', {
                         params: {
                             baidang_id: this.seletedItem.id,
                             id: this.seletedItem.idbaocao,
@@ -184,7 +183,7 @@ export default {
             }
             this.loadingBaoCao = true
             this.$axios
-                .$put(this.$config.serverUrl + '/baocao', {
+                .$put('/baocao', {
                     id: this.seletedItem.idbaocao,
                     noidung: this.noidungbaocao,
                     baidang_id: this.seletedItem.id,
