@@ -18,7 +18,7 @@
                             placeholder="Nhập tiêu đề bài đăng"
                             required
                             dense
-                            @input="tieude = tieude.replace(/\s+ /g, ' ')"
+                            @keydown.space="$rules.preventExtraSpace"
                         ></v-text-field>
                         <div class="spacer-line-form"></div>
                         <h3 class="d-inline-block black--text">Loại tài sản</h3>
@@ -44,7 +44,7 @@
                         <v-text-field
                             v-model="gia"
                             class=""
-                            suffix="Triệu/m²"
+                            suffix="Triệu/m² hoặc Triệu/tháng"
                             :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                             type="number"
                             min="1"
@@ -57,12 +57,6 @@
                         <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                             <sup>(*) </sup>
                         </span>
-                        <!--                    <v-text-field-->
-                        <!--                        v-model="noidung"-->
-                        <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
-                        <!--                        counter-->
-                        <!--                        placeholder="Nhập nội dung bài viết..."-->
-                        <!--                    ></v-text-field>-->
                         <editor id="sunhouseEditor" :min-length="40" class="mt-2" />
 
                         <div class="spacer-line-form"></div>
@@ -105,8 +99,8 @@
                                     item-text="v"
                                     item-value="k"
                                     :items="[
-                                        { k: '1', v: 'Cho thuê' },
-                                        { k: '0', v: 'Rao Bán' },
+                                        { k: 1, v: 'Cho thuê' },
+                                        { k: 0, v: 'Rao Bán' },
                                     ]"
                                     solo
                                 ></v-select>
@@ -121,9 +115,10 @@
                                     min="0"
                                     max="99"
                                     class="mt-2"
-                                    :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
+                                    :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v >= 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
                                     type="number"
                                     solo
+                                    @keypress="$rules.onlyNumberic($event)"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12" lg="4" sm="12">
@@ -137,8 +132,9 @@
                                     max="99"
                                     class="pr-3 mt-2"
                                     type="number"
-                                    :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
+                                    :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v >= 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
                                     solo
+                                    @keypress="$rules.onlyNumberic($event)"
                                 ></v-text-field>
                             </v-col>
                         </v-row>
@@ -184,7 +180,7 @@
                                     class="mt-2"
                                     type="number"
                                     min="1"
-                                    :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
+                                    :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', (v) => (v > 0 && v < 1000000) || 'Diện tích không hợp lệ!!!']"
                                     placeholder="ví dụ: 100"
                                     solo
                                 ></v-text-field>
@@ -247,31 +243,6 @@
                                 </div>
                                 <div v-if="xaphuong">
                                     <h3 class="d-inline-block black--text">Đường/Phố</h3>
-                                    <!--                                <v-combobox-->
-                                    <!--                                    v-model="duong"-->
-                                    <!--                                    class="mt-2"-->
-                                    <!--                                    :items="listDuong"-->
-                                    <!--                                    hide-selected-->
-                                    <!--                                    chips-->
-                                    <!--                                    clearable-->
-                                    <!--                                    :search-input.sync="searchDuong"-->
-                                    <!--                                    item-text="name"-->
-                                    <!--                                    item-value="maduong"-->
-                                    <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
-                                    <!--                                    label="Chọn Đường/Phố"-->
-                                    <!--                                    solo-->
-                                    <!--                                >-->
-                                    <!--                                    <template #no-data>-->
-                                    <!--                                        <v-list-item>-->
-                                    <!--                                            <v-list-item-content>-->
-                                    <!--                                                <v-list-item-title>-->
-                                    <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
-                                    <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
-                                    <!--                                                </v-list-item-title>-->
-                                    <!--                                            </v-list-item-content>-->
-                                    <!--                                        </v-list-item>-->
-                                    <!--                                    </template>-->
-                                    <!--                                </v-combobox>-->
                                     <v-combobox
                                         v-model="duong"
                                         chips
@@ -393,7 +364,7 @@ export default {
             loais: [],
             selected: 'Căn hộ',
             itemhinhthuc: ['Cho thuê', 'Rao bán'],
-            hinhthuc: '1',
+            hinhthuc: 0,
             huong: ['Đông', 'Tây', 'Nam', 'Bắc', 'Đông bắc', 'Tây bắc', 'Đông nam', 'Tây Nam'],
             selectedhuong: 'Đông',
             namxaydung: '',
@@ -456,7 +427,7 @@ export default {
             { src: '/js/leaflet.js' },
             { src: '/js/geosearch.umd.js' },
             { src: '/js/leaflet-geosearch-bundle.min.js' },
-            { src: 'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
+            { src: '//www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
         ],
     },
 
@@ -512,7 +483,7 @@ export default {
         },
         duong(duong) {
             this.arrDiaChi.splice(0, this.arrDiaChi.length - 3)
-            if (this.duong != null) {
+            if (this.duong != null && typeof this.duong !== 'undefined') {
                 if (typeof duong !== 'object') this.arrDiaChi.unshift(duong)
                 else this.arrDiaChi.unshift(duong.tenduong)
             }
@@ -870,5 +841,13 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+}
+</style>
+
+<style scoped>
+::v-deep input::-webkit-outer-spin-button,
+::v-deep input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 </style>

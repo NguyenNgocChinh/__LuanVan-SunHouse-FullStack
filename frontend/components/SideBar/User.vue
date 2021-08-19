@@ -118,12 +118,12 @@ export default {
     computed: {
         ...mapState({ indexNav: (state) => state.user.indexNav }),
         URI_DICRECTORY_UPLOAD() {
-            return this.$config.serverUrl
+            return this.$config.serverUrl + '/'
         },
     },
     head: {
         link: [
-            { href: 'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css', rel: 'stylesheet' },
+            // { href: 'https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css', rel: 'stylesheet' },
             { href: require('~/assets/css/sidebarUserLayout.css'), rel: 'stylesheet' },
         ],
     },

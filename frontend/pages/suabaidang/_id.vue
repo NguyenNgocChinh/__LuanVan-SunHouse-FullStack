@@ -17,7 +17,7 @@
                         placeholder="Nhập tiêu đề bài đăng"
                         required
                         dense
-                        @input="tieude = tieude.replace(/\s+ /g, ' ').trim()"
+                        @keydown.space="$rules.preventExtraSpace"
                     ></v-text-field>
                     <div class="spacer-line-form"></div>
                     <h3 class="d-inline-block black--text">Loại tài sản</h3>
@@ -120,9 +120,10 @@
                                 min="0"
                                 max="99"
                                 class="mt-2"
-                                :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v > 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
+                                :rules="[() => !!phongngu || 'Vui lòng nhập số phòng ngủ !', (v) => (v >= 0 && v < 100) || 'Số phòng ngủ không hợp lệ!!!']"
                                 type="number"
                                 solo
+                                @keypress="$rules.onlyNumberic($event)"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12" lg="4" sm="12">
@@ -136,8 +137,9 @@
                                 max="99"
                                 class="pr-3 mt-2"
                                 type="number"
-                                :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v > 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
+                                :rules="[() => !!phongtam || 'Vui lòng nhập số phòng tắm !', (v) => (v >= 0 && v < 100) || 'Số phòng tắm không hợp lệ!!!']"
                                 solo
+                                @keypress="$rules.onlyNumberic($event)"
                             ></v-text-field>
                         </v-col>
                     </v-row>
@@ -183,7 +185,7 @@
                                 class="mt-2"
                                 type="number"
                                 min="1"
-                                :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', () => dientich > 1 || 'Diện tích không hợp lệ!!!']"
+                                :rules="[() => dientich !== '' || 'Vui lòng nhập diện tích!', (v) => (v > 0 && v < 1000000) || 'Diện tích không hợp lệ!!!']"
                                 placeholder="ví dụ: 100"
                                 solo
                             ></v-text-field>
@@ -528,7 +530,7 @@ export default {
             window.onloadCallback = () => {
                 // eslint-disable-next-line no-undef
                 window.captcha = grecaptcha.render('g-recaptcha', {
-                    sitekey: this.$config.recaptcha.sitekey,
+                    sitekey: this.$config.recaptcha.siteKey,
                 })
             }
 

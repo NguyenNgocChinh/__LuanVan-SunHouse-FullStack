@@ -278,7 +278,7 @@ export default {
 
     computed: {
         URI_AVATAR() {
-            return this.$config.serverUrl
+            return this.$config.serverUrl + '/'
         },
         ParamIndex() {
             return this.$route.hash.charAt(1) || 1

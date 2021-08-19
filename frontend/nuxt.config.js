@@ -201,6 +201,10 @@ export default {
             siteKey: process.env.RECAPTCHA_SITEKEY,
             secret: process.env.RECAPTCHA_SECRET,
         },
+        onesignal: {
+            dev: process.env.ONESIGNAL_DEV,
+            prod: process.env.ONESIGNAL_PROD,
+        },
     },
     // render: {
     //     // bundleRenderer: {

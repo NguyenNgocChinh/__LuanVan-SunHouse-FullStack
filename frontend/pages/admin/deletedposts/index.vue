@@ -141,8 +141,8 @@
             <br />Bạn có chắc chắn không?
             <template #button>
                 <div class="text-right">
-                    <v-btn color="primary" @click="$refs.modalDeleteAll.close()">HỦY</v-btn>
-                    <v-btn color="primary" :loading="loadingDeleteAll" @click="confirmDeleteAll">XÓA</v-btn>
+                    <v-btn v-if="!loadingDeleteAll" color="primary" @click="$refs.modalDeleteAll.close()">HỦY</v-btn>
+                    <v-btn color="primary" :disabled="loadingDeleteAll" :loading="loadingDeleteAll" @click="confirmDeleteAll">XÓA</v-btn>
                 </div>
             </template>
         </sweet-modal>
@@ -225,8 +225,8 @@ export default {
         showItem(item) {
             this.$router.push('/baidang/' + item.id)
         },
-        restore(item) {
-            this.$axios
+        async restore(item) {
+            await this.$axios
                 .$put(this.$config.serverUrl + '/baidang/restorePost/' + item.id)
                 .then((data) => {
                     if (data.success) {
@@ -261,8 +261,12 @@ export default {
             if (Array.isArray(dsBaiDang)) {
                 this.loadingRestoreMul = true
                 try {
-                    dsBaiDang.forEach((item) => {
-                        this.restore(item)
+                    dsBaiDang.forEach(async (item) => {
+                        await this.restore(item)
+                        this.selected.splice(
+                            this.selected.findIndex((i) => i.id === item.id),
+                            1
+                        )
                     })
                 } finally {
                     this.$refs.modalRestore.close()
@@ -310,8 +314,19 @@ export default {
         },
         confirmDeleteAll() {
             this.loadingDeleteAll = true
-            this.$toast.clear('Đang dọn dẹp bài đăng')
-            this.loadingDeleteAll = false
+            this.$toast.show('Đang dọn dẹp bài đăng')
+            this.$axios
+                .$delete('/baidang/forceDeleteAllPost')
+                .then((res) => {
+                    if (res.success) {
+                        this.dsBaiDang = []
+                        this.$toast.success(res.success)
+                    } else this.$toast.error(res.errors)
+                })
+                .finally(() => {
+                    this.$refs.modalDeleteAll.close()
+                    this.loadingDeleteAll = false
+                })
         },
         deleteMultipleItems(dsBaiDang) {
             if (Array.isArray(dsBaiDang)) {

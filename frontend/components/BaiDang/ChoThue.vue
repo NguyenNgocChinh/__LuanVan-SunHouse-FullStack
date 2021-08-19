@@ -16,7 +16,7 @@
                     </v-slide-item>
                 </v-slide-group>
             </v-row>
-            <div v-if="(baidangs.length === 0) & !isLoading" class="white--text" style="margin: 0 auto">Hiện tại không có bài đăng nào là Cho Thuê trên hệ thống!</div>
+            <div v-if="(baidangs.length === 0) & !isLoading" class="white--text my-4" style="margin: 0 auto">Hiện tại không có bài đăng nào là Cho Thuê trên hệ thống!</div>
         </v-container>
     </v-container>
 </template>

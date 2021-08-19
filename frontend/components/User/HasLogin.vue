@@ -61,7 +61,7 @@ export default {
     },
     computed: {
         URI_AVATAR() {
-            return this.$config.serverUrl
+            return this.$config.serverUrl + '/'
         },
     },
     methods: {

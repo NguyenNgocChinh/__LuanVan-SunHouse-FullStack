@@ -38,7 +38,9 @@
         </v-container>
         <div v-if="baidang.choduyet || !baidang.trangthai" style="position: fixed; z-index: 999; top: 55px">
             <v-alert v-model="alertModal" dismissible color="sunhouse_blue2" border="left" elevation="2" colored-border icon="mdi-clock-fast">
-                Bài đăng đang chờ <strong>{{ !baidang.trangthai ? 'kích hoạt' : 'phê duyệt' }}</strong>
+                <span @click="pheduyet">
+                    Bài đăng đang chờ <strong>{{ !baidang.trangthai ? 'kích hoạt' : 'phê duyệt' }}</strong>
+                </span>
             </v-alert>
         </div>
         <v-container>
@@ -299,6 +301,13 @@
                 <v-btn color="primary" :loading="loadingBaoCao" @click="xulybaocao">Báo cáo</v-btn>
             </template>
         </sweet-modal>
+        <sweet-modal ref="pheduyetModal" blocking title="Phê duyệt bài viết">
+            Xác nhận phê duyệt bài viết này
+            <template #button>
+                <v-btn @click="$refs.pheduyetModal.close()">HỦY</v-btn>
+                <v-btn :loading="loadingDuyetBai" :disabled="loadingDuyetBai" color="primary" class="ml-2" @click="duyetbai">PHÊ DUYỆT</v-btn>
+            </template>
+        </sweet-modal>
     </v-container>
 </template>
 <script>
@@ -386,6 +395,7 @@ export default {
 
             noidungbaocao: null,
             loadingBaoCao: false,
+            loadingDuyetBai: false,
         }
     },
     head() {
@@ -433,6 +443,10 @@ export default {
         },
         userIdLoggedIn() {
             if (this.$auth.loggedIn) return this.$auth.user.id
+            return false
+        },
+        userVaitroLoggedIn() {
+            if (this.$auth.loggedIn) return this.$auth.user.vaitro
             return false
         },
         isYeuThich() {
@@ -493,6 +507,38 @@ export default {
         },
         truncate(str, n, useWordBound) {
             truncateSpace(str, n, useWordBound)
+        },
+        pheduyet() {
+            if (this.baidang.choduyet && this.userVaitroLoggedIn) {
+                this.$refs.pheduyetModal.open()
+            }
+        },
+        duyetbai() {
+            this.loadingDuyetBai = true
+            this.$axios
+                .$put('/baidang/duyetbai', null, {
+                    params: {
+                        id: this.baidang.id,
+                    },
+                    withCredentials: true,
+                })
+                .then((data) => {
+                    if (data.success) {
+                        this.$store.commit('PUSH_BAIDANG', this.baidang)
+                        this.$store.commit('UPDATE_DOUUTIEN_BAIDANG', this.baidang)
+                        this.baidang.choduyet = 0
+                        this.$toast.success(data.success)
+                    } else {
+                        this.$toast.error(data.fail)
+                    }
+                })
+                .catch((e) => {
+                    this.$toast.error(e)
+                })
+                .finally(() => {
+                    this.$refs.pheduyetModal.close()
+                    this.loadingDuyetBai = false
+                })
         },
         getchitietsp() {
             try {
@@ -754,7 +800,7 @@ export default {
 <style scoped src="~/assets/css/detailPost.css"></style>
 <style scoped>
 .readLess {
-    height: 260px;
+    height: 250px;
     overflow: hidden;
 }
 </style>

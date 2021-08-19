@@ -269,21 +269,23 @@ export default {
 
         deleteMultipleItems(dsBaiDang) {
             try {
-                dsBaiDang.forEach((item) => {
-                    this.$axios
+                dsBaiDang.forEach(async (item) => {
+                    await this.$axios
                         .$delete('/baidang/' + item.id)
                         .then(() => {
                             const index = this.dsBaiDang.indexOf(item)
                             this.dsBaiDang.splice(index, 1)
                             this.$store.commit('REMOVE_BAIDANG', { ...item })
-                            this.choduyet = this.choduyet - 1
                             this.$toast.success('Xóa Bài Đăng Thành Công')
                             this.duyetbaiLoading = false
+                            this.selected.splice(
+                                this.selected.findIndex((i) => i.id === item.id),
+                                1
+                            )
                         })
                         .catch((e) => {
                             this.duyetbaiLoading = false
-                            this.$toast.error('Xóa Bài Viết Thất Bại')
-                            this.choduyet = this.choduyet - 1
+                            this.$toast.error('Xóa Bài Viết Thất Bại' + '<br/>' + e)
                         })
                 })
             } finally {
