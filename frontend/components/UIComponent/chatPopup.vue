@@ -51,7 +51,7 @@
                 </div>
                 <!--BOX CHAT -->
                 <client-only>
-                    <chat-popup-content v-for="(selected, index) in selectedList" :key="index" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage"></chat-popup-content>
+                    <chat-popup-content v-for="selected in selectedList" :key="selected.id" :contact="selected" @removeBoxChat="removeConversation" @sent="sentMessage"></chat-popup-content>
                 </client-only>
             </div>
             <sweet-modal ref="errorModal" title="Lỗi khi gửi tin nhắn đi" enable-mobile-fullscreen icon="error"> Gặp lỗi trong quá trình gửi tin nhắn, vui lòng liên hệ QTV sớm nhất! </sweet-modal>
@@ -171,6 +171,7 @@ export default {
         },
         startConversationWith(selected) {
             if (selected.id === this.$auth.user.id) return
+
             const isContain = this.selectedList.findIndex((x) => x.id === selected.id)
             if (isContain === -1) {
                 if (this.selectedList.length >= 3) {
@@ -184,6 +185,7 @@ export default {
                 this.selectedContact = selected
                 this.updateUnreadCount(selected, true)
             }
+            this.$nuxt.$emit('expandPopup', selected.id)
         },
         removeConversation(contact) {
             this.selectedList.splice(this.selectedList.indexOf(contact), 1)

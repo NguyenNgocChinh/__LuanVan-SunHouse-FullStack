@@ -66,6 +66,9 @@ export default {
                 self.messages.push(message)
             }
         })
+        this.$nuxt.$on('expandPopup', (idSelected) => {
+            if (this.contact.id === idSelected) this.isExpanded = true
+        })
     },
     computed: {
         ...mapState({
