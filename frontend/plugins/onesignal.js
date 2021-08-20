@@ -4,7 +4,7 @@ export default function ({ $config }) {
     OneSignal.push(function () {
         // eslint-disable-next-line no-undef
         OneSignal.init({
-            appId: process.env.NODE_ENV !== 'production' ? $config.onesignal.dev : $config.onesignal.prod,
+            appId: process.env.NODE_ENV !== 'production' ? $config.onesignal.dev : $config.onesignal.dev, // prod
         })
     })
 }

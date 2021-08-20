@@ -36,10 +36,10 @@
                                                             :items="allUser"
                                                             outlined
                                                             color="blue-grey lighten-2"
-                                                            label="Chọn người bị đánh giá"
+                                                            label="Chọn người muốn đánh giá"
                                                             item-text="name"
                                                             item-value="id"
-                                                            :rules="[editedItem.user.id !== '' || 'Chọn người bị tố cáo']"
+                                                            :rules="[editedItem.user.id !== '' || 'Chọn người muốn đánh giá']"
                                                         >
                                                             <template #selection="data">
                                                                 <v-avatar size="28" class="mr-2" left>

@@ -88,7 +88,7 @@ export default {
         searchInput: undefined,
         items: [
             { text: 'Tin đăng thành công', icon: 'bx bx-layer' },
-            { text: 'Tin chờ duyệt', icon: 'bx bx-loader-alt bx-spin' },
+            { text: 'Tin chờ duyệt', icon: 'bx bx-loader-alt' },
             { text: 'Tin bị hạ', icon: 'bx bx-x' },
         ],
         posts: undefined,

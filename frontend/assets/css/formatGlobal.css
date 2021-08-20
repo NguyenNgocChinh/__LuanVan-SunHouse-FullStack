@@ -71,9 +71,3 @@ body{
 .custom-color-text >>> .v-text-field__slot input {
     color: red
 }
-/*hide arrow*/
-::v-deep input::-webkit-outer-spin-button,
-::v-deep input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}

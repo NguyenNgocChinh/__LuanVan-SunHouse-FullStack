@@ -34,22 +34,31 @@
                                 </v-col>
                             </v-row>
                             <v-row class="content_item">
-                                <v-col class="col-12 label">Ngày sinh</v-col>
-                                <v-col class="col-12">
+                                <v-col cols="12">
                                     <v-row>
                                         <v-col class="col-md-4">
-                                            <datepicker
-                                                v-model="birthday"
-                                                class="custom-placeholer-color custom-label-color"
-                                                placeholder="Chọn ngày sinh"
-                                                :format="formatDate"
-                                                :disabled-dates="disabledDates"
-                                                @input="formatDateModel(birthday)"
-                                            >
-                                                <span slot="beforeCalendarHeader" class="caption red--text text-center">
-                                                    <p class="pa-0 ma-0">Ngày hợp lệ từ 01/01/1900 đến hiện nay</p>
-                                                </span>
-                                            </datepicker>
+                                            <v-menu ref="menuBirthday" v-model="menuBirthday" color="green lighten-1" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
+                                                <template #activator="{ on, attrs }">
+                                                    <v-text-field v-model="birthday" clearable label="Chọn ngày sinh" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                                </template>
+                                                <v-date-picker v-model="birthday" color="green lighten-1" no-title scrollable min="1900-01-01" :max="$moment().format('YYYY-MM-DD')" @input="menuBirthday = false">
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="menuBirthday = false"> HỦY </v-btn>
+                                                    <v-btn text color="primary" @click="$refs.menuBirthday.save(dateStart)"> XÁC NHẬN </v-btn>
+                                                </v-date-picker>
+                                            </v-menu>
+                                        </v-col>
+                                        <v-col class="col-md-4">
+                                            <v-text-field
+                                                v-model="username"
+                                                label="Tên đăng nhập"
+                                                counter
+                                                :rules="[$rules.required, $rules.min(username, 5), username.length <= 30 || 'Độ dài tối đa là 30 ký tự', isValidUsername || 'Tên đăng nhập đã tồn tại trong hệ thống']"
+                                                placeholder="Hãy nhập tên đăng nhập..."
+                                                required
+                                                @keydown.space.prevent="$event.preventDefault()"
+                                                @change="isValidUsername = true"
+                                            ></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -224,7 +233,6 @@
     </v-container>
 </template>
 <script>
-import Datepicker from 'vuejs-datepicker'
 import Vue from 'vue'
 import OtpInput from '@bachdgvn/vue-otp-input'
 import firebase from 'firebase/app'
@@ -233,10 +241,13 @@ import 'firebase/auth'
 import 'firebase/firestore'
 Vue.component('VOtpInput', OtpInput)
 export default {
-    components: { Datepicker },
+    components: {},
     layout: 'user',
     data: () => {
         return {
+            username: '',
+            isValidUsername: true,
+            menuBirthday: false,
             imgAvatar: undefined,
             file: undefined,
             birthday: undefined,
@@ -449,7 +460,10 @@ export default {
             this.email = this.$auth.user.email
             this.oldEmail = this.$auth.user.email
             this.fullname = this.$auth.user.name
-            this.birthday = this.$auth.user.namsinh
+            this.username = this.$auth.user.username
+            if (typeof this.birthday !== 'undefined' && this.birthday !== null) {
+                this.birthday = this.$moment(this.$auth.user.namsinh).format('YYYY-MM-DD')
+            } else this.birthday = undefined
         },
         initilizeView(index) {
             if (parseInt(index) === 1) {
@@ -503,6 +517,18 @@ export default {
                     })
                 if (!this.isValidEmail) return
             }
+            await this.$axios
+                .$get('/users/checkIsValidUsernameForUpdate/' + this.username, { withCredentials: true })
+                .then((res) => {
+                    if (res) {
+                        this.isValidUsername = false
+                        this.loadingSave = false
+                    }
+                })
+                .catch(() => {
+                    this.loadingSave = false
+                })
+            if (!this.isValidUsername) return
             this.$axios
                 .$post('/users/update', data, {
                     withCredentials: true,

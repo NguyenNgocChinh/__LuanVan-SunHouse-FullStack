@@ -41,7 +41,7 @@
                     <template #activator="{ on, attrs }">
                         <v-text-field v-model="dateEnd" clearable label="Chọn ngày kết thúc" readonly v-bind="attrs" v-on="on"></v-text-field>
                     </template>
-                    <v-date-picker v-model="dateEnd" color="green lighten-1" no-title scrollable min="1900-01-01" :max="$moment().format('YYYY-MM-DD')">
+                    <v-date-picker v-model="dateEnd" color="green lighten-1" no-title scrollable min="1900-01-01" :max="$moment().format('YYYY-MM-DD')" @input="menuCalendarEnd = false">
                         <v-spacer></v-spacer>
                         <v-btn text color="primary" @click="menuCalendarEnd = false"> HỦY </v-btn>
                         <v-btn text color="primary" @click="$refs.menuCalendarEnd.save(dateEnd)"> XÁC NHẬN </v-btn>

@@ -512,7 +512,7 @@ export default {
             truncateSpace(str, n, useWordBound)
         },
         pheduyet() {
-            if (this.baidang.choduyet && this.userVaitroLoggedIn) {
+            if (this.baidang.choduyet && this.userVaitroLoggedIn === 'admin') {
                 this.$refs.pheduyetModal.open()
             }
         },

@@ -9,11 +9,17 @@
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <div class="list-menu">
-                <nuxt-link v-for="(item, index) in listMenus" :key="index" class="text-decoration-none sunhouse_white--text" :to="item.href">
-                    <v-btn class="navlink sunhouse_white--text">
-                        <span>{{ item.menu }}</span>
-                    </v-btn>
-                </nuxt-link>
+                <v-list-item-group class="d-flex flex-row">
+                    <v-list-item v-for="(item, index) in listMenus" :key="index" active-class="sunhouse_red1" link :to="item.href" class="navlink">
+                        <v-list-item-title class="white--text">{{ item.menu }}</v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
+
+                <!--                <nuxt-link v-for="(item, index) in listMenus" :key="index" class="text-decoration-none sunhouse_white&#45;&#45;text" :to="item.href">-->
+                <!--                    <v-btn class="navlink sunhouse_white&#45;&#45;text">-->
+                <!--                        <span>{{ item.menu }}</span>-->
+                <!--                    </v-btn>-->
+                <!--                </nuxt-link>-->
             </div>
             <v-spacer></v-spacer>
             <client-only>
@@ -115,8 +121,8 @@ export default {
     },
     methods: {
         onResize() {
-            this.isMobile = window.innerWidth < 1376
-            this.isVerySmall = window.innerWidth < 580
+            this.isMobile = window.innerWidth < 1080
+            this.isVerySmall = window.innerWidth < 280
         },
     },
 }
@@ -127,7 +133,7 @@ export default {
     box-shadow: none;
     text-transform: unset;
     &:hover {
-        background-color: $sunhouse_red2 !important;
+        background-color: $sunhouse_grey !important;
     }
 }
 </style>
