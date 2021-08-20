@@ -37,6 +37,23 @@
                             :loading="loais.length < 1"
                             no-data-text="Đang tải..."
                         ></v-select>
+
+                        <h3 class="d-inline-block black--text">Hình thức</h3>
+                        <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                            <sup>(*) </sup>
+                        </span>
+                        <v-select
+                            v-model="hinhthuc"
+                            class="mt-2"
+                            item-text="v"
+                            item-value="k"
+                            :items="[
+                                { k: 1, v: 'Cho thuê' },
+                                { k: 0, v: 'Rao Bán' },
+                            ]"
+                            solo
+                        ></v-select>
+
                         <h3 class="d-inline-block black--text">Giá bán</h3>
                         <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                             <sup>(*) </sup>
@@ -44,7 +61,7 @@
                         <v-text-field
                             v-model="gia"
                             class=""
-                            suffix="Triệu/m² hoặc Triệu/tháng"
+                            :suffix="hinhthuc ? ' Triệu/tháng' : 'Triệu/m²'"
                             :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                             type="number"
                             min="1"
@@ -86,25 +103,8 @@
                 </v-card>
                 <v-card class="mt-6">
                     <v-card-title class="font-weight-bold">THÔNG TIN CHI TIẾT</v-card-title>
-                    <v-card-text>
+                    <v-card-text class="pb-0">
                         <v-row>
-                            <v-col cols="12" lg="4" sm="12">
-                                <h3 class="d-inline-block black--text">Hình thức</h3>
-                                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                    <sup>(*) </sup>
-                                </span>
-                                <v-select
-                                    v-model="hinhthuc"
-                                    class="mt-2"
-                                    item-text="v"
-                                    item-value="k"
-                                    :items="[
-                                        { k: 1, v: 'Cho thuê' },
-                                        { k: 0, v: 'Rao Bán' },
-                                    ]"
-                                    solo
-                                ></v-select>
-                            </v-col>
                             <v-col cols="12" lg="4" sm="12">
                                 <h3 class="d-inline-block black--text">Số phòng ngủ</h3>
                                 <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
@@ -139,7 +139,7 @@
                             </v-col>
                         </v-row>
                     </v-card-text>
-                    <v-card-text>
+                    <v-card-text class="pt-0">
                         <v-row>
                             <v-col cols="12" sm="4">
                                 <h3 class="d-inline-block black--text">Hướng nhà</h3>
@@ -152,7 +152,6 @@
                                     class="mt-2"
                                     item-value="k"
                                     item-text="v"
-                                    :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
                                     :items="[
                                         { k: 'Đông', v: 'Hướng nhà: Đông' },
                                         { k: 'Tây', v: 'Hướng nhà: Tây' },
@@ -162,6 +161,7 @@
                                         { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
                                         { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
                                         { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
+                                        { k: 'kxd', v: 'Hướng nhà: Không xác định' },
                                     ]"
                                     solo
                                 ></v-select>
@@ -269,9 +269,10 @@
                                     <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
                                     <v-text-field
                                         v-model="diachicuthe"
-                                        disabled
+                                        readonly
+                                        color="sunhouse_red2"
                                         class="mt-2"
-                                        messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường"
+                                        messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường. Bạn không thể chỉnh sửa"
                                         placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
                                         solo
                                         :loading="loadingDiaChiCuThe"
@@ -317,7 +318,7 @@
             </v-row>
             <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
             <div class="text-center">
-                <v-btn class="mx-auto" color="primary" :text="vaild" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
+                <v-btn class="mx-auto" color="primary" elevation="6" large @click="xulydangbai"> Đăng bài</v-btn>
             </div>
             <client-only>
                 <sweet-modal ref="modalPleaseMoveToMarker" icon="warning"> Vị trí phức tạp chưa thể định vị, vui lòng kéo thả marker từ bản đồ để có được địa chỉ tốt nhất </sweet-modal>
@@ -330,6 +331,15 @@ import { LMap, LMarker, LTileLayer, LPopup, LControl } from 'vue2-leaflet'
 import { OpenStreetMapProvider, GeoSearchControl } from 'leaflet-geosearch'
 import Editor from '@/components/UIComponent/Editor'
 import { scrollToInputInvalid } from '~/assets/js/scrollToView'
+function recaptchaCallback(e) {
+    var container = document.getElementById('g-recaptcha-container')
+    container.innerHTML = ''
+    var recaptcha = document.createElement('div')
+    grecaptcha.render(recaptcha, {
+        sitekey: '6LewZh8TAAAAAG3YT_c17Gxxx',
+    })
+    container.appendChild(recaptcha)
+}
 
 export default {
     components: { Editor, LMarker, LMap, LTileLayer, LPopup, LControl },
@@ -489,8 +499,9 @@ export default {
             }
             this.diachicuthe = this.arrDiaChi.join(',')
         },
-        marker() {
-            if (this.marker == null) {
+        marker(value) {
+            if (value == null) {
+                console.log('dragggeeddd')
                 this.thanhpho = null
                 this.diachicuthe = null
                 this.toadoX = null
@@ -508,10 +519,12 @@ export default {
             }
             // eslint-disable-next-line no-unused-vars,nuxt/no-globals-in-created
             window.onloadCallback = () => {
-                // eslint-disable-next-line no-undef
-                window.captcha = grecaptcha.render('g-recaptcha', {
-                    sitekey: this.$config.recaptcha.siteKey,
-                })
+                if (window.$('#g-recaptcha').length) {
+                    // eslint-disable-next-line no-undef
+                    window.captcha = grecaptcha.render('g-recaptcha', {
+                        sitekey: this.$config.recaptcha.siteKey,
+                    })
+                }
             }
 
             const map = this.$refs.map.mapObject
@@ -524,21 +537,32 @@ export default {
                 keepResult: true,
                 showMarker: false,
             })
-
             map.addControl(search)
 
             map.on('geosearch/showlocation', (result) => {
                 this.marker = [result.location.y, result.location.x]
                 this.toadoX = result.location.y
                 this.toadoY = result.location.x
-                if ('label' in result.location) {
-                    const diaChi = result.location.label.split(',')
+                setTimeout(() => {
+                    this.$refs.marker.mapObject.on('dragend', (event) => {
+                        const marker = event.target
+                        const position = marker.getLatLng()
+                        this.center = [position.lat, position.lng]
+                        this.toadoX = position.lat
+                        this.toadoY = position.lng
+                        this.marker = [this.toadoX, this.toadoY]
+                        this.setDisplayNameFromlatLng(position.lat, position.lng)
+                    })
+                }, 500)
+                const address = result.location.raw.display_name
+                if (address) {
+                    const diaChi = address.split(',')
                     for (let i = 0; i < diaChi.length; i++) {
                         const checkResult2 = /\d{5}/.test(diaChi[i])
                         if (checkResult2) diaChi.splice(i, 1)
                     }
                     this.diachicuthe = diaChi.join(',')
-                    this.getSelectOnComboBox(this.diachicuthe)
+                    // this.getSelectOnComboBox(this.diachicuthe)
                 } else {
                     this.setDisplayNameFromlatLng(result.location.x, result.location.y)
                 }
@@ -565,6 +589,7 @@ export default {
             map.on('geosearch/marker/dragend', (result) => {
                 this.toadoX = result.location.lat
                 this.toadoY = result.location.lng
+                console.log('dragged', `${this.toadoX + '-' + this.toadoY}`)
 
                 if ('label' in result.location) {
                     this.diachicuthe = result.location.label
@@ -702,7 +727,9 @@ export default {
                 window.scroll(0, top)
                 return
             }
-            if (this.noidung.length < 40 || this.noidung.length > 3000) {
+            const content = this.noidung.replace(/<(.|\n)*?>/g, '').trim()
+            if (content.length < 40 || content.length > 3000) {
+                // textarea is still empty
                 this.$toast.error('Nội dung từ 40 - 3000 ký tự')
                 const top = document.getElementById('sunhouseEditor').offsetTop
                 window.scroll(0, top)
@@ -723,7 +750,7 @@ export default {
             data.append('noidung', this.noidung)
             data.append('sophongngu', this.phongngu)
             data.append('sophongtam', this.phongtam)
-            data.append('huong', this.selectedhuong)
+            data.append('huong', this.selectedhuong === 'kxd' ? null : this.selectedhuong)
             for (let i = 0; i < this.noithat.length; i++) {
                 data.append('dstiennghi[' + i + ']', this.noithat[i])
             }
@@ -841,13 +868,5 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-}
-</style>
-
-<style scoped>
-::v-deep input::-webkit-outer-spin-button,
-::v-deep input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
 }
 </style>

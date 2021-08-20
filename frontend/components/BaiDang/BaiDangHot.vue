@@ -6,7 +6,7 @@
             </div>
             <br />
             <h4 class="sunhouse_red1--text text-center pa-1 pb-4" style="display: inline-block; text-shadow: 0px 2px 6px #fff">Nhà đẹp của bạn - Thành công của chúng tôi</h4>
-            <v-row>
+            <v-row class="justify-center">
                 <v-slide-group v-if="isLoading" class="pa-4">
                     <v-slide-item v-for="index in 5" :key="index" class="mt-2">
                         <v-skeleton-loader light class="mx-4" width="315px" height="500px" type="image,list-item-two-line,list-item-three-line,divider,list-item"></v-skeleton-loader>

@@ -36,6 +36,23 @@
                         :loading="loais.length < 1"
                         no-data-text="Đang tải..."
                     ></v-select>
+
+                    <h3 class="d-inline-block black--text">Hình thức</h3>
+                    <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
+                        <sup>(*) </sup>
+                    </span>
+                    <v-select
+                        v-model="hinhthuc"
+                        class="mt-2"
+                        item-text="v"
+                        item-value="k"
+                        :items="[
+                            { k: 1, v: 'Cho thuê' },
+                            { k: 0, v: 'Rao Bán' },
+                        ]"
+                        solo
+                    ></v-select>
+
                     <h3 class="d-inline-block black--text">Giá bán</h3>
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
@@ -43,7 +60,7 @@
                     <v-text-field
                         v-model="gia"
                         class=""
-                        suffix="Triệu/m²"
+                        :suffix="hinhthuc ? ' Triệu/tháng' : 'Triệu/m²'"
                         :rules="[() => !!gia || 'Vui lòng nhập giá bán !!!', (v) => (v > 0 && v < 1000000) || 'Giá bán không hợp lệ!!!']"
                         type="number"
                         min="1"
@@ -56,13 +73,7 @@
                     <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
                         <sup>(*) </sup>
                     </span>
-                    <!--                    <v-text-field-->
-                    <!--                        v-model="noidung"-->
-                    <!--                        :rules="[() => !!noidung || 'Vui lòng nhập nội dung bài viết !', () => (!!noidung && noidung.length >= 40) || 'Nội dung mô tả phải ít nhất 40 ký tự']"-->
-                    <!--                        counter-->
-                    <!--                        placeholder="Nhập nội dung bài viết..."-->
-                    <!--                    ></v-text-field>-->
-                    <editor id="sunhouseEditor" :min-length="40" :old="noidung" class="mt-2" />
+                    <editor id="sunhouseEditor" :old="noidung" :min-length="40" class="mt-2" />
 
                     <div class="spacer-line-form"></div>
                     <h3 class="black--text">Hình ảnh</h3>
@@ -91,25 +102,8 @@
             </v-card>
             <v-card class="mt-6">
                 <v-card-title class="font-weight-bold">THÔNG TIN CHI TIẾT</v-card-title>
-                <v-card-text>
+                <v-card-text class="pb-0">
                     <v-row>
-                        <v-col cols="12" lg="4" sm="12">
-                            <h3 class="d-inline-block black--text">Hình thức</h3>
-                            <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                                <sup>(*) </sup>
-                            </span>
-                            <v-select
-                                v-model="hinhthuc"
-                                class="mt-2"
-                                item-text="v"
-                                item-value="k"
-                                :items="[
-                                    { k: 1, v: 'Cho thuê' },
-                                    { k: 0, v: 'Rao Bán' },
-                                ]"
-                                solo
-                            ></v-select>
-                        </v-col>
                         <v-col cols="12" lg="4" sm="12">
                             <h3 class="d-inline-block black--text">Số phòng ngủ</h3>
                             <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
@@ -144,7 +138,7 @@
                         </v-col>
                     </v-row>
                 </v-card-text>
-                <v-card-text>
+                <v-card-text class="pt-0">
                     <v-row>
                         <v-col cols="12" sm="4">
                             <h3 class="d-inline-block black--text">Hướng nhà</h3>
@@ -157,7 +151,6 @@
                                 class="mt-2"
                                 item-value="k"
                                 item-text="v"
-                                :rules="[() => !!selectedhuong || 'Vui lòng chọn hướng nhà !']"
                                 :items="[
                                     { k: 'Đông', v: 'Hướng nhà: Đông' },
                                     { k: 'Tây', v: 'Hướng nhà: Tây' },
@@ -167,6 +160,7 @@
                                     { k: 'Đông Nam', v: 'Hướng nhà: Đông Nam' },
                                     { k: 'Tây Bắc', v: 'Hướng nhà: Tây Bắc' },
                                     { k: 'Tây Nam', v: 'Hướng nhà: Tây Nam' },
+                                    { k: 'kxd', v: 'Hướng nhà: Không xác định' },
                                 ]"
                                 solo
                             ></v-select>
@@ -248,39 +242,16 @@
                             </div>
                             <div v-if="xaphuong">
                                 <h3 class="d-inline-block black--text">Đường/Phố</h3>
-                                <!--                                <v-combobox-->
-                                <!--                                    v-model="duong"-->
-                                <!--                                    class="mt-2"-->
-                                <!--                                    :items="listDuong"-->
-                                <!--                                    hide-selected-->
-                                <!--                                    chips-->
-                                <!--                                    clearable-->
-                                <!--                                    :search-input.sync="searchDuong"-->
-                                <!--                                    item-text="name"-->
-                                <!--                                    item-value="maduong"-->
-                                <!--                                    no-data-text="Tải dữ liệu đường thất bại"-->
-                                <!--                                    label="Chọn Đường/Phố"-->
-                                <!--                                    solo-->
-                                <!--                                >-->
-                                <!--                                    <template #no-data>-->
-                                <!--                                        <v-list-item>-->
-                                <!--                                            <v-list-item-content>-->
-                                <!--                                                <v-list-item-title>-->
-                                <!--                                                    Không tìm thấy đường tên: "<strong>{{ searchDuong }}</strong-->
-                                <!--                                                    >". Nhấn <kbd>enter</kbd> để tạo mới đường này-->
-                                <!--                                                </v-list-item-title>-->
-                                <!--                                            </v-list-item-content>-->
-                                <!--                                        </v-list-item>-->
-                                <!--                                    </template>-->
-                                <!--                                </v-combobox>-->
                                 <v-combobox
                                     v-model="duong"
                                     chips
                                     class="mt-2"
+                                    :rules="[(v) => v === null || v.length < 30 || 'Tên đường không được quá 30 ký tự']"
                                     :items="listDuong"
                                     :search-input.sync="searchDuong"
                                     item-text="tenduong"
                                     item-value="id"
+                                    :return-object="false"
                                     no-data-text="Đường này chưa có sẵn trong hệ thống.
                                     Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
@@ -297,9 +268,10 @@
                                 <v-icon size="15" :color="toadoX && diachicuthe ? 'green' : 'red'">{{ toadoX && diachicuthe ? 'mdi-check-circle' : 'mdi-close-circle' }}</v-icon>
                                 <v-text-field
                                     v-model="diachicuthe"
-                                    disabled
+                                    readonly
+                                    color="sunhouse_red2"
                                     class="mt-2"
-                                    messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường"
+                                    messages="Địa chỉ sẽ được tự động tạo ra bằng cách chọn từ bản đồ hoặc chọn từ thành phố/xã phường. Bạn không thể chỉnh sửa"
                                     placeholder="Tự động sinh ra từ chọn vị trí hoặc bản đồ"
                                     solo
                                     :loading="loadingDiaChiCuThe"
@@ -334,14 +306,15 @@
                     </v-row>
                 </v-card-text>
             </v-card>
-            <v-row class="text-center my-5" style="position: relative; height: 100px">
+        </v-form>
+        <v-row class="text-center my-5" style="position: relative; height: 100px">
+            <div class="my-2" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
                 <div class="my-2 d-flex flex-row align-center" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
                     <div id="g-recaptcha" class="g-recaptcha"></div>
                     <v-btn class="ml-2" fab small color="sunhouse_grey1" @click="resetCaptcha"><v-icon color="sunhouse_grey2">mdi-restart</v-icon></v-btn>
                 </div>
-            </v-row>
-        </v-form>
-        <!--        <p class="font-weight-bold red&#45;&#45;text text-center">Xin vui lòng điền đủ những trường bắt buộc trước khi đăng bài!</p>-->
+            </div>
+        </v-row>
         <div class="text-center">
             <v-btn class="mx-auto" color="sunhouse_blue1 sunhouse_white--text" elevation="6" large @click="xulydangbai"> Sửa bài</v-btn>
         </div>
@@ -449,7 +422,7 @@ export default {
             { src: '/js/leaflet.js' },
             { src: '/js/geosearch.umd.js' },
             { src: '/js/leaflet-geosearch-bundle.min.js' },
-            { src: 'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
+            { src: '//www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=vi', defer: true, async: true },
         ],
     },
 
@@ -714,7 +687,7 @@ export default {
                         this.noidung = this.baidang.noidung
                         this.phongngu = this.baidang.sophongngu
                         this.phongtam = this.baidang.sophongtam
-                        this.selectedhuong = this.baidang.huong
+                        this.selectedhuong = this.baidang.huong !== 'null' ? this.baidang.huong : 'kxd'
                         this.namxaydung = this.baidang.namxaydung || ''
                         this.dientich = this.baidang.dientich
                         this.diachicuthe = this.baidang.diachi
@@ -756,7 +729,9 @@ export default {
                 window.scroll(0, top)
                 return
             }
-            if (this.noidung.length < 40 || this.noidung.length > 3000) {
+            const content = this.noidung.replace(/<(.|\n)*?>/g, '').trim()
+            if (content.length < 40 || content.length > 3000) {
+                // textarea is still empty
                 this.$toast.error('Nội dung từ 40 - 3000 ký tự')
                 const top = document.getElementById('sunhouseEditor').offsetTop
                 window.scroll(0, top)
@@ -777,7 +752,7 @@ export default {
             data.append('noidung', this.noidung)
             data.append('sophongngu', this.phongngu)
             data.append('sophongtam', this.phongtam)
-            data.append('huong', this.selectedhuong)
+            data.append('huong', this.selectedhuong === 'kxd' ? null : this.selectedhuong)
             for (let i = 0; i < this.noithat.length; i++) {
                 data.append('dstiennghi[' + i + ']', this.noithat[i])
             }

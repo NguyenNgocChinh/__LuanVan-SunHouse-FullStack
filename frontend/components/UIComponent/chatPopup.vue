@@ -106,7 +106,7 @@ export default {
         // grant allow notify
         document.addEventListener('DOMContentLoaded', function () {
             if (!Notification) {
-                alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop. Vui lòng thử trình duyệt khác như Chrome.')
+                alert('Trình duyệt đang sử dụng không hỗ trợ thông báo desktop.')
                 return
             }
 

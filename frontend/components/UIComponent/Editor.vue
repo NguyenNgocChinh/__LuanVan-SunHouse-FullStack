@@ -116,6 +116,11 @@ export default {
                 this.error = 'Độ dài tối đa là ' + this.maxLength
                 return false
             }
+            if (content.replace(/<(.|\n)*?>/g, '').trim().length < this.minLength) {
+                // textarea is still empty
+                this.error = 'Độ dài tối thiểu phải đủ ít nhất ' + this.minLength
+                return false
+            }
 
             this.error = ''
             return true

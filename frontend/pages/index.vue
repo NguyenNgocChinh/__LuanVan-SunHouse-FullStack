@@ -1,8 +1,8 @@
 <template>
     <div>
         <BaiDangHot />
-        <ChoThue />
-        <RaoBan />
+        <ChoThue class="mt-12" />
+        <RaoBan class="mt-12" />
     </div>
 </template>
 

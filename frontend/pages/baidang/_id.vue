@@ -7,7 +7,7 @@
                     <v-col class="col-md-8">
                         <div>
                             <div v-if="hinhanhArr.length < 1">
-                                <v-img :src="wrong_image" />
+                                <v-img :src="wrong_image" style="border-radius: 8px" />
                             </div>
                             <div v-else>
                                 <viewer ref="viewer" style="position: relative" rebuild :options="options" :images="[]" class="viewer" @inited="inited">
@@ -25,12 +25,15 @@
                     </v-col>
                     <v-col class="col-md-4 pl-3">
                         <div class="special-highlight mb-3">Đặc điểm nổi trội</div>
-                        <ul class="special-wrapper list-unstyled">
-                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">{{ baidang.gia || '--' }} Triệu / m²</li>
+                        <ul class="special-wrapper list-unstyled" style="border-bottom: none !important">
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">{{ baidang.gia || '--' }} {{ baidang.isChoThue ? 'Triệu/tháng' : 'Triệu/m²' }}</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis">Hình thức: {{ baidang.isChoThue ? 'Cho thuê' : 'Rao bán' }}</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.dientich }">Diện tích: {{ baidang.dientich || '--' }} m²</li>
-                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.sophongngu }">Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng</li>
-                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.huong }">Hướng nhà: {{ baidang.huong || '--' }}</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.sophongngu === '0' }">Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.sophongtam === '0' }">Số phòng tắm: {{ baidang.sophongtam || '--' }} phòng</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.huong === 'null' }">Hướng nhà: {{ baidang.huong !== 'null' ? baidang.huong : '--' }}</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.loai }">Loại nhà: {{ baidang.loai || '-' }}</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.diachi }">{{ baidang.diachi || '-' }}</li>
                         </ul>
                     </v-col>
                 </v-row>
@@ -105,7 +108,7 @@
                             <div class="col-12 d-flex align-items-center pl-0 mb-2 price-sec">
                                 <div class="item">
                                     Mức giá:
-                                    <div class="price sunhouse_red2--text">{{ baidang.gia }} Triệu / m<sup>2</sup></div>
+                                    <div class="price sunhouse_red2--text">{{ baidang.gia }} {{ baidang.isChoThue ? 'Triệu/tháng' : 'Triệu/m²' }}</div>
                                 </div>
                                 <div class="item">
                                     Diện tích:
@@ -117,7 +120,7 @@
                                 </div>
                                 <div class="item">
                                     Hướng nhà:
-                                    <div class="font-weight-bold">{{ baidang.huong }}</div>
+                                    <div class="font-weight-bold">{{ baidang.huong !== 'null' ? baidang.huong : 'Không xác định' }}</div>
                                 </div>
                             </div>
                             <div class="info-description">
@@ -524,7 +527,7 @@ export default {
                 })
                 .then((data) => {
                     if (data.success) {
-                        this.$store.commit('PUSH_BAIDANG', this.baidang)
+                        this.$store.commit('PUSH_BAIDANG', { ...this.baidang })
                         this.$store.commit('UPDATE_DOUUTIEN_BAIDANG', this.baidang)
                         this.baidang.choduyet = 0
                         this.$toast.success(data.success)

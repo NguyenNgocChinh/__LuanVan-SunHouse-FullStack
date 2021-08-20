@@ -1,6 +1,7 @@
 <template>
     <!--    animate__animated animate__fadeInRightanimate__animated animate__fadeInRight-->
-    <v-card v-if="baidang" class="mx-4 pt-5 article-card rounded" style="background: white" :style="'width:' + parseInt(width) + 'px'">
+
+    <v-card v-if="baidang" class="mx-4 pt-5 article-card rounded" style="background: white; height: 100%; position: relative; padding-bottom: 10px" :style="'width:' + parseInt(width) + 'px'">
         <div style="margin-top: -20px; flex-shrink: 0">
             <v-img
                 v-if="baidang.hinhanh.length > 0"
@@ -23,7 +24,7 @@
                 </v-layout>
             </v-img>
         </div>
-        <v-card-title class="text-uppercase" style="color: #005fb8">
+        <v-card-title class="text-uppercase pb-0" style="color: #005fb8">
             <div class="card-title">
                 <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
                     <template #activator="{ on, attrs }">
@@ -35,106 +36,102 @@
                 </v-tooltip>
             </div>
         </v-card-title>
-        <v-card-subtitle class="noidung d-flex flex-column" style="background: red">
-            <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia || '-' }} Triệu/m²</p>
-            <v-row class="d-flex flex-column" style="margin-top: auto">
-                <div>
-                    <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2 justify-content-center" v-on="on"> <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span>
-                                </template>
-                                <span>Diện tích: {{ baidang.dientich || '-' }} m²</span>
-                            </v-tooltip>
-                        </v-col>
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2" v-on="on">
-                                        <v-icon class="mr-1" size="16">bx bx-bed</v-icon>
-                                        {{ baidang.sophongngu || '-' }} phòng</span
-                                    >
-                                </template>
-                                <span>Số phòng ngủ: {{ baidang.sophongngu || '-' }} </span>
-                            </v-tooltip>
-                        </v-col>
+        <v-card-subtitle class="noidung">
+            <p class="font-weight-bold py-2 black--text">Giá: {{ baidang.gia || '-' }} {{ baidang.isChoThue ? 'Triệu/tháng' : 'Triệu/m²' }}</p>
+            <v-row class="d-flex flex-column">
+                <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2 justify-content-center" v-on="on"> <v-icon class="mr-1" size="16px">bx bx-area</v-icon> {{ baidang.dientich }} m²</span>
+                            </template>
+                            <span>Diện tích: {{ baidang.dientich || '-' }} m²</span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-bath</v-icon> {{ baidang.sophongtam }} phòng</span>
-                                </template>
-                                <span>Số phòng tắm: {{ baidang.sophongtam || '-' }} </span>
-                            </v-tooltip>
-                        </v-col>
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-compass</v-icon> {{ baidang.huong || '-' }}</span>
-                                </template>
-                                <span>Hướng nhà: {{ baidang.huong || '-' }} </span>
-                            </v-tooltip>
-                        </v-col>
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on">
+                                    <v-icon class="mr-1" size="16">bx bx-bed</v-icon>
+                                    {{ baidang.sophongngu || '-' }} phòng</span
+                                >
+                            </template>
+                            <span>Số phòng ngủ: {{ baidang.sophongngu || '-' }} </span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon> {{ baidang.loai || '-' }}</span>
-                                </template>
-                                <span>Loại nhà: {{ baidang.loai || '-' }} </span>
-                            </v-tooltip>
-                        </v-col>
-                        <v-col cols="6" class="align-center pt-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon> {{ baidang.namxaydung || '-' }}</span>
-                                </template>
-                                <span>Năm xây dựng: {{ baidang.namxaydung || '-' }} </span>
-                            </v-tooltip>
-                        </v-col>
+                </v-col>
+                <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-bath</v-icon> {{ baidang.sophongtam }} phòng</span>
+                            </template>
+                            <span>Số phòng tắm: {{ baidang.sophongtam || '-' }} </span>
+                        </v-tooltip>
                     </v-col>
-                    <v-col cols="12" class="pb-1 pl-1 pt-0 d-flex flex-row">
-                        <v-col cols="12" class="align-center py-0">
-                            <v-tooltip top content-class="tooltipCustom">
-                                <template #activator="{ on }">
-                                    <p class="d-flex flow-row align-center diachi mr-2" v-on="on">
-                                        <v-icon size="16px" class="mr-2">bx bx-map-pin</v-icon>
-                                        <span>{{ baidang.diachi }}</span>
-                                    </p>
-                                </template>
-                                <span>Vị trí</span>
-                            </v-tooltip>
-                        </v-col>
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-compass</v-icon>{{ baidang.huong !== 'null' ? baidang.huong : '-' }}</span>
+                            </template>
+                            <span>Hướng nhà: {{ baidang.huong !== 'null' ? baidang.huong : 'Không xác định' }} </span>
+                        </v-tooltip>
                     </v-col>
-                </div>
-                <div style="margin-top: auto">
-                    <v-col cols="12" class="pb-0 pl-1 pt-0" style="margin-top: auto">
-                        <v-col cols="12" class="align-center py-0">
-                            <v-divider />
-                            <div class="pa-4 d-flex size-14 flex-row align-center justify-space-between">
-                                <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }} </span>
-                                <!--                <v-spacer />-->
-                                <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }} </span>
-                                <span v-if="baidang.userObject.id !== userId && userId" class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
-                                    <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
-                                    Chat ngay
-                                </span>
-                                <span v-if="!$auth.loggedIn" class="font-weight-bold cursor-pointer chatnow" @click="$router.push('/login')">
-                                    <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
-                                    Đăng nhập
-                                </span>
-                            </div>
-                        </v-col>
+                </v-col>
+                <v-col cols="12" class="pb-1 pl-0 pt-0 d-flex flex-row">
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-building-house</v-icon> {{ baidang.loai || '-' }}</span>
+                            </template>
+                            <span>Loại nhà: {{ baidang.loai || '-' }} </span>
+                        </v-tooltip>
                     </v-col>
-                </div>
+                    <v-col cols="6" class="align-center pt-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <span class="mr-2" v-on="on"><v-icon class="mr-1" size="16px">bx bx-calendar-star</v-icon> {{ baidang.namxaydung || '-' }}</span>
+                            </template>
+                            <span>Năm xây dựng: {{ baidang.namxaydung || 'Không xác định' }} </span>
+                        </v-tooltip>
+                    </v-col>
+                </v-col>
+                <v-col cols="12" class="pb-1 pl-1 pt-0 d-flex flex-row">
+                    <v-col cols="12" class="align-center py-0">
+                        <v-tooltip top content-class="tooltipCustom">
+                            <template #activator="{ on }">
+                                <p class="d-flex flow-row align-center diachi mr-2" v-on="on">
+                                    <v-icon size="16px" class="mr-2">bx bx-map-pin</v-icon>
+                                    <span>{{ baidang.diachi }}</span>
+                                </p>
+                            </template>
+                            <span>Vị trí</span>
+                        </v-tooltip>
+                    </v-col>
+                </v-col>
             </v-row>
         </v-card-subtitle>
+        <v-row style="position: absolute; bottom: 0; left: 0; right: 0; padding-bottom: 10px">
+            <v-col cols="12" class="align-center py-0">
+                <v-divider />
+                <div class="pa-4 d-flex size-14 flex-row align-center justify-space-between">
+                    <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-calendar</v-icon>{{ baidang.thoigian }} </span>
+                    <!--                <v-spacer />-->
+                    <span class="d-flex flex-row align-center"> <v-icon size="16px" class="mr-1">bx bx-show</v-icon>{{ baidang.luotxem }} </span>
+                    <span v-if="baidang.userObject.id !== userId && userId" class="font-weight-bold cursor-pointer chatnow" @click="chatNow">
+                        <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
+                        Chat ngay
+                    </span>
+                    <span v-if="!$auth.loggedIn" class="font-weight-bold cursor-pointer chatnow" @click="$router.push('/login')">
+                        <v-icon size="16px" class="mr-1">mdi-facebook-messenger</v-icon>
+                        Đăng nhập
+                    </span>
+                </div>
+            </v-col>
+        </v-row>
         <v-chip-group class="loainha">
             <v-chip :style="'background-color: #' + (baidang.isChoThue === 1 ? '477998' : 'dd2d4a !important')" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
-            <!--                <v-chip color="deep-orange accent-3 " class="white&#45;&#45;text" label>Nổi bật</v-chip>-->
+            <v-chip v-if="isNoiBat" color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
         </v-chip-group>
         <v-tooltip v-if="isYeuThich" top content-class="tooltipCustom">
             <template #activator="{ on }">
@@ -193,6 +190,17 @@ export default {
                     }
                 })
             } else flag = false
+            return flag
+        },
+        isNoiBat() {
+            let flag = false
+            if (this.$store.state.baidang_hots.length > 0) {
+                this.$store.state.baidang_hots.forEach((item) => {
+                    if (item.id === this.baidang.id) {
+                        flag = true
+                    }
+                })
+            }
             return flag
         },
     },
@@ -323,5 +331,120 @@ export default {
 <style>
 .v-carousel__controls__item {
     color: red !important;
+}
+</style>
+<style scoped>
+.cards {
+    --spacing: 25px;
+    --columns: 4;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: calc(-1 * var(--spacing));
+}
+.card {
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: 25%;
+    /*margin-left: var(--spacing);*/
+    /*margin-bottom: var(--spacing);*/
+}
+.card-image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.card-top {
+    padding: 25px;
+}
+.card-title {
+    font-weight: 500;
+    margin-bottom: 25px;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+.card-user {
+    display: flex;
+    align-items: center;
+}
+.card-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 100rem;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.card-user-info {
+    padding-left: 20px;
+    flex: 1;
+}
+.card-user-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+.card-user-name {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+}
+.card-user-top ion-icon {
+    color: #20e3b2;
+    margin-left: 5px;
+}
+.card-user-game {
+    color: #999;
+    font-weight: 300;
+    font-size: 13px;
+}
+.card-bottom {
+    padding: 25px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-live {
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: 10px;
+    background-color: #ff6651;
+}
+.card-live span {
+    margin-left: 10px;
+    font-size: 14px;
+}
+.card-watching {
+    font-size: 13px;
+    color: #999;
+    font-weight: 300;
+}
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.card-top {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.card-user,
+.card-bottom {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+.card {
+    display: flex;
+    flex-direction: column;
 }
 </style>

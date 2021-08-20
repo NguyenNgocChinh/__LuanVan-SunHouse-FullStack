@@ -1,4 +1,5 @@
 import sortBy from 'lodash/sortBy'
+import maxBy from 'lodash/maxBy'
 export const state = () => ({
     state: {
         SearchResult: null,
@@ -46,21 +47,20 @@ export const mutations = {
         state.baidang_hots = []
     },
     UPDATE_DOUUTIEN_BAIDANG(state, baidang) {
-        const max = Math.max.apply(
-            Math,
-            state.baidang_hots.map(function (o) {
-                return o.douutien
-            })
-        )
+        const { douutien } = maxBy(state.baidang_hots, 'douutien')
         if (baidang.isChoThue) {
             const index = state.baidang_chothue.findIndex((item) => item.id === baidang.id)
-            if (index > -1) state.baidang_chothue[index].douutien = max + 1
+            if (index > -1) state.baidang_chothue[index].douutien = douutien + 1
         } else {
             const index = state.baidang_raoban.findIndex((item) => item.id === baidang.id)
-            if (index > -1) state.baidang_raoban[index].douutien = max + 1
+            if (index > -1) state.baidang_raoban[index].douutien = douutien + 1
         }
         const index = state.baidang_hots.findIndex((item) => item.id === baidang.id)
-        if (index > -1) state.baidang_hots[index].douutien = max + 1
+        if (index < 0) {
+            baidang.douutien = douutien + 1
+            state.baidang_hots.unshift(baidang)
+            state.baidang_hots.pop()
+        } else state.baidang_hots[index].douutien = douutien + 1
     },
     PUSH_BAIDANG(state, baidang) {
         if (baidang.isChoThue) {

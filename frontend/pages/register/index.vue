@@ -160,6 +160,8 @@ import 'firebase/firestore'
 Vue.component('VOtpInput', OtpInput)
 export default {
     components: {},
+    middleware: 'auth',
+    auth: 'guest',
     data() {
         return {
             valid1: false,

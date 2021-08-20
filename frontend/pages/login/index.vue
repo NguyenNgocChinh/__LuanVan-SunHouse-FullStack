@@ -25,8 +25,6 @@
 
                     <div class="p-t-13 p-b-9">
                         <span class="txt1"> Mật khẩu </span>
-
-                        <a href="javascript:void(0)" class="txt2 bo1 m-l-5" style="text-decoration: none" @click.prevent="$router.push('/resetpassword/sendmail')"> Quên mật khẩu? </a>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
                         <input ref="pass" v-model="loginForm.password" class="input100" type="password" name="pass" />
@@ -37,7 +35,10 @@
                         <button type="submit" class="login100-form-btn" @click.prevent="login">Đăng nhập</button>
                     </div>
 
-                    <div class="w-full text-center p-t-55">
+                    <div class="w-full text-center p-t-30">
+                        <div class="mb-2">
+                            <a href="javascript:void(0)" class="txt2 bo1 m-l-5" style="text-decoration: none" @click.prevent="$router.push('/resetpassword/sendmail')"> Quên mật khẩu? </a>
+                        </div>
                         <span class="txt2"> Chưa phải là thành viên? </span>
 
                         <a href="javascript:void(0)" class="txt2 bo1" style="text-decoration: none" @click="$router.push('/register')"> Đăng ký ngay</a>
