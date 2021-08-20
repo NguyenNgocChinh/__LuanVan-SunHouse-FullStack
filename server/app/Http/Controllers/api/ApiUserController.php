@@ -129,10 +129,16 @@ class ApiUserController extends Controller
                 'trangthai' => -1
             ])->update(['trangthai' => 1]);
             $user->save();
+            $rowAvalible = DB::table('baidang')->where([
+                'user_id' => $user->id,
+                'trangthai' => 1,
+                'choduyet' => 0,
+            ])->count();
             return response()->json(
                 [
                     'success' => "Kích hoạt tài khoản thành công",
                     'baidangkichhoat' => $rows_effect,
+                    'baidangDaDuyet' => $rowAvalible,
                     'baidang' => BaiDangResource::collection($rows),
                 ]
             );
@@ -245,7 +251,7 @@ class ApiUserController extends Controller
     public function checkIsValidUsernameForUpdate($username)
     {
         $kq = User::where('username', $username)->count();
-        if(Auth::check()){
+        if (Auth::check()) {
             $kq = Auth::user()->username == $username ? 0 : $kq;
         }
         return response()->json($kq);
