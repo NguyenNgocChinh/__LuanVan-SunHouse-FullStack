@@ -139,7 +139,7 @@ class ApiTimkiemController extends Controller
                 $column2 = request($column . "2");
                 if (is_null($column1)) $column1 = 0;
                 if (is_null($column2) || $column2 >= $max) {
-                    $baidangs = $baidangs->where($column, '>', $column1);
+                    $baidangs = $baidangs->where($column, '>=', $column1);
                 } else {
                     $baidangs = $baidangs->whereBetween($column, [$column1, $column2]);
                 }

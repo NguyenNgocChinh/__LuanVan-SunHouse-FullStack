@@ -71,14 +71,14 @@ class DanhGiaController extends Controller
     }
     public function removeDanhGia($idDanhGia){
         $danhgia = DanhGia::findOrFail($idDanhGia);
-        $danhgia->delete();
         $user = User::findOrFail($danhgia->user_id);
+        $danhgia->delete();
         $minSao = DanhGia::select(DB::raw('min(sao) as minSao'))->where('user_id',$danhgia->user_id)->get();
         Log::info($minSao);
+        $user->sao = 5;
         if($minSao[0]->minSao != null)
-            $user->sao = $minSao[0]->minSao;
-        else
-            $user->sao = 5;
+        $user->sao = $minSao[0]->minSao;
+
         $user->save();
         return response()->json([
             'success' => 'Xóa đánh giá thành công'

@@ -29,6 +29,7 @@ class BaiDangDetailResource extends JsonResource
                 "created_at" => $this->users->created_at,
                 "sao" => $this->users->sao,
             ],
+            "userObject" => (object) new UserResource($this->users),
             "luotxem" => $this->luotxem,
             "noidung" => $this->noidung,
             "tieude" => $this->tieude,

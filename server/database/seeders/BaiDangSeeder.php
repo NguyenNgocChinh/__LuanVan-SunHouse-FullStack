@@ -45,7 +45,7 @@ class BaiDangSeeder extends Seeder
                 'noidung' => $faker->text(1000),
                 'loai_id' => $loai->random(),
                 'gia' => rand(3000, 8000),
-                'trangthai' => rand(0, 1),
+                'trangthai' => 1,
                 'huong' => $Huong->random(),
                 'isChoThue' => rand(0, 1),
                 'sophongngu' => rand(1, 5),

@@ -23,7 +23,7 @@ class BaoCaoController extends Controller
     }
     public function getBaoCaoWithUser()
     {
-        $baocaos =  BaoCao::groupBy(['user_bibaocao','sdt','email'])
+        $baocaos =  BaoCao::groupBy(['user_bibaocao','name','sdt','email','vaitro','trangthai'])
         ->select(['user_bibaocao','name','sdt','vaitro','email','trangthai',DB::raw('count(*) as slbitocao')])
         ->leftJoin('users','users.id','=','baocao.user_bibaocao')
         ->orderBy('slbitocao','desc')

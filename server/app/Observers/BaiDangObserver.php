@@ -55,7 +55,7 @@ class BaiDangObserver
     {
         Log::info($baiDang);
         $trangthai = 0;
-        if ($baiDang->trangthai && $baiDang->choduyet)
+        if ($baiDang->trangthai && !$baiDang->choduyet)
             $trangthai = 1;
         DB::table('location')
             ->insert(

@@ -47,10 +47,13 @@ class ApiBaiDangController extends Controller
 
     public function getHotPosts()
     {
+        $max = BaiDang::where(['trangthai' => 1, 'choduyet' => 0])->count();
+        $chiadu = $max / 2;
+        $max = $max >= 20 ? 10 : ceil($chiadu);
         $hot_posts = BaiDang::where('trangthai', 1)
             ->where('choduyet', 0)
             ->orderBy('douutien', 'desc')
-            ->limit(10)
+            ->limit($max)
             ->get();
         return response()->json([
             'baidangs' => BaiDangResource::collection($hot_posts)
@@ -126,7 +129,34 @@ class ApiBaiDangController extends Controller
             'baidangs' => BaiDangResource::collection($choduyet),
         ]);
     }
-
+    public function forceDeleteAllPost()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->vaitro == 'admin') {
+                $baiDangs =  BaiDang::withTrashed()->get();
+                foreach ($baiDangs as $baiDang) {
+                    foreach ($baiDang->tiennghiBaiDang as $tiennghi) {
+                        $tiennghi->delete();
+                    }
+                    foreach ($baiDang->hinhanh as $hinhanh) {
+                        Log::info($hinhanh);
+                        $kq = $hinhanh->delete();
+                        Log::info("kq " . $kq);
+                    }
+                    $baiDang->forceDelete();
+                }
+                return response()->json([
+                    'success' => 'Xóa bài đăng thành công'
+                ]);
+            }
+            return response()->json([
+                'errors' => 'Bạn không có quyền xóa bài đăng'
+            ]);
+        }
+        return response()->json([
+            'errors' => 'Bạn cần đăng nhập để xác minh người dùng'
+        ]);
+    }
     public function deletePost($id)
     {
         $post = BaiDang::find($id);
@@ -302,7 +332,6 @@ class ApiBaiDangController extends Controller
                 'noidung' => 'required',
                 'sophongngu' => 'required',
                 'sophongtam' => 'required',
-                'huong' => 'required',
                 'dientich' => 'required',
                 'diachi' => 'required',
                 'toadoX' => 'required',
@@ -317,7 +346,6 @@ class ApiBaiDangController extends Controller
                 'sophongngu.required' => 'Số phòng ngủ không được để trống!',
                 'sophongtam.required' => 'Số phòng tắm không được để trống!',
                 'namxaydung.required' => 'Năm xây dựng không được để trống!',
-                'huong.required' => 'Chưa chọn hướng nhà!',
                 'dientich.required' => 'Diện tích không được để trống!',
                 'diachi.required' => 'Địa chỉ nhà không được để trống!',
                 'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
@@ -519,7 +547,7 @@ class ApiBaiDangController extends Controller
     public function verifyCaptcha(Request $request)
     {
         $token = $request->get('g-recaptcha-response');
-        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY', null));
+        $recaptcha = new \ReCaptcha\ReCaptcha(env('INVISIBLE_RECAPTCHA_SECRETKEY'));
         $resp = $recaptcha->setExpectedHostname($request->getHost())
 
             ->verify($token, $request->ip());

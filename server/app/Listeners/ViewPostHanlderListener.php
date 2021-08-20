@@ -31,16 +31,18 @@ class ViewPostHanlderListener
      * @param  ViewPostHanlder  $event
      * @return void
      */
-    public function handle()
+    public function handle($event)
     {
+        $post = $event->post;
         Log::info("in handle");
         Log::info("session " . json_encode(session()->get('viewed_posts', [])));
-        Log::info("Bài đăng đã được xem " . $this->isPostViewed($this->post));
-	    if (!$this->isPostViewed($this->post))
+        Log::info("Bài đăng đã được xem " . $this->isPostViewed($post));
+	    if (!$this->isPostViewed($post))
 	    {
+            Log::info($post);
             Log::info("increement luotxem");
-            $this->post->increment('luotxem');
-	        $this->storePost($this->post);
+            $post->increment('luotxem');
+	        $this->storePost($post);
 	    }
     }
 

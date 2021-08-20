@@ -67,6 +67,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/checkIsValidNumberPhone/{numberphone}', [ApiUserController::class, "checkIsValidNumberPhone"]);
     Route::get('/checkIsValidEmail/{email}', [ApiUserController::class, "checkIsValidEmail"]);
     Route::get('/checkIsValidUsername/{username}', [ApiUserController::class, "checkIsValidUsername"]);
+    Route::get('/checkIsValidUsernameForUpdate/{username}', [ApiUserController::class, "checkIsValidUsernameForUpdate"])->middleware('auth:sanctum');
 
     Route::put('/toggleVaiTro', [ApiUserController::class, "toggleVaiTro"]);
 });
@@ -89,6 +90,7 @@ Route::group(['prefix' => 'baidang'], function () {
     Route::get('/choduyet/count', [ApiBaiDangController::class, 'countChoDuyetPosts']);
     Route::put('/duyetbai', [ApiBaiDangController::class, 'duyetBai'])->middleware('auth:sanctum');
     Route::get('/deletePosts', [ApiBaiDangController::class, 'deletePosts'])->middleware('auth:sanctum');
+    Route::delete('/forceDeleteAllPost', [ApiBaiDangController::class, 'forceDeleteAllPost'])->middleware('auth:sanctum');
     Route::put('/restorePost/{id}', [ApiBaiDangController::class, 'restorePost'])->middleware('auth:sanctum')->whereNumber('id');
     Route::delete('/forceDeletePost/{id}', [ApiBaiDangController::class, 'forceDeletePost'])->middleware('auth:sanctum')->whereNumber('id');
 
@@ -139,7 +141,7 @@ Route::get('timkiem', [ApiTimkiemController::class, "timkiem"]);
 /*
      * YEU THICH
      */
-Route::get('/yeuthich', [YeuThichController::class, "getYeuThichOfUser"]);
+Route::get('/yeuthich', [YeuThichController::class, "getYeuThichOfUser"])->middleware('auth:sanctum');
 Route::post('/addYeuThich', [YeuThichController::class, "addYeuThich"])->middleware('auth:sanctum');
 Route::post('/removeYeuThich', [YeuThichController::class, "removeYeuThich"])->middleware('auth:sanctum');
 /*

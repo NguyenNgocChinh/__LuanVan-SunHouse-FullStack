@@ -8,7 +8,7 @@ return array(
 	|
 	|
 	*/
-    'app_id' => env('ONESIGNAL_APP_ID'),
+    'app_id' => env('ONESIGNAL_APP_ID', ),
 
     /*
 	|--------------------------------------------------------------------------

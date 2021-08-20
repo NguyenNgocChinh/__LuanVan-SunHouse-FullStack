@@ -43,10 +43,11 @@ class ApiUserController extends Controller
 
     public function login(ApiLoginRequest $request)
     {
-
         $isEmail = filter_var($request->username, FILTER_VALIDATE_EMAIL);
-
-        if (!$user = Auth::guard('web')->attempt([$isEmail ? "email" : "username" => $request->username, 'password' => $request->password], $request->remember))
+        if (!$user = Auth::guard('web')->attempt(
+            [$isEmail ? "email" : "username" => $request->username, 'password' => $request->password],
+            $request->remember
+        ))
 
             return response()->json([
                 'message' => 'Invalid login details'
@@ -57,9 +58,6 @@ class ApiUserController extends Controller
         return response()->json([
             'user' => Auth::user(),
             'token' => $token
-        ]);
-        return response()->json([
-            'token' => $token,
         ]);
     }
 
@@ -125,7 +123,7 @@ class ApiUserController extends Controller
         $user = User::findOrFail($id);
         if ($user != null) {
             $user->trangthai = 1;
-            $rows = $user->baidang->where('trangthai',-1);
+            $rows = $user->baidang->where('trangthai', -1);
             $rows_effect = DB::table('baidang')->where([
                 'user_id' => $user->id,
                 'trangthai' => -1
@@ -171,8 +169,10 @@ class ApiUserController extends Controller
         if ($user) {
             $user->email = $request->email;
             // $user->sdt = $request->sdt;
-            $namsinh = str_replace('/', '-', $request->namsinh);
-            $user->namsinh = date('Y-m-d', strtotime($namsinh));
+            if ($request->namsinh) {
+                $namsinh = str_replace('/', '-', $request->namsinh);
+                $user->namsinh = date('Y-m-d', strtotime($namsinh));
+            }
             $user->name = $request->name;
 
             if ($request->hasfile('file')) {
@@ -240,6 +240,14 @@ class ApiUserController extends Controller
     public function checkIsValidUsername($username)
     {
         $kq = User::where('username', $username)->count();
+        return response()->json($kq);
+    }
+    public function checkIsValidUsernameForUpdate($username)
+    {
+        $kq = User::where('username', $username)->count();
+        if(Auth::check()){
+            $kq = Auth::user()->username == $username ? 0 : $kq;
+        }
         return response()->json($kq);
     }
     public function toggleVaiTro(Request $request)

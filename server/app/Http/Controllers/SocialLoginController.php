@@ -77,7 +77,7 @@ class SocialLoginController extends Controller
 //        Auth::setUser($user);
 
 
-//        return redirect(env('CLIENT_BASE_URL'));
+    //    return redirect(env('CLIENT_BASE_URL'));
         return redirect(env('CLIENT_BASE_URL') . 'login/social-callback?token=' . $token . '&origin=' . ($newUser ? 'register' : 'login'));
     }
 

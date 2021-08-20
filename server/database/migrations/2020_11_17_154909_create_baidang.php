@@ -41,6 +41,13 @@ class CreateBaidang extends Migration
             $table->foreign('loai_id')->references('id')->on('loai');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('duong_id')->references('id')->on('duong');
+            $table->index('diachi');
+            $table->index('huong');
+            $table->index('sophongngu');
+            $table->index('sophongtam');
+            $table->index('gia');
+            $table->index('dientich');
+            $table->index('douutien');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `diachi` (`diachi`)');
             // DB::statement('ALTER TABLE baidang ADD FULLTEXT `tieude` (`tieude`,`diachi`)');
             $table->nullableTimestamps();

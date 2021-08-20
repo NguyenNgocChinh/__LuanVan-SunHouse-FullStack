@@ -19,9 +19,4 @@ class ViewPostHandler
     {
         $this->post = $post;
     }
-
-    public function handle()
-	{
-       return $this->post;
-	}
 }

@@ -45,7 +45,7 @@ class FilterView
         $time = time();
 
         // Let the views expire after one hour.
-        $throttleTime = env('THROTTLE_TIME_VIEW', 500);
+        $throttleTime = env('THROTTLE_TIME_VIEW', 60);
 
         return array_filter($posts, function ($timestamp) use ($time, $throttleTime)
         {
