@@ -50,6 +50,7 @@
                             { k: 'user', v: 'user' },
                             { k: 'admin', v: 'admin' },
                         ]"
+                        :disabled="item.vaitro === 'admin'"
                         hide-details
                         hide-selected
                         @change="changeVaitro(item)"
@@ -178,6 +179,7 @@ export default {
                     item.trangthai = 0
                     if (response.success) {
                         this.$toast.success(response.success)
+                        item.baidangDaDuyet = 0
                         this.$store.commit('REMOVE_BAIDANG_OF_USER', item.id)
                     } else this.$toast.error(response.error, { duration: 5000 })
                 })
@@ -195,6 +197,7 @@ export default {
                     item.trangthai = 1
                     if (response.success) {
                         this.$toast.success(response.success)
+                        item.baidangDaDuyet = response.baidangDaDuyet
                         this.$toast.success(`Đã kích hoạt lại bài đăng`)
                     } else this.$toast.error(response.error, { duration: 5000 })
                 })

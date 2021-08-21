@@ -58,7 +58,7 @@ Vue.prototype.$rules = {
         // only prevent the keypress if the value is blank
         if (!e.target.value) e.preventDefault()
         // otherwise, if the leading character is a space, remove all leading white-space
-        else e.target.value = e.target.value.replace(/\s+/u, ' ').trim()
+        else e.target.value = e.target.value.replace(/\s+/g, ' ').trim()
     },
     preventNumericInput($event) {
         // @keypress="$rules.preventNumericInput($event)"
@@ -78,5 +78,8 @@ Vue.prototype.$rules = {
         if (!/\p{L}|\s+/u.test($event.key)) {
             $event.preventDefault()
         }
+    },
+    replaceSpace(data) {
+        data = data.replace(/\s+ /g, ' ')
     },
 }

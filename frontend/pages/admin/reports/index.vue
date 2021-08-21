@@ -160,6 +160,7 @@ export default {
                 { text: 'Trạng Thái', value: 'trangthai' },
                 { text: 'Bị Báo Cáo', value: 'slbitocao' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
+                { text: 'Mở rộng', value: 'data-table-expand', width: '8%' },
             ],
 
             loading: true,

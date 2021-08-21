@@ -13,12 +13,11 @@
                             v-model="tieude"
                             clearable
                             counter
-                            class=""
-                            :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20 && tieude.length <= 100) || 'Tiêu đề từ 20 - 100 ký tự']"
+                            :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.replace(/\s+ /g, ' ').length >= 20 && tieude.replace(/\s+ /g, ' ').length <= 100) || 'Tiêu đề từ 20 - 100 ký tự']"
                             placeholder="Nhập tiêu đề bài đăng"
                             required
                             dense
-                            @keydown.space="$rules.preventExtraSpace"
+                            @blur=""
                         ></v-text-field>
                         <div class="spacer-line-form"></div>
                         <h3 class="d-inline-block black--text">Loại tài sản</h3>

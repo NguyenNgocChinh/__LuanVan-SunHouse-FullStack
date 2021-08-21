@@ -1,6 +1,6 @@
 <template>
     <div class="text-center">
-        <v-dialog v-model="dialog" width="600">
+        <v-dialog v-model="dialog" width="600" persistent>
             <v-card>
                 <v-card-text class="pt-10 red--text d-flex">
                     <v-icon color="red" size="70" class="mr-5">mdi-close</v-icon>
@@ -42,13 +42,15 @@ export default {
     },
     created() {
         this.$nextTick(() => {
+            if (this.$auth.loggedIn) this.$auth.logout()
             this.getDanhGia()
         })
     },
     methods: {
-        async redirectHome() {
-            if (this.$auth.loggedIn) await this.$auth.logout()
+        redirectHome() {
+            // if (this.$auth.loggedIn) await this.$auth.logout()
             this.dialog = false
+            this.$router.push('/')
         },
         getDanhGia() {
             this.$nuxt.$loading.start()

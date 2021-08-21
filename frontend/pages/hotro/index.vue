@@ -15,8 +15,8 @@
                 </v-list-item>
 
                 <v-card-actions>
-                    <v-btn outlined rounded text href="https://www.facebook.com/chinhnguyen.210399/" target="_blank"> Facebook </v-btn>
-                    <v-btn outlined rounded text href="https://www.facebook.com/messages/t/100006166661659" target="_blank"> Messenger </v-btn>
+                    <v-btn outlined color="primary" rounded text href="https://www.facebook.com/chinhnguyen.210399/" target="_blank"> <v-icon>bx bxl-facebook-circle</v-icon> Facebook </v-btn>
+                    <v-btn outlined color="primary" rounded text href="https://www.facebook.com/messages/t/100006166661659" target="_blank"> <v-icon>bx bxl-messenger</v-icon> Messenger </v-btn>
                 </v-card-actions>
             </v-card>
         </template>
