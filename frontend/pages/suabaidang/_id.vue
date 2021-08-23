@@ -10,14 +10,17 @@
                     </span>
                     <v-text-field
                         v-model="tieude"
-                        clearable
                         counter
-                        class=""
-                        :rules="[() => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!', () => (!!tieude && tieude.length >= 20 && tieude.length <= 100) || 'Tiêu đề từ 20 - 100 ký tự']"
+                        :rules="[
+                            () => !!tieude || 'Vui lòng nhập tiêu đề bài viết!!',
+                            () => (!!tieude && tieude.replace(/\s+ /g, ' ').length >= 20 && tieude.replace(/\s+ /g, ' ').length <= 100) || 'Tiêu đề từ 20 - 100 ký tự',
+                            !/[!#$*~]/.test(tieude) || 'Tiêu đề không được chứa các ký tự đặc biệt như: !#$*~',
+                        ]"
                         placeholder="Nhập tiêu đề bài đăng"
                         required
                         dense
-                        @keydown.space="$rules.preventExtraSpace"
+                        @keypress="$rules.onlyCharacterAndNumber($event)"
+                        @blur="tieude = tieude.replace(/\s+ /g, ' ')"
                     ></v-text-field>
                     <div class="spacer-line-form"></div>
                     <h3 class="d-inline-block black--text">Loại tài sản</h3>
@@ -167,7 +170,17 @@
                         </v-col>
                         <v-col cols="12" sm="4">
                             <h3 class="d-inline-block black--text">Năm xây dựng</h3>
-                            <v-text-field v-model="namxaydung" min="1900" :max="new Date().getFullYear()" class="mt-2" :rules="[$rules.validYear]" type="number" placeholder="ví dụ: 2021" solo></v-text-field>
+                            <v-text-field
+                                v-model="namxaydung"
+                                min="1900"
+                                :max="new Date().getFullYear()"
+                                class="mt-2"
+                                :rules="[$rules.validYear]"
+                                type="number"
+                                placeholder="ví dụ: 2021"
+                                solo
+                                @keypress="$rules.onlyNumberic($event)"
+                            ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="4">
                             <h3 class="d-inline-block black--text">Diện tích: m<sup>2</sup></h3>
@@ -210,43 +223,46 @@
                         <v-col cols="12" lg="4" sm="12">
                             <div>
                                 <h3 class="d-inline-block black--text">Tỉnh/Thành phố</h3>
-                                <v-combobox
+                                <v-select
                                     v-model="thanhpho"
                                     class="mt-2"
                                     :items="listThanhPho"
                                     placeholder="Tìm kiếm"
                                     item-text="name"
                                     item-value="matp"
+                                    return-object
                                     no-data-text="Tải dữ liệu thành phố thất bại"
                                     label="Chọn Tỉnh/Thành Phố"
                                     solo
-                                ></v-combobox>
+                                ></v-select>
                             </div>
                             <div v-if="thanhpho">
                                 <h3 class="d-inline-block black--text">Quận/Huyện</h3>
-                                <v-combobox
+                                <v-select
                                     v-model="quanhuyen"
                                     class="mt-2"
                                     placeholder="Tìm kiếm"
                                     :items="listQuanHuyen"
                                     item-text="name"
                                     item-value="maqh"
+                                    return-object
                                     no-data-text="Tải dữ liệu quận huyện thất bại"
                                     label="Chọn Quận/Huyện"
                                     solo
-                                ></v-combobox>
+                                ></v-select>
                             </div>
                             <div v-if="quanhuyen">
                                 <h3 class="d-inline-block black--text">Xã/Phường</h3>
-                                <v-combobox v-model="xaphuong" class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-combobox>
+                                <v-select v-model="xaphuong" return-object class="mt-2" :items="listXaPhuong" item-text="name" item-value="matp" no-data-text="Tải dữ liệu xã phường thất bại" label="Chọn Xã/Phường" solo></v-select>
                             </div>
                             <div v-if="xaphuong">
                                 <h3 class="d-inline-block black--text">Đường/Phố</h3>
+                                {{ duong }}
                                 <v-combobox
                                     v-model="duong"
                                     chips
                                     class="mt-2"
-                                    :rules="[(v) => v === null || v.length < 30 || 'Tên đường không được quá 30 ký tự']"
+                                    :rules="[(v) => v === null || v.length === 0 || v.length < 30 || 'Tên đường không được quá 30 ký tự', !/[!#$*~]/.test(duong) || 'Tên đường không được chứa các ký tự đặc biệt như: !#$*~']"
                                     :items="listDuong"
                                     :search-input.sync="searchDuong"
                                     item-text="tenduong"
@@ -256,9 +272,10 @@
                                     Hãy tiếp tục viết đúng tên đường và thực hiện đăng bài"
                                     label="Chọn Đường/Phố"
                                     solo
+                                    @keypress.space="$rules.preventExtraSpace($event)"
                                 >
                                 </v-combobox>
-                                <p class="blue--text" style="margin-top: -15px">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
+                                <p class="blue--text" style="">Nếu đường không có sẵn trong hệ thống. Hãy cứ tiếp tục viết đúng tên đường và tiếp tục đăng bài.</p>
                             </div>
                             <div class="f-flex flex-row align-center">
                                 <h3 class="d-inline-block black--text">Địa chỉ cụ thể</h3>

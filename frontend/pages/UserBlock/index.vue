@@ -24,7 +24,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="redirectHome"> ĐỒNG Ý </v-btn>
+                    <v-btn color="primary" :loading="loading" :disabled="loading" @click="redirectHome"> ĐỒNG Ý </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -38,31 +38,34 @@ export default {
         return {
             dialog: true,
             danhgiaList: [],
+            loading: false,
         }
     },
     created() {
-        this.$nextTick(() => {
-            if (this.$auth.loggedIn) this.$auth.logout()
-            this.getDanhGia()
-        })
+        this.getDanhGia()
+    },
+    beforeDestroy() {
+        if (this.$auth.loggedIn) this.$auth.logout()
     },
     methods: {
         redirectHome() {
-            // if (this.$auth.loggedIn) await this.$auth.logout()
-            this.dialog = false
-            this.$router.push('/')
+            this.loading = true
+            if (this.$auth.loggedIn) this.$auth.logout()
+            else this.$router.push({ path: '/' })
         },
         getDanhGia() {
-            this.$nuxt.$loading.start()
-            this.$axios
-                .$get('/danhgia/getDanhGiaForUser', { withCredentials: true })
-                .then((respone) => {
-                    this.danhgiaList = respone
-                })
-                .catch(() => {})
-                .finally(() => {
-                    this.$nuxt.$loading.finish()
-                })
+            this.$nextTick(() => {
+                this.$nuxt.$loading.start()
+                this.$axios
+                    .$get('/danhgia/getDanhGiaForUser', { withCredentials: true })
+                    .then((respone) => {
+                        this.danhgiaList = respone
+                    })
+                    .catch(() => {})
+                    .finally(() => {
+                        this.$nuxt.$loading.finish()
+                    })
+            })
         },
     },
 }

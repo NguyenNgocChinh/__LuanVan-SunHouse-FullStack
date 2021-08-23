@@ -42,12 +42,13 @@
                                                 :items="item.baocao"
                                             >
                                                 <template #[`item.noidung`]="{ item }">
+                                                    <v-rating half-increments :value="parseFloat(item.sao)" color="yellow darken-3" length="5" readonly size="15"></v-rating>
                                                     <span class="red--text" v-html="$sanitize(item.noidung)"></span>
                                                 </template>
                                                 <template #[`item.created_at`]="{ item }">
                                                     {{ $nuxt.$moment(item.created_at).format('DD/MM/YYYY HH:mm:ss') }}
                                                 </template>
-                                                <template #[`item.name`]="{ item }"> {{ item.name }} ({{ item.username }}) </template>
+                                                <template #[`item.name`]="{ item }"> {{ item.name }} ({{ item.username || '-' }}) </template>
                                                 <template #[`item.hanhdong`]="{ item }">
                                                     <v-btn icon color="red"><v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon></v-btn>
                                                 </template>
@@ -86,7 +87,7 @@
                                     </v-row>
                                 </template>
                                 <template #[`item.noidungbaocao`]="{ item }">
-                                    <p v-html="item.noidungbaocao"></p>
+                                    <p style="word-break: break-all">{{ item.noidungbaocao }}</p>
                                 </template>
                                 <template #[`item.hanhdong`]="{ item }">
                                     <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
@@ -104,6 +105,12 @@
                             </v-data-table>
                         </v-container>
                     </td>
+                </template>
+                <template #[`item.name`]="{ item }">
+                    <div class="text-center py-2">
+                        {{ item.name }}
+                        <v-rating half-increments :value="parseFloat(item.sao)" color="yellow darken-3" length="5" readonly size="15"></v-rating>
+                    </div>
                 </template>
                 <template #[`item.trangthai`]="{ item }">
                     <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
@@ -152,13 +159,13 @@ export default {
             singleSelect: false,
             selected: [],
             headersUserBiBaoCao: [
-                { text: 'ID', value: 'user_bibaocao' },
-                { text: 'Tên', value: 'name' },
-                { text: 'Email', value: 'email' },
-                { text: 'SĐT', value: 'sdt' },
-                { text: 'Vai Trò', value: 'vaitro', width: '9%' },
-                { text: 'Trạng Thái', value: 'trangthai' },
-                { text: 'Bị Báo Cáo', value: 'slbitocao' },
+                { text: 'ID', value: 'user_bibaocao', width: '6%', align: 'center' },
+                { text: 'Tên', value: 'name', align: 'center' },
+                { text: 'Email', value: 'email', align: 'center' },
+                { text: 'SĐT', value: 'sdt', align: 'center' },
+                { text: 'Vai Trò', value: 'vaitro', width: '9%', align: 'center' },
+                { text: 'Trạng Thái', value: 'trangthai', align: 'center' },
+                { text: 'Bị Báo Cáo', value: 'slbitocao', align: 'center' },
                 { text: 'Hành động', value: 'hanhdong', sortable: false },
                 { text: 'Mở rộng', value: 'data-table-expand', width: '8%' },
             ],
@@ -311,7 +318,7 @@ export default {
                             }
                             this.selectedUser.slbitocao -= 1
                             if (this.selectedUser.slbitocao < 1) this.list.splice(this.indexUser, 1)
-
+                            this.selectedUser.sao = this._.meanBy(this.selectedBaiDang.baocao, 'sao')
                             this.$store.commit('REMOVE_BAOCAO', this.seletedItem.id)
                         }
                         if (res.errors) {

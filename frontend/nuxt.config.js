@@ -45,7 +45,7 @@ export default {
         ],
     },
     router: {
-        // middleware: 'auth',
+        middleware: 'checkStatus',
     },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: ['~/assets/css/formatToast', '~/assets/css/formatGlobal'],
@@ -63,6 +63,7 @@ export default {
         { src: '~/plugins/sanitize.js', ssr: false },
         { src: '~/plugins/sweetAlert.js', ssr: false },
         { src: '~/plugins/onesignal.js', ssr: false },
+        { src: '~/plugins/filters.js', ssr: false },
     ],
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,

@@ -1,7 +1,10 @@
 import Vue from 'vue'
 Vue.prototype.$rules = {
     required: (value) => !!value || 'Không được để trống!',
-    min: (v, lenght) => v.length >= lenght || 'Ít nhất ' + lenght + ' kí tự',
+    min: (v, lenght) => {
+        if (v === '' || v === null) return true
+        return v.length >= lenght || 'Ít nhất ' + lenght + ' kí tự'
+    },
     email: (value) => {
         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return pattern.test(value) || 'E-mail không hợp lệ!'
@@ -76,6 +79,13 @@ Vue.prototype.$rules = {
     onlyCharacter($event) {
         // @keypress="$rules.onlyCharacter($event)"
         if (!/\p{L}|\s+/u.test($event.key)) {
+            $event.preventDefault()
+        }
+    },
+    onlyCharacterAndNumber($event) {
+        // @keypress="$rules.onlyCharacterAndNumber($event)"
+        const regex = /^[!#$*]*$/
+        if (regex.test($event.key)) {
             $event.preventDefault()
         }
     },

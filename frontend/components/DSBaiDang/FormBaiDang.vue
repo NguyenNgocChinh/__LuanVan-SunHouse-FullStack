@@ -12,7 +12,7 @@
             </div>
             <div v-show="banKinhOn" class="ml-5 pt-0 mt-0 searchBanKinh" @toggle="isViTri">
                 <!--            <v-slider v-model="bankinh" thumb-color="blue" thumb-label="always"></v-slider>-->
-                <v-text-field v-model="bankinh" placeholder="Nhập bán kính" label="Bán kính" value="50" outlined @keydown.enter="searchBaiDangs" />
+                <v-text-field v-model="bankinh" placeholder="Nhập bán kính" label="Bán kính" value="50" outlined suffix="Km" @keydown.enter="searchBaiDangs" />
                 <v-radio-group v-model="radioGroup" mandatory class="pt-0 mt-0">
                     <v-radio :label="'Theo địa chỉ'" :value="1" class="pt-0 mt-0"></v-radio>
                     <div v-if="radioGroup === 1" class="pb-4">
@@ -24,6 +24,7 @@
                     <small v-if="radioGroup === 2" class="blue--text caption" style="font-size: 8px"> {{ X }}, {{ Y }} </small>
                 </v-radio-group>
             </div>
+            <h4 class="ml-5 sunhouse_grey2--text">Ngày đăng:</h4>
             <div class="ml-5 my-2">
                 <v-menu ref="menuCalendarStart" v-model="menuCalendarStart" color="green lighten-1" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
                     <template #activator="{ on, attrs }">
@@ -172,7 +173,14 @@
             <div class="ml-1">
                 <v-btn block class="sunhouse_red2 sunhouse_white--text" @click="searchBaiDangs">Tìm kiếm</v-btn>
             </div>
-            <v-checkbox v-model="isSaveSearch" label="Lưu tìm kiếm" color="sunhouse_blue2" hide-details @click="toggleSaveSearch"></v-checkbox>
+            <v-checkbox
+                v-model="isSaveSearch"
+                :disabled="date1 > date2"
+                :rules="[date1 === null || date2 === null || date1 < date2 || 'Ngày không hợp lệ, nên không thể lưu tìm kiếm']"
+                label="Lưu tìm kiếm"
+                color="sunhouse_blue2"
+                @click="toggleSaveSearch"
+            ></v-checkbox>
         </v-form>
     </v-card>
 </template>
@@ -239,41 +247,6 @@ export default {
             }
         },
 
-        // inputThanhPho(val) {
-        //     this.arrDiaChi = []
-        //     this.quanhuyen = []
-        //     this.inputQuanHuyen = null
-        //
-        //     if (this.inputThanhPho != null) {
-        //         var ret = val.replace('Tỉnh', '')
-        //         ret = ret.replace('Thành phố', '')
-        //         this.arrDiaChi.push(ret)
-        //         this.diachi = this.arrDiaChi.join(',')
-        //     }
-        // },
-        // inputQuanHuyen(val) {
-        //     this.xaphuong = []
-        //     this.inputXaPhuong = ''
-        //     this.arrDiaChi.splice(0, this.arrDiaChi.length - 1)
-        //     if (this.inputQuanHuyen === '') this.inputQuanHuyen = null
-        //     if (this.inputQuanHuyen != null) {
-        //         var ret = val.replace('Huyện', '')
-        //         ret = ret.replace('Quận', '')
-        //         this.arrDiaChi.unshift(ret)
-        //         this.diachi = this.arrDiaChi.join(',')
-        //     }
-        // },
-        // inputXaPhuong(val) {
-        //     this.arrDiaChi.splice(0, this.arrDiaChi.length - 2)
-        //     if (this.inputXaPhuong === '') this.inputXaPhuong = null
-        //     if (this.inputXaPhuong != null) {
-        //         var ret = val.replace('Xã', '')
-        //         ret = ret.replace('Phường', '')
-        //         this.arrDiaChi.unshift(ret)
-        //         this.diachi = this.arrDiaChi.join(',')
-        //     }
-        // },
-
         searchParams: {
             handler(newValue) {
                 if (this.loaded) {
@@ -283,9 +256,6 @@ export default {
                 }
             },
             deep: true,
-        },
-        dateStart(val) {
-            console.log('watch ', val)
         },
     },
     created() {},
@@ -332,6 +302,12 @@ export default {
 
             searchParams: 'searchParams',
         }),
+        date1() {
+            return this.dateStart !== null ? this.dateStart.replace(/-/g, '/') : null
+        },
+        date2() {
+            return this.dateEnd !== null ? this.dateEnd.replace(/-/g, '/') : null
+        },
     },
     methods: {
         loadSavedSearch() {
@@ -346,7 +322,6 @@ export default {
         },
         toggleSaveSearch() {
             console.log('change to ' + this.isSaveSearch)
-
             if (this.isSaveSearch) {
                 this.saveSearch()
                 this.$toast.success('Đã lưu tìm kiếm')

@@ -29,7 +29,7 @@
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.gia }">{{ baidang.gia || '--' }} {{ baidang.isChoThue ? 'Triệu/tháng' : 'Triệu/m²' }}</li>
                             <li class="special-wrapper-item text-overflow-ellipsis">Hình thức: {{ baidang.isChoThue ? 'Cho thuê' : 'Rao bán' }}</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.dientich }">Diện tích: {{ baidang.dientich || '--' }} m²</li>
-                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.sophongngu === '0' }">Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng</li>
+                            <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.sophongngu || baidang.sophongngu === '0' }">Số phòng ngủ: {{ baidang.sophongngu || '--' }} phòng</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.sophongtam === '0' }">Số phòng tắm: {{ baidang.sophongtam || '--' }} phòng</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: baidang.huong === 'null' }">Hướng nhà: {{ baidang.huong !== 'null' ? baidang.huong : '--' }}</li>
                             <li class="special-wrapper-item text-overflow-ellipsis" :class="{ disable: !baidang.loai }">Loại nhà: {{ baidang.loai || '-' }}</li>
@@ -41,7 +41,7 @@
         </v-container>
         <div v-if="baidang.choduyet || !baidang.trangthai" style="position: fixed; z-index: 999; top: 55px">
             <v-alert v-model="alertModal" dismissible color="sunhouse_blue2" border="left" elevation="2" colored-border icon="mdi-clock-fast">
-                <span @click="pheduyet">
+                <span :class="{ 'cursor-pointer': userVaitroLoggedIn === 'admin' }" @click="pheduyet">
                     Bài đăng đang chờ <strong>{{ !baidang.trangthai ? 'kích hoạt' : 'phê duyệt' }}</strong>
                 </span>
             </v-alert>
@@ -126,7 +126,7 @@
                             <div class="info-description">
                                 <h2>Thông tin mô tả</h2>
                                 <v-divider />
-                                <p style="letter-spacing: 0.5px" class="my-4" :class="{ readLess: !readMore }" v-html="$sanitize(baidang.noidung)"></p>
+                                <p style="letter-spacing: 0.5px" class="mt-4" :class="[{ readLess: !readMore }, { 'my-4': readMore }]" v-html="$sanitize(baidang.noidung)"></p>
                                 <v-btn v-if="!readMore" rounded small color="sunhouse_blue2 sunhouse_white--text" class="mb-4" @click="readMore = !readMore">Xem thêm</v-btn>
                                 <v-expansion-panels multiple tile :value="[0, 1, 2]" flat hover accordion>
                                     <v-expansion-panel>
@@ -147,11 +147,13 @@
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Diện tích:</span>
-                                                    <span class="attribute-info">{{ baidang.dientich }} m<sup>2</sup></span>
+                                                    <span class="attribute-info"
+                                                        >{{ baidang.dientich }} m<sup><small>2</small></sup></span
+                                                    >
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Hướng nhà:</span>
-                                                    <span class="attribute-info">{{ baidang.huong }}</span>
+                                                    <span class="attribute-info">{{ baidang.huong !== 'null' ? baidang.huong : 'Không xác định' }}</span>
                                                 </li>
                                             </ul>
                                         </v-expansion-panel-content>
@@ -182,7 +184,7 @@
                                                 </li>
                                                 <li class="d-flex mb-3">
                                                     <span class="label">Hướng nhà:</span>
-                                                    <span class="attribute-info">{{ baidang.huong }}</span>
+                                                    <span class="attribute-info">{{ baidang.huong !== 'null' ? baidang.huong : 'Không xác định' }}</span>
                                                 </li>
                                             </ul>
                                         </v-expansion-panel-content>
@@ -227,7 +229,7 @@
                                     <v-col class="col-md-3">
                                         <v-avatar size="56">
                                             <v-img v-if="user.profile_photo_path == null" width="100%" height="100%" :src="user.profile_photo_url" />
-                                            <v-img v-else width="100%" height="100%" :src="isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : URI_DICRECTORY_UPLOAD + user.profile_photo_path" />
+                                            <v-img v-else width="100%" height="100%" :src="isValidHttpUrl(user.profile_photo_path) ? user.profile_photo_path : this.$config.serverUrl + '/' + user.profile_photo_path" />
                                         </v-avatar>
                                     </v-col>
                                     <v-col class="col-md-9 pl-0">
@@ -235,7 +237,7 @@
                                             {{ user.name || '-' }}
                                         </div>
                                         <div style="word-break: break-word">{{ user.email || '-' }}</div>
-                                        <v-rating length="5" size="18" :value="parseInt(user.sao)" color="yellow darken-3" readonly style="margin-left: -10px"></v-rating>
+                                        <v-rating length="5" half-increments size="18" :value="parseFloat(user.sao)" color="yellow darken-3" readonly style="margin-left: -10px"></v-rating>
                                     </v-col>
                                 </v-row>
                                 <v-row class="mb-2"><v-divider /></v-row>
@@ -295,11 +297,31 @@
                 </v-col>
             </v-row>
         </sweet-modal>
-        <sweet-modal v-if="user" ref="modalBaoCao" enable-mobile-fullscreen :title="`Báo cáo bài đăng của ${user.name}`" width="90%" blocking>
+        <sweet-modal v-if="user" ref="modalBaoCao" enable-mobile-fullscreen :title="`Báo cáo bài đăng của ${user.name}`" blocking>
+            <!--            <v-row>-->
+            <!--                <h3 class="d-inline-block">Nhập nội dung báo cáo</h3>-->
+            <!--            </v-row>-->
+            <!--            <editor id="sunhouseEditor" :min-length="40" :max-length="255" class="mt-2 py-5" />-->
             <v-row>
-                <h3 class="d-inline-block">Nhập nội dung báo cáo</h3>
+                <v-col cols="12" sm="12" class="pa-0">
+                    <v-textarea
+                        v-model="noidungbaocao"
+                        autofocus
+                        auto-grow
+                        row-height="15"
+                        counter
+                        label="Nội dung đánh giá"
+                        outlined
+                        :rules="[() => !!noidungbaocao || 'Phải nhập nội dung đánh giá', (noidungbaocao.length >= 20 && noidungbaocao.length < 255) || 'Nội dung phải từ 20-255 ký tự']"
+                        required
+                        @keypress="noidungbaocao = noidungbaocao.replace(/\s+/g, ' ')"
+                        @blur="noidungbaocao = noidungbaocao.replace(/\s+/g, ' ')"
+                    ></v-textarea>
+                </v-col>
+                <v-col cols="12" sm="12" class="text-center pa-0">
+                    <v-rating v-model.number="sao" half-increments color="yellow darken-3" hover length="5" size="30"></v-rating>
+                </v-col>
             </v-row>
-            <editor id="sunhouseEditor" :min-length="40" :max-length="255" class="mt-2 py-5" />
             <template slot="button">
                 <v-btn color="primary" :loading="loadingBaoCao" @click="xulybaocao">Báo cáo</v-btn>
             </template>
@@ -321,13 +343,12 @@ import * as serviceNear from '@/static/js/servicesNear'
 import OwlCarousel from '@/components/UIComponent/owlCarousel'
 import Timer from '@/components/UIComponent/Timer'
 import BaiDangCard from '@/components/BaiDang/BaiDangCard'
-import Editor from '@/components/UIComponent/Editor'
 
 import { truncateSpace } from '~/assets/js/core'
 Vue.use(Viewer)
 
 export default {
-    components: { Editor, BaiDangCard, Timer, OwlCarousel },
+    components: { BaiDangCard, Timer, OwlCarousel },
     validate({ params }) {
         // Must be a number
         return /^\d+$/.test(params.id)
@@ -396,9 +417,11 @@ export default {
             isCanPush: false,
             nextPush: null,
 
-            noidungbaocao: null,
+            noidungbaocao: '',
+            sao: 4,
             loadingBaoCao: false,
             loadingDuyetBai: false,
+            baocaoIsValid: true,
         }
     },
     head() {
@@ -480,9 +503,9 @@ export default {
         this.$nuxt.$on('endCountDown', () => {
             this.isCanPush = true
         })
-        this.$nuxt.$on('blurTieuDe', (noidung) => {
-            this.noidungbaocao = noidung
-        })
+        // this.$nuxt.$on('blurTieuDe', (noidung) => {
+        //     this.noidungbaocao = noidung
+        // })
     },
     methods: {
         shareOnFB() {
@@ -574,12 +597,8 @@ export default {
                             // Save localStorage
                             const history = JSON.parse(localStorage.getItem('history'))
                             let saveToLocalStorage = history || []
-                            if (this._.some(saveToLocalStorage, data)) {
-                                saveToLocalStorage.splice(
-                                    saveToLocalStorage.findIndex((x) => x.id === data.id),
-                                    1
-                                )
-                            }
+                            const index = saveToLocalStorage.findIndex((x) => x.id === data.id)
+                            if (index > -1) saveToLocalStorage.splice(index, 1)
                             data.timeSave = this.$moment().format('H:mm:ss - DD/MM/YYYY')
                             saveToLocalStorage.unshift(data)
                             saveToLocalStorage = this._.sortBy(saveToLocalStorage, ['timeSave'])
@@ -769,8 +788,10 @@ export default {
                 this.$toast.error('Phải nhập nội dung báo cáo')
                 return
             }
-            if (this.noidungbaocao.length < 40 || this.noidungbaocao.length > 255) {
-                this.$toast.error('Nội dung báo cáo phải ít nhất 40 - 255 ký tự')
+            const content = this.noidungbaocao.replace(/<(.|\n)*?>/g, '').trim()
+            if (content.length < 20 || content.length > 255) {
+                // textarea is still empty
+                this.$toast.error('Nội dung từ 40 - 3000 ký tự')
                 return
             }
             this.loadingBaoCao = true
@@ -778,6 +799,7 @@ export default {
                 .$post('/baocao', {
                     noidung: this.noidungbaocao,
                     baidang_id: this.baidang.id,
+                    sao: this.sao,
                     user_bibaocao: this.user.id,
                 })
                 .then((res) => {
@@ -803,7 +825,7 @@ export default {
 <style scoped src="~/assets/css/detailPost.css"></style>
 <style scoped>
 .readLess {
-    height: 250px;
+    height: 230px;
     overflow: hidden;
 }
 </style>

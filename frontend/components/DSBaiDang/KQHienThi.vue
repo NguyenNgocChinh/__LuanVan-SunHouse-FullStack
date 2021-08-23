@@ -116,20 +116,13 @@ export default {
     mounted() {
         this.getbaidangs(true)
         this.$nuxt.$on('search', () => {
-            this.baidangs = []
+            // this.baidangs = []
             this.page = 1
             this.getbaidangs()
         })
     },
     methods: {
         async getbaidangs(filter = false) {
-            this.detail_page = {
-                to: '?',
-                from: '?',
-                total: '?',
-            }
-            this.baidangs = []
-            if (this.isEmpty) this.isEmpty = false
             const arrAddress = this.diachi
             const url = '/timkiem?' + this.sortBy()
             const toDay = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10).replace(/-/g, '/')
@@ -139,6 +132,13 @@ export default {
                 this.$toast.error('Ngày nhập vào không hợp lệ')
                 return
             }
+            this.detail_page = {
+                to: '?',
+                from: '?',
+                total: '?',
+            }
+            this.baidangs = []
+            if (this.isEmpty) this.isEmpty = false
             await this.$axios
                 .$get(url, {
                     params: {
@@ -157,8 +157,10 @@ export default {
                         dientich2: this.dientich2,
                         banKinhOn: this.banKinhOn,
                         bankinh: this.bankinh,
-                        created_at1: date1 === toDay ? null : this.dateStart,
-                        created_at2: date2 === toDay ? null : this.dateEnd,
+                        // created_at1: date1 === toDay ? null : this.dateStart,
+                        // created_at2: date2 === toDay ? null : this.dateEnd,
+                        created_at1: this.dateStart,
+                        created_at2: this.dateEnd,
                         X: this.X,
                         Y: this.Y,
                     },

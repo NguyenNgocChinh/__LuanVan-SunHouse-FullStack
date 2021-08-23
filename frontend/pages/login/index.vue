@@ -74,16 +74,11 @@ export default {
                 })
                 this.$nuxt.$toast.show('Đang tiến hành đăng nhập vào hệ thống!')
                 await this.$auth.loginWith('laravelSanctum', { data: this.loginForm }).then(async (res) => {
-                    if (!res.data.user?.trangthai) {
-                        await this.$auth.logout()
-                        this.$router.push('/UserBlock')
-                    } else {
-                        this.$auth.strategy.token.set(res.data.token)
-                        window.OneSignal.push(function () {
-                            window.OneSignal.sendTag('user_id', self.$auth.user.id)
-                        })
-                        this.$toast.success('Đăng nhập thành công')
-                    }
+                    this.$auth.strategy.token.set(res.data.token)
+                    window.OneSignal.push(function () {
+                        window.OneSignal.sendTag('user_id', self.$auth.user.id)
+                    })
+                    this.$toast.success('Đăng nhập thành công')
                 })
             } catch (e) {
                 this.$nuxt.$toast.show('Thông tin đăng nhập không chính xác!', {

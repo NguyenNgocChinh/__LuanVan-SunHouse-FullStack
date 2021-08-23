@@ -44,7 +44,7 @@
                         <v-switch v-model="singleSelect" label="Tắt chọn tất cả" class="pa-3"></v-switch>
                         <v-spacer />
                         <div class="pt-4">
-                            <v-btn dark small color="sunhouse_red2" class="mr-2" @click="duyetbai(selected)"> PHÊ DUYỆT </v-btn>
+                            <v-btn :disabled="selected.length < 1" dark small color="sunhouse_red2" class="mr-2" @click="duyetbai(selected)"> PHÊ DUYỆT </v-btn>
                         </div>
                     </div>
                 </template>

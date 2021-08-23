@@ -50,13 +50,20 @@
                                 </v-container>
                             </template>
                             <template #[`item.hanhdong`]="{ item }">
-                                <v-btn icon color="red" @click="deleteItem(item)"><v-icon>mdi-delete</v-icon></v-btn>
+                                <v-btn icon color="red" @click="preDelete(item)"><v-icon>mdi-delete</v-icon></v-btn>
                             </template>
                         </v-data-table>
                     </v-col>
                 </v-row>
             </v-col>
         </v-row>
+        <sweet-modal ref="modalDelete" blocking title="Xác nhận xóa bài đăng trong lịch sử" icon="warning">
+            Bạn có chắc chắn muốn xóa bài đăng không?
+            <template slot="button">
+                <v-btn class="mr-2" :disabled="loadingDelete" @click="$refs.modalDelete.close()">Hủy</v-btn>
+                <v-btn color="primary" :loading="loadingDelete" :disabled="loadingDelete" @click="deleteItem(selectedItem)">XÁC NHẬN XÓA</v-btn>
+            </template>
+        </sweet-modal>
     </v-container>
 </template>
 
@@ -68,6 +75,8 @@ export default {
         selectedTable: [],
         searchInput: undefined,
         loadingData: false,
+        selectedItem: {},
+        loadingDelete: false,
         tindangs: [],
         headers: [
             { text: 'Tin đăng', value: 'tieude' },
@@ -86,17 +95,23 @@ export default {
     },
     methods: {
         async getYeuThichPosts() {
+            this.loadingData = true
             this.tindangs = await this.$axios.$get('/yeuthich')
+            this.loadingData = false
         },
 
         deleteItem(item) {
             if (this.$auth.loggedIn) {
+                this.loadingDelete = true
                 this.$axios.$post('/removeYeuThich', {
                     baidang_id: item.id,
                 })
                 this.$store.commit('REMOVE_YEUTHICH', item.id)
                 const index = this.tindangs.findIndex((i) => i.id === item.id)
                 this.tindangs.splice(index, 1)
+                this.loadingDelete = false
+                this.$refs.modalDelete.close()
+                this.selectedItem = {}
             }
         },
         deleteArrayItem(list) {
@@ -112,6 +127,10 @@ export default {
                     this.$nuxt.$loading.finish()
                 }
             })
+        },
+        preDelete(item) {
+            this.selectedItem = item
+            this.$refs.modalDelete.open()
         },
     },
 }

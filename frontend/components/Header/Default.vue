@@ -11,7 +11,7 @@
             <div class="list-menu">
                 <v-list-item-group class="d-flex flex-row">
                     <v-list-item v-for="(item, index) in listMenus" :key="index" active-class="sunhouse_red1" link :to="item.href" class="navlink">
-                        <v-list-item-title class="white--text" style="font-size: 14px; letter-spacing: 1.25px; font-weight: 550">{{ item.menu }}</v-list-item-title>
+                        <v-list-item-title class="sunhouse_white--text" style="font-size: 14px; letter-spacing: 1.25px; font-weight: 550">{{ item.menu }}</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
 

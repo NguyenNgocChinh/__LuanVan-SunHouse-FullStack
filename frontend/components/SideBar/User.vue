@@ -23,7 +23,8 @@
                         <img v-else :src="isValidHttpUrl($auth.user.profile_photo_path) ? $auth.user.profile_photo_path : URI_DICRECTORY_UPLOAD + $auth.user.profile_photo_path" />
                         <div class="name_job">
                             <div class="name">{{ $auth.user.name }}</div>
-                            <div class="job">{{ $auth.user.vaitro === 'user' ? 'Thành viên' : 'Quản trị viên' }}</div>
+                            <div v-if="$auth.user.vaitro === 'user'" class="job">{{ 'Thành viên' }}</div>
+                            <div v-else class="job admin cursor-pointer" @click="$router.push('/admin')">Quản trị viên</div>
                         </div>
                     </div>
                     <i id="log_out" class="bx bx-log-out" @click="logout"></i>
@@ -180,5 +181,13 @@ export default {
 .v-application ul,
 .v-application ol {
     padding-left: unset;
+}
+.job {
+    font-weight: 500;
+}
+.admin {
+    &:hover {
+        color: $sunhouse_blue1;
+    }
 }
 </style>

@@ -250,7 +250,7 @@ export default {
             menuBirthday: false,
             imgAvatar: undefined,
             file: undefined,
-            birthday: undefined,
+            birthday: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
             sdt: undefined,
             oldnumberPhone: undefined,
             email: undefined,
@@ -460,8 +460,9 @@ export default {
             this.email = this.$auth.user.email
             this.oldEmail = this.$auth.user.email
             this.fullname = this.$auth.user.name
-            this.username = this.$auth.user.username
-            if (typeof this.birthday !== 'undefined' && this.birthday !== null) {
+            this.username = this.$auth.user.username === null ? '' : this.$auth.user.username
+            console.log(this.$auth.user.namsinh)
+            if (this.$auth.user.namsinh !== null) {
                 this.birthday = this.$moment(this.$auth.user.namsinh).format('YYYY-MM-DD')
             } else this.birthday = undefined
         },
@@ -496,11 +497,6 @@ export default {
                 return
             }
             this.loadingSave = true
-            const data = new FormData()
-            data.append('name', this.fullname)
-            data.append('email', this.email)
-            data.append('namsinh', this.birthday)
-            data.append('file', this.file)
             if (this.oldEmail !== this.email) {
                 await this.$axios
                     .$get('/users/checkIsValidEmail/' + this.email)
@@ -529,6 +525,14 @@ export default {
                     this.loadingSave = false
                 })
             if (!this.isValidUsername) return
+
+            const data = new FormData()
+            data.append('name', this.fullname)
+            data.append('username', this.username)
+            data.append('email', this.email)
+            data.append('namsinh', this.birthday)
+            data.append('file', this.file)
+
             this.$axios
                 .$post('/users/update', data, {
                     withCredentials: true,

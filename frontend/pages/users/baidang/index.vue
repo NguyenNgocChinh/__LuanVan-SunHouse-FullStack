@@ -68,13 +68,20 @@
                                 <v-btn icon color="warning" @click="$router.push({ path: '/suabaidang/' + item.id })">
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
-                                <v-btn icon color="red" @click="deleteItem(item)"><v-icon>mdi-delete</v-icon></v-btn>
+                                <v-btn icon color="red" @click="preDelete(item)"><v-icon>mdi-delete</v-icon></v-btn>
                             </template>
                         </v-data-table>
                     </v-col>
                 </v-row>
             </v-col>
         </v-row>
+        <sweet-modal ref="modalDelete" blocking title="Xác nhận xóa bài đăng" icon="warning">
+            Bạn có chắc chắn muốn xóa bài đăng không?
+            <template slot="button">
+                <v-btn class="mr-2" :disabled="loadingDelete" @click="$refs.modalDelete.close()">Hủy</v-btn>
+                <v-btn color="primary" :loading="loadingDelete" :disabled="loadingDelete" @click="deleteItem(selectedItem)">XÁC NHẬN XÓA</v-btn>
+            </template>
+        </sweet-modal>
     </v-container>
 </template>
 
@@ -91,9 +98,11 @@ export default {
             { text: 'Tin chờ duyệt', icon: 'bx bx-loader-alt' },
             { text: 'Tin bị hạ', icon: 'bx bx-x' },
         ],
+        selectedItem: {},
         posts: undefined,
         allPosts: undefined,
         loadingData: false,
+        loadingDelete: false,
         headers: [
             { text: 'Tin đăng', value: 'tieude' },
             { text: '', value: 'hanhdong', sortable: false },
@@ -138,6 +147,10 @@ export default {
         this.getAllPost()
     },
     methods: {
+        preDelete(item) {
+            this.$refs.modalDelete.open()
+            this.selectedItem = item
+        },
         getAllPost() {
             this.loadingData = true
             this.$axios
@@ -154,13 +167,21 @@ export default {
                 })
         },
         deleteItem(item) {
-            this.$axios.$delete('/baidang/' + item.id).then((res) => {
-                if (res.success) {
-                    this.$toast.success(res.success)
-                    this.allPosts.splice(this.allPosts.indexOf(item), 1)
-                    this.posts.splice(this.posts.indexOf(item), 1)
-                } else this.$toast.error(res.fail, { duration: 5000 })
-            })
+            this.loadingDelete = true
+            this.$axios
+                .$delete('/baidang/' + item.id)
+                .then((res) => {
+                    if (res.success) {
+                        this.$toast.success(res.success)
+                        this.allPosts.splice(this.allPosts.indexOf(item), 1)
+                        this.posts.splice(this.posts.indexOf(item), 1)
+                    } else this.$toast.error(res.fail, { duration: 5000 })
+                })
+                .finally(() => {
+                    this.loadingDelete = false
+                    this.$refs.modalDelete.close()
+                    this.selectedItem = {}
+                })
         },
         deleteArrayItem(list) {
             this.$nextTick(() => {

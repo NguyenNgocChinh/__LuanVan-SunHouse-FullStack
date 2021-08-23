@@ -159,8 +159,8 @@
             Nếu tiếp tục bạn sẽ khôi phục {{ selected.length }} bài viết đã chọn. <br />Bạn có chắc chắn không?
             <template #button>
                 <div class="text-right">
-                    <v-btn color="primary" @click="$refs.modalRestore.close()">HỦY</v-btn>
-                    <v-btn color="primary" :loading="loadingRestoreMul" @click="restoreMultiple(selected)">KHÔI PHỤC</v-btn>
+                    <v-btn color="primary" :disabled="loadingRestoreMul" @click="$refs.modalRestore.close()">HỦY</v-btn>
+                    <v-btn color="primary" :disabled="loadingRestoreMul" :loading="loadingRestoreMul" @click="restoreMultiple(selected)">KHÔI PHỤC</v-btn>
                 </div>
             </template>
         </sweet-modal>
@@ -257,11 +257,11 @@ export default {
                     })
                 })
         },
-        restoreMultiple(dsBaiDang) {
+        async restoreMultiple(dsBaiDang) {
             if (Array.isArray(dsBaiDang)) {
                 this.loadingRestoreMul = true
                 try {
-                    dsBaiDang.forEach(async (item) => {
+                    await dsBaiDang.forEach(async (item) => {
                         await this.restore(item)
                         this.selected.splice(
                             this.selected.findIndex((i) => i.id === item.id),
@@ -269,8 +269,8 @@ export default {
                         )
                     })
                 } finally {
-                    this.$refs.modalRestore.close()
                     this.loadingRestoreMul = false
+                    this.$refs.modalRestore.close()
                 }
             }
         },

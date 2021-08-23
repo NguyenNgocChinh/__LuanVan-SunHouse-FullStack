@@ -14,7 +14,7 @@
                                     <div class="text-center font-weight-bold" dark>Lọc Theo:</div>
                                 </v-col>
                                 <v-col cols="8">
-                                    <v-select v-model="selected" placeholder="Theo lượt xem" :items="items"></v-select>
+                                    <v-select v-model="selected" placeholder="Theo độ nổi bật" :items="items"></v-select>
                                 </v-col>
                             </v-col>
                         </v-row>

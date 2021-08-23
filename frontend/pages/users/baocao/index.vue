@@ -49,7 +49,10 @@
                                 </v-container>
                             </template>
                             <template #[`item.noidungbaocao`]="{ item }">
-                                <p v-html="item.noidungbaocao"></p>
+                                <div class="text-center">
+                                    <v-rating half-increments :value="parseFloat(item.sao)" color="yellow darken-3" length="5" readonly size="15"></v-rating>
+                                    <p style="word-break: break-all">{{ item.noidungbaocao }}</p>
+                                </div>
                             </template>
                             <template #[`item.hanhdong`]="{ item }">
                                 <v-btn icon color="warning" @click="editItem(item)"><v-icon>mdi-pencil</v-icon></v-btn>
@@ -69,12 +72,25 @@
         </sweet-modal>
         <sweet-modal ref="modalBaoCao" :title="`Sửa báo cáo bài đăng`" width="90%" blocking>
             <v-row>
-                <h3 class="d-inline-block">Nhập nội dung báo cáo</h3>
-                <span style="font-size: 14px" class="font-weight-bold red--text text-sm d-inline-block">
-                    <sup>(*) </sup>
-                </span>
+                <v-col cols="12" sm="12" class="pa-0">
+                    <v-textarea
+                        v-model="seletedItem.noidungbaocao"
+                        autofocus
+                        auto-grow
+                        row-height="15"
+                        counter
+                        label="Nội dung đánh giá"
+                        outlined
+                        :rules="[() => !!seletedItem.noidungbaocao || 'Phải nhập nội dung đánh giá', (seletedItem.noidungbaocao.length >= 20 && seletedItem.noidungbaocao.length < 255) || 'Nội dung phải từ 20-255 ký tự']"
+                        required
+                        @keypress="seletedItem.noidungbaocao = seletedItem.noidungbaocao.replace(/\s+/g, ' ')"
+                        @blur="seletedItem.noidungbaocao = seletedItem.noidungbaocao.replace(/\s+/g, ' ')"
+                    ></v-textarea>
+                </v-col>
+                <v-col cols="12" sm="12" class="text-center pa-0">
+                    <v-rating v-model.number="seletedItem.sao" color="yellow darken-3" half-increments hover length="5" size="30"></v-rating>
+                </v-col>
             </v-row>
-            <editor id="sunhouseEditor" :min-length="40" class="mt-2 py-5" :old="seletedItem.noidungbaocao" />
             <div class="text-right">
                 <v-btn color="primary" :loading="loadingBaoCao" @click="suabaocao">Báo cáo</v-btn>
             </div>
@@ -83,9 +99,8 @@
 </template>
 
 <script>
-import Editor from '@/components/UIComponent/Editor'
 export default {
-    components: { Editor },
+    components: {},
     layout: 'user',
     data: () => ({
         selectedTable: [],
@@ -94,12 +109,15 @@ export default {
         tindangs: [],
         loadingDelete: false,
         loadingBaoCao: false,
-        noidungbaocao: null,
-        seletedItem: {},
+        noidungbaocao: '',
+        sao: null,
+        seletedItem: {
+            noidungbaocao: '',
+        },
         headers: [
-            { text: 'Tin đăng', value: 'tieude' },
-            { text: 'Nội dung báo cáo', value: 'noidungbaocao', width: '20%' },
-            { text: 'Ngày báo cáo', value: 'ngaybaocao' },
+            { text: 'Tin đăng', value: 'tieude', align: 'center' },
+            { text: 'Nội dung báo cáo', value: 'noidungbaocao', width: '20%', align: 'center' },
+            { text: 'Ngày báo cáo', value: 'ngaybaocao', width: '15%', align: 'center' },
             { text: '', value: 'hanhdong', sortable: false },
         ],
     }),
@@ -173,26 +191,30 @@ export default {
             this.$refs.modalBaoCao.open()
         },
         suabaocao() {
-            if (this.noidungbaocao === null || this.noidungbaocao === '') {
+            if (this.seletedItem.noidungbaocao === null || this.seletedItem.noidungbaocao === '') {
                 this.$toast.error('Phải nhập nội dung báo cáo')
                 return
             }
-            if (this.noidungbaocao.length < 40 || this.noidungbaocao.length > 255) {
-                this.$toast.error('Nội dung báo cáo phải ít nhất 40 - 255 ký tự')
+            const content = this.seletedItem.noidungbaocao.replace(/<(.|\n)*?>/g, '').trim()
+            if (content.length < 20 || content.length > 255) {
+                // textarea is still empty
+                this.$toast.error('Nội dung từ 20 - 255 ký tự')
                 return
             }
             this.loadingBaoCao = true
             this.$axios
                 .$put('/baocao', {
                     id: this.seletedItem.idbaocao,
-                    noidung: this.noidungbaocao,
+                    noidung: this.seletedItem.noidungbaocao,
                     baidang_id: this.seletedItem.id,
+                    sao: this.seletedItem.sao,
                 })
                 .then((res) => {
                     if (res.success) {
                         this.$toast.success(res.success)
                         const index = this.tindangs.findIndex((item) => item.id === this.seletedItem.id)
-                        this.tindangs[index].noidungbaocao = this.noidungbaocao
+                        this.tindangs[index].noidungbaocao = this.seletedItem.noidungbaocao
+                        this.tindangs[index].sao = this.seletedItem.sao
                         this.$refs.modalBaoCao.close()
                     }
                     if (res.errors) {

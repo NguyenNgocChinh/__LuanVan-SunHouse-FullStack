@@ -131,6 +131,7 @@
         </v-row>
         <v-chip-group class="loainha">
             <v-chip :style="'background-color: #' + (baidang.isChoThue === 1 ? '477998' : 'dd2d4a !important')" class="white--text" label>{{ baidang.isChoThue === 1 ? 'Cho thuê' : 'Rao bán' }} </v-chip>
+            <v-chip v-if="baidang.bankinh && baidang.bankinh !== null" color="sunhouse_grey2" class="white--text" label> <v-icon>mdi-map-marker-radius</v-icon> {{ baidang.bankinh | round }} km</v-chip>
             <v-chip v-if="isNoiBat" color="deep-orange accent-3 " class="white--text" label>Nổi bật</v-chip>
         </v-chip-group>
         <v-tooltip v-if="isYeuThich" top content-class="tooltipCustom">

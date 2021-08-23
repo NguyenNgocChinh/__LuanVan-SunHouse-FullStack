@@ -138,24 +138,24 @@
 
                 <template #[`item.user.name`]="{ item }">
                     {{ item.user.name }}
-                    <div v-if="item.user.service.length > 0" style="display: inline-block" class="ml-1">
-                        <v-img v-if="item.user.service[0].service === 'google'" :width="15" src="/svg/Google.svg"></v-img>
-                        <v-img v-else :width="15" src="/svg/Facebook.svg"></v-img>
-                    </div>
+                    <!--                    <div v-if="item.user.service.length > 0" style="display: inline-block" class="ml-1">-->
+                    <!--                        <v-img v-if="item.user.service[0].service === 'google'" :width="15" src="/svg/Google.svg"></v-img>-->
+                    <!--                        <v-img v-else :width="15" src="/svg/Facebook.svg"></v-img>-->
+                    <!--                    </div>-->
                 </template>
                 <template #[`item.sao`]="{ item }">
                     <span :class="{ 'red--text': item.sao < 4 }">{{ item.sao }}</span>
                 </template>
 
                 <template #[`item.hanhdong`]="{ item }">
-                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">
-                        <template #activator="{ on }">
-                            <v-icon color="sunhouse_grey1" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>
-                        </template>
-                        <span>Xem chi tiết người dùng</span>
-                    </v-tooltip>
+                    <!--                    <v-tooltip top offset-overflow content-class="tooltipCustom" color="black">-->
+                    <!--                        <template #activator="{ on }">-->
+                    <!--                            <v-icon color="sunhouse_grey1" class="mr-2" v-on="on" @click="showItem(item)"> mdi-eye </v-icon>-->
+                    <!--                        </template>-->
+                    <!--                        <span>Xem chi tiết người dùng</span>-->
+                    <!--                    </v-tooltip>-->
 
-                    <v-icon color="sunhouse_blue1" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+                    <!--                    <v-icon color="sunhouse_blue1" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>-->
                     <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
                 </template>
             </v-data-table>
@@ -205,16 +205,16 @@ export default {
             singleSelect: false,
             selected: [],
             headers: [
-                { text: '', value: 'id', sortable: false },
-                { text: 'Tên', value: 'user.name' },
+                { text: '', value: 'id', sortable: false, width: '1%' },
+                { text: 'Tên', value: 'user.name', width: '30%' },
                 // { text: 'Bài đăng', value: 'baidang' },
-                { text: 'Số sao', value: 'sao' },
+                { text: 'Sao', value: 'sao', width: '12%' },
                 { text: 'Email', value: 'user.email' },
                 { text: 'SĐT', value: 'user.sdt' },
-                { text: 'Vai Trò', value: 'user.vaitro', width: '9%' },
-                { text: 'Trạng Thái', value: 'user.trangthai' },
+                { text: 'Vai Trò', value: 'user.vaitro', width: '17%' },
+                { text: 'Active', value: 'user.trangthai', width: '15%' },
                 { text: 'Nội dung bị đánh giá', value: 'noidung', width: '20%' },
-                { text: 'Hành động', value: 'hanhdong', width: '12%', sortable: false },
+                { text: '', value: 'hanhdong', width: '5%', sortable: false },
             ],
 
             loading: true,

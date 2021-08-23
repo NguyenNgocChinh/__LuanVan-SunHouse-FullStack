@@ -96,11 +96,11 @@ export default {
                 icon: 'bx bxs-trash',
                 to: '/admin/deletedposts',
             },
-            {
-                title: 'Quản lý đánh giá',
-                icon: 'bx bxs-report',
-                to: '/admin/reviews',
-            },
+            // {
+            //     title: 'Quản lý đánh giá',
+            //     icon: 'bx bxs-report',
+            //     to: '/admin/reviews',
+            // },
         ],
     }),
     computed: {

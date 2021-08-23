@@ -206,7 +206,7 @@
             <v-container fluid class="align-center d-flex flex-row justify-center">
                 <v-container fluid style="width: 85%">
                     <div class="d-flex flex-row align-center sunhouse_grey2--text flex-row justify-center py-2" style=" !important; border-radius: 8px; border: 1px solid #3b383a">
-                        <v-btn class="btn-rounded mr-3 sunhouse_blue1 sunhouse_white--text" @click="openModalNhanTin">
+                        <v-btn class="btn-rounded mr-3 sunhouse_blue1 sunhouse_white--text px-2" @click="openModalNhanTin">
                             <v-icon class="pr-2">mdi-radio-tower</v-icon>
                             Đăng ký nhận tin
                         </v-btn>

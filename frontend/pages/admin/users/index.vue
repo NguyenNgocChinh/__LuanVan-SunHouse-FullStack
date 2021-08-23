@@ -32,7 +32,7 @@
                 </template>
 
                 <template #[`item.trangthai`]="{ item }">
-                    <v-btn v-if="item.trangthai === 1" icon color="teal" :loading="loadingDisable" @click="disableUser(item)">
+                    <v-btn v-if="item.trangthai === 1" :disabled="$auth.user.id === item.id" icon color="teal" :loading="loadingDisable" @click="disableUser(item)">
                         <v-icon>mdi-check</v-icon>
                     </v-btn>
 
@@ -41,21 +41,21 @@
                     </v-btn>
                 </template>
                 <template #[`item.baidang`]="{ item }"> {{ item.baidangDaDuyet }} / {{ item.baidang }} </template>
-                <template #[`item.vaitro`]="{ item }">
-                    <v-select
-                        :value="item.vaitro"
-                        item-text="v"
-                        item-value="k"
-                        :items="[
-                            { k: 'user', v: 'user' },
-                            { k: 'admin', v: 'admin' },
-                        ]"
-                        :disabled="item.vaitro === 'admin'"
-                        hide-details
-                        hide-selected
-                        @change="changeVaitro(item)"
-                    />
-                </template>
+                <!--                <template #[`item.vaitro`]="{ item }">-->
+                <!--                    <v-select-->
+                <!--                        :value="item.vaitro"-->
+                <!--                        item-text="v"-->
+                <!--                        item-value="k"-->
+                <!--                        :items="[-->
+                <!--                            { k: 'user', v: 'user' },-->
+                <!--                            { k: 'admin', v: 'admin' },-->
+                <!--                        ]"-->
+                <!--                        :disabled="item.vaitro === 'admin'"-->
+                <!--                        hide-details-->
+                <!--                        hide-selected-->
+                <!--                        @change="changeVaitro(item)"-->
+                <!--                    />-->
+                <!--                </template>-->
 
                 <template #[`item.name`]="{ item }">
                     {{ item.name }}

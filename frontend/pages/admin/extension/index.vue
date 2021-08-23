@@ -55,7 +55,7 @@
                                     </v-form>
                                 </v-card>
                             </v-dialog>
-                            <v-btn fab dark small color="red" class="mr-5" @click="deleteMultipleItem(selected)">
+                            <v-btn v-show="selected.length > 0" fab dark small color="red" class="mr-5" @click="deleteMultipleItem(selected)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                         </div>
