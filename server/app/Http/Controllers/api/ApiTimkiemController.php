@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use function PHPSTORM_META\type;
-
 class ApiTimkiemController extends Controller
 {
     public $page_size;

@@ -292,7 +292,7 @@ class ApiUserController extends Controller
                 'success' => 'Đã gửi mail đặt lại mật khẩu'
             ])
             : response()->json([
-                'errors' => 'Địa chỉ email này chưa được đăng ký'
+                'errors' => $status
             ]);;
     }
     public function resetPassword(Request $request)

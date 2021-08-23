@@ -107,16 +107,15 @@ class User extends Authenticatable
         return $this->hasMany(DanhGia::class, 'user_id', 'id');
     }
 
-    /**
-     * Send a password reset notification to the user.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    // public function sendPasswordResetNotification($token)
-    // {
-    //     $url = 'https://'.env('CLIENT_BASE_URL').'/resetpassword?token=' . $token;
-
-    //     $this->notify(new ResetPasswordNotification($url));
-    // }
+   /**
+ * Send a password reset notification to the user.
+ *
+ * @param  string  $token
+ * @return void
+ */
+public function sendPasswordResetNotification($token)
+{
+    $url = env('CLIENT_BASE_URL').'resetpassword?token=' . $token . '&email=' . $this->email;
+    $this->notify(new ResetPasswordNotification($url, $this->name));
+}
 }

@@ -98,7 +98,7 @@ class BaiDang extends Model
     public function bibaocao()
     {
         return $this->hasMany(BaoCao::class, 'baidang_id', 'id')->rightJoin('users','users.id','=','baocao.user_id')
-        ->select(['baocao.id','noidung','baocao.created_at','user_bibaocao','name','username','profile_photo_path','users.sdt']);
+        ->select(['baocao.id','noidung','baocao.created_at','user_bibaocao','name','username','profile_photo_path','users.sdt', 'baocao.sao']);
     }
 
     public function getPrice()

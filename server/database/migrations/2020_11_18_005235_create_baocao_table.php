@@ -19,6 +19,7 @@ class CreateBaoCaoTable extends Migration
             $table->mediumInteger('user_bibaocao');
             $table->integer('baidang_id');
             $table->string('noidung',255);
+            $table->float('sao',2,1)->default(5);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

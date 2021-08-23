@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->date('namsinh')->nullable();
             $table->string('profile_photo_path', 200)->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->char('sao',1)->default(5);
+            $table->float('sao',2,1)->default(5);
             $table->rememberToken();
             $table->timestamps();
         });
