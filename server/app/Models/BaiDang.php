@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class BaiDang extends Model
 {
@@ -49,6 +50,14 @@ class BaiDang extends Model
             'users' => ['user_id','users.id'],
         ],
     ];
+     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    // protected $appends = [
+    //     'bankinh',
+    // ];
 
     public function users()
     {
@@ -97,7 +106,10 @@ class BaiDang extends Model
         $max = $this->max('gia')->get();
         return $max;
     }
-
+    // public function bankinh($x_from,$y_from,$x_to,$y_to){
+    //     $bankinh = DB::select("select ST_Distance_Sphere(ST_GeomFromText('point(? ?)',4326),(ST_GeomFromText('point(? ?)',4326))) as bankinh", [$x_from, $y_from, $x_to, $y_to]);
+    //     return $bankinh[0]->bankinh / 1609.344;
+    // }
     public function formattedCreatedDate()
     {
         $today = new DateTime(date("Y-m-d H:i:s"));

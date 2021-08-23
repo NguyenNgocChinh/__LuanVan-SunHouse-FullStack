@@ -4,17 +4,21 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaiDangResource;
+use App\Http\Resources\BaiDangResourceSearch;
 use App\Http\Resources\PaginateResource;
 use App\Models\BaiDang;
+use App\Models\Location;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use function PHPSTORM_META\type;
+
 class ApiTimkiemController extends Controller
 {
     public $page_size;
-
+    public static $wrap = null;
     public function __construct(Request $request)
     {
         if ($request->page_size)
@@ -25,6 +29,10 @@ class ApiTimkiemController extends Controller
 
     public function timkiem(Request $request)
     {
+        $request->validate([
+            'X' => 'numeric',
+            'Y' => 'numeric'
+        ]);
         Log::info($request);
         DB::enableQueryLog();
         $baidangs = new BaiDang();
@@ -77,9 +85,11 @@ class ApiTimkiemController extends Controller
             if ($request->has(['X', 'Y'])) {
                 $list_baidang_bankinh = $this->getBaiDangsRound($request->Y, $request->X, $request->bankinh);
             }
+            $temp = $list_baidang_bankinh->implode('baidang_id', ',');
+            $ids = explode(',', trim($temp));
             Log::info(DB::getQueryLog());
+            $baidangs = $baidangs->whereIn('id', $ids);
             // Log::info($list_baidang_bankinh);
-            $baidangs = $baidangs->whereIn('id', $list_baidang_bankinh);
         }
 
         //QUERY WHERE column
@@ -113,8 +123,8 @@ class ApiTimkiemController extends Controller
         foreach ($column_date as $column) {
             if (request()->has($column . "1") || request()->has($column . "2")) {
                 Log::info("in created_at search");
-                    $column1 = date('Y-m-d 00:00:00', strtotime($request->get($column . 1)));
-                    $column2 = date('Y-m-d 23:59:59', strtotime($request->get($column . 2)));
+                $column1 = date('Y-m-d 00:00:00', strtotime($request->get($column . 1)));
+                $column2 = date('Y-m-d 23:59:59', strtotime($request->get($column . 2)));
                 if (is_null($request->get($column . 1)) && !is_null($request->get($column . 2))) {
                     Log::info("NULL IS COLUMN1");
                     $baidangs = $baidangs->where($column, '<=', $column2);
@@ -172,15 +182,21 @@ class ApiTimkiemController extends Controller
             Log::info("sort giá");
             $baidangs = $baidangs->orderBy('gia', request('sortByGia'));
         }
-        $baidangs = $baidangs->where('baidang.trangthai', 1)
-            ->where('baidang.choduyet', 0);
-        Log::info($baidangs->count());
-        $baidangs = $baidangs
-            ->paginate($this->page_size);
+        $baidangs = $baidangs->where(['baidang.trangthai' => 1, 'baidang.choduyet' => 0]);
+        $baidangs = $baidangs->paginate($this->page_size);
 
+        $resultPage =  new PaginateResource($baidangs);
+        $result = BaiDangResourceSearch::collection($baidangs);
+        if ($request->banKinhOn == 'true') {
+            $result = json_encode($result);
+            $result = json_decode($result);
+            usort($result, function ($a, $b) { //Sort the array using a user defined function
+                return $a->bankinh < $b->bankinh ? -1 : 1; //Compare the scores
+            });
+        }
         return response()->json((object) [
-            'page' => new PaginateResource($baidangs),
-            'baidangs' => BaiDangResource::collection($baidangs)
+            'page' => $resultPage,
+            'baidangs' => $result
         ]);
     }
 
@@ -188,13 +204,13 @@ class ApiTimkiemController extends Controller
     function getBaiDangsRound($x, $y, $radius)
     {
         $radius = $radius * 1609.344;
-        $kq = DB::table('location')
-            ->select('baidang_id')
+        $kq = DB::table('location')->select('baidang_id')
+            // selectRaw("baidang_id,ST_Distance_Sphere((position),(ST_GeomFromText('point($x $y)',4326))) / 1609.344 as bankinh")
             ->whereRaw("ST_Distance_Sphere((position),(ST_GeomFromText('point($x $y)',4326))) <= $radius")
             ->where('trangthai', 1)
             ->get();
-        $temp = $kq->implode('baidang_id', ',');
-        $kq = explode(',', trim($temp));
+        // $temp = $kq->implode('baidang_id', ',');
+        // $kq = explode(',', trim($temp));
         return $kq;
     }
 
@@ -213,8 +229,6 @@ class ApiTimkiemController extends Controller
     function sortByField($array, $field, $desc =  true)
     {
         // $newArray = array_column($array, $field);
-        Log::info("array");
-        Log::info($array);
         $newArray = array();
         foreach ($array as $key => $row) {
             $newArray[$key] = $row[$field];

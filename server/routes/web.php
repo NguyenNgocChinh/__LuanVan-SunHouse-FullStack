@@ -26,7 +26,7 @@ use Illuminate\Http\Request;
 /*
  * Broadcast
  */
-
+Broadcast::routes(["middleware" => "auth:sanctum"]);
 /*
 * AUTH
 */

@@ -66,6 +66,7 @@ class ApiUserController extends Controller
         $user = $request->user();
         $user->yeuthich = $user->yeuthich;
         $user->baocao = $user->baocao;
+        $user->social;
         return response()->json($user);
     }
 
@@ -175,11 +176,12 @@ class ApiUserController extends Controller
         if ($user) {
             $user->email = $request->email;
             // $user->sdt = $request->sdt;
-            if ($request->namsinh) {
+            if ($request->namsinh != 'null') {
                 $namsinh = str_replace('/', '-', $request->namsinh);
                 $user->namsinh = date('Y-m-d', strtotime($namsinh));
-            }
+            }else $user->namsinh = null;
             $user->name = $request->name;
+            $user->username = $request->username;
 
             if ($request->hasfile('file')) {
                 $arrPath = explode('/', $user->profile_photo_path);
