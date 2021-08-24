@@ -172,6 +172,11 @@ class ApiUserController extends Controller
     }
     public function updateInfomationUser(Request $request)
     {
+        $request->validate([
+            'file' => 'image',
+        ], [
+            'file.image' => 'Hình ảnh phải là file hình ảnh png,jpg,jpge,...'
+        ]);
         $user = Auth::user();
         if ($user) {
             $user->email = $request->email;

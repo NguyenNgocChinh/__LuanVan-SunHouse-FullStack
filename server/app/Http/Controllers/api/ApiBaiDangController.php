@@ -234,19 +234,20 @@ class ApiBaiDangController extends Controller
                 return response()->json(['errors' => 'Chưa xác thực Captcha']);
             $request->validate(
                 [
-                    'tieude' => 'required',
+                    'tieude' => 'required|min:20|max:100',
                     'loai_id' => 'required',
-                    'gia' => 'required',
+                    'gia' => 'required|between:1,999999',
                     'hinhthuc' => 'required',
-                    'noidung' => 'required',
-                    'sophongngu' => 'required',
-                    'sophongtam' => 'required',
+                    'noidung' => 'required|min:40|max:3000',
+                    'sophongngu' => 'required|between:0,99',
+                    'sophongtam' => 'required|between:0,99',
                     'huong' => 'required',
-                    'dientich' => 'required',
-                    'diachi' => 'required',
+                    'dientich' => 'required|between:1,999999',
+                    'diachi' => 'required|min:0|max:150',
                     'toadoX' => 'required',
                     'toadoY' => 'required',
-                    'g-recaptcha-response' => 'required'
+                    'file' => 'image',
+                    'g-recaptcha-response' => 'required',
                 ],
                 [
                     'tieude.required' => 'Tiêu đề không được để trống!',
@@ -262,6 +263,7 @@ class ApiBaiDangController extends Controller
                     'diachi.required' => 'Địa chỉ nhà không được để trống!',
                     'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
                     'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                    'file.image' => 'Hình ảnh phải là file hình ảnh png,jpg,jpge,...'
                 ]
             );
 
@@ -325,17 +327,20 @@ class ApiBaiDangController extends Controller
             return response()->json(['errors' => 'Chưa xác thực Captcha']);
         $request->validate(
             [
-                'tieude' => 'required',
+                'tieude' => 'required|min:20|max:100',
                 'loai_id' => 'required',
-                'gia' => 'required',
+                'gia' => 'required|between:1,999999',
                 'hinhthuc' => 'required',
-                'noidung' => 'required',
-                'sophongngu' => 'required',
-                'sophongtam' => 'required',
-                'dientich' => 'required',
-                'diachi' => 'required',
+                'noidung' => 'required|min:40|max:3000',
+                'sophongngu' => 'required|between:0,99',
+                'sophongtam' => 'required|between:0,99',
+                'huong' => 'required',
+                'dientich' => 'required|between:min,max',
+                'diachi' => 'required|min:0|max:150',
                 'toadoX' => 'required',
                 'toadoY' => 'required',
+                'file' => 'image',
+                'g-recaptcha-response' => 'required'
             ],
             [
                 'tieude.required' => 'Tiêu đề không được để trống!',
@@ -350,6 +355,7 @@ class ApiBaiDangController extends Controller
                 'diachi.required' => 'Địa chỉ nhà không được để trống!',
                 'toadoX.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
                 'toadoY.required' => 'Xảy ra lỗi định vị hoặc địa chỉ không hợp lệ!',
+                'file.image' => 'Hình ảnh phải là file hình ảnh png,jpg,jpge,...'
             ]
         );
 

@@ -30,7 +30,7 @@ class BaoCaoController extends Controller
             ->get();
 
         foreach ($baocaos as $baocao) {
-            $baidangsId = BaoCao::select(['baidang_id','sao'])->where('user_bibaocao', $baocao->user_bibaocao)->get();
+            $baidangsId = BaoCao::select(['baidang_id'])->where('user_bibaocao', $baocao->user_bibaocao)->get();
             $temp = $baidangsId->implode('baidang_id', ',');
             $baidangsId = explode(',', trim($temp));
             $baidangs = BaiDang::whereIn('id', $baidangsId)->get();
