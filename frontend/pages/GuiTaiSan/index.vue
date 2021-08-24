@@ -84,7 +84,7 @@
                         <v-file-input
                             ref="files"
                             v-model="files"
-                            accept="image/*"
+                            accept="image/png, image/jpeg, image/bmp"
                             label="Có thể chọn nhiều hình ảnh"
                             placeholder="Có thể chọn nhiều hình ảnh"
                             prepend-icon="mdi-camera"
@@ -811,16 +811,18 @@ export default {
                         if (error.response) {
                             for (const key of Object.keys(error.response.data.errors)) {
                                 this.$nuxt.$toast.error(error.response.data.errors[key], {
-                                    duration: null,
+                                    duration: 6000,
                                 })
                             }
+                            this.resetCaptcha()
                         }
                     })
                     .finally(() => {
                         this.$nuxt.$loading.finish()
                     })
             } catch (e) {
-                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: null })
+                this.$nuxt.$toast.error('Lỗi không xác định, vui lòng liên hệ QTV', { duration: 6000 })
+                this.resetCaptcha()
             } finally {
                 this.$nuxt.$loading.finish()
             }

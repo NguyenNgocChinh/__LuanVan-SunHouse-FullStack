@@ -554,7 +554,7 @@ export default {
                     if (error.response) {
                         for (const key of Object.keys(error.response.data.errors)) {
                             this.$nuxt.$toast.error(error.response.data.errors[key], {
-                                duration: null,
+                                duration: 6000,
                             })
                         }
                     }
